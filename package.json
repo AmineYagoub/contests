@@ -11,7 +11,7 @@
     "start": "nx serve",
     "build": "nx build",
     "type-check": "tsc --pretty --noEmit",
-    "lint": "eslint . --ext ts --ext tsx --ext js",
+    "lint": "eslint . --ext js,jsx,ts,tsx",
     "prebuild": "rimraf dist",
     "prepare": "husky install"
   },
