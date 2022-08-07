@@ -1,4 +1,5 @@
 import LatestContests from '@/components/admin/LatestContests';
+import LatestInstructors from '@/components/admin/LatestInstructors';
 import LatestUsers from '@/components/admin/LatestUsers';
 import StudentAgeChart from '@/components/admin/StudentAgeChart';
 import { NextPageWithLayout } from '@/config/types';
@@ -111,7 +112,7 @@ const AdminDashboard: NextPageWithLayout = () => {
           <LatestUsers />
         </Col>
         <Col span={10}>
-          <LatestContests />
+          <LatestInstructors />
         </Col>
       </Row>
     </>

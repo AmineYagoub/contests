@@ -21,7 +21,7 @@
 /* Firefox */
 * {
   scrollbar-width: auto;
-  scrollbar-color: #e400dd #ffffff;
+  scrollbar-color: #6d90e8 #ffffff;
 }
 
 /* Chrome, Edge, and Safari */
@@ -34,7 +34,7 @@
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #e400dd;
+  background-color: #6d90e8;
   border-radius: 10px;
   border: 3px solid #ffffff;
 }
@@ -134,4 +134,7 @@ input[type='tel'] {
   height: 80px;
   display: flex;
   align-items: flex-end;
+}
+.ant-upload {
+  width: 100%;
 }
