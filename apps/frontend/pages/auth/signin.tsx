@@ -1,25 +1,25 @@
-import { Button, Divider, Form, Input } from "antd";
-import AuthLayout from "@/layout/AuthLayout";
-import { EmotionJSX } from "@emotion/react/types/jsx-namespace";
-import { NextPageWithLayout } from "@/config/types";
-import styled from "@emotion/styled";
-import Link from "next/link";
+import { Button, Divider, Form, Input } from 'antd';
+import AuthLayout from '@/layout/AuthLayout';
+import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import { NextPageWithLayout } from '@/config/types';
+import styled from '@emotion/styled';
+import Link from 'next/link';
 
 const StyledForm = styled(Form)({
   maxWidth: 400,
-  padding: "30px 50px !important",
-  backgroundColor: "#fff",
+  padding: '30px 50px !important',
+  backgroundColor: '#fff',
   boxShadow:
-    "0px 2px 4px rgba(31, 41, 55, 0.06), 0px 4px 6px rgba(100, 116, 139, 0.12)",
+    '0px 2px 4px rgba(31, 41, 55, 0.06), 0px 4px 6px rgba(100, 116, 139, 0.12)',
 });
 
 const SignInPage: NextPageWithLayout = () => {
   const onFinish = (values: any) => {
-    console.log("Success:", values);
+    console.log('Success:', values);
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+    console.log('Failed:', errorInfo);
   };
   return (
     <StyledForm
@@ -34,7 +34,7 @@ const SignInPage: NextPageWithLayout = () => {
       <Form.Item
         label="البريد الإلكتروني"
         name="username"
-        rules={[{ required: true, message: "Please input your username!" }]}
+        rules={[{ required: true, message: 'Please input your username!' }]}
       >
         <Input />
       </Form.Item>
@@ -42,7 +42,7 @@ const SignInPage: NextPageWithLayout = () => {
       <Form.Item
         label="كلمة السر"
         name="password"
-        rules={[{ required: true, message: "Please input your password!" }]}
+        rules={[{ required: true, message: 'Please input your password!' }]}
       >
         <Input.Password />
       </Form.Item>

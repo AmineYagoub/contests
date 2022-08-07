@@ -1,15 +1,15 @@
-import { FC } from "react";
-import { Card, Select } from "antd";
-import ReactEChartsCore from "echarts-for-react/lib/core";
-import * as echarts from "echarts/core";
+import { FC } from 'react';
+import { Card, Select } from 'antd';
+import ReactEChartsCore from 'echarts-for-react/lib/core';
+import * as echarts from 'echarts/core';
 import {
   ToolboxComponent,
   TooltipComponent,
   GridComponent,
   LegendComponent,
-} from "echarts/components";
-import { BarChart } from "echarts/charts";
-import { CanvasRenderer } from "echarts/renderers";
+} from 'echarts/components';
+import { BarChart } from 'echarts/charts';
+import { CanvasRenderer } from 'echarts/renderers';
 echarts.use([
   ToolboxComponent,
   TooltipComponent,
@@ -21,12 +21,12 @@ echarts.use([
 
 const labelOption = {
   show: true,
-  position: "insideBottom",
+  position: 'insideBottom',
   distance: 10,
   rotate: 90,
-  align: "left",
-  verticalAlign: "middle",
-  formatter: "{c}",
+  align: 'left',
+  verticalAlign: 'middle',
+  formatter: '{c}',
   fontSize: 16,
   rich: {
     name: {},
@@ -34,68 +34,68 @@ const labelOption = {
 };
 const option = {
   tooltip: {
-    trigger: "axis",
+    trigger: 'axis',
     axisPointer: {
-      type: "shadow",
+      type: 'shadow',
     },
   },
   legend: {
     data: [
-      "عدد المسابقات",
-      "طلاب مشاركين مع مشرفين",
-      "طلاب مشاركين بدون مشرفين",
+      'عدد المسابقات',
+      'طلاب مشاركين مع مشرفين',
+      'طلاب مشاركين بدون مشرفين',
     ],
   },
   toolbox: {
     show: true,
-    orient: "vertical",
-    left: "right",
-    top: "center",
+    orient: 'vertical',
+    left: 'right',
+    top: 'center',
     feature: {
       mark: { show: true },
       dataView: { show: true, readOnly: false },
-      magicType: { show: true, type: ["line", "bar", "stack"] },
+      magicType: { show: true, type: ['line', 'bar', 'stack'] },
       restore: { show: true },
       saveAsImage: { show: true },
     },
   },
   xAxis: [
     {
-      type: "category",
+      type: 'category',
       axisTick: { show: false },
-      data: ["2022", "2023", "2024", "2025"],
+      data: ['2022', '2023', '2024', '2025'],
     },
   ],
   yAxis: [
     {
-      type: "value",
+      type: 'value',
     },
   ],
   series: [
     {
-      name: "عدد المسابقات",
-      type: "bar",
+      name: 'عدد المسابقات',
+      type: 'bar',
       label: labelOption,
       emphasis: {
-        focus: "series",
+        focus: 'series',
       },
       data: [33, 45, 55, 32],
     },
     {
-      name: "طلاب مشاركين مع مشرفين",
-      type: "bar",
+      name: 'طلاب مشاركين مع مشرفين',
+      type: 'bar',
       label: labelOption,
       emphasis: {
-        focus: "series",
+        focus: 'series',
       },
       data: [150, 232, 201, 154],
     },
     {
-      name: "طلاب مشاركين بدون مشرفين",
-      type: "bar",
+      name: 'طلاب مشاركين بدون مشرفين',
+      type: 'bar',
       label: labelOption,
       emphasis: {
-        focus: "series",
+        focus: 'series',
       },
       data: [98, 77, 101, 99],
     },
@@ -130,7 +130,7 @@ const ContestsChart: FC = (props) => {
         option={option}
         notMerge={true}
         lazyUpdate={true}
-        theme={"theme_name"}
+        theme={'theme_name'}
         style={{
           height: 400,
         }}

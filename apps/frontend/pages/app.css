@@ -5,16 +5,16 @@
 }
 @font-face {
   font-display: swap;
-  font-family: "CoconNextArabic";
+  font-family: 'CoconNextArabic';
   font-style: normal;
   font-weight: 300;
-  src: url("/fonts/CoconNextArabic-Light.eot");
-  src: local("CoconNextArabic-Light"),
-    url("/fonts/CoconNextArabic-Light.eot?#iefix") format("embedded-opentype"),
-    url("/fonts/CoconNextArabic-Light.woff2") format("woff2"),
-    url("/fonts/CoconNextArabic-Light.woff") format("woff"),
-    url("/fonts/CoconNextArabic-Light.ttf") format("truetype"),
-    url("/fonts/CoconNextArabic-Light.svg#CoconNextArabic-Light") format("svg");
+  src: url('/fonts/CoconNextArabic-Light.eot');
+  src: local('CoconNextArabic-Light'),
+    url('/fonts/CoconNextArabic-Light.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/CoconNextArabic-Light.woff2') format('woff2'),
+    url('/fonts/CoconNextArabic-Light.woff') format('woff'),
+    url('/fonts/CoconNextArabic-Light.ttf') format('truetype'),
+    url('/fonts/CoconNextArabic-Light.svg#CoconNextArabic-Light') format('svg');
 }
 
 /* ===== Scrollbar CSS ===== */
@@ -41,7 +41,7 @@
 
 body {
   color: var(--font-color);
-  font-family: "CoconNextArabic", serif;
+  font-family: 'CoconNextArabic', serif;
   font-weight: 400;
   line-height: 1.5;
   -webkit-tap-highlight-color: transparent;
@@ -51,7 +51,7 @@ body {
 }
 span {
   color: var(--font-color);
-  font-family: "CoconNextArabic", serif;
+  font-family: 'CoconNextArabic', serif;
   font-weight: 400;
   line-height: 1.5;
 }
@@ -99,7 +99,7 @@ table {
 .ant-form-item-label {
   padding: 0 !important;
 }
-input[type="tel"] {
+input[type='tel'] {
   text-align: right;
 }
 

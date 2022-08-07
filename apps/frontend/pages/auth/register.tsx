@@ -1,9 +1,9 @@
-import { Button, Divider, Form, Input, InputNumber, Select } from "antd";
-import AuthLayout from "@/layout/AuthLayout";
-import { EmotionJSX } from "@emotion/react/types/jsx-namespace";
-import { NextPageWithLayout } from "@/config/types";
-import styled from "@emotion/styled";
-import Link from "next/link";
+import { Button, Divider, Form, Input, InputNumber, Select } from 'antd';
+import AuthLayout from '@/layout/AuthLayout';
+import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import { NextPageWithLayout } from '@/config/types';
+import styled from '@emotion/styled';
+import Link from 'next/link';
 
 const { Option } = Select;
 
@@ -14,26 +14,26 @@ const layout = {
 
 const StyledForm = styled(Form)({
   maxWidth: 680,
-  padding: "40px 25px !important",
-  backgroundColor: "#fff",
+  padding: '40px 25px !important',
+  backgroundColor: '#fff',
   boxShadow:
-    "0px 2px 4px rgba(31, 41, 55, 0.06), 0px 4px 6px rgba(100, 116, 139, 0.12)",
+    '0px 2px 4px rgba(31, 41, 55, 0.06), 0px 4px 6px rgba(100, 116, 139, 0.12)',
 });
 
-const Space = styled("span")({
-  display: "inline-block",
-  width: "24px",
-  lineHeight: "32px",
-  textAlign: "center",
+const Space = styled('span')({
+  display: 'inline-block',
+  width: '24px',
+  lineHeight: '32px',
+  textAlign: 'center',
 });
 
 const SignUpPage: NextPageWithLayout = () => {
   const onFinish = (values: any) => {
-    console.log("Success:", values);
+    console.log('Success:', values);
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+    console.log('Failed:', errorInfo);
   };
   return (
     <StyledForm
@@ -48,16 +48,16 @@ const SignUpPage: NextPageWithLayout = () => {
         label="الإسم الكامل"
         name="name"
         style={{ marginBottom: 0 }}
-        rules={[{ required: true, message: "Please input your username!" }]}
+        rules={[{ required: true, message: 'Please input your username!' }]}
       >
         <Form.Item
-          style={{ display: "inline-block", width: "calc(50% - 12px)" }}
+          style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}
         >
           <Input placeholder="الإسم الأول" />
         </Form.Item>
         <Space>-</Space>
         <Form.Item
-          style={{ display: "inline-block", width: "calc(50% - 12px)" }}
+          style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}
         >
           <Input placeholder="إسم العائلة" />
         </Form.Item>
@@ -66,7 +66,7 @@ const SignUpPage: NextPageWithLayout = () => {
       <Form.Item
         label="البريد الإلكتروني"
         name="email"
-        rules={[{ required: true, message: "Please input your email!" }]}
+        rules={[{ required: true, message: 'Please input your email!' }]}
       >
         <Input type="email" />
       </Form.Item>
@@ -75,10 +75,10 @@ const SignUpPage: NextPageWithLayout = () => {
         label="نوع العضوية"
         name="role"
         style={{ marginBottom: 0 }}
-        rules={[{ required: true, message: "Please input your role!" }]}
+        rules={[{ required: true, message: 'Please input your role!' }]}
       >
         <Form.Item
-          style={{ display: "inline-block", width: "calc(50% - 12px)" }}
+          style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}
         >
           <Select>
             <Option value="rmb">معلم مشرف</Option>
@@ -88,7 +88,7 @@ const SignUpPage: NextPageWithLayout = () => {
         </Form.Item>
         <Space>-</Space>
         <Form.Item
-          style={{ display: "inline-block", width: "calc(50% - 12px)" }}
+          style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}
         >
           <Select placeholder="إختر المعلم المشرف" disabled>
             <Option value="rmb">معلم مشرف</Option>
@@ -103,10 +103,10 @@ const SignUpPage: NextPageWithLayout = () => {
         label="السن"
         rules={[
           {
-            type: "number",
+            type: 'number',
             min: 10,
             max: 20,
-            message: "السن يجب ان يكون بين 10 و 20",
+            message: 'السن يجب ان يكون بين 10 و 20',
           },
         ]}
       >
@@ -133,7 +133,7 @@ const SignUpPage: NextPageWithLayout = () => {
         <Input
           addonAfter="/https://facebook.com"
           placeholder="your-name"
-          style={{ textAlign: "left" }}
+          style={{ textAlign: 'left' }}
         />
       </Form.Item>
 

@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const withNx = require("@nrwl/next/plugins/with-nx");
-const withTM = require("next-transpile-modules")(["echarts", "zrender"]);
+const withNx = require('@nrwl/next/plugins/with-nx');
+const withTM = require('next-transpile-modules')(['echarts', 'zrender']);
 
 /**
  * @type {import('@nrwl/next/plugins/with-nx').WithNxOptions}
@@ -8,11 +8,11 @@ const withTM = require("next-transpile-modules")(["echarts", "zrender"]);
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["via.placeholder.com", "flagcdn.com"],
+    domains: ['via.placeholder.com', 'flagcdn.com'],
   },
   i18n: {
-    locales: ["ar"],
-    defaultLocale: "ar",
+    locales: ['ar'],
+    defaultLocale: 'ar',
   },
   nx: {
     svgr: false,

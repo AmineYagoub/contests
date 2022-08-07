@@ -1,13 +1,13 @@
-import Head from "next/head";
-import { AppProps } from "next/app";
-import { CacheProvider, EmotionCache } from "@emotion/react";
-import createEmotionCache from "@/config/createEmotionCache";
-import ar from "antd/lib/locale/ar_EG";
-import { ConfigProvider, notification } from "antd";
-import { ReactElement, useEffect } from "react";
-import { NextComponentType } from "next";
-import "antd/dist/antd.variable.min.css";
-import "./app.css";
+import Head from 'next/head';
+import { AppProps } from 'next/app';
+import { CacheProvider, EmotionCache } from '@emotion/react';
+import createEmotionCache from '@/config/createEmotionCache';
+import ar from 'antd/lib/locale/ar_EG';
+import { ConfigProvider, notification } from 'antd';
+import { ReactElement, useEffect } from 'react';
+import { NextComponentType } from 'next';
+import 'antd/dist/antd.variable.min.css';
+import './app.css';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -25,13 +25,13 @@ export default function CustomApp(props: MyAppProps) {
 
   useEffect(() => {
     notification.config({
-      placement: "topRight",
+      placement: 'topRight',
       duration: 4,
       rtl: true,
     });
     ConfigProvider.config({
       theme: {
-        primaryColor: "#6d90e8",
+        primaryColor: '#6d90e8',
       },
     });
   }, []);

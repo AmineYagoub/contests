@@ -1,15 +1,15 @@
-import { FC } from "react";
-import { Button, Card } from "antd";
-import ReactEChartsCore from "echarts-for-react/lib/core";
-import * as echarts from "echarts/core";
+import { FC } from 'react';
+import { Button, Card } from 'antd';
+import ReactEChartsCore from 'echarts-for-react/lib/core';
+import * as echarts from 'echarts/core';
 import {
   ToolboxComponent,
   TooltipComponent,
   LegendComponent,
-} from "echarts/components";
-import { PieChart } from "echarts/charts";
-import { LabelLayout } from "echarts/features";
-import { CanvasRenderer } from "echarts/renderers";
+} from 'echarts/components';
+import { PieChart } from 'echarts/charts';
+import { LabelLayout } from 'echarts/features';
+import { CanvasRenderer } from 'echarts/renderers';
 
 echarts.use([
   ToolboxComponent,
@@ -22,9 +22,9 @@ echarts.use([
 
 const option = {
   tooltip: {
-    trigger: "item",
+    trigger: 'item',
     axisPointer: {
-      type: "shadow",
+      type: 'shadow',
     },
 
     formatter: function (params) {
@@ -33,14 +33,14 @@ const option = {
     },
   },
   legend: {
-    top: "top",
-    formatter: "{name} سنة",
+    top: 'top',
+    formatter: '{name} سنة',
   },
   toolbox: {
     show: true,
-    orient: "vertical",
-    left: "right",
-    top: "bottom",
+    orient: 'vertical',
+    left: 'right',
+    top: 'bottom',
     feature: {
       mark: { show: true },
       dataView: { show: true, readOnly: false },
@@ -50,28 +50,28 @@ const option = {
   },
   series: [
     {
-      name: "سن الطلاب",
-      type: "pie",
+      name: 'سن الطلاب',
+      type: 'pie',
       radius: [30, 100],
-      center: ["50%", "50%"],
-      roseType: "area",
+      center: ['50%', '50%'],
+      roseType: 'area',
       label: {
-        formatter: "{c} طالب",
+        formatter: '{c} طالب',
         fontSize: 12,
       },
       emphasis: {
-        focus: "series",
+        focus: 'series',
       },
       itemStyle: {
         borderRadius: 8,
       },
       data: [
-        { value: 40, name: "13" },
-        { value: 38, name: "14" },
-        { value: 50, name: "15" },
-        { value: 30, name: "16" },
-        { value: 28, name: "17" },
-        { value: 26, name: "18" },
+        { value: 40, name: '13' },
+        { value: 38, name: '14' },
+        { value: 50, name: '15' },
+        { value: 30, name: '16' },
+        { value: 28, name: '17' },
+        { value: 26, name: '18' },
       ],
     },
   ],
@@ -89,7 +89,7 @@ const StudentAgeChart: FC = (props) => {
         option={option}
         notMerge={true}
         lazyUpdate={true}
-        theme={"theme_name"}
+        theme={'theme_name'}
         style={{
           height: 400,
         }}
