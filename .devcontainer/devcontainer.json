@@ -1,0 +1,48 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.233.0/containers/javascript-node-mongo
+// Update the VARIANT arg in docker-compose.yml to pick a Node.js version
+{
+  "name": "Node.js",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+
+  // Set *default* container specific settings.json values on container create.
+  "settings": {},
+
+  // Add the IDs of extensions you want installed when the container is created.
+  "extensions": [
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    "GitHub.copilot",
+    "me-dutour-mathieu.vscode-github-actions",
+    "firsttris.vscode-jest-runner",
+    "eg2.vscode-npm-script",
+    "christian-kohler.npm-intellisense",
+    "howardzuo.vscode-npm-dependency",
+    "nrwl.angular-console",
+    "esbenp.prettier-vscode",
+    "svipas.prettier-plus",
+    "sibiraj-s.vscode-scss-formatter",
+    "mrmlnc.vscode-scss",
+    "redhat.vscode-yaml",
+    "ms-azuretools.vscode-docker",
+    "Prisma.prisma",
+    "mongodb.mongodb-vscode"
+  ],
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [3000, 27017, 3306],
+
+  // Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": "npm install",
+
+  // Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+  // "remoteUser": "node",
+  "features": {
+    "git": "latest",
+    "github-cli": "latest",
+    "sshd": "latest"
+  }
+}

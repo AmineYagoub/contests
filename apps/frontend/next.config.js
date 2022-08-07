@@ -1,15 +1,22 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const withNx = require('@nrwl/next/plugins/with-nx');
+const withNx = require("@nrwl/next/plugins/with-nx");
+const withTM = require("next-transpile-modules")(["echarts", "zrender"]);
 
 /**
  * @type {import('@nrwl/next/plugins/with-nx').WithNxOptions}
  **/
 const nextConfig = {
+  reactStrictMode: true,
+  images: {
+    domains: ["via.placeholder.com", "flagcdn.com"],
+  },
+  i18n: {
+    locales: ["ar"],
+    defaultLocale: "ar",
+  },
   nx: {
-    // Set this to true if you would like to to use SVGR
-    // See: https://github.com/gregberge/svgr
     svgr: false,
   },
 };
 
-module.exports = withNx(nextConfig);
+module.exports = withTM(withNx(nextConfig));

@@ -12,7 +12,15 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": true,
-    "types": ["jest", "node"]
+    "types": ["jest", "node"],
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@/config/*": ["config/*"],
+      "@/layout/*": ["layouts/*"],
+      "@/pages/*": ["pages/*"],
+      "@/components/*": ["components/*"]
+    }
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "next-env.d.ts"],
   "exclude": ["node_modules", "jest.config.ts"]

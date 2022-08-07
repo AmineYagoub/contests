@@ -1,0 +1,137 @@
+:root {
+  --pulse-color: 0 0 0 0 rgba(204, 169, 44, 0);
+  --pulse-shadow-color: 0 0 0 10px rgba(204, 169, 44, 0);
+  --background: ghostwhite;
+}
+@font-face {
+  font-display: swap;
+  font-family: "CoconNextArabic";
+  font-style: normal;
+  font-weight: 300;
+  src: url("/fonts/CoconNextArabic-Light.eot");
+  src: local("CoconNextArabic-Light"),
+    url("/fonts/CoconNextArabic-Light.eot?#iefix") format("embedded-opentype"),
+    url("/fonts/CoconNextArabic-Light.woff2") format("woff2"),
+    url("/fonts/CoconNextArabic-Light.woff") format("woff"),
+    url("/fonts/CoconNextArabic-Light.ttf") format("truetype"),
+    url("/fonts/CoconNextArabic-Light.svg#CoconNextArabic-Light") format("svg");
+}
+
+/* ===== Scrollbar CSS ===== */
+/* Firefox */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #e400dd #ffffff;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 13px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #e400dd;
+  border-radius: 10px;
+  border: 3px solid #ffffff;
+}
+
+body {
+  color: var(--font-color);
+  font-family: "CoconNextArabic", serif;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: auto;
+  overflow-x: hidden;
+}
+span {
+  color: var(--font-color);
+  font-family: "CoconNextArabic", serif;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--font-color);
+  margin: 0;
+  padding: 0;
+}
+table {
+  font-size: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.ant-layout {
+  background-color: var(--background) !important;
+  min-height: 100vh;
+}
+.ant-layout-content {
+  max-width: 1600px;
+  width: 100vw;
+  padding: 1em;
+  align-self: center;
+}
+
+.ant-layout-sider-light {
+  background: #f0f2f5;
+}
+
+.ant-input-search-button {
+  background-color: transparent;
+  /* color: c.$primary-color; */
+  box-shadow: unset;
+}
+
+.ant-input-group-addon {
+  border-top: 0;
+  border-bottom: 0;
+}
+.ant-form-item-label {
+  padding: 0 !important;
+}
+input[type="tel"] {
+  text-align: right;
+}
+
+.ant-form {
+  margin: 0 auto;
+}
+
+.ant-form-item-label
+  > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+  position: absolute;
+  left: -15px;
+}
+
+.ant-form-rtl .ant-form-item-label {
+  text-align: right;
+}
+
+.trigger {
+  padding: 0 24px;
+  font-size: 18px;
+  line-height: 64px;
+  cursor: pointer;
+  color: beige;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+.ant-statistic-content {
+  height: 80px;
+  display: flex;
+  align-items: flex-end;
+}
