@@ -4,13 +4,20 @@ import {
   MenuUnfoldOutlined,
   IdcardOutlined,
   BarChartOutlined,
-  UserSwitchOutlined,
   MailOutlined,
   BellOutlined,
   TrophyOutlined,
+  EditOutlined,
+  SettingOutlined,
 } from '@ant-design/icons';
-import { createElement, useState } from 'react';
+import { createElement, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
+import TeacherIcon from '@/components/icons/TeacherIcon';
+import StyledFooter from './StyledFooter';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { AppRoutes } from '@/config/routes';
+import { StyledHeader } from './HomeLayout';
 
 const { Content, Header, Sider } = Layout;
 
@@ -23,7 +30,7 @@ const StyledContent = styled(Content)({
     '0px 2px 4px rgba(31, 41, 55, 0.06), 0px 4px 6px rgba(100, 116, 139, 0.12)',
 });
 
-const Logo = styled('div')({
+export const Logo = styled('div')({
   height: 32,
   margin: 16,
   backgroundColor: 'rgba(255, 255, 255, 0.3)',
@@ -36,6 +43,8 @@ const StyledMenu = styled(Menu)({
 
 const AdminDashboardLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const router = useRouter();
+
   return (
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -43,48 +52,95 @@ const AdminDashboardLayout = ({ children }) => {
         <StyledMenu
           mode="inline"
           defaultSelectedKeys={['1']}
+          selectedKeys={[router.pathname]}
           items={[
             {
-              key: '1',
+              key: AppRoutes.AdminManageDashboard,
               icon: <BarChartOutlined style={{ fontSize: 18 }} />,
-              label: 'لوحة التحكم',
+
+              label: (
+                <Link
+                  href={AppRoutes.AdminManageDashboard}
+                >{`لوحة التحكم`}</Link>
+              ),
             },
             {
-              key: '2',
-              icon: <UserSwitchOutlined style={{ fontSize: 18 }} />,
-              label: 'إدارة المعلمين',
+              key: AppRoutes.AdminManageInstructors,
+              icon: <TeacherIcon style={{ fontSize: 18 }} />,
+              label: (
+                <Link
+                  href={AppRoutes.AdminManageInstructors}
+                >{`إدارة المعلمين`}</Link>
+              ),
             },
             {
-              key: '3',
+              key: AppRoutes.AdminManageStudents,
               icon: <IdcardOutlined style={{ fontSize: 18 }} />,
-              label: 'إدارة الطلاب',
+
+              label: (
+                <Link
+                  href={AppRoutes.AdminManageStudents}
+                >{`إدارة الطلاب`}</Link>
+              ),
             },
             {
-              key: '4',
+              key: AppRoutes.AdminManageContests,
               icon: <TrophyOutlined style={{ fontSize: 18 }} />,
-              label: 'إدارة المسابقات',
+
+              label: (
+                <Link
+                  href={AppRoutes.AdminManageContests}
+                >{`إدارة المسابقات`}</Link>
+              ),
             },
             {
-              key: '5',
+              key: AppRoutes.AdminManageQuestions,
+              icon: <EditOutlined style={{ fontSize: 18 }} />,
+
+              label: (
+                <Link
+                  href={AppRoutes.AdminManageQuestions}
+                >{`إدارة أسئلة المسابقات`}</Link>
+              ),
+            },
+            {
+              key: AppRoutes.AdminManageMessages,
               icon: <MailOutlined style={{ fontSize: 18 }} />,
-              label: 'الرسائل',
+
+              label: (
+                <Link href={AppRoutes.AdminManageMessages}>{`الرسائل`}</Link>
+              ),
             },
             {
-              key: '6',
+              key: AppRoutes.AdminManageNotifications,
               icon: <BellOutlined style={{ fontSize: 18 }} />,
-              label: 'الإشعارات',
+
+              label: (
+                <Link
+                  href={AppRoutes.AdminManageNotifications}
+                >{`الإشعارات`}</Link>
+              ),
+            },
+            {
+              key: AppRoutes.AdminManageSettings,
+              icon: <SettingOutlined style={{ fontSize: 18 }} />,
+
+              label: (
+                <Link href={AppRoutes.AdminManageSettings}>{`الإعدادات`}</Link>
+              ),
             },
           ]}
         />
       </Sider>
-      <Layout className="site-layout">
-        <Header className="site-layout-background" style={{ padding: 0 }}>
-          {createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+      <Layout>
+        <StyledHeader>
+          {createElement(!collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
             className: 'trigger',
             onClick: () => setCollapsed(!collapsed),
           })}
-        </Header>
+        </StyledHeader>
         <StyledContent>{children}</StyledContent>
+        <StyledFooter />
       </Layout>
     </Layout>
   );

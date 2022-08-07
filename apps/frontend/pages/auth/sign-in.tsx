@@ -4,6 +4,7 @@ import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { NextPageWithLayout } from '@/config/types';
 import styled from '@emotion/styled';
 import Link from 'next/link';
+import { AppRoutes } from '@/config/routes';
 
 const StyledForm = styled(Form)({
   maxWidth: 400,
@@ -48,13 +49,13 @@ const SignInPage: NextPageWithLayout = () => {
       </Form.Item>
 
       <Form.Item>
-        <Link href="/auth/forgot">نسيت كلمة السر؟</Link>
+        <Link href="/">نسيت كلمة السر؟</Link>
       </Form.Item>
       <Button type="primary" htmlType="submit" block>
         تسجيل الدخول
       </Button>
       <Divider>ليس لديك حساب؟</Divider>
-      <Link href="/auth/register">
+      <Link href={AppRoutes.SignUp}>
         <Button type="primary" ghost block>
           أنشئ حساب جديد
         </Button>

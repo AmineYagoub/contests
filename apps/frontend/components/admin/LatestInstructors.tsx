@@ -1,13 +1,12 @@
-import { Space, Table, Tag } from 'antd';
+import { formatDate } from '@/utils/app';
+import { Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import React from 'react';
 
 interface DataType {
   key: string;
   name: string;
-  age: number;
+  age: string;
   address: string;
-  tags: string[];
 }
 
 const columns: ColumnsType<DataType> = [
@@ -18,7 +17,7 @@ const columns: ColumnsType<DataType> = [
     render: (text) => <a>{text}</a>,
   },
   {
-    title: 'السن',
+    title: 'تاريخ التسجيل',
     dataIndex: 'age',
     key: 'age',
   },
@@ -27,75 +26,50 @@ const columns: ColumnsType<DataType> = [
     dataIndex: 'address',
     key: 'address',
   },
-  {
-    title: 'نوع العضوية',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = 'green';
-          if (tag === 'بدون مشرف') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
 ];
 
 const data: DataType[] = [
   {
     key: '1',
     name: 'أحمد عمر 1',
-    age: 13,
+    age: formatDate(new Date()),
     address: 'مصر',
-    tags: ['بدون مشرف'],
   },
   {
     key: '2',
     name: 'أحمد عمر 2',
-    age: 13,
+    age: formatDate(new Date()),
     address: 'السعودية',
-    tags: ['مع مشرف'],
   },
   {
     key: '3',
     name: 'أحمد عمر 3',
-    age: 18,
+    age: formatDate(new Date()),
     address: 'مصر',
-    tags: ['مع مشرف'],
   },
   {
     key: '4',
     name: 'أحمد عمر 4',
-    age: 15,
+    age: formatDate(new Date()),
     address: 'الأردن',
-    tags: ['مع مشرف'],
   },
   {
     key: '5',
     name: 'أحمد عمر 5',
-    age: 17,
+    age: formatDate(new Date()),
     address: 'الكويت',
-    tags: ['مع مشرف'],
   },
 ];
 
-const LatestUsers = () => {
+const LatestInstructors = () => {
   return (
     <Table
       columns={columns}
       dataSource={data}
       pagination={{ hideOnSinglePage: true }}
-      title={() => 'آخر الطلبة المسجلين'}
+      title={() => 'آخر المعلمين المسجلين'}
     />
   );
 };
 
-export default LatestUsers;
+export default LatestInstructors;

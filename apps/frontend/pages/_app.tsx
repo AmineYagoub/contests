@@ -8,6 +8,7 @@ import { ReactElement, useEffect } from 'react';
 import { NextComponentType } from 'next';
 import 'antd/dist/antd.variable.min.css';
 import './app.css';
+import theme from '@/config/theme';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -30,9 +31,7 @@ export default function CustomApp(props: MyAppProps) {
       rtl: true,
     });
     ConfigProvider.config({
-      theme: {
-        primaryColor: '#6d90e8',
-      },
+      theme,
     });
   }, []);
 

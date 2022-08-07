@@ -1,16 +1,19 @@
+import { AppRoutes } from '@/config/routes';
 import { Layout, PageHeader } from 'antd';
+import Link from 'next/link';
+import StyledFooter from './StyledFooter';
 
-const { Footer, Content } = Layout;
+const { Content } = Layout;
 
 const AuthLayout = ({ children }) => (
   <Layout>
     <PageHeader
       onBack={() => null}
-      title="الرئيسية"
+      title={<Link href={AppRoutes.Home}>{`الرئيسية`}</Link>}
       subTitle="العودة إلى الصفحة الرئيسية"
     />
     <Content>{children}</Content>
-    <Footer>Footer</Footer>
+    <StyledFooter />
   </Layout>
 );
 
