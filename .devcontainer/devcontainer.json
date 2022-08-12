@@ -29,7 +29,9 @@
     "redhat.vscode-yaml",
     "ms-azuretools.vscode-docker",
     "Prisma.prisma",
-    "mongodb.mongodb-vscode"
+    "mongodb.mongodb-vscode",
+    "mike-co.import-sorter",
+    "GraphQL.vscode-graphql"
   ],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
