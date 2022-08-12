@@ -7,6 +7,12 @@ const withTM = require('next-transpile-modules')(['echarts', 'zrender']);
  **/
 const nextConfig = {
   reactStrictMode: true,
+  compiler: {
+    emotion: true,
+    /*     removeConsole: {
+      exclude: ['error'],
+    }, */
+  },
   images: {
     domains: ['via.placeholder.com', 'flagcdn.com'],
   },

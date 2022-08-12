@@ -1,0 +1,19 @@
+query PaginateContests($params: PaginateContestDto!) {
+  paginateContest(params: $params) {
+    total
+    data {
+      id
+      title
+      duration
+      published
+      level
+      created
+      updated
+      status
+      authorId
+      startTime
+      questionCount
+      participants
+    }
+  }
+}

@@ -16,7 +16,9 @@
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
+      "@/graphql/*": ["graphql/*"],
       "@/config/*": ["config/*"],
+      "@/hooks/*": ["hooks/*"],
       "@/utils/*": ["utils/*"],
       "@/layout/*": ["layouts/*"],
       "@/pages/*": ["pages/*"],

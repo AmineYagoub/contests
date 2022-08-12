@@ -1,16 +1,26 @@
-import Head from 'next/head';
-import { AppProps } from 'next/app';
-import { CacheProvider, EmotionCache } from '@emotion/react';
-import createEmotionCache from '@/config/createEmotionCache';
-import ar from 'antd/lib/locale/ar_EG';
-import { ConfigProvider, notification } from 'antd';
-import { ReactElement, useEffect } from 'react';
-import { NextComponentType } from 'next';
 import 'antd/dist/antd.variable.min.css';
 import './app.css';
-import theme from '@/config/theme';
+import 'moment/locale/ar-dz';
 
-// Client-side cache, shared for the whole session of the user in the browser.
+import { ConfigProvider, notification, Spin } from 'antd';
+import ar from 'antd/lib/locale/ar_EG';
+import moment from 'moment-timezone';
+import { NextComponentType } from 'next';
+import { AppProps } from 'next/app';
+import Head from 'next/head';
+import { ReactElement, useEffect } from 'react';
+
+import createEmotionCache from '@/config/createEmotionCache';
+import { useApollo } from '@/config/createGraphQLClient';
+import theme from '@/config/theme';
+import { LoadingOutlined } from '@ant-design/icons';
+import { ApolloProvider } from '@apollo/client';
+import { CacheProvider, EmotionCache } from '@emotion/react';
+
+const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+Spin.setDefaultIndicator(<Spin indicator={antIcon} />);
+moment.tz.setDefault('Africa/Cairo');
+moment.locale('ar');
 const clientSideEmotionCache = createEmotionCache();
 
 interface MyAppProps extends AppProps {
@@ -35,14 +45,18 @@ export default function CustomApp(props: MyAppProps) {
     });
   }, []);
 
+  const apolloClient = useApollo(pageProps);
+
   return (
     <CacheProvider value={emotionCache}>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      <ConfigProvider locale={ar} direction="rtl">
-        {getLayout(<Component {...pageProps} />)}
-      </ConfigProvider>
+      <ApolloProvider client={apolloClient}>
+        <ConfigProvider locale={ar} direction="rtl">
+          {getLayout(<Component {...pageProps} />)}
+        </ConfigProvider>
+      </ApolloProvider>
     </CacheProvider>
   );
 }

@@ -1,33 +1,32 @@
 import { Layout, Menu } from 'antd';
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  IdcardOutlined,
-  BarChartOutlined,
-  MailOutlined,
-  BellOutlined,
-  TrophyOutlined,
-  EditOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
-import { createElement, useEffect, useState } from 'react';
-import styled from '@emotion/styled';
-import TeacherIcon from '@/components/icons/TeacherIcon';
-import StyledFooter from './StyledFooter';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { AppRoutes } from '@/config/routes';
-import { StyledHeader } from './HomeLayout';
+import { createElement, useState } from 'react';
 
-const { Content, Header, Sider } = Layout;
+import TeacherIcon from '@/components/icons/TeacherIcon';
+import { AppRoutes } from '@/config/routes';
+import {
+  BarChartOutlined,
+  BellOutlined,
+  EditOutlined,
+  IdcardOutlined,
+  MailOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  SettingOutlined,
+  TrophyOutlined,
+} from '@ant-design/icons';
+import styled from '@emotion/styled';
+
+import { StyledHeader } from './HomeLayout';
+import StyledFooter from './StyledFooter';
+
+const { Content, Sider } = Layout;
 
 const StyledContent = styled(Content)({
-  margin: 25,
-  padding: 25,
   width: '95% !important',
-  backgroundColor: '#fff',
-  boxShadow:
-    '0px 2px 4px rgba(31, 41, 55, 0.06), 0px 4px 6px rgba(100, 116, 139, 0.12)',
+  backgroundColor: 'transparent',
+  marginTop: '1rem',
 });
 
 export const Logo = styled('div')({
@@ -51,7 +50,7 @@ const AdminDashboardLayout = ({ children }) => {
         <Logo />
         <StyledMenu
           mode="inline"
-          defaultSelectedKeys={['1']}
+          defaultSelectedKeys={[AppRoutes.AdminManageDashboard]}
           selectedKeys={[router.pathname]}
           items={[
             {
