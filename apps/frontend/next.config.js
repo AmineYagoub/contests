@@ -14,7 +14,7 @@ const nextConfig = {
     }, */
   },
   images: {
-    domains: ['via.placeholder.com', 'flagcdn.com'],
+    domains: ['via.placeholder.com', 'flagcdn.com', 'upload.wikimedia.org'],
   },
   i18n: {
     locales: ['ar'],

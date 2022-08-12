@@ -1,4 +1,4 @@
-import { ContestLevel, ContestStatus } from '@/graphql/graphql';
+import { ContestLevel, ContestStatus, ContestType } from '@/graphql/graphql';
 
 export type Mapper<T> = {
   text: string;
@@ -48,6 +48,21 @@ export const contestMappedLevels: Mapper<ContestLevel>[] = [
   {
     text: '19',
     value: ContestLevel?.Nineteen,
+  },
+];
+
+export const contestMappedTypes: Mapper<ContestType>[] = [
+  {
+    text: 'مسابقة جهوية',
+    value: ContestType?.Regional,
+  },
+  {
+    text: 'مسابقة مركزية',
+    value: ContestType?.Centralized,
+  },
+  {
+    text: 'مسابقة دولية',
+    value: ContestType?.Worldwide,
   },
 ];
 

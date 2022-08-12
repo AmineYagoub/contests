@@ -8,6 +8,47 @@ export class ContestService {
   constructor(private prisma: PrismaService) {}
 
   /**
+   * Create a Contest
+   *
+   * @param data Prisma.ContestCreateInput The Contest data.
+   * @returns Promise<Contest>
+   */
+  async create(data: Prisma.ContestCreateInput): Promise<Contest> {
+    return this.prisma.contest.create({
+      data,
+    });
+  }
+
+  /**
+   * Update a Contest
+   *
+   * @param params Prisma.ContestUpdateInput The Contest data.
+   * @returns Promise<Contest>
+   */
+  async update(params: {
+    where: Prisma.ContestWhereUniqueInput;
+    data: Prisma.ContestUpdateInput;
+  }): Promise<Contest> {
+    const { data, where } = params;
+    return this.prisma.contest.update({
+      data,
+      where,
+    });
+  }
+
+  /**
+   * Delete a Contest
+   *
+   * @param where Prisma.ContestWhereInput The Contest where input.
+   * @returns  Promise<Contest>
+   */
+  async delete(where: Prisma.ContestWhereUniqueInput): Promise<Contest> {
+    return this.prisma.contest.delete({
+      where,
+    });
+  }
+
+  /**
    * Find a Contest by its unique key.
    *
    * @param input Prisma.ContestWhereUniqueInput The unique key of the Contest.
@@ -92,7 +133,9 @@ export class ContestService {
             filter.duration = Number(value);
             break;
           case 'level':
-            filter.level = String(value);
+            filter.level = {
+              array_contains: String(value),
+            };
             break;
           case 'status':
             filter.status = String(value);
@@ -115,46 +158,5 @@ export class ContestService {
       }
     }
     return filter;
-  }
-
-  /**
-   * Create a Contest
-   *
-   * @param data Prisma.ContestCreateInput The Contest data.
-   * @returns Promise<Contest>
-   */
-  async create(data: Prisma.ContestCreateInput): Promise<Contest> {
-    return this.prisma.contest.create({
-      data,
-    });
-  }
-
-  /**
-   * Update a Contest
-   *
-   * @param params Prisma.ContestUpdateInput The Contest data.
-   * @returns Promise<Contest>
-   */
-  async update(params: {
-    where: Prisma.ContestWhereUniqueInput;
-    data: Prisma.ContestUpdateInput;
-  }): Promise<Contest> {
-    const { data, where } = params;
-    return this.prisma.contest.update({
-      data,
-      where,
-    });
-  }
-
-  /**
-   * Delete a Contest
-   *
-   * @param where Prisma.ContestWhereInput The Contest where input.
-   * @returns  Promise<Contest>
-   */
-  async delete(where: Prisma.ContestWhereUniqueInput): Promise<Contest> {
-    return this.prisma.contest.delete({
-      where,
-    });
   }
 }

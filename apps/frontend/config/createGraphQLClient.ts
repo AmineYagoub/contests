@@ -38,7 +38,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:3000', // Server URL (must be absolute)
+  uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
   credentials: 'same-origin', // Additional fetch() options like `credentials` or `headers`
 });
 

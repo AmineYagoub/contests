@@ -1,13 +1,14 @@
 import {
+  IsArray,
+  IsDate,
   IsNotEmpty,
-  IsString,
   IsNumber,
   IsOptional,
+  IsString,
   Min,
-  IsDate,
-  IsArray,
 } from 'class-validator';
-import { InputType, Field, Int } from '@nestjs/graphql';
+
+import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class CreateContestDto {
@@ -22,10 +23,15 @@ export class CreateContestDto {
   @Min(0)
   duration?: number;
 
+  @Field(() => [String])
+  @IsNotEmpty()
+  @IsString({ each: true })
+  level: string[];
+
   @Field()
   @IsNotEmpty()
   @IsString()
-  level: string;
+  type: string;
 
   @Field()
   @IsNotEmpty()
@@ -56,6 +62,11 @@ export class CreateContestDto {
   @IsOptional()
   @IsArray()
   participants?: number[];
+
+  @Field(() => [String], { defaultValue: [], nullable: true })
+  @IsOptional()
+  @IsArray()
+  countries?: string[];
 
   @Field(() => Int, { defaultValue: 100, nullable: true })
   @IsOptional()

@@ -5,6 +5,8 @@ export const ContestFields: { [P in ContestsDataIndex]: P } = {
   title: 'title',
   duration: 'duration',
   level: 'level',
+  type: 'type',
+  countries: 'countries',
   status: 'status',
   startTime: 'startTime',
   created: 'created',

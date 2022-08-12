@@ -28,18 +28,20 @@ export type Contest = {
   __typename?: 'Contest';
   /** Identifies the author of the Contest. */
   authorId: Scalars['Int'];
+  /** Identifies a list of countries that can be allowed to join this Contest. */
+  countries?: Maybe<Array<Scalars['String']>>;
   /** Identifies the date and time when the object was created. */
   created: Scalars['DateTime'];
   /** Identifies the duration of the Contest. */
   duration: Scalars['Int'];
   id: Scalars['Int'];
-  /** Identifies the level of the Contest. */
-  level: ContestLevel;
+  /** Identifies a list of levels that can be join this Contest. */
+  level: Array<ContestLevel>;
   /** Identifies the max number of Participants in the Contest. */
   maxParticipants: Scalars['Int'];
-  /** Identifies the date and time when contest started. */
+  /** Identifies a list of users ids that joins this contest. */
   participants?: Maybe<Array<Scalars['String']>>;
-  /** Identifies IF the Contest is published or not. */
+  /** Identifies if the Contest is published or not. */
   published: Scalars['Boolean'];
   /** Identifies how many questions in the Contest. */
   questionCount: Scalars['Int'];
@@ -49,6 +51,8 @@ export type Contest = {
   status: ContestStatus;
   /** Identifies the title of the Contest. */
   title: Scalars['String'];
+  /** Identifies the Type of this Contest. */
+  type: ContestType;
   /** Identifies the date and time when the object was last updated. */
   updated: Scalars['DateTime'];
 };
@@ -71,10 +75,18 @@ export enum ContestStatus {
   Open = 'OPEN',
 }
 
+/** Contest Type */
+export enum ContestType {
+  Centralized = 'CENTRALIZED',
+  Regional = 'REGIONAL',
+  Worldwide = 'WORLDWIDE',
+}
+
 export type CreateContestDto = {
   authorId: Scalars['Int'];
+  countries?: InputMaybe<Array<Scalars['String']>>;
   duration?: InputMaybe<Scalars['Int']>;
-  level: Scalars['String'];
+  level: Array<Scalars['String']>;
   maxParticipants?: InputMaybe<Scalars['Int']>;
   participants?: InputMaybe<Array<Scalars['Int']>>;
   published?: InputMaybe<Scalars['Boolean']>;
@@ -82,6 +94,7 @@ export type CreateContestDto = {
   startTime: Scalars['DateTime'];
   status: Scalars['String'];
   title: Scalars['String'];
+  type: Scalars['String'];
 };
 
 export type Mutation = {
@@ -129,14 +142,16 @@ export type QueryPaginateContestArgs = {
 };
 
 export type WhereType = {
+  countries?: InputMaybe<Array<Scalars['String']>>;
   created?: InputMaybe<Array<Scalars['String']>>;
   duration?: InputMaybe<Scalars['Int']>;
-  level?: InputMaybe<Scalars['String']>;
+  level?: InputMaybe<Array<Scalars['String']>>;
   participants?: InputMaybe<Array<Scalars['Int']>>;
   questionCount?: InputMaybe<Scalars['Int']>;
   startTime?: InputMaybe<Array<Scalars['String']>>;
   status?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<Scalars['String']>;
 };
 
 export type CreateContestMutationVariables = Exact<{
@@ -149,7 +164,7 @@ export type CreateContestMutation = {
     __typename?: 'Contest';
     id: number;
     title: string;
-    level: ContestLevel;
+    level: Array<ContestLevel>;
     status: ContestStatus;
     startTime: any;
     published: boolean;
@@ -173,7 +188,7 @@ export type PaginateContestsQuery = {
       title: string;
       duration: number;
       published: boolean;
-      level: ContestLevel;
+      level: Array<ContestLevel>;
       created: any;
       updated: any;
       status: ContestStatus;

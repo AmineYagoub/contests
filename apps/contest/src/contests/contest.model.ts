@@ -16,6 +16,12 @@ export enum ContestLevel {
   Thirteen = 'Thirteen',
 }
 
+export enum ContestType {
+  REGIONAL = 'REGIONAL',
+  CENTRALIZED = 'CENTRALIZED',
+  WORLDWIDE = 'WORLDWIDE',
+}
+
 registerEnumType(ContestStatus, {
   name: 'ContestStatus',
   description: 'Contest Status',
@@ -24,6 +30,11 @@ registerEnumType(ContestStatus, {
 registerEnumType(ContestLevel, {
   name: 'ContestLevel',
   description: 'Contest Level',
+});
+
+registerEnumType(ContestType, {
+  name: 'ContestType',
+  description: 'Contest Type',
 });
 
 @ObjectType()
@@ -41,13 +52,18 @@ export class Contest {
   })
   duration: number;
 
-  @Field(() => ContestLevel, {
-    description: 'Identifies the level of the Contest.',
+  @Field(() => [ContestLevel], {
+    description: 'Identifies a list of levels that can be join this Contest.',
   })
-  level: ContestLevel;
+  level: ContestLevel[];
+
+  @Field(() => ContestType, {
+    description: 'Identifies the Type of this Contest.',
+  })
+  type: ContestType;
 
   @Field(() => Boolean, {
-    description: 'Identifies IF the Contest is published or not.',
+    description: 'Identifies if the Contest is published or not.',
   })
   published: boolean;
 
@@ -67,10 +83,17 @@ export class Contest {
   startTime: Date;
 
   @Field(() => [String], {
-    description: 'Identifies the date and time when contest started.',
+    description: 'Identifies a list of users ids that joins this contest.',
     nullable: true,
   })
   participants?: string[];
+
+  @Field(() => [String], {
+    description:
+      'Identifies a list of countries that can be allowed to join this Contest.',
+    nullable: true,
+  })
+  countries?: string[];
 
   @Field(() => Int, {
     description: 'Identifies how many questions in the Contest.',

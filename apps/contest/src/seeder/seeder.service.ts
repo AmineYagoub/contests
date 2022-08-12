@@ -3,7 +3,11 @@ import { Injectable } from '@nestjs/common';
 import { Contest } from '@prisma/client';
 
 import { PrismaService } from '../app/prisma.service';
-import { ContestLevel, ContestStatus } from '../contests/contest.model';
+import {
+  ContestLevel,
+  ContestStatus,
+  ContestType,
+} from '../contests/contest.model';
 
 @Injectable()
 export class SeederService {
@@ -17,25 +21,18 @@ export class SeederService {
         id: faker.datatype.number(),
         title: `المسابقة رقم ${index}`,
         authorId: faker.datatype.number(),
+        type: faker.helpers.arrayElement(Object.values(ContestType)),
         duration: 40,
         maxParticipants: 0,
         participants: [],
+        countries: [],
         questionCount: 100,
         published: faker.datatype.boolean(),
         created: faker.date.past(),
         updated: faker.date.past(),
         startTime: faker.date.soon(),
-        status: faker.helpers.arrayElement([
-          ContestStatus.CLOSED,
-          ContestStatus.NOT_STARTED,
-          ContestStatus.OPEN,
-        ]),
-        level: faker.helpers.arrayElement([
-          ContestLevel.Thirteen,
-          ContestLevel.Fifteen,
-          ContestLevel.Sixteen,
-          ContestLevel.Seventeen,
-        ]),
+        status: faker.helpers.arrayElement(Object.values(ContestStatus)),
+        level: faker.helpers.arrayElements(Object.values(ContestLevel)),
       };
       cts.push(contest);
     }

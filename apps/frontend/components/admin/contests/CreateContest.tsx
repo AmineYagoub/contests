@@ -10,17 +10,27 @@ import {
   Row,
   Select,
   Space,
+  Tag,
 } from 'antd';
 import {
   ContestLevel,
   ContestStatus,
+  ContestType,
   useCreateContestMutation,
 } from 'graphql/graphql';
 import moment from 'moment';
+import Image from 'next/image';
+import { FocusEvent, FocusEventHandler, useState } from 'react';
 
 import { ContestFields } from '@/utils/fields';
+import {
+  contestMappedLevels,
+  contestMappedTypes,
+  getMapperLabel,
+} from '@/utils/mapper';
 import { SaveOutlined } from '@ant-design/icons';
 
+import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 import type { RangePickerProps } from 'antd/es/date-picker';
 const { Option } = Select;
 
@@ -48,6 +58,7 @@ const CreateContest = ({
   const onFinish = async () => {
     try {
       const values = await form.validateFields();
+
       const { data } = await createContestMutation({
         variables: {
           input: {
@@ -57,12 +68,51 @@ const CreateContest = ({
           },
         },
       });
+
       if (data) {
         form.resetFields();
         onClose();
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+  type ContriesType = {
+    name: string;
+    flag: string;
+  };
+  const [countries, setCountries] = useState<ContriesType[]>();
+  const [countriesStor, setCountriesStor] = useState<ContriesType[]>();
+
+  const handleFetchCountries = (e: FocusEvent<HTMLElement, Element>) => {
+    if (!countries) {
+      fetch(process.env.NEXT_PUBLIC_COUNTRIES_ENDPOINT)
+        .then((res) => res.json())
+        .then((data) => {
+          const c = data.map((country) => ({
+            name: country.name.common,
+            flag: country.flags.png,
+          }));
+          setCountries(c);
+          setCountriesStor(c);
+        });
+    }
+  };
+  const handleChangeCountries = (value) => {
+    if (value.length === 0) {
+      setCountries(countriesStor);
+    }
+  };
+
+  const handleSearch = (newValue: string) => {
+    if (newValue) {
+      setCountries(
+        countriesStor.filter((country) =>
+          country.name.toLowerCase().match(newValue.toLowerCase())
+        )
+      );
+    } else {
+      setCountries(countriesStor);
     }
   };
 
@@ -109,6 +159,57 @@ const CreateContest = ({
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item
+              name={ContestFields.type}
+              label="نوع المسابقة"
+              rules={[{ required: true, message: 'يرجى إختيار نوع المسابقة' }]}
+            >
+              <Select
+                allowClear
+                showArrow
+                options={contestMappedTypes}
+                fieldNames={{ label: 'text' }}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name={ContestFields.countries}
+              label="الدول المشاركة"
+              help="أتركه فارغا للسماح بجميع الدول"
+            >
+              <Select
+                mode="multiple"
+                allowClear
+                showArrow
+                filterOption={false}
+                showSearch
+                value={countries}
+                onFocus={handleFetchCountries}
+                onChange={handleChangeCountries}
+                onSearch={handleSearch}
+                notFoundContent={null}
+              >
+                {countries?.map((country) => (
+                  <Option key={country.name} value={country.name}>
+                    <Image
+                      loading="lazy"
+                      width="20"
+                      height="12"
+                      src={country.flag}
+                      alt={country.name}
+                    />
+                    <b style={{ margin: '0 5px', display: 'inline-block' }}>
+                      {country.name}
+                    </b>
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
               name={ContestFields.title}
               label="عنوان المسابقة"
               rules={[{ required: true, message: 'يرجى كتابة عنوان للمسابقة' }]}
@@ -122,15 +223,13 @@ const CreateContest = ({
               label="مستوى المسابقة"
               rules={[{ required: true, message: 'يرجى تحديد مستوى المسابقة' }]}
             >
-              <Select mode="tags" allowClear showArrow>
-                <Option value={ContestLevel.Thirteen}>13</Option>
-                <Option value={ContestLevel.Fourteen}>14</Option>
-                <Option value={ContestLevel.Fifteen}>15</Option>
-                <Option value={ContestLevel.Sixteen}>16</Option>
-                <Option value={ContestLevel.Seventeen}>17</Option>
-                <Option value={ContestLevel.Eighteen}>18</Option>
-                <Option value={ContestLevel.Nineteen}>19</Option>
-              </Select>
+              <Select
+                mode="tags"
+                allowClear
+                showArrow
+                options={contestMappedLevels}
+                fieldNames={{ label: 'text' }}
+              />
             </Form.Item>
           </Col>
         </Row>
