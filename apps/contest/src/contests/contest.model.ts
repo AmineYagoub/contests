@@ -1,47 +1,10 @@
-import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { ContestStatus, ContestType } from '@contests/types';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
-export enum ContestStatus {
-  OPEN = 'OPEN',
-  CLOSED = 'CLOSED',
-  NOT_STARTED = 'NOT_STARTED',
-}
-
-export enum ContestLevel {
-  Eighteen = 'Eighteen',
-  Fifteen = 'Fifteen',
-  Fourteen = 'Fourteen',
-  Nineteen = 'Nineteen',
-  Seventeen = 'Seventeen',
-  Sixteen = 'Sixteen',
-  Thirteen = 'Thirteen',
-}
-
-export enum ContestType {
-  REGIONAL = 'REGIONAL',
-  CENTRALIZED = 'CENTRALIZED',
-  WORLDWIDE = 'WORLDWIDE',
-}
-
-registerEnumType(ContestStatus, {
-  name: 'ContestStatus',
-  description: 'Contest Status',
-});
-
-registerEnumType(ContestLevel, {
-  name: 'ContestLevel',
-  description: 'Contest Level',
-});
-
-registerEnumType(ContestType, {
-  name: 'ContestType',
-  description: 'Contest Type',
-});
+import { BaseModel } from '../common/base.model';
 
 @ObjectType()
-export class Contest {
-  @Field(() => Int)
-  id: number;
-
+export class Contest extends BaseModel {
   @Field({
     description: 'Identifies the title of the Contest.',
   })
@@ -52,25 +15,10 @@ export class Contest {
   })
   duration: number;
 
-  @Field(() => [ContestLevel], {
-    description: 'Identifies a list of levels that can be join this Contest.',
-  })
-  level: ContestLevel[];
-
   @Field(() => ContestType, {
     description: 'Identifies the Type of this Contest.',
   })
   type: ContestType;
-
-  @Field(() => Boolean, {
-    description: 'Identifies if the Contest is published or not.',
-  })
-  published: boolean;
-
-  @Field(() => Int, {
-    description: 'Identifies the author of the Contest.',
-  })
-  authorId: number;
 
   @Field(() => ContestStatus, {
     description: 'Identifies the status of the Contest.',
@@ -104,15 +52,4 @@ export class Contest {
     description: 'Identifies the max number of Participants in the Contest.',
   })
   maxParticipants: number;
-
-  @Field({
-    description: 'Identifies the date and time when the object was created.',
-  })
-  created: Date;
-
-  @Field({
-    description:
-      'Identifies the date and time when the object was last updated.',
-  })
-  updated: Date;
 }

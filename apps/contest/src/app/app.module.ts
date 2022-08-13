@@ -9,7 +9,9 @@ import {
   MercuriusFederationDriver,
   MercuriusFederationDriverConfig,
 } from '@nestjs/mercurius';
+
 import { ContestModule } from '../contests/contest.module';
+import { QuestionModule } from '../questions/question.module';
 import { SeederModule } from '../seeder/seeder.module';
 
 @Module({
@@ -21,6 +23,7 @@ import { SeederModule } from '../seeder/seeder.module';
       inject: [contestGQLConfig.KEY],
     }),
     ContestModule,
+    QuestionModule,
     SeederModule,
   ],
 })

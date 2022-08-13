@@ -1,4 +1,9 @@
-import { ContestLevel, ContestStatus, ContestType } from '@/graphql/graphql';
+import {
+  ContestStatus,
+  ContestType,
+  QuestionType,
+  StudentLevel,
+} from '@/graphql/graphql';
 
 export type Mapper<T> = {
   text: string;
@@ -20,34 +25,34 @@ export const contestMappedStatus: Mapper<ContestStatus>[] = [
   },
 ];
 
-export const contestMappedLevels: Mapper<ContestLevel>[] = [
+export const studentMappedLevels: Mapper<StudentLevel>[] = [
   {
     text: '13',
-    value: ContestLevel?.Thirteen,
+    value: StudentLevel?.Thirteen,
   },
   {
     text: '14',
-    value: ContestLevel?.Fourteen,
+    value: StudentLevel?.Fourteen,
   },
   {
     text: '15',
-    value: ContestLevel?.Fifteen,
+    value: StudentLevel?.Fifteen,
   },
   {
     text: '16',
-    value: ContestLevel?.Sixteen,
+    value: StudentLevel?.Sixteen,
   },
   {
     text: '17',
-    value: ContestLevel?.Seventeen,
+    value: StudentLevel?.Seventeen,
   },
   {
     text: '18',
-    value: ContestLevel?.Eighteen,
+    value: StudentLevel?.Eighteen,
   },
   {
     text: '19',
-    value: ContestLevel?.Nineteen,
+    value: StudentLevel?.Nineteen,
   },
 ];
 
@@ -63,6 +68,21 @@ export const contestMappedTypes: Mapper<ContestType>[] = [
   {
     text: 'مسابقة دولية',
     value: ContestType?.Worldwide,
+  },
+];
+
+export const questionMappedTypes: Mapper<QuestionType>[] = [
+  {
+    text: 'سهل',
+    value: QuestionType?.Easy,
+  },
+  {
+    text: 'متوسط',
+    value: QuestionType?.Medium,
+  },
+  {
+    text: 'صعب',
+    value: QuestionType?.Hard,
   },
 ];
 

@@ -10,27 +10,16 @@ import {
   Row,
   Select,
   Space,
-  Tag,
 } from 'antd';
-import {
-  ContestLevel,
-  ContestStatus,
-  ContestType,
-  useCreateContestMutation,
-} from 'graphql/graphql';
+import { ContestStatus, useCreateContestMutation } from 'graphql/graphql';
 import moment from 'moment';
 import Image from 'next/image';
-import { FocusEvent, FocusEventHandler, useState } from 'react';
+import { FocusEvent, useState } from 'react';
 
 import { ContestFields } from '@/utils/fields';
-import {
-  contestMappedLevels,
-  contestMappedTypes,
-  getMapperLabel,
-} from '@/utils/mapper';
+import { contestMappedTypes, studentMappedLevels } from '@/utils/mapper';
 import { SaveOutlined } from '@ant-design/icons';
 
-import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 import type { RangePickerProps } from 'antd/es/date-picker';
 const { Option } = Select;
 
@@ -227,7 +216,7 @@ const CreateContest = ({
                 mode="tags"
                 allowClear
                 showArrow
-                options={contestMappedLevels}
+                options={studentMappedLevels}
                 fieldNames={{ label: 'text' }}
               />
             </Form.Item>

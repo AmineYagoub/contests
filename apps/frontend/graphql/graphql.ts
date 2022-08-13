@@ -26,7 +26,7 @@ export type Scalars = {
 
 export type Contest = {
   __typename?: 'Contest';
-  /** Identifies the author of the Contest. */
+  /** Identifies the author of the Question. */
   authorId: Scalars['Int'];
   /** Identifies a list of countries that can be allowed to join this Contest. */
   countries?: Maybe<Array<Scalars['String']>>;
@@ -34,14 +34,14 @@ export type Contest = {
   created: Scalars['DateTime'];
   /** Identifies the duration of the Contest. */
   duration: Scalars['Int'];
-  id: Scalars['Int'];
+  id: Scalars['ID'];
   /** Identifies a list of levels that can be join this Contest. */
-  level: Array<ContestLevel>;
+  level: Array<StudentLevel>;
   /** Identifies the max number of Participants in the Contest. */
   maxParticipants: Scalars['Int'];
   /** Identifies a list of users ids that joins this contest. */
   participants?: Maybe<Array<Scalars['String']>>;
-  /** Identifies if the Contest is published or not. */
+  /** Identifies if the Question is published or not. */
   published: Scalars['Boolean'];
   /** Identifies how many questions in the Contest. */
   questionCount: Scalars['Int'];
@@ -57,16 +57,18 @@ export type Contest = {
   updated: Scalars['DateTime'];
 };
 
-/** Contest Level */
-export enum ContestLevel {
-  Eighteen = 'Eighteen',
-  Fifteen = 'Fifteen',
-  Fourteen = 'Fourteen',
-  Nineteen = 'Nineteen',
-  Seventeen = 'Seventeen',
-  Sixteen = 'Sixteen',
-  Thirteen = 'Thirteen',
-}
+export type ContestPaginationDto = {
+  orderBy?: InputMaybe<OrderContestArgs>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WhereContestArgs>;
+};
+
+export type ContestPaginationResponce = {
+  __typename?: 'ContestPaginationResponce';
+  data?: Maybe<Array<Contest>>;
+  total: Scalars['Int'];
+};
 
 /** Contest Status */
 export enum ContestStatus {
@@ -86,20 +88,30 @@ export type CreateContestDto = {
   authorId: Scalars['Int'];
   countries?: InputMaybe<Array<Scalars['String']>>;
   duration?: InputMaybe<Scalars['Int']>;
-  level: Array<Scalars['String']>;
+  level: Array<StudentLevel>;
   maxParticipants?: InputMaybe<Scalars['Int']>;
   participants?: InputMaybe<Array<Scalars['Int']>>;
   published?: InputMaybe<Scalars['Boolean']>;
   questionCount?: InputMaybe<Scalars['Int']>;
   startTime: Scalars['DateTime'];
-  status: Scalars['String'];
+  status: ContestStatus;
   title: Scalars['String'];
-  type: Scalars['String'];
+  type: ContestType;
+};
+
+export type CreateQuestionDto = {
+  authorId: Scalars['Int'];
+  level: Array<StudentLevel>;
+  options: Array<Scalars['String']>;
+  published?: InputMaybe<Scalars['Boolean']>;
+  title: Scalars['String'];
+  type: QuestionType;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   createContest: Contest;
+  createQuestion: Question;
   seedContest?: Maybe<Scalars['Boolean']>;
 };
 
@@ -107,51 +119,119 @@ export type MutationCreateContestArgs = {
   input: CreateContestDto;
 };
 
-export type OrderType = {
+export type MutationCreateQuestionArgs = {
+  input: CreateQuestionDto;
+};
+
+export type OrderContestArgs = {
   created?: InputMaybe<Scalars['String']>;
   duration?: InputMaybe<Scalars['String']>;
   participants?: InputMaybe<Scalars['String']>;
   startTime?: InputMaybe<Scalars['String']>;
 };
 
-export type PaginateContest = {
-  __typename?: 'PaginateContest';
-  data?: Maybe<Array<Contest>>;
-  total: Scalars['Int'];
-};
-
-export type PaginateContestDto = {
-  orderBy?: InputMaybe<OrderType>;
-  skip?: InputMaybe<Scalars['Int']>;
-  take?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<WhereType>;
+export type OrderQuestionArgs = {
+  created?: InputMaybe<Scalars['String']>;
+  usedCount?: InputMaybe<Scalars['Int']>;
 };
 
 export type Query = {
   __typename?: 'Query';
   findOneContestById?: Maybe<Contest>;
-  paginateContest?: Maybe<PaginateContest>;
+  findOneQuestionById?: Maybe<Question>;
+  paginateContest?: Maybe<ContestPaginationResponce>;
+  paginateQuestions?: Maybe<QuestionPaginationResponce>;
 };
 
 export type QueryFindOneContestByIdArgs = {
   id: Scalars['Int'];
 };
 
-export type QueryPaginateContestArgs = {
-  params: PaginateContestDto;
+export type QueryFindOneQuestionByIdArgs = {
+  id: Scalars['Int'];
 };
 
-export type WhereType = {
+export type QueryPaginateContestArgs = {
+  params: ContestPaginationDto;
+};
+
+export type QueryPaginateQuestionsArgs = {
+  params: QuestionPaginationDto;
+};
+
+export type Question = {
+  __typename?: 'Question';
+  /** Identifies the author of the Question. */
+  authorId: Scalars['Int'];
+  /** Identifies the date and time when the object was created. */
+  created: Scalars['DateTime'];
+  id: Scalars['ID'];
+  /** Identifies a list of levels that can be join this Contest. */
+  level: Array<StudentLevel>;
+  /** Identifies a list of ansewers of this Question. */
+  options: Array<Scalars['String']>;
+  /** Identifies if the Question is published or not. */
+  published: Scalars['Boolean'];
+  /** Identifies the title of the Question. */
+  title: Scalars['String'];
+  /** Identifies the Type of this Question. */
+  type: QuestionType;
+  /** Identifies the date and time when the object was last updated. */
+  updated: Scalars['DateTime'];
+  /** Identifies how many questions in the Question. */
+  usedCount?: Maybe<Scalars['Int']>;
+};
+
+export type QuestionPaginationDto = {
+  orderBy?: InputMaybe<OrderQuestionArgs>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WhereQuestionArgs>;
+};
+
+export type QuestionPaginationResponce = {
+  __typename?: 'QuestionPaginationResponce';
+  data?: Maybe<Array<Question>>;
+  total: Scalars['Int'];
+};
+
+/** Question Type */
+export enum QuestionType {
+  Easy = 'EASY',
+  Hard = 'HARD',
+  Medium = 'MEDIUM',
+}
+
+/** Student Level */
+export enum StudentLevel {
+  Eighteen = 'Eighteen',
+  Fifteen = 'Fifteen',
+  Fourteen = 'Fourteen',
+  Nineteen = 'Nineteen',
+  Seventeen = 'Seventeen',
+  Sixteen = 'Sixteen',
+  Thirteen = 'Thirteen',
+}
+
+export type WhereContestArgs = {
   countries?: InputMaybe<Array<Scalars['String']>>;
   created?: InputMaybe<Array<Scalars['String']>>;
   duration?: InputMaybe<Scalars['Int']>;
-  level?: InputMaybe<Array<Scalars['String']>>;
+  level?: InputMaybe<Array<StudentLevel>>;
   participants?: InputMaybe<Array<Scalars['Int']>>;
   questionCount?: InputMaybe<Scalars['Int']>;
   startTime?: InputMaybe<Array<Scalars['String']>>;
-  status?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<ContestStatus>;
   title?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<ContestType>;
+};
+
+export type WhereQuestionArgs = {
+  created?: InputMaybe<Array<Scalars['String']>>;
+  level?: InputMaybe<Array<StudentLevel>>;
+  options?: InputMaybe<Array<Scalars['String']>>;
+  title?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<QuestionType>;
 };
 
 export type CreateContestMutationVariables = Exact<{
@@ -162,9 +242,9 @@ export type CreateContestMutation = {
   __typename?: 'Mutation';
   createContest: {
     __typename?: 'Contest';
-    id: number;
+    id: string;
     title: string;
-    level: Array<ContestLevel>;
+    level: Array<StudentLevel>;
     status: ContestStatus;
     startTime: any;
     published: boolean;
@@ -174,21 +254,21 @@ export type CreateContestMutation = {
 };
 
 export type PaginateContestsQueryVariables = Exact<{
-  params: PaginateContestDto;
+  params: ContestPaginationDto;
 }>;
 
 export type PaginateContestsQuery = {
   __typename?: 'Query';
   paginateContest?: {
-    __typename?: 'PaginateContest';
+    __typename?: 'ContestPaginationResponce';
     total: number;
     data?: Array<{
       __typename?: 'Contest';
-      id: number;
+      id: string;
       title: string;
       duration: number;
       published: boolean;
-      level: Array<ContestLevel>;
+      level: Array<StudentLevel>;
       created: any;
       updated: any;
       status: ContestStatus;
@@ -196,6 +276,51 @@ export type PaginateContestsQuery = {
       startTime: any;
       questionCount: number;
       participants?: Array<string> | null;
+    }> | null;
+  } | null;
+};
+
+export type CreateQuestionMutationVariables = Exact<{
+  input: CreateQuestionDto;
+}>;
+
+export type CreateQuestionMutation = {
+  __typename?: 'Mutation';
+  createQuestion: {
+    __typename?: 'Question';
+    id: string;
+    type: QuestionType;
+    title: string;
+    level: Array<StudentLevel>;
+    options: Array<string>;
+    authorId: number;
+    usedCount?: number | null;
+    published: boolean;
+    created: any;
+    updated: any;
+  };
+};
+
+export type PaginateQuestionsQueryVariables = Exact<{
+  params: QuestionPaginationDto;
+}>;
+
+export type PaginateQuestionsQuery = {
+  __typename?: 'Query';
+  paginateQuestions?: {
+    __typename?: 'QuestionPaginationResponce';
+    total: number;
+    data?: Array<{
+      __typename?: 'Question';
+      id: string;
+      title: string;
+      type: QuestionType;
+      published: boolean;
+      level: Array<StudentLevel>;
+      created: any;
+      updated: any;
+      authorId: number;
+      usedCount?: number | null;
     }> | null;
   } | null;
 };
@@ -258,7 +383,7 @@ export type CreateContestMutationOptions = Apollo.BaseMutationOptions<
   CreateContestMutationVariables
 >;
 export const PaginateContestsDocument = gql`
-  query PaginateContests($params: PaginateContestDto!) {
+  query PaginateContests($params: ContestPaginationDto!) {
     paginateContest(params: $params) {
       total
       data {
@@ -328,4 +453,132 @@ export type PaginateContestsLazyQueryHookResult = ReturnType<
 export type PaginateContestsQueryResult = Apollo.QueryResult<
   PaginateContestsQuery,
   PaginateContestsQueryVariables
+>;
+export const CreateQuestionDocument = gql`
+  mutation CreateQuestion($input: CreateQuestionDto!) {
+    createQuestion(input: $input) {
+      id
+      type
+      title
+      level
+      options
+      authorId
+      usedCount
+      published
+      created
+      updated
+    }
+  }
+`;
+export type CreateQuestionMutationFn = Apollo.MutationFunction<
+  CreateQuestionMutation,
+  CreateQuestionMutationVariables
+>;
+
+/**
+ * __useCreateQuestionMutation__
+ *
+ * To run a mutation, you first call `useCreateQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createQuestionMutation, { data, loading, error }] = useCreateQuestionMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateQuestionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateQuestionMutation,
+    CreateQuestionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateQuestionMutation,
+    CreateQuestionMutationVariables
+  >(CreateQuestionDocument, options);
+}
+export type CreateQuestionMutationHookResult = ReturnType<
+  typeof useCreateQuestionMutation
+>;
+export type CreateQuestionMutationResult =
+  Apollo.MutationResult<CreateQuestionMutation>;
+export type CreateQuestionMutationOptions = Apollo.BaseMutationOptions<
+  CreateQuestionMutation,
+  CreateQuestionMutationVariables
+>;
+export const PaginateQuestionsDocument = gql`
+  query PaginateQuestions($params: QuestionPaginationDto!) {
+    paginateQuestions(params: $params) {
+      total
+      data {
+        id
+        title
+        type
+        published
+        level
+        created
+        updated
+        authorId
+        usedCount
+      }
+    }
+  }
+`;
+
+/**
+ * __usePaginateQuestionsQuery__
+ *
+ * To run a query within a React component, call `usePaginateQuestionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePaginateQuestionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePaginateQuestionsQuery({
+ *   variables: {
+ *      params: // value for 'params'
+ *   },
+ * });
+ */
+export function usePaginateQuestionsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    PaginateQuestionsQuery,
+    PaginateQuestionsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    PaginateQuestionsQuery,
+    PaginateQuestionsQueryVariables
+  >(PaginateQuestionsDocument, options);
+}
+export function usePaginateQuestionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    PaginateQuestionsQuery,
+    PaginateQuestionsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    PaginateQuestionsQuery,
+    PaginateQuestionsQueryVariables
+  >(PaginateQuestionsDocument, options);
+}
+export type PaginateQuestionsQueryHookResult = ReturnType<
+  typeof usePaginateQuestionsQuery
+>;
+export type PaginateQuestionsLazyQueryHookResult = ReturnType<
+  typeof usePaginateQuestionsLazyQuery
+>;
+export type PaginateQuestionsQueryResult = Apollo.QueryResult<
+  PaginateQuestionsQuery,
+  PaginateQuestionsQueryVariables
 >;

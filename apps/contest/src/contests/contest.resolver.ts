@@ -1,4 +1,4 @@
-import { CreateContestDto, PaginateContestDto } from '@contests/dto';
+import { ContestPaginationDto, CreateContestDto } from '@contests/dto';
 import {
   Args,
   Int,
@@ -7,8 +7,8 @@ import {
   Resolver,
   ResolveReference,
 } from '@nestjs/graphql';
-import { PaginateContest } from '../common/pagination.model';
 
+import { ContestPaginationResponce } from '../common/pagination.responce';
 import { Contest } from './contest.model';
 import { ContestService } from './contest.service';
 
@@ -21,8 +21,8 @@ export class ContestResolver {
     return this.contestService.findUnique({ id });
   }
 
-  @Query(() => PaginateContest, { nullable: true })
-  async paginateContest(@Args('params') params: PaginateContestDto) {
+  @Query(() => ContestPaginationResponce, { nullable: true })
+  async paginateContest(@Args('params') params: ContestPaginationDto) {
     return this.contestService.paginate(params);
   }
 

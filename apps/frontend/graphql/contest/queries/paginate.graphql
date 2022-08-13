@@ -1,4 +1,4 @@
-query PaginateContests($params: PaginateContestDto!) {
+query PaginateContests($params: ContestPaginationDto!) {
   paginateContest(params: $params) {
     total
     data {

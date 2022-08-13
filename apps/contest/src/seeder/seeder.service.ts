@@ -1,13 +1,9 @@
+import { ContestStatus, ContestType, StudentLevel } from '@contests/types';
 import { faker } from '@faker-js/faker';
 import { Injectable } from '@nestjs/common';
 import { Contest } from '@prisma/client';
 
 import { PrismaService } from '../app/prisma.service';
-import {
-  ContestLevel,
-  ContestStatus,
-  ContestType,
-} from '../contests/contest.model';
 
 @Injectable()
 export class SeederService {
@@ -32,7 +28,7 @@ export class SeederService {
         updated: faker.date.past(),
         startTime: faker.date.soon(),
         status: faker.helpers.arrayElement(Object.values(ContestStatus)),
-        level: faker.helpers.arrayElements(Object.values(ContestLevel)),
+        level: faker.helpers.arrayElements(Object.values(StudentLevel)),
       };
       cts.push(contest);
     }

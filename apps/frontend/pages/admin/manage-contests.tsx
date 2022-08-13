@@ -8,7 +8,7 @@ import {
   SearchDatePickerIcon,
 } from '@/components/admin/tables/SearchDatePicker';
 import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
-import { Contest, ContestLevel, ContestStatus } from '@/graphql/graphql';
+import { Contest, ContestStatus, StudentLevel } from '@/graphql/graphql';
 import {
   ContestsDataIndex,
   useSearchContests,
@@ -16,9 +16,9 @@ import {
 import AdminDashboardLayout from '@/layout/AdminDashboardLayout';
 import { ContestFields } from '@/utils/fields';
 import {
-  contestMappedLevels,
   contestMappedStatus,
   getMapperLabel,
+  studentMappedLevels,
 } from '@/utils/mapper';
 import { PlusOutlined } from '@ant-design/icons';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
@@ -129,12 +129,12 @@ const ManageContests = () => {
       title: 'مستوى المسابقة',
       dataIndex: ContestFields.level,
       key: ContestFields.level,
-      filters: contestMappedLevels,
+      filters: studentMappedLevels,
       filterMultiple: false,
       onFilter: methods.handleFilter,
       filteredValue: filteredInfo.level || null,
       render: (text) =>
-        `${getMapperLabel<ContestLevel>(contestMappedLevels, text)} سنة`,
+        `${getMapperLabel<StudentLevel>(studentMappedLevels, text)} سنة`,
     },
     {
       title: 'تاريخ البدء',

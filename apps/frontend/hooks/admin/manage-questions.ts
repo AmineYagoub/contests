@@ -2,12 +2,12 @@ import { TableProps } from 'antd/es/table';
 import { useState } from 'react';
 
 import {
-  Contest,
-  OrderContestArgs,
-  usePaginateContestsQuery,
-  WhereContestArgs,
+  OrderQuestionArgs,
+  Question,
+  usePaginateQuestionsQuery,
+  WhereQuestionArgs,
 } from '@/graphql/graphql';
-import { ContestFields } from '@/utils/fields';
+import { QuestionFields } from '@/utils/fields';
 import { Pagination } from '@/utils/types';
 
 import type {
@@ -16,9 +16,9 @@ import type {
   FilterValue,
   SorterResult,
 } from 'antd/es/table/interface';
-export type ContestsDataIndex = keyof Contest;
+export type QuestionsDataIndex = keyof Question;
 
-export const useSearchContests = () => {
+export const useSearchQuestions = () => {
   const [pagination, setPagination] = useState<Pagination>({
     offset: 0,
     limit: 10,
@@ -27,16 +27,16 @@ export const useSearchContests = () => {
     hasPrevPage: false,
   });
 
-  const [where, setWhere] = useState<WhereContestArgs>(null);
-  const [orderBy, setOrderBy] = useState<OrderContestArgs>(null);
+  const [where, setWhere] = useState<WhereQuestionArgs>(null);
+  const [orderBy, setOrderBy] = useState<OrderQuestionArgs>(null);
   const [filteredInfo, setFilteredInfo] = useState<
     Record<string, FilterValue | null>
   >({});
   const [sortedInfo, setSortedInfo] = useState<
-    SorterResult<ColumnType<Contest>> | SorterResult<ColumnType<Contest>[]>
+    SorterResult<ColumnType<Question>> | SorterResult<ColumnType<Question>[]>
   >({});
 
-  const handleFilter = (value: string | number | boolean, record: Contest) => {
+  const handleFilter = (value: string | number | boolean, record: Question) => {
     return true;
   };
 
@@ -63,7 +63,7 @@ export const useSearchContests = () => {
     }));
   };
 
-  const { data, loading } = usePaginateContestsQuery({
+  const { data, loading } = usePaginateQuestionsQuery({
     variables: {
       params: {
         take: pagination.limit,
@@ -78,21 +78,21 @@ export const useSearchContests = () => {
   const handleSearch = (
     selectedKeys: string[],
     confirm: (param?: FilterConfirmProps) => void,
-    dataIndex: ContestsDataIndex
+    dataIndex: QuestionsDataIndex
   ) => {
     confirm();
   };
 
-  const handleTableChange: TableProps<ColumnType<Contest>>['onChange'] = (
+  const handleTableChange: TableProps<ColumnType<Question>>['onChange'] = (
     _,
     filters,
     sorter
   ) => {
     const { field, order } = sorter;
-    const o: OrderContestArgs = {};
+    const o: OrderQuestionArgs = {};
 
     if (order) {
-      for (const key in ContestFields) {
+      for (const key in QuestionFields) {
         if (key === field) {
           o[key] = order === 'ascend' ? 'asc' : 'desc';
           break;
@@ -100,14 +100,10 @@ export const useSearchContests = () => {
       }
     }
 
-    const w: WhereContestArgs = {};
+    const w: WhereQuestionArgs = {};
     for (const [key, value] of Object.entries(filters)) {
       if (value) {
-        w[key] = [ContestFields.startTime, ContestFields.created].includes(
-          key as 'created' | 'startTime'
-        )
-          ? value
-          : value[0];
+        w[key] = key === QuestionFields.created ? value : value[0];
       }
     }
 
@@ -124,7 +120,7 @@ export const useSearchContests = () => {
     handleTableChange,
     clearAllFilters,
     handlePagination: {
-      total: data?.paginateContest?.total ?? 0,
+      total: data?.paginateQuestions?.total ?? 0,
       pageSize: pagination.limit,
       pageSizeOptions: ['10', '20', '30', '50'],
       showSizeChanger: true,
@@ -135,7 +131,7 @@ export const useSearchContests = () => {
 
   return {
     methods,
-    data: data?.paginateContest?.data.map((d) => ({ key: d.id, ...d })) ?? [],
+    data: data?.paginateQuestions?.data.map((d) => ({ key: d.id, ...d })) ?? [],
     loading,
     filteredInfo,
     sortedInfo,

@@ -1,6 +1,8 @@
 import { Type } from '@nestjs/common';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+
 import { Contest } from '../contests/contest.model';
+import { Question } from '../questions/question.model';
 
 function Paginate<T>(Node: Type<T>) {
   @ObjectType({ isAbstract: true })
@@ -15,4 +17,7 @@ function Paginate<T>(Node: Type<T>) {
 }
 
 @ObjectType()
-export class PaginateContest extends Paginate(Contest) {}
+export class ContestPaginationResponce extends Paginate(Contest) {}
+
+@ObjectType()
+export class QuestionPaginationResponce extends Paginate(Question) {}
