@@ -8,6 +8,7 @@ import {
   Min,
 } from 'class-validator';
 
+import { ContestStatus, ContestType, StudentLevel } from '@contests/types';
 import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
@@ -23,20 +24,20 @@ export class CreateContestDto {
   @Min(0)
   duration?: number;
 
-  @Field(() => [String])
+  @Field(() => [StudentLevel])
   @IsNotEmpty()
   @IsString({ each: true })
-  level: string[];
+  level: StudentLevel[];
 
-  @Field()
+  @Field(() => ContestType)
   @IsNotEmpty()
   @IsString()
-  type: string;
+  type: ContestType;
 
-  @Field()
+  @Field(() => ContestStatus)
   @IsNotEmpty()
   @IsString()
-  status: string;
+  status: ContestStatus;
 
   @Field()
   @IsNotEmpty()
