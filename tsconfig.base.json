@@ -15,8 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@contests/config": ["libs/config/src/index.ts"],
       "@contests/dto": ["libs/dto/src/index.ts"],
-      "@contests/config": ["libs/config/src/index.ts"]
+      "@contests/types": ["libs/types/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
