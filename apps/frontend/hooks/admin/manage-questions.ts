@@ -2,6 +2,7 @@ import { TableProps } from 'antd/es/table';
 import { useState } from 'react';
 
 import {
+  OrderByType,
   OrderQuestionArgs,
   Question,
   usePaginateQuestionsQuery,
@@ -16,6 +17,7 @@ import type {
   FilterValue,
   SorterResult,
 } from 'antd/es/table/interface';
+
 export type QuestionsDataIndex = keyof Question;
 
 export const useSearchQuestions = () => {
@@ -63,7 +65,7 @@ export const useSearchQuestions = () => {
     }));
   };
 
-  const { data, loading } = usePaginateQuestionsQuery({
+  const { data, loading, refetch } = usePaginateQuestionsQuery({
     variables: {
       params: {
         take: pagination.limit,
@@ -94,7 +96,7 @@ export const useSearchQuestions = () => {
     if (order) {
       for (const key in QuestionFields) {
         if (key === field) {
-          o[key] = order === 'ascend' ? 'asc' : 'desc';
+          o[key] = order === 'ascend' ? OrderByType.Asc : OrderByType.Desc;
           break;
         }
       }
@@ -114,6 +116,7 @@ export const useSearchQuestions = () => {
   };
 
   const methods = {
+    refetch,
     handleReset,
     handleFilter,
     handleSearch,

@@ -5,6 +5,7 @@ query PaginateQuestions($params: QuestionPaginationDto!) {
       id
       title
       type
+      options
       published
       level
       created

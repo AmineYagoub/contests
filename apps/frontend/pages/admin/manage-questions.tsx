@@ -105,13 +105,13 @@ const ManageQuestions = () => {
       filterMultiple: false,
       onFilter: methods.handleFilter,
       filteredValue: filteredInfo.type || null,
-      render: ({ type }) => {
+      render: (type: QuestionType) => {
         let color = type === QuestionType.Easy ? 'green' : 'volcano';
         if (type === QuestionType.Medium) {
           color = 'blue';
         }
         return (
-          <Tag color={color}>
+          <Tag color={color} key={type}>
             {getMapperLabel<QuestionType>(questionMappedTypes, type)}
           </Tag>
         );
@@ -122,19 +122,30 @@ const ManageQuestions = () => {
       dataIndex: QuestionFields.level,
       key: QuestionFields.level,
       filters: studentMappedLevels,
-      filterMultiple: false,
+      filterMultiple: true,
       onFilter: methods.handleFilter,
       filteredValue: filteredInfo.level || null,
-      render: (text) => `${JSON.stringify(text)}`.replace(/\[|\]/g, ''),
+      render: (levels: StudentLevel[]) => {
+        return levels?.map((level) => {
+          return (
+            <Tag color="warning" key={level}>
+              {getMapperLabel<StudentLevel>(studentMappedLevels, level)}
+            </Tag>
+          );
+        });
+      },
     },
     {
       title: 'عدد الخيارات',
-      key: 'عدد الخيارات',
+      dataIndex: QuestionFields.options,
+      key: QuestionFields.options,
       sorter: true,
       sortDirections: ['descend', 'ascend'],
       sortOrder:
-        sortedInfo.columnKey === 'عدد الخيارات' ? sortedInfo.order : null,
-      render: (text, record: Question) => <span>{record.options.length}</span>,
+        sortedInfo.columnKey === QuestionFields.options
+          ? sortedInfo.order
+          : null,
+      render: (options) => options?.length,
     },
     {
       title: 'مرات الإستخدام',
@@ -194,7 +205,13 @@ const ManageQuestions = () => {
         pagination={methods.handlePagination}
         style={{ minHeight: 400 }}
       />
-      <CreateQuestion visible={visible} onClose={onClose} />
+      <CreateQuestion
+        visible={visible}
+        onClose={onClose}
+        onSuccess={() => {
+          methods.refetch();
+        }}
+      />
     </StyledSection>
   );
 };

@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import {
   Contest,
+  OrderByType,
   OrderContestArgs,
   usePaginateContestsQuery,
   WhereContestArgs,
@@ -94,7 +95,7 @@ export const useSearchContests = () => {
     if (order) {
       for (const key in ContestFields) {
         if (key === field) {
-          o[key] = order === 'ascend' ? 'asc' : 'desc';
+          o[key] = order === 'ascend' ? OrderByType.Asc : OrderByType.Desc;
           break;
         }
       }

@@ -129,23 +129,15 @@ export class QuestionService {
               contains: String(value),
             };
             break;
-          case 'duration':
-            filter.duration = Number(value);
-            break;
           case 'level':
             filter.level = {
               array_contains: String(value),
             };
             break;
-          case 'status':
-            filter.status = String(value);
+          case 'type':
+            filter.type = String(value);
             break;
-          case 'startTime':
-            filter.startTime = {
-              lte: new Date(value[1]),
-              gte: new Date(value[0]),
-            };
-            break;
+
           case 'created':
             filter.created = {
               lte: new Date(value[1]),

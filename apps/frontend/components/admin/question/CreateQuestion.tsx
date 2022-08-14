@@ -28,9 +28,11 @@ const StyledInput = styled(Input)({
 const CreateQuestion = ({
   visible,
   onClose,
+  onSuccess,
 }: {
   visible: boolean;
   onClose: () => void;
+  onSuccess: () => void;
 }) => {
   const [form] = Form.useForm();
   const [CreateQuestionMutation, { loading, error }] =
@@ -39,8 +41,8 @@ const CreateQuestion = ({
   const onFinish = async () => {
     try {
       const values = await form.validateFields();
-      console.log(values);
-      /*       const { data } = await CreateQuestionMutation({
+
+      const { data } = await CreateQuestionMutation({
         variables: {
           input: {
             ...values,
@@ -52,7 +54,8 @@ const CreateQuestion = ({
       if (data) {
         form.resetFields();
         onClose();
-      } */
+        onSuccess();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -178,7 +181,7 @@ const CreateQuestion = ({
                 <Button
                   type="dashed"
                   onClick={() => add()}
-                  style={{ width: 'calc(50% - 16px)' }}
+                  style={{ width: 'calc(50% - 10px)' }}
                   icon={<PlusOutlined />}
                 >
                   أضف خيار

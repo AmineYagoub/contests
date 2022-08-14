@@ -43,7 +43,6 @@ export function SearchDatePicker<T>(props: SearchInputProps<T>) {
         }}
         value={[moment(selectedKeys[0]), moment(selectedKeys[1])]}
         onChange={(_, formatString: [string, string]) => {
-          console.log(formatString);
           setSelectedKeys(formatString);
         }}
       />

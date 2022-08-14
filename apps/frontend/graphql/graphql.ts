@@ -123,16 +123,27 @@ export type MutationCreateQuestionArgs = {
   input: CreateQuestionDto;
 };
 
+export type OrderByOptionsArgs = {
+  count?: InputMaybe<OrderByType>;
+};
+
+/** OrderBy Type */
+export enum OrderByType {
+  Asc = 'Asc',
+  Desc = 'Desc',
+}
+
 export type OrderContestArgs = {
-  created?: InputMaybe<Scalars['String']>;
-  duration?: InputMaybe<Scalars['String']>;
-  participants?: InputMaybe<Scalars['String']>;
-  startTime?: InputMaybe<Scalars['String']>;
+  created?: InputMaybe<OrderByType>;
+  duration?: InputMaybe<OrderByType>;
+  participants?: InputMaybe<OrderByType>;
+  startTime?: InputMaybe<OrderByType>;
 };
 
 export type OrderQuestionArgs = {
-  created?: InputMaybe<Scalars['String']>;
-  usedCount?: InputMaybe<Scalars['Int']>;
+  created?: InputMaybe<OrderByType>;
+  options?: InputMaybe<OrderByOptionsArgs>;
+  usedCount?: InputMaybe<OrderByType>;
 };
 
 export type Query = {
@@ -315,6 +326,7 @@ export type PaginateQuestionsQuery = {
       id: string;
       title: string;
       type: QuestionType;
+      options: Array<string>;
       published: boolean;
       level: Array<StudentLevel>;
       created: any;
@@ -521,6 +533,7 @@ export const PaginateQuestionsDocument = gql`
         id
         title
         type
+        options
         published
         level
         created
