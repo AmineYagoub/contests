@@ -1,8 +1,10 @@
-import { isProd } from '..';
+import { ApolloServerPluginInlineTraceDisabled } from 'apollo-server-core';
+
+import { IntrospectAndCompose } from '@apollo/gateway';
 import { Inject } from '@nestjs/common';
 import { ConfigType, registerAs } from '@nestjs/config';
-import { ApolloServerPluginInlineTraceDisabled } from 'apollo-server-core';
-import { IntrospectAndCompose } from '@apollo/gateway';
+
+import { isProd } from '../';
 
 export const GATEWAY_GQL_REGISTER_KEY = 'gatewayGQLConfig';
 
@@ -24,6 +26,8 @@ export const gatewayGQLConfig = registerAs(GATEWAY_GQL_REGISTER_KEY, () => ({
         { name: 'CONTEST_SERVICE', url: 'http://localhost:3001/graphql' },
       ],
     }),
+    serviceHealthCheck: true,
+    pollIntervalInMs: 5000,
   },
 }));
 

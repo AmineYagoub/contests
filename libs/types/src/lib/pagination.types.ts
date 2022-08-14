@@ -1,9 +1,9 @@
 import { IsNumber, IsObject, IsOptional, Max, Min } from 'class-validator';
 
 import { Type } from '@nestjs/common';
-import { Field, InputType, Int } from '@nestjs/graphql';
+import { Field, InputType, Int, registerEnumType } from '@nestjs/graphql';
 
-export default function PaginatedArgs<WhereI, OrderI>(
+export function PaginatedArgs<WhereI, OrderI>(
   WhereIClass: Type<WhereI>,
   OrderIClass: Type<OrderI>
 ): any {
@@ -34,3 +34,13 @@ export default function PaginatedArgs<WhereI, OrderI>(
   }
   return PaginateType;
 }
+
+export enum OrderByType {
+  Asc = 'asc',
+  Desc = 'desc',
+}
+
+registerEnumType(OrderByType, {
+  name: 'OrderByType',
+  description: 'OrderBy Type',
+});

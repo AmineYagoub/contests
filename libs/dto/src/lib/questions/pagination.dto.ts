@@ -1,6 +1,6 @@
-import { Field, InputType, Int, OmitType, PartialType } from '@nestjs/graphql';
+import { OrderByType, PaginatedArgs } from '@contests/types';
+import { Field, InputType, OmitType, PartialType } from '@nestjs/graphql';
 
-import PaginatedArgs from '../types/pagination';
 import { CreateQuestionDto } from './create.dto';
 
 @InputType()
@@ -13,11 +13,14 @@ export class WhereQuestionArgs extends PartialType(
 
 @InputType()
 export class OrderQuestionArgs {
-  @Field({ nullable: true })
-  created?: string;
+  @Field(() => OrderByType, { nullable: true })
+  created?: OrderByType;
 
-  @Field(() => Int, { nullable: true })
-  usedCount?: number;
+  @Field(() => OrderByType, { nullable: true })
+  options?: OrderByType;
+
+  @Field(() => OrderByType, { nullable: true })
+  usedCount?: OrderByType;
 }
 
 @InputType()
