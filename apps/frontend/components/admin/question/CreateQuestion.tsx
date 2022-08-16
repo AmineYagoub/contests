@@ -10,7 +10,11 @@ import {
   Space,
 } from 'antd';
 
-import { useCreateQuestionMutation } from '@/graphql/graphql';
+import {
+  Question,
+  useCreateQuestionMutation,
+  useUpdateQuestionMutation,
+} from '@/graphql/graphql';
 import { QuestionFields } from '@/utils/fields';
 import { questionMappedTypes, studentMappedLevels } from '@/utils/mapper';
 import {
@@ -29,28 +33,39 @@ const CreateQuestion = ({
   visible,
   onClose,
   onSuccess,
+  record,
 }: {
   visible: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  record?: Question;
 }) => {
   const [form] = Form.useForm();
   const [CreateQuestionMutation, { loading, error }] =
     useCreateQuestionMutation();
+  const [
+    UpdateQuestionMutation,
+    { loading: loadingUpdate, error: errorUpdate },
+  ] = useUpdateQuestionMutation();
 
   const onFinish = async () => {
     try {
       const values = await form.validateFields();
-
-      const { data } = await CreateQuestionMutation({
-        variables: {
-          input: {
-            ...values,
-            authorId: 1,
-          },
-        },
-      });
-
+      const data = record
+        ? await UpdateQuestionMutation({
+            variables: {
+              input: values,
+              id: Number(record.id),
+            },
+          })
+        : await CreateQuestionMutation({
+            variables: {
+              input: {
+                ...values,
+                authorId: 1,
+              },
+            },
+          });
       if (data) {
         form.resetFields();
         onClose();
@@ -83,7 +98,7 @@ const CreateQuestion = ({
             icon={<SaveOutlined />}
             htmlType="submit"
             form="create-question"
-            loading={loading}
+            loading={loading || loadingUpdate}
           >
             حفظ
           </Button>
@@ -97,8 +112,10 @@ const CreateQuestion = ({
         form={form}
         name="create-question"
         initialValues={{
-          duration: 40,
-          questionCount: 100,
+          title: record?.title,
+          type: record?.type,
+          level: record?.level,
+          options: record?.options,
         }}
       >
         <Form.Item
@@ -192,10 +209,10 @@ const CreateQuestion = ({
           )}
         </Form.List>
       </Form>
-      {error && (
+      {(error || errorUpdate) && (
         <Alert
           message="خطأ"
-          description="حدث خطأ أثناء إنشاء السؤال ، يرجى المحاولة مرة أخرى"
+          description="حدث خطأ أثناء عملية حفظ السؤال ، يرجى المحاولة مرة أخرى"
           banner
           closable
           type="error"

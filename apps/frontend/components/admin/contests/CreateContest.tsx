@@ -11,11 +11,16 @@ import {
   Select,
   Space,
 } from 'antd';
-import { ContestStatus, useCreateContestMutation } from 'graphql/graphql';
 import moment from 'moment';
 import Image from 'next/image';
 import { FocusEvent, useState } from 'react';
 
+import {
+  Contest,
+  ContestStatus,
+  useCreateContestMutation,
+  useUpdateContestMutation,
+} from '@/graphql/graphql';
 import { ContestFields } from '@/utils/fields';
 import { contestMappedTypes, studentMappedLevels } from '@/utils/mapper';
 import { SaveOutlined } from '@ant-design/icons';
@@ -36,31 +41,47 @@ const disabledDate: RangePickerProps['disabledDate'] = (current) => {
 const CreateContest = ({
   visible,
   onClose,
+  onSuccess,
+  record,
 }: {
   visible: boolean;
   onClose: () => void;
+  onSuccess: () => void;
+  record?: Contest;
 }) => {
   const [form] = Form.useForm();
   const [createContestMutation, { loading, error }] =
     useCreateContestMutation();
+  const [
+    UpdateContestMutation,
+    { loading: loadingUpdate, error: errorUpdate },
+  ] = useUpdateContestMutation();
 
   const onFinish = async () => {
     try {
       const values = await form.validateFields();
 
-      const { data } = await createContestMutation({
-        variables: {
-          input: {
-            ...values,
-            status: ContestStatus.NotStarted,
-            authorId: 1,
-          },
-        },
-      });
+      const data = Object.entries(record).length
+        ? await UpdateContestMutation({
+            variables: {
+              input: values,
+              id: Number(record.id),
+            },
+          })
+        : await createContestMutation({
+            variables: {
+              input: {
+                ...values,
+                status: ContestStatus.NotStarted,
+                authorId: 1,
+              },
+            },
+          });
 
       if (data) {
         form.resetFields();
         onClose();
+        onSuccess();
       }
     } catch (error) {
       console.log(error);
@@ -127,7 +148,7 @@ const CreateContest = ({
             icon={<SaveOutlined />}
             htmlType="submit"
             form="create-contest"
-            loading={loading}
+            loading={loading || loadingUpdate}
           >
             حفظ
           </Button>
@@ -141,8 +162,10 @@ const CreateContest = ({
         form={form}
         name="create-contest"
         initialValues={{
-          duration: 40,
-          questionCount: 100,
+          duration: record.duration ?? 40,
+          questionCount: record.questionCount ?? 100,
+          title: record?.title,
+          type: record?.type,
         }}
       >
         <Row gutter={16}>
@@ -276,10 +299,10 @@ const CreateContest = ({
           </Col>
         </Row>
       </Form>
-      {error && (
+      {(error || errorUpdate) && (
         <Alert
           message="خطأ"
-          description="حدث خطأ أثناء إنشاء المسابقة ، يرجى المحاولة مرة أخرى"
+          description="حدث خطأ أثناء حفظ المسابقة ، يرجى المحاولة مرة أخرى"
           banner
           closable
           type="error"

@@ -112,7 +112,11 @@ export type Mutation = {
   __typename?: 'Mutation';
   createContest: Contest;
   createQuestion: Question;
+  deleteContestById?: Maybe<Contest>;
+  deleteQuestionById?: Maybe<Question>;
   seedContest?: Maybe<Scalars['Boolean']>;
+  updateContest: Contest;
+  updateQuestion: Question;
 };
 
 export type MutationCreateContestArgs = {
@@ -123,8 +127,22 @@ export type MutationCreateQuestionArgs = {
   input: CreateQuestionDto;
 };
 
-export type OrderByOptionsArgs = {
-  count?: InputMaybe<OrderByType>;
+export type MutationDeleteContestByIdArgs = {
+  id: Scalars['Int'];
+};
+
+export type MutationDeleteQuestionByIdArgs = {
+  id: Scalars['Int'];
+};
+
+export type MutationUpdateContestArgs = {
+  id: Scalars['Int'];
+  input: UpdateContestDto;
+};
+
+export type MutationUpdateQuestionArgs = {
+  id: Scalars['Int'];
+  input: UpdateQuestionDto;
 };
 
 /** OrderBy Type */
@@ -142,7 +160,7 @@ export type OrderContestArgs = {
 
 export type OrderQuestionArgs = {
   created?: InputMaybe<OrderByType>;
-  options?: InputMaybe<OrderByOptionsArgs>;
+  options?: InputMaybe<OrderByType>;
   usedCount?: InputMaybe<OrderByType>;
 };
 
@@ -224,6 +242,31 @@ export enum StudentLevel {
   Thirteen = 'Thirteen',
 }
 
+export type UpdateContestDto = {
+  authorId?: InputMaybe<Scalars['Int']>;
+  countries?: InputMaybe<Array<Scalars['String']>>;
+  duration?: InputMaybe<Scalars['Int']>;
+  level?: InputMaybe<Array<StudentLevel>>;
+  maxParticipants?: InputMaybe<Scalars['Int']>;
+  participants?: InputMaybe<Array<Scalars['Int']>>;
+  published?: InputMaybe<Scalars['Boolean']>;
+  questionCount?: InputMaybe<Scalars['Int']>;
+  startTime?: InputMaybe<Scalars['DateTime']>;
+  status?: InputMaybe<ContestStatus>;
+  title?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<ContestType>;
+};
+
+export type UpdateQuestionDto = {
+  authorId?: InputMaybe<Scalars['Int']>;
+  level?: InputMaybe<Array<StudentLevel>>;
+  options?: InputMaybe<Array<Scalars['String']>>;
+  published?: InputMaybe<Scalars['Boolean']>;
+  title?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<QuestionType>;
+  usedCount?: InputMaybe<Scalars['Int']>;
+};
+
 export type WhereContestArgs = {
   countries?: InputMaybe<Array<Scalars['String']>>;
   created?: InputMaybe<Array<Scalars['String']>>;
@@ -264,6 +307,39 @@ export type CreateContestMutation = {
   };
 };
 
+export type DeleteContestMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+export type DeleteContestMutation = {
+  __typename?: 'Mutation';
+  deleteContestById?: { __typename?: 'Contest'; id: string } | null;
+};
+
+export type UpdateContestMutationVariables = Exact<{
+  id: Scalars['Int'];
+  input: UpdateContestDto;
+}>;
+
+export type UpdateContestMutation = {
+  __typename?: 'Mutation';
+  updateContest: {
+    __typename?: 'Contest';
+    id: string;
+    title: string;
+    duration: number;
+    published: boolean;
+    level: Array<StudentLevel>;
+    created: any;
+    updated: any;
+    status: ContestStatus;
+    authorId: number;
+    startTime: any;
+    questionCount: number;
+    participants?: Array<string> | null;
+  };
+};
+
 export type PaginateContestsQueryVariables = Exact<{
   params: ContestPaginationDto;
 }>;
@@ -298,6 +374,37 @@ export type CreateQuestionMutationVariables = Exact<{
 export type CreateQuestionMutation = {
   __typename?: 'Mutation';
   createQuestion: {
+    __typename?: 'Question';
+    id: string;
+    type: QuestionType;
+    title: string;
+    level: Array<StudentLevel>;
+    options: Array<string>;
+    authorId: number;
+    usedCount?: number | null;
+    published: boolean;
+    created: any;
+    updated: any;
+  };
+};
+
+export type DeleteQuestionMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+export type DeleteQuestionMutation = {
+  __typename?: 'Mutation';
+  deleteQuestionById?: { __typename?: 'Question'; id: string } | null;
+};
+
+export type UpdateQuestionMutationVariables = Exact<{
+  id: Scalars['Int'];
+  input: UpdateQuestionDto;
+}>;
+
+export type UpdateQuestionMutation = {
+  __typename?: 'Mutation';
+  updateQuestion: {
     __typename?: 'Question';
     id: string;
     type: QuestionType;
@@ -393,6 +500,118 @@ export type CreateContestMutationResult =
 export type CreateContestMutationOptions = Apollo.BaseMutationOptions<
   CreateContestMutation,
   CreateContestMutationVariables
+>;
+export const DeleteContestDocument = gql`
+  mutation DeleteContest($id: Int!) {
+    deleteContestById(id: $id) {
+      id
+    }
+  }
+`;
+export type DeleteContestMutationFn = Apollo.MutationFunction<
+  DeleteContestMutation,
+  DeleteContestMutationVariables
+>;
+
+/**
+ * __useDeleteContestMutation__
+ *
+ * To run a mutation, you first call `useDeleteContestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteContestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteContestMutation, { data, loading, error }] = useDeleteContestMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteContestMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteContestMutation,
+    DeleteContestMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    DeleteContestMutation,
+    DeleteContestMutationVariables
+  >(DeleteContestDocument, options);
+}
+export type DeleteContestMutationHookResult = ReturnType<
+  typeof useDeleteContestMutation
+>;
+export type DeleteContestMutationResult =
+  Apollo.MutationResult<DeleteContestMutation>;
+export type DeleteContestMutationOptions = Apollo.BaseMutationOptions<
+  DeleteContestMutation,
+  DeleteContestMutationVariables
+>;
+export const UpdateContestDocument = gql`
+  mutation UpdateContest($id: Int!, $input: UpdateContestDto!) {
+    updateContest(id: $id, input: $input) {
+      id
+      title
+      duration
+      published
+      level
+      created
+      updated
+      status
+      authorId
+      startTime
+      questionCount
+      participants
+    }
+  }
+`;
+export type UpdateContestMutationFn = Apollo.MutationFunction<
+  UpdateContestMutation,
+  UpdateContestMutationVariables
+>;
+
+/**
+ * __useUpdateContestMutation__
+ *
+ * To run a mutation, you first call `useUpdateContestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateContestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateContestMutation, { data, loading, error }] = useUpdateContestMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateContestMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateContestMutation,
+    UpdateContestMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateContestMutation,
+    UpdateContestMutationVariables
+  >(UpdateContestDocument, options);
+}
+export type UpdateContestMutationHookResult = ReturnType<
+  typeof useUpdateContestMutation
+>;
+export type UpdateContestMutationResult =
+  Apollo.MutationResult<UpdateContestMutation>;
+export type UpdateContestMutationOptions = Apollo.BaseMutationOptions<
+  UpdateContestMutation,
+  UpdateContestMutationVariables
 >;
 export const PaginateContestsDocument = gql`
   query PaginateContests($params: ContestPaginationDto!) {
@@ -524,6 +743,116 @@ export type CreateQuestionMutationResult =
 export type CreateQuestionMutationOptions = Apollo.BaseMutationOptions<
   CreateQuestionMutation,
   CreateQuestionMutationVariables
+>;
+export const DeleteQuestionDocument = gql`
+  mutation DeleteQuestion($id: Int!) {
+    deleteQuestionById(id: $id) {
+      id
+    }
+  }
+`;
+export type DeleteQuestionMutationFn = Apollo.MutationFunction<
+  DeleteQuestionMutation,
+  DeleteQuestionMutationVariables
+>;
+
+/**
+ * __useDeleteQuestionMutation__
+ *
+ * To run a mutation, you first call `useDeleteQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteQuestionMutation, { data, loading, error }] = useDeleteQuestionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteQuestionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteQuestionMutation,
+    DeleteQuestionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    DeleteQuestionMutation,
+    DeleteQuestionMutationVariables
+  >(DeleteQuestionDocument, options);
+}
+export type DeleteQuestionMutationHookResult = ReturnType<
+  typeof useDeleteQuestionMutation
+>;
+export type DeleteQuestionMutationResult =
+  Apollo.MutationResult<DeleteQuestionMutation>;
+export type DeleteQuestionMutationOptions = Apollo.BaseMutationOptions<
+  DeleteQuestionMutation,
+  DeleteQuestionMutationVariables
+>;
+export const UpdateQuestionDocument = gql`
+  mutation UpdateQuestion($id: Int!, $input: UpdateQuestionDto!) {
+    updateQuestion(id: $id, input: $input) {
+      id
+      type
+      title
+      level
+      options
+      authorId
+      usedCount
+      published
+      created
+      updated
+    }
+  }
+`;
+export type UpdateQuestionMutationFn = Apollo.MutationFunction<
+  UpdateQuestionMutation,
+  UpdateQuestionMutationVariables
+>;
+
+/**
+ * __useUpdateQuestionMutation__
+ *
+ * To run a mutation, you first call `useUpdateQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateQuestionMutation, { data, loading, error }] = useUpdateQuestionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateQuestionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateQuestionMutation,
+    UpdateQuestionMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateQuestionMutation,
+    UpdateQuestionMutationVariables
+  >(UpdateQuestionDocument, options);
+}
+export type UpdateQuestionMutationHookResult = ReturnType<
+  typeof useUpdateQuestionMutation
+>;
+export type UpdateQuestionMutationResult =
+  Apollo.MutationResult<UpdateQuestionMutation>;
+export type UpdateQuestionMutationOptions = Apollo.BaseMutationOptions<
+  UpdateQuestionMutation,
+  UpdateQuestionMutationVariables
 >;
 export const PaginateQuestionsDocument = gql`
   query PaginateQuestions($params: QuestionPaginationDto!) {

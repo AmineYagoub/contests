@@ -1,4 +1,8 @@
-import { CreateQuestionDto, QuestionPaginationDto } from '@contests/dto';
+import {
+  CreateQuestionDto,
+  QuestionPaginationDto,
+  UpdateQuestionDto,
+} from '@contests/dto';
 import {
   Args,
   Int,
@@ -21,6 +25,11 @@ export class QuestionResolver {
     return this.questionService.findUnique({ id });
   }
 
+  @Mutation(() => Question, { nullable: true })
+  async deleteQuestionById(@Args('id', { type: () => Int }) id: number) {
+    return this.questionService.delete({ id });
+  }
+
   @Query(() => QuestionPaginationResponce, { nullable: true })
   async paginateQuestions(@Args('params') params: QuestionPaginationDto) {
     return this.questionService.paginate(params);
@@ -29,6 +38,14 @@ export class QuestionResolver {
   @Mutation(() => Question)
   async createQuestion(@Args('input') data: CreateQuestionDto) {
     return this.questionService.create(data);
+  }
+
+  @Mutation(() => Question)
+  async updateQuestion(
+    @Args('id', { type: () => Int }) id: number,
+    @Args('input') data: UpdateQuestionDto
+  ) {
+    return this.questionService.update({ data, where: { id } });
   }
 
   /**

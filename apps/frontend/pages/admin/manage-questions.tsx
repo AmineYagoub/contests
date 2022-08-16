@@ -1,8 +1,9 @@
-import { Button, Space, Table, Tag } from 'antd';
+import { Button, Space, Table, Tag, Tooltip } from 'antd';
 import moment from 'moment-timezone';
 import { useState } from 'react';
 
 import CreateQuestion from '@/components/admin/question/CreateQuestion';
+import DeleteQuestion from '@/components/admin/question/DeleteQuestion';
 import {
   SearchDatePicker,
   SearchDatePickerIcon,
@@ -20,7 +21,11 @@ import {
   questionMappedTypes,
   studentMappedLevels,
 } from '@/utils/mapper';
-import { FolderAddOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  EditOutlined,
+  FolderAddOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
 
@@ -38,7 +43,24 @@ const ManageQuestions = () => {
   const { methods, data, loading, filteredInfo, sortedInfo } =
     useSearchQuestions();
 
-  // const data = [];
+  const refetchData = () => {
+    methods.refetch();
+  };
+  const [visible, setVisible] = useState(false);
+
+  const showDrawer = () => {
+    setVisible(true);
+  };
+  const onClose = () => {
+    setVisible(false);
+  };
+
+  const [updateRecord, setUpdateRecord] = useState<Question>(null);
+
+  const updateQuestion = (record: Question) => {
+    setUpdateRecord(record);
+    showDrawer();
+  };
 
   const getColumnSearchProps = (
     dataIndex: QuestionsDataIndex
@@ -162,19 +184,22 @@ const ManageQuestions = () => {
       title: 'الإجراءات',
       key: 'action',
       filteredValue: null,
-      render: (record) => <Space size="small">delete</Space>,
+      render: (record) => (
+        <Space size="small">
+          <DeleteQuestion record={record} onSuccess={refetchData} />
+          <Tooltip title="تحرير السؤال">
+            <Button
+              shape="circle"
+              icon={<EditOutlined />}
+              type="primary"
+              ghost
+              onClick={() => updateQuestion(record)}
+            />
+          </Tooltip>
+        </Space>
+      ),
     },
   ];
-
-  const [visible, setVisible] = useState(false);
-
-  const showDrawer = () => {
-    setVisible(true);
-  };
-
-  const onClose = () => {
-    setVisible(false);
-  };
 
   return (
     <StyledSection>
@@ -208,9 +233,8 @@ const ManageQuestions = () => {
       <CreateQuestion
         visible={visible}
         onClose={onClose}
-        onSuccess={() => {
-          methods.refetch();
-        }}
+        onSuccess={refetchData}
+        record={updateRecord}
       />
     </StyledSection>
   );

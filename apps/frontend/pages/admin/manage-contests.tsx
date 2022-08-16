@@ -1,8 +1,9 @@
-import { Space, Table, Tag } from 'antd';
+import { Button, Space, Table, Tag, Tooltip } from 'antd';
 import moment from 'moment-timezone';
-import dynamic from 'next/dynamic';
 import { useState } from 'react';
 
+import CreateContest from '@/components/admin/contests/CreateContest';
+import DeleteContest from '@/components/admin/contests/DeleteContest';
 import {
   SearchDatePicker,
   SearchDatePickerIcon,
@@ -20,7 +21,7 @@ import {
   getMapperLabel,
   studentMappedLevels,
 } from '@/utils/mapper';
-import { PlusOutlined } from '@ant-design/icons';
+import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
 
@@ -33,13 +34,6 @@ const StyledSection = styled('section')({
   overflow: 'hidden',
   minHeight: 'calc(100vh - 200px)',
 });
-
-const CreateContest = dynamic(
-  () => import('@/components/admin/contests/CreateContest'),
-  {
-    ssr: false,
-  }
-);
 
 const ManageContests = () => {
   const { methods, data, loading, filteredInfo, sortedInfo } =
@@ -81,6 +75,17 @@ const ManageContests = () => {
       <span>{moment(date).calendar()}</span>
     ),
   });
+
+  const refetchData = () => {
+    methods.refetch();
+  };
+
+  const [updateRecord, setUpdateRecord] = useState<Contest>({} as Contest);
+
+  const updateContest = (record: Contest) => {
+    setUpdateRecord(record);
+    showDrawer();
+  };
 
   const columns: ColumnsType<ColumnType<Contest>> = [
     {
@@ -133,8 +138,15 @@ const ManageContests = () => {
       filterMultiple: false,
       onFilter: methods.handleFilter,
       filteredValue: filteredInfo.level || null,
-      render: (text) =>
-        `${getMapperLabel<StudentLevel>(studentMappedLevels, text)} سنة`,
+      render: (levels: StudentLevel[]) => {
+        return levels?.map((level) => {
+          return (
+            <Tag color="warning" key={level}>
+              {getMapperLabel<StudentLevel>(studentMappedLevels, level)}
+            </Tag>
+          );
+        });
+      },
     },
     {
       title: 'تاريخ البدء',
@@ -156,7 +168,7 @@ const ManageContests = () => {
       filterMultiple: false,
       onFilter: methods.handleFilter,
       filteredValue: filteredInfo.status || null,
-      render: ({ status }) => {
+      render: (status) => {
         let color = status === ContestStatus.Open ? 'green' : 'volcano';
         if (status === ContestStatus.NotStarted) {
           color = 'blue';
@@ -173,7 +185,20 @@ const ManageContests = () => {
       title: 'الإجراءات',
       key: 'action',
       filteredValue: null,
-      render: (record) => <Space size="small">delete</Space>,
+      render: (record) => (
+        <Space size="small">
+          <DeleteContest record={record} onSuccess={refetchData} />
+          <Tooltip title="تحرير السؤال">
+            <Button
+              shape="circle"
+              icon={<EditOutlined />}
+              type="primary"
+              ghost
+              onClick={() => updateContest(record)}
+            />
+          </Tooltip>
+        </Space>
+      ),
     },
   ];
 
@@ -207,7 +232,12 @@ const ManageContests = () => {
         pagination={methods.handlePagination}
         style={{ minHeight: 400 }}
       />
-      <CreateContest visible={visible} onClose={onClose} />
+      <CreateContest
+        visible={visible}
+        onClose={onClose}
+        onSuccess={refetchData}
+        record={updateRecord}
+      />
     </StyledSection>
   );
 };

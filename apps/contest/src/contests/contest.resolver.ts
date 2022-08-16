@@ -1,4 +1,8 @@
-import { ContestPaginationDto, CreateContestDto } from '@contests/dto';
+import {
+  ContestPaginationDto,
+  CreateContestDto,
+  UpdateContestDto,
+} from '@contests/dto';
 import {
   Args,
   Int,
@@ -29,6 +33,19 @@ export class ContestResolver {
   @Mutation(() => Contest)
   async createContest(@Args('input') data: CreateContestDto) {
     return this.contestService.create(data);
+  }
+
+  @Mutation(() => Contest, { nullable: true })
+  async deleteContestById(@Args('id', { type: () => Int }) id: number) {
+    return this.contestService.delete({ id });
+  }
+
+  @Mutation(() => Contest)
+  async updateContest(
+    @Args('id', { type: () => Int }) id: number,
+    @Args('input') data: UpdateContestDto
+  ) {
+    return this.contestService.update({ data, where: { id } });
   }
 
   /**

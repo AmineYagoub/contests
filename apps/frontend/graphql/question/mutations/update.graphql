@@ -1,0 +1,14 @@
+mutation UpdateQuestion($id: Int!, $input: UpdateQuestionDto!) {
+  updateQuestion(id: $id, input: $input) {
+    id
+    type
+    title
+    level
+    options
+    authorId
+    usedCount
+    published
+    created
+    updated
+  }
+}

@@ -64,7 +64,7 @@ export const useSearchContests = () => {
     }));
   };
 
-  const { data, loading } = usePaginateContestsQuery({
+  const { data, loading, refetch } = usePaginateContestsQuery({
     variables: {
       params: {
         take: pagination.limit,
@@ -119,6 +119,7 @@ export const useSearchContests = () => {
   };
 
   const methods = {
+    refetch,
     handleReset,
     handleFilter,
     handleSearch,

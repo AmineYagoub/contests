@@ -1,0 +1,16 @@
+mutation UpdateContest($id: Int!, $input: UpdateContestDto!) {
+  updateContest(id: $id, input: $input) {
+    id
+    title
+    duration
+    published
+    level
+    created
+    updated
+    status
+    authorId
+    startTime
+    questionCount
+    participants
+  }
+}
