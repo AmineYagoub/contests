@@ -28,8 +28,8 @@ export const useSearchContests = () => {
     hasPrevPage: false,
   });
 
-  const [where, setWhere] = useState<WhereContestArgs>(null);
-  const [orderBy, setOrderBy] = useState<OrderContestArgs>(null);
+  const [where, setWhere] = useState<WhereContestArgs>({});
+  const [orderBy, setOrderBy] = useState<OrderContestArgs>({});
   const [filteredInfo, setFilteredInfo] = useState<
     Record<string, FilterValue | null>
   >({});
@@ -52,8 +52,8 @@ export const useSearchContests = () => {
       offset: 0,
       limit: 10,
     });
-    setWhere(null);
-    setOrderBy(null);
+    setWhere({});
+    setOrderBy({});
   };
 
   const onPaginationChange = (page: number, pageSize: number) => {
@@ -102,6 +102,7 @@ export const useSearchContests = () => {
     }
 
     const w: WhereContestArgs = {};
+    console.log(filters);
     for (const [key, value] of Object.entries(filters)) {
       if (value) {
         w[key] = [ContestFields.startTime, ContestFields.created].includes(

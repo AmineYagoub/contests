@@ -87,6 +87,7 @@ const CreateQuestion = ({
       style={{ position: 'absolute' }}
       bodyStyle={{ paddingBottom: 80 }}
       width={720}
+      destroyOnClose
       extra={
         <Space>
           <Button onClick={onClose} htmlType="reset">

@@ -1,4 +1,4 @@
-import { Button, Space, Table, Tag, Tooltip } from 'antd';
+import { Space, Table, Tag } from 'antd';
 import moment from 'moment-timezone';
 import { useState } from 'react';
 
@@ -21,13 +21,14 @@ import {
   getMapperLabel,
   studentMappedLevels,
 } from '@/utils/mapper';
-import { EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
 
 import { TableBtn } from './dashboard';
 
 import type { ColumnsType, ColumnType } from 'antd/es/table';
+import UpdateContest from '@/components/admin/contests/UpdateContest';
 const StyledSection = styled('section')({
   backgroundColor: '#f8f8f8 !important',
   position: 'relative',
@@ -78,13 +79,6 @@ const ManageContests = () => {
 
   const refetchData = () => {
     methods.refetch();
-  };
-
-  const [updateRecord, setUpdateRecord] = useState<Contest>({} as Contest);
-
-  const updateContest = (record: Contest) => {
-    setUpdateRecord(record);
-    showDrawer();
   };
 
   const columns: ColumnsType<ColumnType<Contest>> = [
@@ -188,15 +182,7 @@ const ManageContests = () => {
       render: (record) => (
         <Space size="small">
           <DeleteContest record={record} onSuccess={refetchData} />
-          <Tooltip title="تحرير السؤال">
-            <Button
-              shape="circle"
-              icon={<EditOutlined />}
-              type="primary"
-              ghost
-              onClick={() => updateContest(record)}
-            />
-          </Tooltip>
+          <UpdateContest record={record} onSuccess={refetchData} />
         </Space>
       ),
     },
@@ -222,7 +208,7 @@ const ManageContests = () => {
       >
         مسابقة جديدة
       </TableBtn>
-      <TableBtn onClick={methods.clearAllFilters}>مسح البحث</TableBtn>
+      <TableBtn onClick={methods.clearAllFilters}>إعادة الضبط</TableBtn>
       <Table
         columns={columns}
         dataSource={data}
@@ -236,7 +222,6 @@ const ManageContests = () => {
         visible={visible}
         onClose={onClose}
         onSuccess={refetchData}
-        record={updateRecord}
       />
     </StyledSection>
   );

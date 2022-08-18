@@ -352,17 +352,20 @@ export type PaginateContestsQuery = {
     data?: Array<{
       __typename?: 'Contest';
       id: string;
+      type: ContestType;
       title: string;
+      level: Array<StudentLevel>;
       duration: number;
       published: boolean;
-      level: Array<StudentLevel>;
+      countries?: Array<string> | null;
       created: any;
       updated: any;
       status: ContestStatus;
       authorId: number;
       startTime: any;
-      questionCount: number;
       participants?: Array<string> | null;
+      questionCount: number;
+      maxParticipants: number;
     }> | null;
   } | null;
 };
@@ -619,17 +622,20 @@ export const PaginateContestsDocument = gql`
       total
       data {
         id
+        type
         title
+        level
         duration
         published
-        level
+        countries
         created
         updated
         status
         authorId
         startTime
-        questionCount
         participants
+        questionCount
+        maxParticipants
       }
     }
   }

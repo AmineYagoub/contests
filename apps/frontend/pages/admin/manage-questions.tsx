@@ -21,17 +21,14 @@ import {
   questionMappedTypes,
   studentMappedLevels,
 } from '@/utils/mapper';
-import {
-  EditOutlined,
-  FolderAddOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
+import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
 
 import { TableBtn } from './dashboard';
 
 import type { ColumnsType, ColumnType } from 'antd/es/table';
+import ImportQuestions from '@/components/admin/question/ImportQuestions';
 const StyledSection = styled('section')({
   backgroundColor: '#f8f8f8 !important',
   position: 'relative',
@@ -203,15 +200,7 @@ const ManageQuestions = () => {
 
   return (
     <StyledSection>
-      <Button
-        type="primary"
-        size="middle"
-        ghost
-        icon={<FolderAddOutlined />}
-        onClick={showDrawer}
-      >
-        إستيراد الأسئلة
-      </Button>
+      <ImportQuestions />
       <TableBtn
         type="primary"
         size="middle"

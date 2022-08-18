@@ -105,8 +105,9 @@ export class ContestService {
    * @returns Prisma.ContestOrderByWithRelationInput The built orderBy input.
    */
   private buildSorter(orderBy: Prisma.ContestOrderByWithRelationInput) {
-    return orderBy
-      ? Object.entries(orderBy).map(([key, value]) => ({ [key]: value }))
+    const entries = Object.entries(orderBy);
+    return entries.length
+      ? entries.map(([key, value]) => ({ [key]: value }))
       : { created: Prisma.SortOrder.desc };
   }
 
@@ -121,7 +122,8 @@ export class ContestService {
     where?: Prisma.ContestWhereInput
   ): Prisma.ContestWhereInput {
     const filter: Prisma.ContestWhereInput = {};
-    if (where) {
+
+    if (where && Object.entries(where).length) {
       for (const [key, value] of Object.entries(where)) {
         switch (key) {
           case 'title':
@@ -157,6 +159,7 @@ export class ContestService {
         }
       }
     }
+    console.log(filter);
     return filter;
   }
 }
