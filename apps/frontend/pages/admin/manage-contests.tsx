@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import CreateContest from '@/components/admin/contests/CreateContest';
 import DeleteContest from '@/components/admin/contests/DeleteContest';
+import UpdateContest from '@/components/admin/contests/UpdateContest';
 import {
   SearchDatePicker,
   SearchDatePickerIcon,
@@ -28,7 +29,6 @@ import styled from '@emotion/styled';
 import { TableBtn } from './dashboard';
 
 import type { ColumnsType, ColumnType } from 'antd/es/table';
-import UpdateContest from '@/components/admin/contests/UpdateContest';
 const StyledSection = styled('section')({
   backgroundColor: '#f8f8f8 !important',
   position: 'relative',
@@ -125,7 +125,7 @@ const ManageContests = () => {
       render: (data: string[]) => `${data.length} متسابق`,
     },
     {
-      title: 'مستوى المسابقة',
+      title: 'المستوى المستهدف',
       dataIndex: ContestFields.level,
       key: ContestFields.level,
       filters: studentMappedLevels,

@@ -1,49 +1,14 @@
-import { Button, message, Modal, Upload } from 'antd';
-import type { UploadProps } from 'antd';
+import { Button, Modal, Progress, Upload } from 'antd';
 import { useState } from 'react';
+
+import { useCreateQuestions } from '@/hooks/questions/create-question.hook';
 import { FolderAddOutlined, InboxOutlined } from '@ant-design/icons';
-import JSZip from 'jszip';
-import * as fs from 'fs';
 
 const { Dragger } = Upload;
 
-const props: UploadProps = {
-  name: 'file',
-  beforeUpload(file, FileList) {
-    JSZip.loadAsync(file) // 1) read the Blob
-      .then((zip) => {
-        const set = new Set();
-        zip.forEach(function (relativePath, zipEntry) {
-          const entry = relativePath.match(/[0-9]+/g)?.shift();
-          if (entry && !zipEntry.dir) {
-            fs.readFile(relativePath, (err, data) => {
-              console.log(data);
-            });
-            return;
-          }
-        });
-        console.log(set);
-      });
-  },
-  onChange(info) {
-    // console.log(info.file.fileName);
-    const { status } = info.file;
-    if (status !== 'uploading') {
-      // console.log(info.file, info.fileList);
-    }
-    if (status === 'done') {
-      // console.log("done");
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log('Dropped files', e.dataTransfer.files);
-  },
-};
-
 const ImportQuestions = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const { uploadProps, progress } = useCreateQuestions({});
 
   const showModal = () => {
     setModalVisible(true);
@@ -51,6 +16,7 @@ const ImportQuestions = () => {
   const closeModal = () => {
     setModalVisible(false);
   };
+
   return (
     <>
       <Button
@@ -69,7 +35,14 @@ const ImportQuestions = () => {
         onOk={closeModal}
         onCancel={closeModal}
       >
-        <Dragger {...props}>
+        <Progress
+          strokeColor={{
+            '0%': '#108ee9',
+            '100%': '#87d068',
+          }}
+          percent={progress}
+        />
+        <Dragger {...uploadProps}>
           <p className="ant-upload-drag-icon">
             <InboxOutlined />
           </p>

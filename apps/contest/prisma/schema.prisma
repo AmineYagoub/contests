@@ -10,6 +10,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Tag {
+  id                Int       @id @default(autoincrement())
+  title             String    @db.VarChar(255) @unique
+  created           DateTime  @default(now())
+  updated           DateTime  @updatedAt
+  questions         Question[]
+  contests          Contest[]
+}
+
 model Contest {
   id                Int       @id @default(autoincrement())
   type              String    @db.VarChar(100)
@@ -27,16 +36,22 @@ model Contest {
   authorId          Int       @db.UnsignedInt
   created           DateTime  @default(now())
   updated           DateTime  @updatedAt
+  tags              Tag[]
 
   @@index([type(length: 100, sort: Desc)])
   @@index([status(length: 100, sort: Desc)])
   @@index([authorId, created(sort: Desc)])
 }
 
+
+
+
 model Question {
   id                Int       @id @default(autoincrement())
   type              String    @db.VarChar(100)
   title             String    @db.VarChar(255) @unique
+  correctAnswer     String    @db.VarChar(255) 
+  lesson            String?   @db.VarChar(255) @default("")
   level             Json      @db.Json
   usedCount         Int?      @db.UnsignedInt @default(0)
   options           Json      @db.Json
@@ -45,6 +60,7 @@ model Question {
   created           DateTime  @default(now())
   updated           DateTime  @updatedAt
   contests          ContestsOnQuestions[]
+  tags              Tag[]
 
   @@index([type(length: 100, sort: Desc)])
   @@index([usedCount(sort: Desc)])

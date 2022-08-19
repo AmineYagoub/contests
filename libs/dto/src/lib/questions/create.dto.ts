@@ -1,7 +1,35 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 import { QuestionType, StudentLevel } from '@contests/types';
 import { Field, InputType, Int } from '@nestjs/graphql';
+import { Prisma } from '@prisma/client';
+
+@InputType()
+class TagInput {
+  @Field()
+  title: string;
+}
+
+@InputType()
+export class TagCreateInput {
+  @Field(() => TagInput)
+  create: { title: string };
+
+  @Field(() => TagInput)
+  where: { title: string };
+}
+
+@InputType()
+class TagConnectInput {
+  @Field(() => [TagCreateInput])
+  connectOrCreate: { create: { title: string }; where: { title: string } }[];
+}
 
 @InputType()
 export class CreateQuestionDto {
@@ -9,6 +37,16 @@ export class CreateQuestionDto {
   @IsNotEmpty()
   @IsString()
   title: string;
+
+  @Field()
+  @IsNotEmpty()
+  @IsString()
+  correctAnswer: string;
+
+  @Field()
+  @IsOptional()
+  @IsString()
+  lesson?: string;
 
   @Field(() => [StudentLevel])
   @IsNotEmpty()
@@ -24,6 +62,11 @@ export class CreateQuestionDto {
   @IsNotEmpty()
   @IsString({ each: true })
   options: string[];
+
+  @Field(() => TagConnectInput)
+  @IsOptional()
+  @IsObject()
+  tags?: Prisma.TagCreateNestedManyWithoutQuestionsInput;
 
   @Field(() => Int)
   @IsNotEmpty()

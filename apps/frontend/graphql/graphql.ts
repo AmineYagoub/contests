@@ -101,9 +101,12 @@ export type CreateContestDto = {
 
 export type CreateQuestionDto = {
   authorId: Scalars['Int'];
+  correctAnswer: Scalars['String'];
+  lesson: Scalars['String'];
   level: Array<StudentLevel>;
   options: Array<Scalars['String']>;
   published?: InputMaybe<Scalars['Boolean']>;
+  tags: TagConnectInput;
   title: Scalars['String'];
   type: QuestionType;
 };
@@ -112,11 +115,14 @@ export type Mutation = {
   __typename?: 'Mutation';
   createContest: Contest;
   createQuestion: Question;
+  createTag: Tag;
   deleteContestById?: Maybe<Contest>;
   deleteQuestionById?: Maybe<Question>;
+  deleteTagById?: Maybe<Tag>;
   seedContest?: Maybe<Scalars['Boolean']>;
   updateContest: Contest;
   updateQuestion: Question;
+  updateTag: Tag;
 };
 
 export type MutationCreateContestArgs = {
@@ -127,11 +133,19 @@ export type MutationCreateQuestionArgs = {
   input: CreateQuestionDto;
 };
 
+export type MutationCreateTagArgs = {
+  title: Scalars['String'];
+};
+
 export type MutationDeleteContestByIdArgs = {
   id: Scalars['Int'];
 };
 
 export type MutationDeleteQuestionByIdArgs = {
+  id: Scalars['Int'];
+};
+
+export type MutationDeleteTagByIdArgs = {
   id: Scalars['Int'];
 };
 
@@ -143,6 +157,11 @@ export type MutationUpdateContestArgs = {
 export type MutationUpdateQuestionArgs = {
   id: Scalars['Int'];
   input: UpdateQuestionDto;
+};
+
+export type MutationUpdateTagArgs = {
+  id: Scalars['Int'];
+  title: Scalars['String'];
 };
 
 /** OrderBy Type */
@@ -168,6 +187,8 @@ export type Query = {
   __typename?: 'Query';
   findOneContestById?: Maybe<Contest>;
   findOneQuestionById?: Maybe<Question>;
+  findOneTagById?: Maybe<Tag>;
+  findTags?: Maybe<Array<Tag>>;
   paginateContest?: Maybe<ContestPaginationResponce>;
   paginateQuestions?: Maybe<QuestionPaginationResponce>;
 };
@@ -178,6 +199,14 @@ export type QueryFindOneContestByIdArgs = {
 
 export type QueryFindOneQuestionByIdArgs = {
   id: Scalars['Int'];
+};
+
+export type QueryFindOneTagByIdArgs = {
+  id: Scalars['Int'];
+};
+
+export type QueryFindTagsArgs = {
+  title: Scalars['String'];
 };
 
 export type QueryPaginateContestArgs = {
@@ -192,15 +221,21 @@ export type Question = {
   __typename?: 'Question';
   /** Identifies the author of the Question. */
   authorId: Scalars['Int'];
+  /** Identifies the correct answer for this Question. */
+  correctAnswer: Scalars['String'];
   /** Identifies the date and time when the object was created. */
   created: Scalars['DateTime'];
   id: Scalars['ID'];
+  /** Identifies the lesson learned from this Question. */
+  lesson: Scalars['String'];
   /** Identifies a list of levels that can be join this Contest. */
   level: Array<StudentLevel>;
   /** Identifies a list of ansewers of this Question. */
   options: Array<Scalars['String']>;
   /** Identifies if the Question is published or not. */
   published: Scalars['Boolean'];
+  /** Identifies a list of tags that belongs to this Question. */
+  tags: Array<Tag>;
   /** Identifies the title of the Question. */
   title: Scalars['String'];
   /** Identifies the Type of this Question. */
@@ -242,6 +277,29 @@ export enum StudentLevel {
   Thirteen = 'Thirteen',
 }
 
+export type Tag = {
+  __typename?: 'Tag';
+  /** Identifies the date and time when the object was created. */
+  created: Scalars['DateTime'];
+  /** Identifies the title of the Tag. */
+  title: Scalars['String'];
+  /** Identifies the date and time when the object was last updated. */
+  updated: Scalars['DateTime'];
+};
+
+export type TagConnectInput = {
+  connectOrCreate: Array<TagCreateInput>;
+};
+
+export type TagCreateInput = {
+  create: TagInput;
+  where: TagInput;
+};
+
+export type TagInput = {
+  title: Scalars['String'];
+};
+
 export type UpdateContestDto = {
   authorId?: InputMaybe<Scalars['Int']>;
   countries?: InputMaybe<Array<Scalars['String']>>;
@@ -259,9 +317,12 @@ export type UpdateContestDto = {
 
 export type UpdateQuestionDto = {
   authorId?: InputMaybe<Scalars['Int']>;
+  correctAnswer?: InputMaybe<Scalars['String']>;
+  lesson?: InputMaybe<Scalars['String']>;
   level?: InputMaybe<Array<StudentLevel>>;
   options?: InputMaybe<Array<Scalars['String']>>;
   published?: InputMaybe<Scalars['Boolean']>;
+  tags?: InputMaybe<TagConnectInput>;
   title?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<QuestionType>;
   usedCount?: InputMaybe<Scalars['Int']>;
@@ -270,10 +331,8 @@ export type UpdateQuestionDto = {
 export type WhereContestArgs = {
   countries?: InputMaybe<Array<Scalars['String']>>;
   created?: InputMaybe<Array<Scalars['String']>>;
-  duration?: InputMaybe<Scalars['Int']>;
   level?: InputMaybe<Array<StudentLevel>>;
   participants?: InputMaybe<Array<Scalars['Int']>>;
-  questionCount?: InputMaybe<Scalars['Int']>;
   startTime?: InputMaybe<Array<Scalars['String']>>;
   status?: InputMaybe<ContestStatus>;
   title?: InputMaybe<Scalars['String']>;
@@ -281,9 +340,12 @@ export type WhereContestArgs = {
 };
 
 export type WhereQuestionArgs = {
+  correctAnswer?: InputMaybe<Scalars['String']>;
   created?: InputMaybe<Array<Scalars['String']>>;
+  lesson?: InputMaybe<Scalars['String']>;
   level?: InputMaybe<Array<StudentLevel>>;
   options?: InputMaybe<Array<Scalars['String']>>;
+  tags?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<QuestionType>;
 };
@@ -437,14 +499,25 @@ export type PaginateQuestionsQuery = {
       title: string;
       type: QuestionType;
       options: Array<string>;
-      published: boolean;
+      lesson: string;
+      correctAnswer: string;
       level: Array<StudentLevel>;
       created: any;
       updated: any;
       authorId: number;
       usedCount?: number | null;
+      tags: Array<{ __typename?: 'Tag'; title: string }>;
     }> | null;
   } | null;
+};
+
+export type FindTagsQueryVariables = Exact<{
+  title: Scalars['String'];
+}>;
+
+export type FindTagsQuery = {
+  __typename?: 'Query';
+  findTags?: Array<{ __typename?: 'Tag'; title: string }> | null;
 };
 
 export const CreateContestDocument = gql`
@@ -869,7 +942,11 @@ export const PaginateQuestionsDocument = gql`
         title
         type
         options
-        published
+        lesson
+        correctAnswer
+        tags {
+          title
+        }
         level
         created
         updated
@@ -929,4 +1006,57 @@ export type PaginateQuestionsLazyQueryHookResult = ReturnType<
 export type PaginateQuestionsQueryResult = Apollo.QueryResult<
   PaginateQuestionsQuery,
   PaginateQuestionsQueryVariables
+>;
+export const FindTagsDocument = gql`
+  query FindTags($title: String!) {
+    findTags(title: $title) {
+      title
+    }
+  }
+`;
+
+/**
+ * __useFindTagsQuery__
+ *
+ * To run a query within a React component, call `useFindTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindTagsQuery({
+ *   variables: {
+ *      title: // value for 'title'
+ *   },
+ * });
+ */
+export function useFindTagsQuery(
+  baseOptions: Apollo.QueryHookOptions<FindTagsQuery, FindTagsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<FindTagsQuery, FindTagsQueryVariables>(
+    FindTagsDocument,
+    options
+  );
+}
+export function useFindTagsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FindTagsQuery,
+    FindTagsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<FindTagsQuery, FindTagsQueryVariables>(
+    FindTagsDocument,
+    options
+  );
+}
+export type FindTagsQueryHookResult = ReturnType<typeof useFindTagsQuery>;
+export type FindTagsLazyQueryHookResult = ReturnType<
+  typeof useFindTagsLazyQuery
+>;
+export type FindTagsQueryResult = Apollo.QueryResult<
+  FindTagsQuery,
+  FindTagsQueryVariables
 >;

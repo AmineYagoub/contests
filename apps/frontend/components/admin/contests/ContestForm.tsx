@@ -1,4 +1,5 @@
 import { Col, DatePicker, Form, Input, InputNumber, Row, Select } from 'antd';
+import { FormInstance } from 'antd/es/form/Form';
 import moment from 'moment';
 import Image from 'next/image';
 import { FocusEvent, useState } from 'react';
@@ -8,7 +9,6 @@ import { ContestFields } from '@/utils/fields';
 import { contestMappedTypes, studentMappedLevels } from '@/utils/mapper';
 
 import type { RangePickerProps } from 'antd/es/date-picker';
-import { FormInstance } from 'antd/es/form/Form';
 const { Option } = Select;
 
 /**
@@ -66,8 +66,6 @@ const ContestForm = ({
       setCountries(countriesStor);
     }
   };
-
-  console.log(record);
 
   return (
     <Form

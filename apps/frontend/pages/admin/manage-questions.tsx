@@ -4,12 +4,19 @@ import { useState } from 'react';
 
 import CreateQuestion from '@/components/admin/question/CreateQuestion';
 import DeleteQuestion from '@/components/admin/question/DeleteQuestion';
+import ImportQuestions from '@/components/admin/question/ImportQuestions';
+import UpdateQuestion from '@/components/admin/question/UpdateQuestion';
 import {
   SearchDatePicker,
   SearchDatePickerIcon,
 } from '@/components/admin/tables/SearchDatePicker';
 import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
-import { Question, QuestionType, StudentLevel } from '@/graphql/graphql';
+import {
+  Question,
+  QuestionType,
+  StudentLevel,
+  Tag as TagModel,
+} from '@/graphql/graphql';
 import {
   QuestionsDataIndex,
   useSearchQuestions,
@@ -28,7 +35,6 @@ import styled from '@emotion/styled';
 import { TableBtn } from './dashboard';
 
 import type { ColumnsType, ColumnType } from 'antd/es/table';
-import ImportQuestions from '@/components/admin/question/ImportQuestions';
 const StyledSection = styled('section')({
   backgroundColor: '#f8f8f8 !important',
   position: 'relative',
@@ -50,13 +56,6 @@ const ManageQuestions = () => {
   };
   const onClose = () => {
     setVisible(false);
-  };
-
-  const [updateRecord, setUpdateRecord] = useState<Question>(null);
-
-  const updateQuestion = (record: Question) => {
-    setUpdateRecord(record);
-    showDrawer();
   };
 
   const getColumnSearchProps = (
@@ -115,9 +114,23 @@ const ManageQuestions = () => {
           : null,
       ...getColumnSearchDateProps(QuestionFields.created),
     },
-
     {
-      title: 'نوع السؤال',
+      title: 'الموضوعات',
+      dataIndex: QuestionFields.tags,
+      key: QuestionFields.tags,
+      ...getColumnSearchProps(QuestionFields.tags),
+      render: (tags: TagModel[]) => {
+        return tags?.map((tag) => {
+          return (
+            <Tag color="green" key={tag.title}>
+              {tag.title}
+            </Tag>
+          );
+        });
+      },
+    },
+    {
+      title: 'صعوبة السؤال',
       key: QuestionFields.type,
       dataIndex: QuestionFields.type,
       filters: questionMappedTypes,
@@ -137,7 +150,7 @@ const ManageQuestions = () => {
       },
     },
     {
-      title: 'مستوى السؤال',
+      title: 'المستوى المستهدف',
       dataIndex: QuestionFields.level,
       key: QuestionFields.level,
       filters: studentMappedLevels,
@@ -184,15 +197,7 @@ const ManageQuestions = () => {
       render: (record) => (
         <Space size="small">
           <DeleteQuestion record={record} onSuccess={refetchData} />
-          <Tooltip title="تحرير السؤال">
-            <Button
-              shape="circle"
-              icon={<EditOutlined />}
-              type="primary"
-              ghost
-              onClick={() => updateQuestion(record)}
-            />
-          </Tooltip>
+          <UpdateQuestion record={record} onSuccess={refetchData} />
         </Space>
       ),
     },
@@ -209,7 +214,7 @@ const ManageQuestions = () => {
       >
         سؤال جديد
       </TableBtn>
-      <TableBtn onClick={methods.clearAllFilters}>مسح البحث</TableBtn>
+      <TableBtn onClick={methods.clearAllFilters}>إعادة الضبط</TableBtn>
       <Table
         columns={columns}
         dataSource={data}
@@ -223,7 +228,6 @@ const ManageQuestions = () => {
         visible={visible}
         onClose={onClose}
         onSuccess={refetchData}
-        record={updateRecord}
       />
     </StyledSection>
   );

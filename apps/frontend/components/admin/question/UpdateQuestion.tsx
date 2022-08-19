@@ -1,19 +1,20 @@
-import { Alert, Button, Drawer, Form, Space, Tooltip } from 'antd';
+import { Alert, Button, Drawer, Space, Tooltip } from 'antd';
 import { useState } from 'react';
 
-import { Contest, useUpdateContestMutation } from '@/graphql/graphql';
+import { Question } from '@/graphql/graphql';
+import { useCreateQuestions } from '@/hooks/questions/create-question.hook';
 import { EditOutlined, SaveOutlined } from '@ant-design/icons';
 
-import ContestForm from './ContestForm';
+import QuestionForm from './QuestionForm';
 
-const UpdateContest = ({
+const UpdateQuestion = ({
   onSuccess,
   record,
 }: {
   onSuccess: () => void;
-  record: Contest;
+  record: Question;
 }) => {
-  const [form] = Form.useForm();
+  // TODO: GET FRECH RECORD FROM SERVER AND USE SUSPENSE
   const [visible, setVisible] = useState(false);
 
   const showDrawer = () => {
@@ -23,34 +24,14 @@ const UpdateContest = ({
   const onClose = () => {
     setVisible(false);
   };
-
-  const [UpdateContestMutation, { loading, error }] =
-    useUpdateContestMutation();
-
-  const onFinish = async () => {
-    try {
-      const values = await form.validateFields();
-
-      const data = await UpdateContestMutation({
-        variables: {
-          input: values,
-          id: Number(record.id),
-        },
-      });
-
-      if (data) {
-        form.resetFields();
-        onClose();
-        onSuccess();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+  const { onFinish, loadingUpdate, form, errorUpdate } = useCreateQuestions({
+    onSuccess,
+    record,
+    onClose,
+  });
   return (
     <>
-      <Tooltip title="تحرير المسابقة">
+      <Tooltip title="تحرير السؤال">
         <Button
           shape="circle"
           icon={<EditOutlined />}
@@ -59,15 +40,13 @@ const UpdateContest = ({
           onClick={showDrawer}
         />
       </Tooltip>
-
       <Drawer
-        title="تحديث بيانات المسابقة"
+        title="تعديل سؤال"
         placement="left"
         closable={false}
         onClose={onClose}
         visible={visible}
         width={720}
-        destroyOnClose
         extra={
           <Space>
             <Button onClick={onClose} htmlType="reset">
@@ -78,19 +57,19 @@ const UpdateContest = ({
               type="primary"
               icon={<SaveOutlined />}
               htmlType="submit"
-              form="update-contest"
-              loading={loading}
+              form="create-question"
+              loading={loadingUpdate}
             >
               حفظ
             </Button>
           </Space>
         }
       >
-        <ContestForm form={form} record={record} />
-        {error && (
+        <QuestionForm form={form} record={record} />
+        {errorUpdate && (
           <Alert
             message="خطأ"
-            description="حدث خطأ أثناء حفظ المسابقة ، يرجى المحاولة مرة أخرى"
+            description="حدث خطأ أثناء عملية حفظ السؤال ، يرجى المحاولة مرة أخرى"
             banner
             closable
             type="error"
@@ -102,4 +81,4 @@ const UpdateContest = ({
   );
 };
 
-export default UpdateContest;
+export default UpdateQuestion;

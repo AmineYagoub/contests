@@ -31,5 +31,8 @@ export const QuestionFields: { [P in QuestionsDataIndex]: P } = {
   usedCount: 'usedCount',
   created: 'created',
   updated: 'updated',
+  correctAnswer: 'correctAnswer',
+  lesson: 'lesson',
+  tags: 'tags',
   __typename: '__typename',
 };

@@ -13,6 +13,7 @@ import {
 import { ContestModule } from '../contests/contest.module';
 import { QuestionModule } from '../questions/question.module';
 import { SeederModule } from '../seeder/seeder.module';
+import { TagModule } from '../tags/tag.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { SeederModule } from '../seeder/seeder.module';
       useFactory: async (config: ContestConfigGQLType) => config,
       inject: [contestGQLConfig.KEY],
     }),
+    TagModule,
     ContestModule,
     QuestionModule,
     SeederModule,

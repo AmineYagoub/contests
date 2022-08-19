@@ -85,11 +85,7 @@ export const useSearchQuestions = () => {
     confirm();
   };
 
-  const handleTableChange: TableProps<ColumnType<Question>>['onChange'] = (
-    _,
-    filters,
-    sorter
-  ) => {
+  const handleTableChange = (pagination, filters, sorter, extra) => {
     const { field, order } = sorter;
     const o: OrderQuestionArgs = {};
 

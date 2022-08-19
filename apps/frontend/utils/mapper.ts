@@ -88,3 +88,6 @@ export const questionMappedTypes: Mapper<QuestionType>[] = [
 
 export const getMapperLabel = <T>(mapper: Mapper<T>[], val: T) =>
   mapper.find((m) => m.value === val)?.text;
+
+export const getLevelsValues = (text: string) =>
+  studentMappedLevels.find((m) => m.text === text)?.value;

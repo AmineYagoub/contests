@@ -69,15 +69,15 @@ export class QuestionService {
   /**
    * Paginate contests
    *
-   * @param params Prisma.ContestPaginationInput The pagination input.
-   * @returns Promise<Prisma.Contest[]>
+   * @param params Prisma.QuestionPaginationInput The pagination input.
+   * @returns Promise<Prisma.Question[]>
    */
   async paginate(params: {
     skip?: number;
     take?: number;
-    cursor?: Prisma.ContestWhereUniqueInput;
-    where?: Prisma.ContestWhereInput;
-    orderBy?: Prisma.ContestOrderByWithRelationInput;
+    cursor?: Prisma.QuestionWhereUniqueInput;
+    where?: Prisma.QuestionWhereInput;
+    orderBy?: Prisma.QuestionOrderByWithRelationInput;
   }) {
     const { skip, take, cursor, where: w, orderBy } = params;
     const where = this.buildWhere(w);
@@ -90,8 +90,12 @@ export class QuestionService {
         cursor,
         where,
         orderBy: sort,
+        include: {
+          tags: true,
+        },
       }),
     ]);
+
     return {
       total: data[0],
       data: data[1],
@@ -101,10 +105,10 @@ export class QuestionService {
   /**
    * Build the orderBy input for the paginate query.
    *
-   * @param orderBy Prisma.ContestOrderByWithRelationInput The Contest orderBy input.
-   * @returns Prisma.ContestOrderByWithRelationInput The built orderBy input.
+   * @param orderBy Prisma.QuestionOrderByWithRelationInput The Question orderBy input.
+   * @returns Prisma.QuestionOrderByWithRelationInput The built orderBy input.
    */
-  private buildSorter(orderBy: Prisma.ContestOrderByWithRelationInput) {
+  private buildSorter(orderBy: Prisma.QuestionOrderByWithRelationInput) {
     return orderBy
       ? Object.entries(orderBy).map(([key, value]) => ({ [key]: value }))
       : { created: Prisma.SortOrder.desc };
@@ -113,14 +117,14 @@ export class QuestionService {
   /**
    * Build the where input for the paginate query.
    *
-   * @param where Prisma.ContestWhereInput The Contest where input.
+   * @param where Prisma.QuestionWhereInput The Question where input.
    *
-   * @returns Prisma.ContestWhereInput The built where input.
+   * @returns Prisma.QuestionWhereInput The built where input.
    */
   private buildWhere(
-    where?: Prisma.ContestWhereInput
-  ): Prisma.ContestWhereInput {
-    const filter: Prisma.ContestWhereInput = {};
+    where?: Prisma.QuestionWhereInput
+  ): Prisma.QuestionWhereInput {
+    const filter: Prisma.QuestionWhereInput = {};
     if (where) {
       for (const [key, value] of Object.entries(where)) {
         switch (key) {
@@ -136,6 +140,15 @@ export class QuestionService {
             break;
           case 'type':
             filter.type = String(value);
+            break;
+          case 'tags':
+            filter.tags = {
+              some: {
+                title: {
+                  contains: String(value),
+                },
+              },
+            };
             break;
 
           case 'created':

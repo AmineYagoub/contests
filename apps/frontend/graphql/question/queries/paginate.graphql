@@ -6,7 +6,11 @@ query PaginateQuestions($params: QuestionPaginationDto!) {
       title
       type
       options
-      published
+      lesson
+      correctAnswer
+      tags {
+        title
+      }
       level
       created
       updated
