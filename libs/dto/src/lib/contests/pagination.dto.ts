@@ -12,6 +12,7 @@ export class WhereContestArgs extends PartialType(
     'duration',
     'questionCount',
     'startTime',
+    'tags',
   ] as const)
 ) {
   @Field(() => [String], { nullable: true })
@@ -19,6 +20,9 @@ export class WhereContestArgs extends PartialType(
 
   @Field(() => [String], { nullable: true })
   startTime?: string[];
+
+  @Field({ nullable: true })
+  tags: string;
 }
 
 @InputType()

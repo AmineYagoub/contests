@@ -3,6 +3,7 @@ import {
   IsDate,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsOptional,
   IsString,
   Min,
@@ -10,6 +11,8 @@ import {
 
 import { ContestStatus, ContestType, StudentLevel } from '@contests/types';
 import { Field, InputType, Int } from '@nestjs/graphql';
+import { TagConnectInput } from '../questions/create.dto';
+import { Prisma } from '@prisma/client';
 
 @InputType()
 export class CreateContestDto {
@@ -43,6 +46,11 @@ export class CreateContestDto {
   @IsNotEmpty()
   @IsDate()
   startTime: Date;
+
+  @Field(() => TagConnectInput)
+  @IsOptional()
+  @IsObject()
+  tags?: Prisma.TagCreateNestedManyWithoutContestsInput;
 
   @Field(() => Int)
   @IsNotEmpty()

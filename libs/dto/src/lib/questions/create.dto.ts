@@ -10,6 +10,10 @@ import { QuestionType, StudentLevel } from '@contests/types';
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { Prisma } from '@prisma/client';
 
+type TagTitle = {
+  title: string;
+};
+
 @InputType()
 class TagInput {
   @Field()
@@ -17,18 +21,18 @@ class TagInput {
 }
 
 @InputType()
-export class TagCreateInput {
+class TagCreateInput {
   @Field(() => TagInput)
-  create: { title: string };
+  create: TagTitle;
 
   @Field(() => TagInput)
-  where: { title: string };
+  where: TagTitle;
 }
 
 @InputType()
-class TagConnectInput {
+export class TagConnectInput {
   @Field(() => [TagCreateInput])
-  connectOrCreate: { create: { title: string }; where: { title: string } }[];
+  connectOrCreate: { create: TagTitle; where: TagTitle }[];
 }
 
 @InputType()
