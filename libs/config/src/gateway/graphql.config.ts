@@ -23,7 +23,12 @@ export const gatewayGQLConfig = registerAs(GATEWAY_GQL_REGISTER_KEY, () => ({
   gateway: {
     supergraphSdl: new IntrospectAndCompose({
       subgraphs: [
-        { name: 'CONTEST_SERVICE', url: 'http://localhost:3001/graphql' },
+        {
+          name: 'CONTEST_SERVICE',
+          url:
+            process.env.GATEWAY_CONTEST_SERVICE_HOST ||
+            'http://localhost:3001/graphql',
+        },
       ],
     }),
     serviceHealthCheck: true,
