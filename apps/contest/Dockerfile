@@ -6,6 +6,7 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
+RUN (cd apps/contest/ && npx prisma generate)
 RUN npx nx build contest --generatePackageJson --optimization 
 
 
@@ -15,9 +16,7 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-COPY --from=builder /app/dist/apps/contest/main.js ./main.js
-COPY --from=builder /app/dist/apps/contest/main.js.map ./main.js.map
-COPY --from=builder /app/dist/apps/contest/package.json ./package.json
+COPY --from=builder /app/dist/apps/contest ./
 COPY apps/contest/prisma ./prisma/
 RUN npm install
 RUN npm install prisma
