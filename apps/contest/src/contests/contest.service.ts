@@ -90,6 +90,9 @@ export class ContestService {
         cursor,
         where,
         orderBy: sort,
+        include: {
+          tags: true,
+        },
       }),
     ]);
     return {

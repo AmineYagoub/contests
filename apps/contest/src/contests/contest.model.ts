@@ -2,6 +2,7 @@ import { ContestStatus, ContestType } from '@contests/types';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { BaseModel } from '../common/base.model';
+import { Tag } from '../tags/tag.model';
 
 @ObjectType()
 export class Contest extends BaseModel {
@@ -19,6 +20,11 @@ export class Contest extends BaseModel {
     description: 'Identifies the Type of this Contest.',
   })
   type: ContestType;
+
+  @Field(() => [Tag], {
+    description: 'Identifies a list of tags that belongs to this Question.',
+  })
+  tags: Tag[];
 
   @Field(() => ContestStatus, {
     description: 'Identifies the status of the Contest.',
