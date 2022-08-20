@@ -6,7 +6,7 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-RUN npx nx run contest:build --generatePackageJson=true
+RUN npx nx build contest --generatePackageJson --optimization 
 
 
 # Production image, copy all the files and run next
