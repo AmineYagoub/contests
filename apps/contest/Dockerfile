@@ -18,7 +18,7 @@ ENV NODE_ENV production
 COPY --from=builder /app/dist/apps/contest/main.js ./main.js
 COPY --from=builder /app/dist/apps/contest/main.js.map ./main.js.map
 COPY --from=builder /app/dist/apps/contest/package.json ./package.json
-COPY prisma ./prisma/
+COPY apps/contest/prisma ./prisma/
 RUN npm install
 RUN npm install prisma
 
