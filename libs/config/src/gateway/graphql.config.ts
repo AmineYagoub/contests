@@ -12,6 +12,7 @@ export const gatewayGQLConfig = registerAs(GATEWAY_GQL_REGISTER_KEY, () => ({
   server: {
     // ... Apollo server options
     cors: true,
+    cache: 'bounded',
     context: ({ req, res }) => ({ req, res }),
     path: '/',
     debug: !isProd,
