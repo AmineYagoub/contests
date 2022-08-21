@@ -38,7 +38,9 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 const httpLink = new HttpLink({
-  uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
+  uri: prod
+    ? process.env.NEXT_PUBLIC_PROD_GRAPHQL_ENDPOINT
+    : process.env.NEXT_PUBLIC_DEV_GRAPHQL_ENDPOINT,
   credentials: 'same-origin', // Additional fetch() options like `credentials` or `headers`
 });
 

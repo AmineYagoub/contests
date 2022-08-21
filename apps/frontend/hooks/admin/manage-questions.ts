@@ -1,5 +1,5 @@
 import { TableProps } from 'antd/es/table';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   OrderByType,
@@ -17,6 +17,7 @@ import type {
   FilterValue,
   SorterResult,
 } from 'antd/es/table/interface';
+import { QuestionActions } from '@/valtio/question.state';
 
 export type QuestionsDataIndex = keyof Question;
 
@@ -77,6 +78,37 @@ export const useSearchQuestions = () => {
     ssr: false,
   });
 
+  useEffect(() => {
+    QuestionActions.setQueryLoading(loading);
+    if (data) {
+      QuestionActions.setQueryLoading(false);
+      const results = data?.paginateQuestions?.data.map((d: Question) => ({
+        key: d.id,
+        ...d,
+      }));
+      QuestionActions.setQuestionsData(results);
+    }
+    return () => {
+      QuestionActions.setQuestionsData([]);
+      QuestionActions.setQueryLoading(false);
+    };
+  }, [data]);
+
+  const refetchData = () => {
+    QuestionActions.setQueryLoading(true);
+    refetch()
+      .then(({ data }) => {
+        const results = data?.paginateQuestions?.data.map((d: Question) => ({
+          key: d.id,
+          ...d,
+        }));
+        QuestionActions.setQuestionsData(results);
+      })
+      .finally(() => {
+        QuestionActions.setQueryLoading(false);
+      });
+  };
+
   const handleSearch = (
     selectedKeys: string[],
     confirm: (param?: FilterConfirmProps) => void,
@@ -85,7 +117,11 @@ export const useSearchQuestions = () => {
     confirm();
   };
 
-  const handleTableChange = (pagination, filters, sorter, extra) => {
+  const handleTableChange: TableProps<ColumnType<Question>>['onChange'] = (
+    pagination,
+    filters,
+    sorter: SorterResult<Question>
+  ) => {
     const { field, order } = sorter;
     const o: OrderQuestionArgs = {};
 
@@ -112,7 +148,7 @@ export const useSearchQuestions = () => {
   };
 
   const methods = {
-    refetch,
+    refetchData,
     handleReset,
     handleFilter,
     handleSearch,
@@ -130,8 +166,6 @@ export const useSearchQuestions = () => {
 
   return {
     methods,
-    data: data?.paginateQuestions?.data.map((d) => ({ key: d.id, ...d })) ?? [],
-    loading,
     filteredInfo,
     sortedInfo,
   };

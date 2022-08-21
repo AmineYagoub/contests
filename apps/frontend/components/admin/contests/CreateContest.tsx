@@ -1,9 +1,7 @@
-import { Alert, Button, Drawer, Form, Space } from 'antd';
-
-import { ContestStatus, useCreateContestMutation } from '@/graphql/graphql';
+import { Alert, Button, Drawer, Space } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
-
 import ContestForm from './ContestForm';
+import { useCreateContests } from '@/hooks/contests/create-contest.hook';
 
 const CreateContest = ({
   visible,
@@ -14,33 +12,10 @@ const CreateContest = ({
   onClose: () => void;
   onSuccess: () => void;
 }) => {
-  const [form] = Form.useForm();
-  const [createContestMutation, { loading, error }] =
-    useCreateContestMutation();
-
-  const onFinish = async () => {
-    try {
-      const values = await form.validateFields();
-
-      const data = await createContestMutation({
-        variables: {
-          input: {
-            ...values,
-            status: ContestStatus.NotStarted,
-            authorId: 1,
-          },
-        },
-      });
-
-      if (data) {
-        form.resetFields();
-        onClose();
-        onSuccess();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { onFinish, loading, form, error } = useCreateContests({
+    onClose,
+    onSuccess,
+  });
 
   return (
     <Drawer

@@ -2,13 +2,14 @@ import { Col, DatePicker, Form, Input, InputNumber, Row, Select } from 'antd';
 import { FormInstance } from 'antd/es/form/Form';
 import moment from 'moment';
 import Image from 'next/image';
-import { FocusEvent, useState } from 'react';
+import { FocusEvent, useEffect, useState } from 'react';
 
 import { Contest } from '@/graphql/graphql';
 import { ContestFields } from '@/utils/fields';
 import { contestMappedTypes, studentMappedLevels } from '@/utils/mapper';
 
 import type { RangePickerProps } from 'antd/es/date-picker';
+import SelectTags from '@/components/common/SelectTags';
 const { Option } = Select;
 
 /**
@@ -67,24 +68,63 @@ const ContestForm = ({
     }
   };
 
+  useEffect(() => {
+    if (record) {
+      form.setFieldsValue({
+        duration: record.duration,
+        questionCount: record.questionCount,
+        title: record.title,
+        level: record.level,
+        type: record.type,
+        countries: record.countries,
+        startTime: moment(record.startTime),
+        maxParticipants: record.maxParticipants,
+        tags: record.tags.map((tag) => ({
+          value: tag.title,
+          label: tag.title,
+        })),
+      });
+    }
+    return () => form.resetFields();
+  }, [form, record]);
+
   return (
     <Form
       layout="vertical"
-      hideRequiredMark
       scrollToFirstError
       form={form}
       name={`${record} ? update-contest : create-contest`}
       initialValues={{
-        duration: record?.duration ?? 40,
-        questionCount: record?.questionCount ?? 100,
-        title: record?.title,
-        level: record?.level,
-        type: record?.type,
-        countries: record?.countries,
-        startTime: moment(record?.startTime),
-        maxParticipants: record?.maxParticipants,
+        duration: 40,
+        questionCount: 100,
       }}
     >
+      <Row gutter={16}>
+        <Col span={12}>
+          <Form.Item
+            name={ContestFields.title}
+            label="عنوان المسابقة"
+            rules={[{ required: true, message: 'يرجى كتابة عنوان للمسابقة' }]}
+          >
+            <Input />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item
+            name={ContestFields.level}
+            label="المستوى المستهدف"
+            rules={[{ required: true, message: 'يرجى تحديد مستوى المسابقة' }]}
+          >
+            <Select
+              mode="tags"
+              allowClear
+              showArrow
+              options={studentMappedLevels}
+              fieldNames={{ label: 'text' }}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
       <Row gutter={16}>
         <Col span={12}>
           <Form.Item
@@ -100,6 +140,51 @@ const ContestForm = ({
             />
           </Form.Item>
         </Col>
+        <Col span={12}>
+          <Form.Item
+            name={ContestFields.questionCount}
+            label="عدد أسئلة المسابقة"
+            rules={[
+              { required: true, message: 'يرجى تحديد عدد أسئلة المسابقة' },
+            ]}
+          >
+            <InputNumber style={{ width: '100%' }} />
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row gutter={16}>
+        <Col span={12}>
+          <Form.Item
+            name={ContestFields.startTime}
+            label="موعد إجراء المسابقة"
+            rules={[
+              { required: true, message: 'يرجى تحديد تاريخ بدء المسابقة' },
+            ]}
+            help="توقيت القاهرة"
+            required
+          >
+            <DatePicker
+              showTime
+              showToday
+              allowClear
+              style={{ width: '100%' }}
+              disabledDate={disabledDate}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item
+            name={ContestFields.duration}
+            label="مدة المسابقة"
+            rules={[{ required: true, message: 'يرجى تحديد مدة المسابقة' }]}
+            help="المدة الزمنية بالدقائق"
+          >
+            <InputNumber style={{ width: '100%' }} />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row gutter={16}>
         <Col span={12}>
           <Form.Item
             name={ContestFields.countries}
@@ -135,76 +220,6 @@ const ContestForm = ({
             </Select>
           </Form.Item>
         </Col>
-      </Row>
-      <Row gutter={16}>
-        <Col span={12}>
-          <Form.Item
-            name={ContestFields.title}
-            label="عنوان المسابقة"
-            rules={[{ required: true, message: 'يرجى كتابة عنوان للمسابقة' }]}
-          >
-            <Input />
-          </Form.Item>
-        </Col>
-        <Col span={12}>
-          <Form.Item
-            name={ContestFields.level}
-            label="مستوى المسابقة"
-            rules={[{ required: true, message: 'يرجى تحديد مستوى المسابقة' }]}
-          >
-            <Select
-              mode="tags"
-              allowClear
-              showArrow
-              options={studentMappedLevels}
-              fieldNames={{ label: 'text' }}
-            />
-          </Form.Item>
-        </Col>
-      </Row>
-
-      <Row gutter={16}>
-        <Col span={12}>
-          <Form.Item
-            name={ContestFields.startTime}
-            label="تاريخ البدء"
-            rules={[
-              { required: true, message: 'يرجى تحديد تاريخ بدء المسابقة' },
-            ]}
-            help="توقيت القاهرة"
-          >
-            <DatePicker
-              showTime
-              showToday
-              allowClear
-              style={{ width: '100%' }}
-              disabledDate={disabledDate}
-            />
-          </Form.Item>
-        </Col>
-        <Col span={12}>
-          <Form.Item
-            name={ContestFields.duration}
-            label="مدة المسابقة"
-            rules={[{ required: true, message: 'يرجى تحديد مدة المسابقة' }]}
-            help="المدة الزمنية بالدقائق"
-          >
-            <InputNumber style={{ width: '100%' }} />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row gutter={16}>
-        <Col span={12}>
-          <Form.Item
-            name={ContestFields.questionCount}
-            label="عدد أسئلة المسابقة"
-            rules={[
-              { required: true, message: 'يرجى تحديد عدد أسئلة المسابقة' },
-            ]}
-          >
-            <InputNumber style={{ width: '100%' }} />
-          </Form.Item>
-        </Col>
         <Col span={12}>
           <Form.Item
             name={ContestFields.maxParticipants}
@@ -215,6 +230,14 @@ const ContestForm = ({
           </Form.Item>
         </Col>
       </Row>
+      <Form.Item
+        name={ContestFields.participants}
+        label="الطلاب المستهدفين"
+        help="لن تظهر المسابقة إلا للطبة المحددين في هذا الحقل"
+      >
+        <Select allowClear showArrow fieldNames={{ label: 'text' }} />
+      </Form.Item>
+      <SelectTags />
     </Form>
   );
 };

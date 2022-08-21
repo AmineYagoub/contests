@@ -1,38 +1,46 @@
 import { proxy } from 'valtio';
 
-import { CreateQuestionDto, Question } from '@/graphql/graphql';
+import { Question } from '@/graphql/graphql';
 import { cloneDeep } from '@apollo/client/utilities';
 
 interface QuestionStorage {
-  question?: Question;
-  questions?: Question[];
-  createManyProgression?: number;
-  createManyRecords?: CreateQuestionDto[];
-  createManyRecordsFail?: CreateQuestionDto[];
+  question: Question;
+  questions: Question[];
+  queryLoading: boolean;
+  mutationLoading: boolean;
+  importProgress?: number;
+  importItemsFails: string[];
 }
 
 const init: QuestionStorage = {
   question: null,
   questions: [],
-  createManyProgression: 0,
-  createManyRecords: [],
-  createManyRecordsFail: [],
+  mutationLoading: false,
+  queryLoading: false,
+  importProgress: 0,
+  importItemsFails: [],
 };
 
 export const QuestionState = proxy<QuestionStorage>(init);
 
 export const QuestionActions = {
-  incProgress: (progress: number) => {
-    QuestionState.createManyProgression = progress;
+  setImportProgress: (progress: number) => {
+    QuestionState.importProgress = progress;
   },
   setQuestion: (question: Question) => {
     QuestionState.question = question;
   },
-  addToCreateManyRecords: (question: CreateQuestionDto) => {
-    QuestionState.createManyRecords.push(question);
+  setQuestionsData: (questions: Question[]) => {
+    QuestionState.questions = questions;
   },
-  addToCreateManyRecordsFail: (question: CreateQuestionDto) => {
-    QuestionState.createManyRecordsFail.push(question);
+  setQueryLoading: (loading: boolean) => {
+    QuestionState.queryLoading = loading;
+  },
+  setMutationLoading: (loading: boolean) => {
+    QuestionState.mutationLoading = loading;
+  },
+  setImportItemsFails: (title: string) => {
+    QuestionState.importItemsFails.push(title);
   },
 
   resetState: () => {

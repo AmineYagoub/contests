@@ -87,6 +87,9 @@ const ManageContests = () => {
       dataIndex: ContestFields.title,
       key: ContestFields.title,
       ...getColumnSearchProps(ContestFields.title),
+      render(value) {
+        return <a>{value}</a>;
+      },
     },
     {
       title: 'تاريخ الإنشاء',
@@ -113,7 +116,7 @@ const ManageContests = () => {
       render: (text) => `${text} دقيقة`,
     },
     {
-      title: 'عدد المتسابقين',
+      title: 'عدد المشاركين',
       dataIndex: ContestFields.participants,
       key: ContestFields.participants,
       sorter: true,
@@ -216,7 +219,7 @@ const ManageContests = () => {
         size="large"
         onChange={methods.handleTableChange}
         pagination={methods.handlePagination}
-        style={{ minHeight: 400 }}
+        style={{ minHeight: 500 }}
       />
       <CreateContest
         visible={visible}

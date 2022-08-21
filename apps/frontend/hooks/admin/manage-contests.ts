@@ -87,7 +87,7 @@ export const useSearchContests = () => {
   const handleTableChange: TableProps<ColumnType<Contest>>['onChange'] = (
     _,
     filters,
-    sorter
+    sorter: SorterResult<Contest>
   ) => {
     const { field, order } = sorter;
     const o: OrderContestArgs = {};
@@ -102,7 +102,7 @@ export const useSearchContests = () => {
     }
 
     const w: WhereContestArgs = {};
-    console.log(filters);
+
     for (const [key, value] of Object.entries(filters)) {
       if (value) {
         w[key] = [ContestFields.startTime, ContestFields.created].includes(
