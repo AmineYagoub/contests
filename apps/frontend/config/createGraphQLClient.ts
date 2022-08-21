@@ -12,7 +12,7 @@ import {
 import { onError } from '@apollo/client/link/error';
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
-const prod = process.env.NODE_ENV === 'production';
+const prod = process.env.NODE_ENV !== 'development';
 const isServer = typeof window === 'undefined';
 
 const defaultOptions: DefaultOptions = {
