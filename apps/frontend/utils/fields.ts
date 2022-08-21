@@ -12,6 +12,7 @@ export const ContestFields: { [P in ContestsDataIndex]: P } = {
   startTime: 'startTime',
   created: 'created',
   authorId: 'authorId',
+  tags: 'tags',
   maxParticipants: 'maxParticipants',
   published: 'published',
   participants: 'participants',

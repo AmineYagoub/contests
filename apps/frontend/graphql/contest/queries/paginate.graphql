@@ -4,6 +4,9 @@ query PaginateContests($params: ContestPaginationDto!) {
     data {
       id
       type
+      tags {
+        title
+      }
       title
       level
       duration

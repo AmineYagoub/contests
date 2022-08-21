@@ -1,4 +1,4 @@
-import { Alert, Button, Drawer, Space, Tooltip } from 'antd';
+import { Alert, Button, Drawer, Space } from 'antd';
 import { useState } from 'react';
 
 import { Question } from '@/graphql/graphql';
@@ -14,9 +14,7 @@ const UpdateQuestion = ({
   onSuccess: () => void;
   record: Question;
 }) => {
-  // TODO: GET FRECH RECORD FROM SERVER AND USE SUSPENSE
   const [visible, setVisible] = useState(false);
-
   const showDrawer = () => {
     setVisible(true);
   };
@@ -31,15 +29,14 @@ const UpdateQuestion = ({
   });
   return (
     <>
-      <Tooltip title="تحرير السؤال">
-        <Button
-          shape="circle"
-          icon={<EditOutlined />}
-          type="primary"
-          ghost
-          onClick={showDrawer}
-        />
-      </Tooltip>
+      <Button
+        shape="circle"
+        icon={<EditOutlined />}
+        type="primary"
+        ghost
+        onClick={showDrawer}
+      />
+
       <Drawer
         title="تعديل سؤال"
         placement="left"

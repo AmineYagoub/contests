@@ -49,6 +49,8 @@ export type Contest = {
   startTime: Scalars['DateTime'];
   /** Identifies the status of the Contest. */
   status: ContestStatus;
+  /** Identifies a list of tags that belongs to this Question. */
+  tags: Array<Tag>;
   /** Identifies the title of the Contest. */
   title: Scalars['String'];
   /** Identifies the Type of this Contest. */
@@ -95,6 +97,7 @@ export type CreateContestDto = {
   questionCount?: InputMaybe<Scalars['Int']>;
   startTime: Scalars['DateTime'];
   status: ContestStatus;
+  tags: TagConnectInput;
   title: Scalars['String'];
   type: ContestType;
 };
@@ -311,6 +314,7 @@ export type UpdateContestDto = {
   questionCount?: InputMaybe<Scalars['Int']>;
   startTime?: InputMaybe<Scalars['DateTime']>;
   status?: InputMaybe<ContestStatus>;
+  tags?: InputMaybe<TagConnectInput>;
   title?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<ContestType>;
 };
@@ -335,6 +339,7 @@ export type WhereContestArgs = {
   participants?: InputMaybe<Array<Scalars['Int']>>;
   startTime?: InputMaybe<Array<Scalars['String']>>;
   status?: InputMaybe<ContestStatus>;
+  tags?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<ContestType>;
 };
@@ -428,6 +433,7 @@ export type PaginateContestsQuery = {
       participants?: Array<string> | null;
       questionCount: number;
       maxParticipants: number;
+      tags: Array<{ __typename?: 'Tag'; title: string }>;
     }> | null;
   } | null;
 };
@@ -696,6 +702,9 @@ export const PaginateContestsDocument = gql`
       data {
         id
         type
+        tags {
+          title
+        }
         title
         level
         duration

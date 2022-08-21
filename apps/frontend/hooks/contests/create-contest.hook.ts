@@ -1,40 +1,41 @@
 import { Form } from 'antd';
 import { TagValue } from '@/components/common/SelectTags';
 import {
-  Question,
-  useCreateQuestionMutation,
-  useUpdateQuestionMutation,
+  Contest,
+  ContestStatus,
+  useCreateContestMutation,
+  useUpdateContestMutation,
 } from '@/graphql/graphql';
-import { QuestionActions } from '@/valtio/question.state';
+import { ContestActions } from '@/valtio/contest.state';
 
-export interface CreateQuestionsProps {
+export interface CreateContestsProps {
   visible?: boolean;
   onClose?: () => void;
   onSuccess?: () => void;
-  record?: Question;
+  record?: Contest;
 }
 
-export const useCreateQuestions = ({
+export const useCreateContests = ({
   record,
   onClose,
   onSuccess,
-}: CreateQuestionsProps) => {
+}: CreateContestsProps) => {
   const [form] = Form.useForm();
-  const [CreateQuestionMutation, { loading, error }] =
-    useCreateQuestionMutation();
+  const [CreateContestMutation, { loading, error }] =
+    useCreateContestMutation();
   const [
-    UpdateQuestionMutation,
+    UpdateContestMutation,
     { loading: loadingUpdate, error: errorUpdate },
-  ] = useUpdateQuestionMutation();
+  ] = useUpdateContestMutation();
 
   const onFinish = async () => {
     try {
-      QuestionActions.setMutationLoading(true);
+      ContestActions.setMutationLoading(true);
       const values = await form.validateFields();
       const payload = {
         ...values,
+        status: ContestStatus.NotStarted,
         authorId: 1,
-        correctAnswer: values.options.shift(),
         tags: {
           connectOrCreate: values.tags?.map((tag: TagValue) => {
             return {
@@ -46,13 +47,13 @@ export const useCreateQuestions = ({
       };
 
       const data = record
-        ? await UpdateQuestionMutation({
+        ? await UpdateContestMutation({
             variables: {
               input: payload,
               id: Number(record.id),
             },
           })
-        : await CreateQuestionMutation({
+        : await CreateContestMutation({
             variables: {
               input: payload,
             },
@@ -65,7 +66,7 @@ export const useCreateQuestions = ({
     } catch (error) {
       console.log(error);
     } finally {
-      QuestionActions.setMutationLoading(false);
+      ContestActions.setMutationLoading(false);
     }
   };
 

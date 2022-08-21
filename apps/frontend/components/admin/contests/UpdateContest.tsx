@@ -1,10 +1,11 @@
-import { Alert, Button, Drawer, Form, Space, Tooltip } from 'antd';
+import { Alert, Button, Drawer, Space } from 'antd';
 import { useState } from 'react';
 
-import { Contest, useUpdateContestMutation } from '@/graphql/graphql';
+import { Contest } from '@/graphql/graphql';
 import { EditOutlined, SaveOutlined } from '@ant-design/icons';
 
 import ContestForm from './ContestForm';
+import { useCreateContests } from '@/hooks/contests/create-contest.hook';
 
 const UpdateContest = ({
   onSuccess,
@@ -13,7 +14,6 @@ const UpdateContest = ({
   onSuccess: () => void;
   record: Contest;
 }) => {
-  const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
 
   const showDrawer = () => {
@@ -24,41 +24,21 @@ const UpdateContest = ({
     setVisible(false);
   };
 
-  const [UpdateContestMutation, { loading, error }] =
-    useUpdateContestMutation();
-
-  const onFinish = async () => {
-    try {
-      const values = await form.validateFields();
-
-      const data = await UpdateContestMutation({
-        variables: {
-          input: values,
-          id: Number(record.id),
-        },
-      });
-
-      if (data) {
-        form.resetFields();
-        onClose();
-        onSuccess();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { onFinish, loadingUpdate, errorUpdate, form } = useCreateContests({
+    onSuccess,
+    record,
+    onClose,
+  });
 
   return (
     <>
-      <Tooltip title="تحرير المسابقة">
-        <Button
-          shape="circle"
-          icon={<EditOutlined />}
-          type="primary"
-          ghost
-          onClick={showDrawer}
-        />
-      </Tooltip>
+      <Button
+        shape="circle"
+        icon={<EditOutlined />}
+        type="primary"
+        ghost
+        onClick={showDrawer}
+      />
 
       <Drawer
         title="تحديث بيانات المسابقة"
@@ -79,7 +59,7 @@ const UpdateContest = ({
               icon={<SaveOutlined />}
               htmlType="submit"
               form="update-contest"
-              loading={loading}
+              loading={loadingUpdate}
             >
               حفظ
             </Button>
@@ -87,7 +67,7 @@ const UpdateContest = ({
         }
       >
         <ContestForm form={form} record={record} />
-        {error && (
+        {errorUpdate && (
           <Alert
             message="خطأ"
             description="حدث خطأ أثناء حفظ المسابقة ، يرجى المحاولة مرة أخرى"

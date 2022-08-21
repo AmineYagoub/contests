@@ -1,4 +1,4 @@
-import { Button, Popconfirm, Tooltip } from 'antd';
+import { Button, Popconfirm } from 'antd';
 
 import { Question, useDeleteQuestionMutation } from '@/graphql/graphql';
 import { DeleteOutlined } from '@ant-design/icons';
@@ -31,14 +31,12 @@ const DeleteQuestion = ({
       title="سيتم حذف السؤال و جميع المدخلات المرتبطة به"
       onConfirm={confirmDelete}
     >
-      <Tooltip title="أحذف السؤال" color="orange">
-        <Button
-          shape="circle"
-          icon={<DeleteOutlined style={{ color: 'red' }} />}
-          danger
-          loading={loading}
-        />
-      </Tooltip>
+      <Button
+        shape="circle"
+        icon={<DeleteOutlined style={{ color: 'red' }} />}
+        danger
+        loading={loading}
+      />
     </Popconfirm>
   );
 };
