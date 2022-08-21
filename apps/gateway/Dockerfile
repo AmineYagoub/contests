@@ -16,15 +16,17 @@ WORKDIR /app
 ENV NODE_ENV production
 
 COPY --from=builder /app/dist/apps/gateway ./
+
 RUN npm install
+RUN npm install prisma @nestjs/config apollo-server-core
 
 
 ## Add the wait script to the image
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait /wait
-RUN chmod +x /wait
+ADD https://github.com/vishnubob/wait-for-it/blob/master/wait-for-it.sh ./wait-for-it.sh
+RUN chmod +x ./wait-for-it.sh
 
 # USER nest
 
 EXPOSE 3000
 ## Launch the wait tool and then your application
-CMD /wait && node ./main
+CMD ["node", "main"]
