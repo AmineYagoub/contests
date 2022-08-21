@@ -29,4 +29,4 @@ RUN chmod +x /wait
 
 EXPOSE 3001
 ## Launch the wait tool and then your application
-# CMD /wait && npx prisma migrate deploy && npx prisma generate && node ./main
+CMD /wait && npx prisma migrate deploy && npx prisma generate && node ./main
