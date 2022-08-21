@@ -1,0 +1,5 @@
+query FindTags($title: String!) {
+  findTags(title: $title) {
+    title
+  }
+}

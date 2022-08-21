@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Tag {
+  id                Int       @id @default(autoincrement())
+  title             String    @db.VarChar(255) @unique
+  created           DateTime  @default(now())
+  updated           DateTime  @updatedAt
+  questions         Question[]
+  contests          Contest[]
+}
+
+model Contest {
+  id                Int       @id @default(autoincrement())
+  type              String    @db.VarChar(100)
+  title             String    @db.VarChar(255) @unique
+  status            String    @db.VarChar(100)
+  level             Json      @db.Json
+  duration          Int?      @db.UnsignedSmallInt @default(40)
+  startTime         DateTime  @db.DateTime
+  questionCount     Int?      @db.UnsignedInt @default(100)
+  maxParticipants   Int?      @db.UnsignedInt @default(0)
+  participants      Json?     @db.Json
+  countries         Json?     @db.Json
+  questions         ContestsOnQuestions[]
+  published         Boolean?  @default(true)
+  authorId          Int       @db.UnsignedInt
+  created           DateTime  @default(now())
+  updated           DateTime  @updatedAt
+  tags              Tag[]
+
+  @@index([type(length: 100, sort: Desc)])
+  @@index([status(length: 100, sort: Desc)])
+  @@index([authorId, created(sort: Desc)])
+}
+
+
+
+
+model Question {
+  id                Int       @id @default(autoincrement())
+  type              String    @db.VarChar(100)
+  title             String    @db.VarChar(255) @unique
+  correctAnswer     String    @db.VarChar(255) 
+  lesson            String?   @db.VarChar(255) @default("")
+  level             Json      @db.Json
+  usedCount         Int?      @db.UnsignedInt @default(0)
+  options           Json      @db.Json
+  published         Boolean?  @default(true)
+  authorId          Int       @db.UnsignedInt
+  created           DateTime  @default(now())
+  updated           DateTime  @updatedAt
+  contests          ContestsOnQuestions[]
+  tags              Tag[]
+
+  @@index([type(length: 100, sort: Desc)])
+  @@index([usedCount(sort: Desc)])
+  @@index([authorId, created(sort: Desc)])
+}
+
+model ContestsOnQuestions {
+  question       Question?    @relation(fields: [questionId], references: [id])
+  questionId     Int 
+  contest        Contest?     @relation(fields: [contestId], references: [id])
+  contestId      Int 
+  assignedAt     DateTime?    @default(now())
+  assignedBy     String?
+
+  @@id([questionId, contestId])
+}

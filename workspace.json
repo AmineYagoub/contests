@@ -2,7 +2,12 @@
   "$schema": "./node_modules/nx/schemas/workspace-schema.json",
   "version": 2,
   "projects": {
+    "auth": "apps/auth",
+    "contest": "apps/contest",
+    "dto": "libs/dto",
     "frontend": "apps/frontend",
-    "frontend-e2e": "apps/frontend-e2e"
+    "frontend-e2e": "apps/frontend-e2e",
+    "gateway": "apps/gateway",
+    "types": "libs/types"
   }
 }

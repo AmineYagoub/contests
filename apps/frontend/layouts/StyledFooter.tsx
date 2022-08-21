@@ -7,7 +7,8 @@ const { Footer } = Layout;
 export const Copyright = () => (
   <>
     <small>
-      &copy; جميع الحقوق محفوظة لمنصة مسابقات {new Date().getFullYear()}
+      &copy; جميع الحقوق محفوظة لمنصة أولمبياد النحو العربي{' '}
+      {new Date().getFullYear()}
     </small>
     <br />
     <small>

@@ -1,0 +1,21 @@
+query PaginateQuestions($params: QuestionPaginationDto!) {
+  paginateQuestions(params: $params) {
+    total
+    data {
+      id
+      title
+      type
+      options
+      lesson
+      correctAnswer
+      tags {
+        title
+      }
+      level
+      created
+      updated
+      authorId
+      usedCount
+    }
+  }
+}

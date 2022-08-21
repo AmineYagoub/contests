@@ -69,6 +69,7 @@ h6 {
 table {
   font-size: 1rem;
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  min-height: 400px !important;
 }
 
 .ant-layout {

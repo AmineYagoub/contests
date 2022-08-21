@@ -4,6 +4,9 @@
   "affected": {
     "defaultBase": "main"
   },
+  "cli": {
+    "defaultCollection": "@nrwl/nest"
+  },
   "implicitDependencies": {
     "package.json": {
       "dependencies": "*",
@@ -13,10 +16,9 @@
   },
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/nx-cloud",
+      "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"],
-        "accessToken": "YzVkOWE1NDYtZjZkOS00NjIzLWI3MmItMGU0N2U5NGZlN2FifHJlYWQtd3JpdGU="
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
       }
     }
   },

@@ -1,0 +1,25 @@
+query PaginateContests($params: ContestPaginationDto!) {
+  paginateContest(params: $params) {
+    total
+    data {
+      id
+      type
+      tags {
+        title
+      }
+      title
+      level
+      duration
+      published
+      countries
+      created
+      updated
+      status
+      authorId
+      startTime
+      participants
+      questionCount
+      maxParticipants
+    }
+  }
+}

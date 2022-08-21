@@ -1,0 +1,12 @@
+mutation CreateContest($input: CreateContestDto!) {
+  createContest(input: $input) {
+    id
+    title
+    level
+    status
+    startTime
+    published
+    created
+    updated
+  }
+}

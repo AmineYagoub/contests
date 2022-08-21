@@ -1,10 +1,10 @@
 {
   "root": true,
-  "ignorePatterns": ["dist/*"],
+  "ignorePatterns": ["apps/frontend/.next/*"],
   "plugins": ["@nrwl/nx"],
   "overrides": [
     {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "files": ["*.ts", "*.tsx"],
       "rules": {
         "@nrwl/nx/enforce-module-boundaries": [
           "error",

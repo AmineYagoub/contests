@@ -1,0 +1,5 @@
+mutation DeleteContest($id: Int!) {
+  deleteContestById(id: $id) {
+    id
+  }
+}
