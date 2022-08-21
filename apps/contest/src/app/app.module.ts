@@ -12,7 +12,6 @@ import {
 
 import { ContestModule } from '../contests/contest.module';
 import { QuestionModule } from '../questions/question.module';
-import { SeederModule } from '../seeder/seeder.module';
 import { TagModule } from '../tags/tag.module';
 
 @Module({
@@ -26,7 +25,6 @@ import { TagModule } from '../tags/tag.module';
     TagModule,
     ContestModule,
     QuestionModule,
-    SeederModule,
   ],
 })
 export class AppModule {}
