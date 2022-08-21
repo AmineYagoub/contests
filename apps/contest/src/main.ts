@@ -13,7 +13,7 @@ async function bootstrap() {
     new FastifyAdapter()
   );
   const config = app.get<ContestConfigType>(contestConfig.KEY);
-  await app.listen(config.port);
+  await app.listen(config.port, '0.0.0.0');
   Logger.log(`🚀 Contest Application is running on: ${config.url}/graphiql`);
 }
 
