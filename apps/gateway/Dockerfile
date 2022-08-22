@@ -18,7 +18,7 @@ ENV NODE_ENV production
 COPY --from=builder /app/dist/apps/gateway ./
 
 RUN npm install
-RUN npm install prisma @nestjs/config apollo-server-core
+RUN npm install @nestjs/config apollo-server-core
 
 
 ## Add the wait script to the image
