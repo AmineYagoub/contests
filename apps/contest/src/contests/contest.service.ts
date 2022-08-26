@@ -14,9 +14,39 @@ export class ContestService {
    * @returns Promise<Contest>
    */
   async create(data: Prisma.ContestCreateInput): Promise<Contest> {
+    const { level } = data;
+    const questions = await this.getQuestions(level);
     return this.prisma.contest.create({
-      data,
+      data: {
+        ...data,
+        questions: {
+          connect: [
+            {
+              questionId_contestId: {
+                contestId: 22,
+                questionId: 444,
+              },
+            },
+          ],
+        },
+      },
     });
+  }
+
+  private async getQuestions(
+    level: Prisma.NullTypes.JsonNull | Prisma.InputJsonValue
+  ) {
+    if (!level) {
+      return [];
+    }
+    const questions = this.prisma.question.findMany({
+      where: {
+        level: {
+          array_contains: level as Prisma.InputJsonValue,
+        },
+      },
+    });
+    return questions;
   }
 
   /**
@@ -162,7 +192,6 @@ export class ContestService {
         }
       }
     }
-    console.log(filter);
     return filter;
   }
 }

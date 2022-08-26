@@ -18,7 +18,9 @@ query PaginateContests($params: ContestPaginationDto!) {
       authorId
       startTime
       participants
-      questionCount
+      easyQuestionCount
+      mediumQuestionCount
+      hardQuestionCount
       maxParticipants
     }
   }

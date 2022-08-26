@@ -2,6 +2,7 @@ import { ContestStatus, ContestType } from '@contests/types';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { BaseModel } from '../common/base.model';
+import { Question } from '../questions/question.model';
 import { Tag } from '../tags/tag.model';
 
 @ObjectType()
@@ -42,6 +43,13 @@ export class Contest extends BaseModel {
   })
   participants?: string[];
 
+  @Field(() => [Question], {
+    description:
+      'Identifies a list of questions ids that connected to this contest.',
+    nullable: true,
+  })
+  questions?: Question[];
+
   @Field(() => [String], {
     description:
       'Identifies a list of countries that can be allowed to join this Contest.',
@@ -50,9 +58,19 @@ export class Contest extends BaseModel {
   countries?: string[];
 
   @Field(() => Int, {
-    description: 'Identifies how many questions in the Contest.',
+    description: 'Identifies how many easy questions in the Contest.',
   })
-  questionCount: number;
+  easyQuestionCount: number;
+
+  @Field(() => Int, {
+    description: 'Identifies how many medium questions in the Contest.',
+  })
+  mediumQuestionCount: number;
+
+  @Field(() => Int, {
+    description: 'Identifies how many hard questions in the Contest.',
+  })
+  hardQuestionCount: number;
 
   @Field(() => Int, {
     description: 'Identifies the max number of Participants in the Contest.',

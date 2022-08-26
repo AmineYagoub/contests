@@ -10,7 +10,9 @@ export class WhereContestArgs extends PartialType(
     'maxParticipants',
     'published',
     'duration',
-    'questionCount',
+    'easyQuestionCount',
+    'mediumQuestionCount',
+    'hardQuestionCount',
     'startTime',
     'tags',
   ] as const)

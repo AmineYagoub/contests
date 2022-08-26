@@ -34,17 +34,21 @@ export type Contest = {
   created: Scalars['DateTime'];
   /** Identifies the duration of the Contest. */
   duration: Scalars['Int'];
+  /** Identifies how many easy questions in the Contest. */
+  easyQuestionCount: Scalars['Int'];
+  /** Identifies how many hard questions in the Contest. */
+  hardQuestionCount: Scalars['Int'];
   id: Scalars['ID'];
   /** Identifies a list of levels that can be join this Contest. */
   level: Array<StudentLevel>;
   /** Identifies the max number of Participants in the Contest. */
   maxParticipants: Scalars['Int'];
+  /** Identifies how many medium questions in the Contest. */
+  mediumQuestionCount: Scalars['Int'];
   /** Identifies a list of users ids that joins this contest. */
   participants?: Maybe<Array<Scalars['String']>>;
   /** Identifies if the Question is published or not. */
   published: Scalars['Boolean'];
-  /** Identifies how many questions in the Contest. */
-  questionCount: Scalars['Int'];
   /** Identifies the date and time when contest started. */
   startTime: Scalars['DateTime'];
   /** Identifies the status of the Contest. */
@@ -90,11 +94,13 @@ export type CreateContestDto = {
   authorId: Scalars['Int'];
   countries?: InputMaybe<Array<Scalars['String']>>;
   duration?: InputMaybe<Scalars['Int']>;
+  easyQuestionCount: Scalars['Int'];
+  hardQuestionCount: Scalars['Int'];
   level: Array<StudentLevel>;
   maxParticipants?: InputMaybe<Scalars['Int']>;
+  mediumQuestionCount: Scalars['Int'];
   participants?: InputMaybe<Array<Scalars['Int']>>;
   published?: InputMaybe<Scalars['Boolean']>;
-  questionCount?: InputMaybe<Scalars['Int']>;
   startTime: Scalars['DateTime'];
   status: ContestStatus;
   tags: TagConnectInput;
@@ -122,7 +128,6 @@ export type Mutation = {
   deleteContestById?: Maybe<Contest>;
   deleteQuestionById?: Maybe<Question>;
   deleteTagById?: Maybe<Tag>;
-  seedContest?: Maybe<Scalars['Boolean']>;
   updateContest: Contest;
   updateQuestion: Question;
   updateTag: Tag;
@@ -307,11 +312,13 @@ export type UpdateContestDto = {
   authorId?: InputMaybe<Scalars['Int']>;
   countries?: InputMaybe<Array<Scalars['String']>>;
   duration?: InputMaybe<Scalars['Int']>;
+  easyQuestionCount?: InputMaybe<Scalars['Int']>;
+  hardQuestionCount?: InputMaybe<Scalars['Int']>;
   level?: InputMaybe<Array<StudentLevel>>;
   maxParticipants?: InputMaybe<Scalars['Int']>;
+  mediumQuestionCount?: InputMaybe<Scalars['Int']>;
   participants?: InputMaybe<Array<Scalars['Int']>>;
   published?: InputMaybe<Scalars['Boolean']>;
-  questionCount?: InputMaybe<Scalars['Int']>;
   startTime?: InputMaybe<Scalars['DateTime']>;
   status?: InputMaybe<ContestStatus>;
   tags?: InputMaybe<TagConnectInput>;
@@ -402,7 +409,9 @@ export type UpdateContestMutation = {
     status: ContestStatus;
     authorId: number;
     startTime: any;
-    questionCount: number;
+    easyQuestionCount: number;
+    mediumQuestionCount: number;
+    hardQuestionCount: number;
     participants?: Array<string> | null;
   };
 };
@@ -431,7 +440,9 @@ export type PaginateContestsQuery = {
       authorId: number;
       startTime: any;
       participants?: Array<string> | null;
-      questionCount: number;
+      easyQuestionCount: number;
+      mediumQuestionCount: number;
+      hardQuestionCount: number;
       maxParticipants: number;
       tags: Array<{ __typename?: 'Tag'; title: string }>;
     }> | null;
@@ -646,7 +657,9 @@ export const UpdateContestDocument = gql`
       status
       authorId
       startTime
-      questionCount
+      easyQuestionCount
+      mediumQuestionCount
+      hardQuestionCount
       participants
     }
   }
@@ -716,7 +729,9 @@ export const PaginateContestsDocument = gql`
         authorId
         startTime
         participants
-        questionCount
+        easyQuestionCount
+        mediumQuestionCount
+        hardQuestionCount
         maxParticipants
       }
     }

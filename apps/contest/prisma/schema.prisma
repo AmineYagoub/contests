@@ -20,23 +20,25 @@ model Tag {
 }
 
 model Contest {
-  id                Int       @id @default(autoincrement())
-  type              String    @db.VarChar(100)
-  title             String    @db.VarChar(255) @unique
-  status            String    @db.VarChar(100)
-  level             Json      @db.Json
-  duration          Int?      @db.UnsignedSmallInt @default(40)
-  startTime         DateTime  @db.DateTime
-  questionCount     Int?      @db.UnsignedInt @default(100)
-  maxParticipants   Int?      @db.UnsignedInt @default(0)
-  participants      Json?     @db.Json
-  countries         Json?     @db.Json
-  questions         ContestsOnQuestions[]
-  published         Boolean?  @default(true)
-  authorId          Int       @db.UnsignedInt
-  created           DateTime  @default(now())
-  updated           DateTime  @updatedAt
-  tags              Tag[]
+  id                    Int       @id @default(autoincrement())
+  type                  String    @db.VarChar(100)
+  title                 String    @db.VarChar(255) @unique
+  status                String    @db.VarChar(100)
+  level                 Json      @db.Json
+  duration              Int?      @db.UnsignedSmallInt @default(40)
+  startTime             DateTime  @db.DateTime
+  easyQuestionCount     Int       @db.UnsignedInt 
+  mediumQuestionCount   Int       @db.UnsignedInt 
+  hardQuestionCount     Int       @db.UnsignedInt 
+  maxParticipants       Int?      @db.UnsignedInt @default(0)
+  participants          Json?     @db.Json
+  countries             Json?     @db.Json
+  questions             ContestsOnQuestions[]
+  published             Boolean?  @default(true)
+  authorId              Int       @db.UnsignedInt
+  created               DateTime  @default(now())
+  updated               DateTime  @updatedAt
+  tags                  Tag[]
 
   @@index([type(length: 100, sort: Desc)])
   @@index([status(length: 100, sort: Desc)])

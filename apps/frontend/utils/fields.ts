@@ -16,7 +16,9 @@ export const ContestFields: { [P in ContestsDataIndex]: P } = {
   maxParticipants: 'maxParticipants',
   published: 'published',
   participants: 'participants',
-  questionCount: 'questionCount',
+  easyQuestionCount: 'easyQuestionCount',
+  mediumQuestionCount: 'mediumQuestionCount',
+  hardQuestionCount: 'hardQuestionCount',
   updated: 'updated',
   __typename: '__typename',
 };

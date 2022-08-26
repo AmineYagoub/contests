@@ -1,15 +1,24 @@
-import { Col, DatePicker, Form, Input, InputNumber, Row, Select } from 'antd';
+import {
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  Row,
+  Select,
+  Space,
+} from 'antd';
 import { FormInstance } from 'antd/es/form/Form';
 import moment from 'moment';
 import Image from 'next/image';
 import { FocusEvent, useEffect, useState } from 'react';
 
+import SelectTags from '@/components/common/SelectTags';
 import { Contest } from '@/graphql/graphql';
 import { ContestFields } from '@/utils/fields';
 import { contestMappedTypes, studentMappedLevels } from '@/utils/mapper';
 
 import type { RangePickerProps } from 'antd/es/date-picker';
-import SelectTags from '@/components/common/SelectTags';
 const { Option } = Select;
 
 /**
@@ -72,7 +81,9 @@ const ContestForm = ({
     if (record) {
       form.setFieldsValue({
         duration: record.duration,
-        questionCount: record.questionCount,
+        easyQuestionCount: record.easyQuestionCount,
+        mediumQuestionCount: record.mediumQuestionCount,
+        hardQuestionCount: record.hardQuestionCount,
         title: record.title,
         level: record.level,
         type: record.type,
@@ -141,15 +152,44 @@ const ContestForm = ({
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item
-            name={ContestFields.questionCount}
-            label="عدد أسئلة المسابقة"
-            rules={[
-              { required: true, message: 'يرجى تحديد عدد أسئلة المسابقة' },
-            ]}
-          >
-            <InputNumber style={{ width: '100%' }} />
-          </Form.Item>
+          <Space size={20}>
+            <Form.Item
+              name={ContestFields.easyQuestionCount}
+              label="الأسئلة السهلة"
+              rules={[
+                {
+                  required: true,
+                  message: 'يرجى تحديد عدد الأسئلة السهلة للمسابقة',
+                },
+              ]}
+            >
+              <InputNumber />
+            </Form.Item>
+            <Form.Item
+              name={ContestFields.mediumQuestionCount}
+              label="الأسئلة المتوسطة"
+              rules={[
+                {
+                  required: true,
+                  message: 'يرجى تحديد عدد الأسئلة المتوسطة للمسابقة',
+                },
+              ]}
+            >
+              <InputNumber style={{ width: 105 }} />
+            </Form.Item>
+            <Form.Item
+              name={ContestFields.hardQuestionCount}
+              label="الأسئلة الصعبة"
+              rules={[
+                {
+                  required: true,
+                  message: 'يرجى تحديد عدد الأسئلة الصعبة للمسابقة',
+                },
+              ]}
+            >
+              <InputNumber />
+            </Form.Item>
+          </Space>
         </Col>
       </Row>
 

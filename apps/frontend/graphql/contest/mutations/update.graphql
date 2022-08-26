@@ -10,7 +10,9 @@ mutation UpdateContest($id: Int!, $input: UpdateContestDto!) {
     status
     authorId
     startTime
-    questionCount
+    easyQuestionCount
+    mediumQuestionCount
+    hardQuestionCount
     participants
   }
 }

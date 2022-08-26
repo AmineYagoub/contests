@@ -11,8 +11,9 @@ import {
 
 import { ContestStatus, ContestType, StudentLevel } from '@contests/types';
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { TagConnectInput } from '../questions/create.dto';
 import { Prisma } from '@prisma/client';
+
+import { TagConnectInput } from '../questions/create.dto';
 
 @InputType()
 export class CreateContestDto {
@@ -77,8 +78,18 @@ export class CreateContestDto {
   @IsArray()
   countries?: string[];
 
-  @Field(() => Int, { defaultValue: 100, nullable: true })
+  @Field(() => Int)
   @IsOptional()
   @IsNumber()
-  questionCount?: number;
+  easyQuestionCount: number;
+
+  @Field(() => Int)
+  @IsOptional()
+  @IsNumber()
+  mediumQuestionCount: number;
+
+  @Field(() => Int)
+  @IsOptional()
+  @IsNumber()
+  hardQuestionCount: number;
 }
