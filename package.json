@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "contest:dev": "(cd apps/contest/ && npx prisma migrate dev)",
+    "contest:reset": "(cd apps/contest/ && npx prisma migrate reset)",
     "codegen": "graphql-codegen --config codegen.yml",
     "api": "nx run gateway:serve",
     "cts": "nx run contest:serve",
