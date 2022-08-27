@@ -31,7 +31,10 @@
     "Prisma.prisma",
     "mongodb.mongodb-vscode",
     "mike-co.import-sorter",
-    "GraphQL.vscode-graphql"
+    "GraphQL.vscode-graphql",
+    "streetsidesoftware.code-spell-checker-arabic",
+    "streetsidesoftware.code-spell-checker",
+    "cweijan.vscode-mysql-client2"
   ],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
