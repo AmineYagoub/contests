@@ -49,6 +49,8 @@ export type Contest = {
   participants?: Maybe<Array<Scalars['String']>>;
   /** Identifies if the Question is published or not. */
   published: Scalars['Boolean'];
+  /** Identifies a list of questions ids that connected to this contest. */
+  questions?: Maybe<Array<Question>>;
   /** Identifies the date and time when contest started. */
   startTime: Scalars['DateTime'];
   /** Identifies the status of the Contest. */
@@ -64,6 +66,7 @@ export type Contest = {
 };
 
 export type ContestPaginationDto = {
+  includeQuestions?: InputMaybe<Scalars['Boolean']>;
   orderBy?: InputMaybe<OrderContestArgs>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
@@ -146,29 +149,29 @@ export type MutationCreateTagArgs = {
 };
 
 export type MutationDeleteContestByIdArgs = {
-  id: Scalars['Int'];
+  id: Scalars['String'];
 };
 
 export type MutationDeleteQuestionByIdArgs = {
-  id: Scalars['Int'];
+  id: Scalars['String'];
 };
 
 export type MutationDeleteTagByIdArgs = {
-  id: Scalars['Int'];
+  id: Scalars['String'];
 };
 
 export type MutationUpdateContestArgs = {
-  id: Scalars['Int'];
+  id: Scalars['String'];
   input: UpdateContestDto;
 };
 
 export type MutationUpdateQuestionArgs = {
-  id: Scalars['Int'];
+  id: Scalars['String'];
   input: UpdateQuestionDto;
 };
 
 export type MutationUpdateTagArgs = {
-  id: Scalars['Int'];
+  id: Scalars['String'];
   title: Scalars['String'];
 };
 
@@ -202,15 +205,16 @@ export type Query = {
 };
 
 export type QueryFindOneContestByIdArgs = {
-  id: Scalars['Int'];
+  id: Scalars['String'];
+  isExam?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryFindOneQuestionByIdArgs = {
-  id: Scalars['Int'];
+  id: Scalars['String'];
 };
 
 export type QueryFindOneTagByIdArgs = {
-  id: Scalars['Int'];
+  id: Scalars['String'];
 };
 
 export type QueryFindTagsArgs = {
@@ -230,7 +234,7 @@ export type Question = {
   /** Identifies the author of the Question. */
   authorId: Scalars['Int'];
   /** Identifies the correct answer for this Question. */
-  correctAnswer: Scalars['String'];
+  correctAnswer?: Maybe<Scalars['String']>;
   /** Identifies the date and time when the object was created. */
   created: Scalars['DateTime'];
   id: Scalars['ID'];
@@ -289,6 +293,7 @@ export type Tag = {
   __typename?: 'Tag';
   /** Identifies the date and time when the object was created. */
   created: Scalars['DateTime'];
+  id: Scalars['ID'];
   /** Identifies the title of the Tag. */
   title: Scalars['String'];
   /** Identifies the date and time when the object was last updated. */
@@ -382,7 +387,7 @@ export type CreateContestMutation = {
 };
 
 export type DeleteContestMutationVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['String'];
 }>;
 
 export type DeleteContestMutation = {
@@ -391,7 +396,7 @@ export type DeleteContestMutation = {
 };
 
 export type UpdateContestMutationVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['String'];
   input: UpdateContestDto;
 }>;
 
@@ -414,6 +419,84 @@ export type UpdateContestMutation = {
     hardQuestionCount: number;
     participants?: Array<string> | null;
   };
+};
+
+export type FindByIdForExamQueryVariables = Exact<{
+  id: Scalars['String'];
+  isExam?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+export type FindByIdForExamQuery = {
+  __typename?: 'Query';
+  findOneContestById?: {
+    __typename?: 'Contest';
+    id: string;
+    type: ContestType;
+    title: string;
+    level: Array<StudentLevel>;
+    duration: number;
+    published: boolean;
+    countries?: Array<string> | null;
+    created: any;
+    updated: any;
+    status: ContestStatus;
+    authorId: number;
+    startTime: any;
+    participants?: Array<string> | null;
+    easyQuestionCount: number;
+    mediumQuestionCount: number;
+    hardQuestionCount: number;
+    maxParticipants: number;
+    tags: Array<{ __typename?: 'Tag'; title: string }>;
+    questions?: Array<{
+      __typename?: 'Question';
+      id: string;
+      title: string;
+      options: Array<string>;
+      type: QuestionType;
+    }> | null;
+  } | null;
+};
+
+export type FindByIdForReviewQueryVariables = Exact<{
+  id: Scalars['String'];
+  isExam?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+export type FindByIdForReviewQuery = {
+  __typename?: 'Query';
+  findOneContestById?: {
+    __typename?: 'Contest';
+    id: string;
+    type: ContestType;
+    title: string;
+    level: Array<StudentLevel>;
+    duration: number;
+    published: boolean;
+    countries?: Array<string> | null;
+    created: any;
+    updated: any;
+    status: ContestStatus;
+    authorId: number;
+    startTime: any;
+    participants?: Array<string> | null;
+    easyQuestionCount: number;
+    mediumQuestionCount: number;
+    hardQuestionCount: number;
+    maxParticipants: number;
+    tags: Array<{ __typename?: 'Tag'; title: string }>;
+    questions?: Array<{
+      __typename?: 'Question';
+      id: string;
+      options: Array<string>;
+      type: QuestionType;
+      correctAnswer?: string | null;
+      usedCount?: number | null;
+      level: Array<StudentLevel>;
+      lesson: string;
+      tags: Array<{ __typename?: 'Tag'; title: string }>;
+    }> | null;
+  } | null;
 };
 
 export type PaginateContestsQueryVariables = Exact<{
@@ -471,7 +554,7 @@ export type CreateQuestionMutation = {
 };
 
 export type DeleteQuestionMutationVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['String'];
 }>;
 
 export type DeleteQuestionMutation = {
@@ -480,7 +563,7 @@ export type DeleteQuestionMutation = {
 };
 
 export type UpdateQuestionMutationVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['String'];
   input: UpdateQuestionDto;
 }>;
 
@@ -517,7 +600,7 @@ export type PaginateQuestionsQuery = {
       type: QuestionType;
       options: Array<string>;
       lesson: string;
-      correctAnswer: string;
+      correctAnswer?: string | null;
       level: Array<StudentLevel>;
       created: any;
       updated: any;
@@ -595,7 +678,7 @@ export type CreateContestMutationOptions = Apollo.BaseMutationOptions<
   CreateContestMutationVariables
 >;
 export const DeleteContestDocument = gql`
-  mutation DeleteContest($id: Int!) {
+  mutation DeleteContest($id: String!) {
     deleteContestById(id: $id) {
       id
     }
@@ -645,7 +728,7 @@ export type DeleteContestMutationOptions = Apollo.BaseMutationOptions<
   DeleteContestMutationVariables
 >;
 export const UpdateContestDocument = gql`
-  mutation UpdateContest($id: Int!, $input: UpdateContestDto!) {
+  mutation UpdateContest($id: String!, $input: UpdateContestDto!) {
     updateContest(id: $id, input: $input) {
       id
       title
@@ -707,6 +790,180 @@ export type UpdateContestMutationResult =
 export type UpdateContestMutationOptions = Apollo.BaseMutationOptions<
   UpdateContestMutation,
   UpdateContestMutationVariables
+>;
+export const FindByIdForExamDocument = gql`
+  query FindByIdForExam($id: String!, $isExam: Boolean) {
+    findOneContestById(id: $id, isExam: $isExam) {
+      id
+      type
+      tags {
+        title
+      }
+      questions {
+        id
+        title
+        options
+        type
+      }
+      title
+      level
+      duration
+      published
+      countries
+      created
+      updated
+      status
+      authorId
+      startTime
+      participants
+      easyQuestionCount
+      mediumQuestionCount
+      hardQuestionCount
+      maxParticipants
+    }
+  }
+`;
+
+/**
+ * __useFindByIdForExamQuery__
+ *
+ * To run a query within a React component, call `useFindByIdForExamQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindByIdForExamQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindByIdForExamQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      isExam: // value for 'isExam'
+ *   },
+ * });
+ */
+export function useFindByIdForExamQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    FindByIdForExamQuery,
+    FindByIdForExamQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<FindByIdForExamQuery, FindByIdForExamQueryVariables>(
+    FindByIdForExamDocument,
+    options
+  );
+}
+export function useFindByIdForExamLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FindByIdForExamQuery,
+    FindByIdForExamQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    FindByIdForExamQuery,
+    FindByIdForExamQueryVariables
+  >(FindByIdForExamDocument, options);
+}
+export type FindByIdForExamQueryHookResult = ReturnType<
+  typeof useFindByIdForExamQuery
+>;
+export type FindByIdForExamLazyQueryHookResult = ReturnType<
+  typeof useFindByIdForExamLazyQuery
+>;
+export type FindByIdForExamQueryResult = Apollo.QueryResult<
+  FindByIdForExamQuery,
+  FindByIdForExamQueryVariables
+>;
+export const FindByIdForReviewDocument = gql`
+  query FindByIdForReview($id: String!, $isExam: Boolean) {
+    findOneContestById(id: $id, isExam: $isExam) {
+      id
+      type
+      tags {
+        title
+      }
+      questions {
+        id
+        options
+        type
+        tags {
+          title
+        }
+        correctAnswer
+        usedCount
+        level
+        lesson
+      }
+      title
+      level
+      duration
+      published
+      countries
+      created
+      updated
+      status
+      authorId
+      startTime
+      participants
+      easyQuestionCount
+      mediumQuestionCount
+      hardQuestionCount
+      maxParticipants
+    }
+  }
+`;
+
+/**
+ * __useFindByIdForReviewQuery__
+ *
+ * To run a query within a React component, call `useFindByIdForReviewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindByIdForReviewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindByIdForReviewQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      isExam: // value for 'isExam'
+ *   },
+ * });
+ */
+export function useFindByIdForReviewQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    FindByIdForReviewQuery,
+    FindByIdForReviewQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    FindByIdForReviewQuery,
+    FindByIdForReviewQueryVariables
+  >(FindByIdForReviewDocument, options);
+}
+export function useFindByIdForReviewLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FindByIdForReviewQuery,
+    FindByIdForReviewQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    FindByIdForReviewQuery,
+    FindByIdForReviewQueryVariables
+  >(FindByIdForReviewDocument, options);
+}
+export type FindByIdForReviewQueryHookResult = ReturnType<
+  typeof useFindByIdForReviewQuery
+>;
+export type FindByIdForReviewLazyQueryHookResult = ReturnType<
+  typeof useFindByIdForReviewLazyQuery
+>;
+export type FindByIdForReviewQueryResult = Apollo.QueryResult<
+  FindByIdForReviewQuery,
+  FindByIdForReviewQueryVariables
 >;
 export const PaginateContestsDocument = gql`
   query PaginateContests($params: ContestPaginationDto!) {
@@ -848,7 +1105,7 @@ export type CreateQuestionMutationOptions = Apollo.BaseMutationOptions<
   CreateQuestionMutationVariables
 >;
 export const DeleteQuestionDocument = gql`
-  mutation DeleteQuestion($id: Int!) {
+  mutation DeleteQuestion($id: String!) {
     deleteQuestionById(id: $id) {
       id
     }
@@ -898,7 +1155,7 @@ export type DeleteQuestionMutationOptions = Apollo.BaseMutationOptions<
   DeleteQuestionMutationVariables
 >;
 export const UpdateQuestionDocument = gql`
-  mutation UpdateQuestion($id: Int!, $input: UpdateQuestionDto!) {
+  mutation UpdateQuestion($id: String!, $input: UpdateQuestionDto!) {
     updateQuestion(id: $id, input: $input) {
       id
       type

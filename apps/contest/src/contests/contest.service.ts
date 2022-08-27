@@ -1,7 +1,20 @@
+import { QuestionType } from '@contests/types';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Contest, Prisma } from '@prisma/client';
+import { Contest, Prisma, Question } from '@prisma/client';
 
 import { PrismaService } from '../app/prisma.service';
+
+type PaginateContestParams = {
+  skip?: number;
+  take?: number;
+  cursor?: Prisma.ContestWhereUniqueInput;
+  where?: Prisma.ContestWhereInput;
+  orderBy?: Prisma.ContestOrderByWithRelationInput;
+  include?: {
+    questions?: boolean;
+    tags?: boolean;
+  };
+};
 
 @Injectable()
 export class ContestService {
@@ -14,39 +27,55 @@ export class ContestService {
    * @returns Promise<Contest>
    */
   async create(data: Prisma.ContestCreateInput): Promise<Contest> {
-    const { level } = data;
-    const questions = await this.getQuestions(level);
-    return this.prisma.contest.create({
-      data: {
-        ...data,
-        questions: {
-          connect: [
-            {
-              questionId_contestId: {
-                contestId: 22,
-                questionId: 444,
-              },
-            },
-          ],
-        },
-      },
+    const { level, easyQuestionCount, mediumQuestionCount, hardQuestionCount } =
+      data;
+    const total = easyQuestionCount + mediumQuestionCount + hardQuestionCount;
+    const questions = await this.getConnectedQuestions(level, total);
+    const results = questions.length
+      ? {
+          ...data,
+          questions: {
+            connect: questions,
+          },
+        }
+      : data;
+    return await this.prisma.contest.create({
+      data: results,
     });
   }
 
-  private async getQuestions(
-    level: Prisma.NullTypes.JsonNull | Prisma.InputJsonValue
+  /**
+   *
+   * @param level
+   * @param total
+   * @param contestId
+   * @returns
+   */
+  private async getConnectedQuestions(
+    level: Prisma.NullTypes.JsonNull | Prisma.InputJsonValue,
+    total: number
   ) {
     if (!level) {
       return [];
     }
-    const questions = this.prisma.question.findMany({
+    const levels = (level as Array<string>).map((el) => ({
+      level: {
+        array_contains: [el],
+      },
+    }));
+
+    const questions = await this.prisma.question.findMany({
       where: {
-        level: {
-          array_contains: level as Prisma.InputJsonValue,
-        },
+        OR: levels,
+      },
+      take: total,
+      select: {
+        id: true,
       },
     });
-    return questions;
+    return questions.map((el) => ({
+      id: el.id,
+    }));
   }
 
   /**
@@ -85,15 +114,48 @@ export class ContestService {
    * @returns Promise<Contest | null>
    */
   async findUnique(
-    input: Prisma.ContestWhereUniqueInput
+    input: Prisma.ContestWhereUniqueInput,
+    isExam: boolean
   ): Promise<Contest | null> {
-    const contest = this.prisma.contest.findUnique({
+    const contest = await this.prisma.contest.findUnique({
       where: input,
+      include: {
+        tags: true,
+        questions: true,
+      },
     });
     if (!contest) {
       throw new NotFoundException('contest not found');
     }
+    if (isExam) {
+      const { questions } = contest;
+      contest.questions = this.normalizeQuestions(questions);
+    }
     return contest;
+  }
+
+  /**
+   * Sort and shuffle answers.
+   *
+   * @param questions Question[]
+   * @returns Question[]
+   */
+  private normalizeQuestions(questions: Question[]) {
+    const order = {
+      [QuestionType.EASY]: 1,
+      [QuestionType.MEDIUM]: 2,
+      [QuestionType.HARD]: 3,
+    };
+    const sorted = questions.sort((a, b) => order[a.type] - order[b.type]);
+    const shuffled = sorted.map((el) => {
+      const { options, correctAnswer, ...rest } = el;
+      const allOptions = [...(options as Array<string>), correctAnswer]
+        .map((value) => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value);
+      return { options: allOptions, ...rest } as Question;
+    });
+    return shuffled;
   }
 
   /**
@@ -108,23 +170,29 @@ export class ContestService {
     cursor?: Prisma.ContestWhereUniqueInput;
     where?: Prisma.ContestWhereInput;
     orderBy?: Prisma.ContestOrderByWithRelationInput;
+    includeQuestions?: boolean;
   }) {
-    const { skip, take, cursor, where: w, orderBy } = params;
+    const { skip, take, cursor, where: w, orderBy, includeQuestions } = params;
     const where = this.buildWhere(w);
     const sort = this.buildSorter(orderBy);
+    const findArgs: PaginateContestParams = {
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy: sort as Prisma.ContestOrderByWithRelationInput,
+      include: {
+        tags: true,
+      },
+    };
+    if (includeQuestions) {
+      findArgs.include.questions = true;
+    }
     const data = await this.prisma.$transaction([
       this.prisma.contest.count({ where }),
-      this.prisma.contest.findMany({
-        skip,
-        take,
-        cursor,
-        where,
-        orderBy: sort,
-        include: {
-          tags: true,
-        },
-      }),
+      this.prisma.contest.findMany(findArgs),
     ]);
+    console.log(data[1][0]);
     return {
       total: data[0],
       data: data[1],
@@ -138,7 +206,7 @@ export class ContestService {
    * @returns Prisma.ContestOrderByWithRelationInput The built orderBy input.
    */
   private buildSorter(orderBy: Prisma.ContestOrderByWithRelationInput) {
-    const entries = Object.entries(orderBy);
+    const entries = Object.entries(orderBy ?? {});
     return entries.length
       ? entries.map(([key, value]) => ({ [key]: value }))
       : { created: Prisma.SortOrder.desc };

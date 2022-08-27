@@ -1,20 +1,15 @@
-import {
-  Button,
-  Col,
-  Layout,
-  PageHeader,
-  Row,
-  Space,
-  Statistic,
-  Tag,
-} from 'antd';
-import Link from 'next/link';
+import { Layout, Spin } from 'antd';
 
-import ContestQuestionnaire from '@/components/contest/ContestQuestionnaire';
-import { AppRoutes } from '@/config/routes';
 import theme from '@/config/theme';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
+import { NextPage } from 'next';
+import { useRouter } from 'next/router';
+import { Contest, useFindByIdForExamLazyQuery } from '@/graphql/graphql';
+import { useEffect } from 'react';
+import ContestPageHeader from '@/components/contest/ContestPageHeader';
+import ContestLoadingHeader from '@/components/contest/ContestLoadingHeader';
+import ContestStarter from '@/components/contest/ContestStarter';
+import { ContestActions } from '@/valtio/contest.state';
 
 const { Content } = Layout;
 const StyledContent = styled(Content)({
@@ -25,91 +20,24 @@ const StyledContent = styled(Content)({
   maxHeight: '600px !important',
 });
 
-const StyledStat = styled(Statistic)({
-  ['.ant-statistic-content']: {
-    height: 30,
-    justifyContent: 'center',
-  },
-});
+const StartContestPage: NextPage = () => {
+  const router = useRouter();
+  const [FindByIdForExamQuery, { loading }] = useFindByIdForExamLazyQuery();
 
-const StyledStatLevels = styled(Statistic)({
-  ['.ant-statistic-content']: {
-    height: 30,
-    justifyContent: 'center',
-  },
-  ['.ant-statistic-content-value']: {
-    display: 'none',
-  },
-});
-
-const { Countdown } = Statistic;
-const StyledCountdown = styled(Countdown)({
-  ['.ant-statistic-content']: {
-    height: 30,
-    justifyContent: 'center',
-  },
-});
-
-const StyledCol = styled(Col)({
-  textAlign: 'center',
-});
-
-const StyledNavigationBtn = styled(Space)({
-  position: 'absolute',
-  left: '50%',
-  transform: 'translate(-50%, 0)',
-  top: 15,
-  button: {
-    backgroundImage:
-      'linear-gradient(to right, #4776E6 0%, #8E54E9  51%, #4776E6  100%)',
-    color: 'white',
-    boxShadow: ' 0 0 20px #eee',
-  },
-});
-
-const StartContestPage = () => {
-  const deadline = Date.now() + 1000 * 60 * 60 * 24 * 2 + 1000 * 30; // Moment is also OK
+  useEffect(() => {
+    if (router.query.key) {
+      FindByIdForExamQuery({
+        variables: { id: router.query.key as string, isExam: true },
+      }).then(({ data }) =>
+        ContestActions.setContest(data.findOneContestById as Contest)
+      );
+    }
+  }, [router.query.key]);
   return (
     <Layout>
-      <PageHeader
-        onBack={() => null}
-        title={<Link href={AppRoutes.Home}>{`الرئيسية`}</Link>}
-        subTitle="عنوان المسابقة الرئيسي"
-        style={{ backgroundColor: theme.successColor }}
-        extra={
-          <StyledNavigationBtn>
-            <Button icon={<RightOutlined />} shape="circle" size="large" />
-            <strong>تصفح الأسئلة</strong>
-            <Button icon={<LeftOutlined />} shape="circle" size="large" />
-          </StyledNavigationBtn>
-        }
-      >
-        <Row justify="center">
-          <StyledCol span={6}>
-            <StyledStatLevels
-              title="مستوى المسابقة"
-              value=""
-              suffix={[13, 14, 15].map((el) => (
-                <Tag key={el} color="green">
-                  {el}
-                </Tag>
-              ))}
-            />
-          </StyledCol>
-          <StyledCol span={6}>
-            <StyledCountdown
-              title="الوقت المتبقي"
-              value={deadline}
-              format="HH:mm:ss"
-            />
-          </StyledCol>
-          <StyledCol span={6}>
-            <StyledStat title="عدد الأسئلة" value={93} suffix="/ 100" />
-          </StyledCol>
-        </Row>
-      </PageHeader>
+      {loading ? <ContestLoadingHeader /> : <ContestPageHeader />}
       <StyledContent>
-        <ContestQuestionnaire />
+        {loading ? <Spin size="large" /> : <ContestStarter />}
       </StyledContent>
     </Layout>
   );

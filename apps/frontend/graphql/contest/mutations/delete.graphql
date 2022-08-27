@@ -1,4 +1,4 @@
-mutation DeleteContest($id: Int!) {
+mutation DeleteContest($id: String!) {
   deleteContestById(id: $id) {
     id
   }

@@ -1,17 +1,12 @@
 import { Divider } from 'antd';
-import {
-  AnimatePresence,
-  AnimationControls,
-  motion,
-  useAnimationControls,
-  Variants,
-} from 'framer-motion';
+import { AnimatePresence, motion, useAnimationControls } from 'framer-motion';
 import { useEffect, useState } from 'react';
-
 import { CheckCircleOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
+import { Question } from '@/graphql/graphql';
+import { ContestActions } from '@/valtio/contest.state';
 
-export const StyledSection = styled('section')({
+export const StyledSection = styled(motion.section)({
   padding: 10,
   textAlign: 'center',
   h2: {
@@ -65,10 +60,6 @@ const hover = {
   backgroundImage:
     'linear-gradient( 109.6deg,  rgba(0,191,165,1) 11.2%, rgba(0,140,122,1) 100.2% )',
 };
-const variants: Variants = {
-  selected: { opacity: 1, x: 0 },
-  closed: { opacity: 0, x: '-100%' },
-};
 
 interface AnswerOptionProps {
   data: string[];
@@ -110,8 +101,16 @@ const AnswerOptions = ({ data }: AnswerOptionProps) => {
       clearTimeout(t);
     };
   }, [selected]);
+
+  const onTapStart = (index: number) => {
+    setSelected(index);
+    setTimeout(() => {
+      ContestActions.incrementQuestionIndex();
+    }, 600);
+  };
+
   return (
-    <AnimatePresence initial={false}>
+    <AnimatePresence mode="wait">
       {data.map((el, i) => (
         <StyledContainer
           key={i}
@@ -122,7 +121,7 @@ const AnswerOptions = ({ data }: AnswerOptionProps) => {
         >
           {selected === i && <StyledIcon />}
           <StyledAnswers
-            onTapStart={() => setSelected(i)}
+            onTapStart={() => onTapStart(i)}
             onTapCancel={() => setSelected(null)}
             whileHover={hover}
             whileTap={tap}
@@ -136,19 +135,25 @@ const AnswerOptions = ({ data }: AnswerOptionProps) => {
   );
 };
 
-const answers = [
-  'الجواب الاول',
-  'الجواب الثاني',
-  'الجواب الثالث',
-  'الجواب الرابع',
-];
-
-const ContestQuestionnaire = () => {
+const ContestQuestionnaire = ({ question }: { question: Question }) => {
   return (
-    <StyledSection>
-      <h2>ما هو إعراب كلمة المدثر؟</h2>
+    <StyledSection
+      exit={{ y: -30, opacity: 0 }}
+      transition={{ type: 'spring' }}
+      initial={{ y: -30, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+    >
+      <motion.h2
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        transition={{ type: 'spring' }}
+      >
+        {question.title}
+      </motion.h2>
       <Divider />
-      <AnswerOptions data={answers} />
+
+      <AnswerOptions data={question.options} />
     </StyledSection>
   );
 };
