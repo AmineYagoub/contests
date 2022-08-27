@@ -46,4 +46,7 @@ export class OrderContestArgs {
 export class ContestPaginationDto extends PaginatedArgs(
   WhereContestArgs,
   OrderContestArgs
-) {}
+) {
+  @Field(() => Boolean, { nullable: true, defaultValue: false })
+  includeQuestions?: boolean;
+}
