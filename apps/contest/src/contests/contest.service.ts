@@ -153,13 +153,21 @@ export class ContestService {
         .map((value) => ({ value, sort: Math.random() }))
         .sort((a, b) => a.sort - b.sort)
         .map(({ value }) => value);
-      return { options: allOptions, ...rest } as Question;
+      return {
+        options: this.normalizeOptions(allOptions),
+        ...rest,
+      } as Question;
     });
     return shuffled;
   }
 
+  /**
+   *
+   * @param options
+   * @returns
+   */
   private normalizeOptions(options: string[]) {
-    if (options.length < 4) {
+    while (options.length < 4) {
       options.push('empty');
     }
     return options.map((opt) => opt.replace(/\r/g, ' '));

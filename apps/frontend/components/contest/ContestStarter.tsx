@@ -24,6 +24,7 @@ const ContestStarter = () => {
               contestSnap.contestCurrentIndex
             ] as Question
           }
+          questionIndex={contestSnap.contestCurrentIndex}
         />
       ) : contestSnap.contestFinished ? (
         <ContestFinished />

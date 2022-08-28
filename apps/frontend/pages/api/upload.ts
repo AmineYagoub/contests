@@ -92,7 +92,6 @@ const processFiles = async (path: string) => {
       });
     }
   }
-  console.log(result);
   return result;
 };
 

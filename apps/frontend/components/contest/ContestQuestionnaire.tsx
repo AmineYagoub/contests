@@ -58,15 +58,14 @@ const focus = {
 const hover = {
   cursor: 'pointer',
   scale: 1.03,
-  backgroundImage:
-    'linear-gradient( 109.6deg,  rgba(0,191,165,1) 11.2%, rgba(0,140,122,1) 100.2% )',
 };
 
 interface AnswerOptionProps {
   data: string[];
+  questionIndex: number;
 }
 
-const AnswerOptions = ({ data }: AnswerOptionProps) => {
+const AnswerOptions = ({ data, questionIndex }: AnswerOptionProps) => {
   const [selected, setSelected] = useState(null);
   const controls = useAnimationControls();
 
@@ -89,6 +88,8 @@ const AnswerOptions = ({ data }: AnswerOptionProps) => {
     }),
   };
 
+  // TODO Show correct answer when user get back
+
   useEffect(() => {
     let t = null;
     if (selected !== null) {
@@ -103,8 +104,9 @@ const AnswerOptions = ({ data }: AnswerOptionProps) => {
     };
   }, [selected]);
 
-  const onTapStart = (index: number) => {
+  const onTapStart = (index: number, el: string) => {
     setSelected(index);
+    ContestActions.setAnswer(index, el);
     setTimeout(() => {
       ContestActions.incrementQuestionIndex();
     }, 1000);
@@ -122,11 +124,12 @@ const AnswerOptions = ({ data }: AnswerOptionProps) => {
         >
           {selected === i && <StyledIcon />}
           <StyledAnswers
-            onTapStart={() => onTapStart(i)}
+            onTapStart={() => onTapStart(i, el)}
             onTapCancel={() => setSelected(null)}
             whileHover={hover}
             whileTap={tap}
             whileFocus={selected !== null ? focus : {}}
+            style={{ visibility: el === 'empty' ? 'hidden' : 'visible' }} // empty element just for animation to work
           >
             {el}
           </StyledAnswers>
@@ -136,7 +139,13 @@ const AnswerOptions = ({ data }: AnswerOptionProps) => {
   );
 };
 
-const ContestQuestionnaire = ({ question }: { question: Question }) => {
+const ContestQuestionnaire = ({
+  question,
+  questionIndex,
+}: {
+  question: Question;
+  questionIndex: number;
+}) => {
   return (
     <StyledSection
       exit={{ y: -30, opacity: 0 }}
@@ -157,7 +166,7 @@ const ContestQuestionnaire = ({ question }: { question: Question }) => {
       </AnimatePresence>
       <Divider />
 
-      <AnswerOptions data={question.options} />
+      <AnswerOptions data={question.options} questionIndex={questionIndex} />
     </StyledSection>
   );
 };

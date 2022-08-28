@@ -3,9 +3,16 @@ import { proxy } from 'valtio';
 import { Contest } from '@/graphql/graphql';
 import { cloneDeep } from '@apollo/client/utilities';
 
+type AnswerType = {
+  questionIndex: number;
+  optionIndex: number;
+  option: string;
+};
+
 interface ContestStorage {
   contest: Contest;
   contests: Contest[];
+  answers: AnswerType[];
   queryLoading: boolean;
   contestStarted: boolean;
   contestFinished: boolean;
@@ -18,6 +25,7 @@ interface ContestStorage {
 const init: ContestStorage = {
   contest: null,
   contests: [],
+  answers: [],
   queryLoading: false,
   contestStarted: false,
   contestCurrentIndex: 0,
@@ -35,6 +43,13 @@ export const ContestActions = {
   },
   setContestsData: (contests: Contest[]) => {
     ContestState.contests = contests;
+  },
+  setAnswer: (optionIndex: number, option: string) => {
+    ContestState.answers.push({
+      questionIndex: ContestState.contestCurrentIndex,
+      optionIndex,
+      option,
+    });
   },
   setQueryLoading: (loading: boolean) => {
     ContestState.queryLoading = loading;

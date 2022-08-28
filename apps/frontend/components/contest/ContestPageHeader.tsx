@@ -6,7 +6,7 @@ import { useSnapshot } from 'valtio';
 import { AppRoutes } from '@/config/routes';
 import theme from '@/config/theme';
 import { getMapperLabel, studentMappedLevels } from '@/utils/mapper';
-import { ContestState } from '@/valtio/contest.state';
+import { ContestActions, ContestState } from '@/valtio/contest.state';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
 
@@ -70,7 +70,7 @@ const ContestPageHeader = () => {
     <PageHeader
       onBack={() => null}
       title={<Link href={AppRoutes.Home}>{`الرئيسية`}</Link>}
-      subTitle={contestSnap.contest.title}
+      subTitle={<h1>{contestSnap.contest.title}</h1>}
       style={{ backgroundColor: theme.successColor }}
       extra={
         <StyledNavigationBtn>
@@ -78,14 +78,15 @@ const ContestPageHeader = () => {
             icon={<RightOutlined />}
             shape="circle"
             size="large"
-            disabled={!contestSnap.contestFinished}
+            disabled={contestSnap.contestCurrentIndex <= 0}
+            onClick={() => ContestActions.decrementQuestionIndex()}
           />
           <strong>تصفح الأسئلة</strong>
           <Button
             icon={<LeftOutlined />}
             shape="circle"
             size="large"
-            disabled={contestSnap.contestCurrentIndex <= 0}
+            disabled={!contestSnap.contestFinished}
           />
         </StyledNavigationBtn>
       }
@@ -108,6 +109,7 @@ const ContestPageHeader = () => {
               title="الوقت المتبقي"
               value={durationCount}
               format="HH:mm:ss"
+              valueStyle={{ color: theme.primaryColor }}
             />
           ) : (
             <StyledStat
