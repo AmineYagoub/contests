@@ -1,6 +1,5 @@
 import {
   Args,
-  Int,
   Mutation,
   Query,
   Resolver,
@@ -15,7 +14,7 @@ export class TagResolver {
   constructor(private tagService: TagService) {}
 
   @Query(() => Tag, { nullable: true })
-  async findOneTagById(@Args('id', { type: () => Int }) id: number) {
+  async findOneTagById(@Args('id') id: string) {
     return this.tagService.findUnique({ id });
   }
 
@@ -25,7 +24,7 @@ export class TagResolver {
   }
 
   @Mutation(() => Tag, { nullable: true })
-  async deleteTagById(@Args('id', { type: () => Int }) id: number) {
+  async deleteTagById(@Args('id') id: string) {
     return this.tagService.delete({ id });
   }
 
@@ -35,10 +34,7 @@ export class TagResolver {
   }
 
   @Mutation(() => Tag)
-  async updateTag(
-    @Args('id', { type: () => Int }) id: number,
-    @Args('title') title: string
-  ) {
+  async updateTag(@Args('id') id: string, @Args('title') title: string) {
     return this.tagService.update({ data: { title }, where: { id } });
   }
 
@@ -49,7 +45,7 @@ export class TagResolver {
    * @returns
    */
   @ResolveReference()
-  async resolveReference(reference: { __typename: string; id: number }) {
+  async resolveReference(reference: { __typename: string; id: string }) {
     return this.tagService.findUnique({ id: reference.id });
   }
 }

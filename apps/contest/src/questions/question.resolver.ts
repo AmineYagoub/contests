@@ -5,7 +5,6 @@ import {
 } from '@contests/dto';
 import {
   Args,
-  Int,
   Mutation,
   Query,
   Resolver,
@@ -21,12 +20,12 @@ export class QuestionResolver {
   constructor(private questionService: QuestionService) {}
 
   @Query(() => Question, { nullable: true })
-  async findOneQuestionById(@Args('id', { type: () => Int }) id: number) {
+  async findOneQuestionById(@Args('id') id: string) {
     return this.questionService.findUnique({ id });
   }
 
   @Mutation(() => Question, { nullable: true })
-  async deleteQuestionById(@Args('id', { type: () => Int }) id: number) {
+  async deleteQuestionById(@Args('id') id: string) {
     return this.questionService.delete({ id });
   }
 
@@ -42,7 +41,7 @@ export class QuestionResolver {
 
   @Mutation(() => Question)
   async updateQuestion(
-    @Args('id', { type: () => Int }) id: number,
+    @Args('id') id: string,
     @Args('input') data: UpdateQuestionDto
   ) {
     return this.questionService.update({ data, where: { id } });
@@ -55,7 +54,7 @@ export class QuestionResolver {
    * @returns
    */
   @ResolveReference()
-  async resolveReference(reference: { __typename: string; id: number }) {
+  async resolveReference(reference: { __typename: string; id: string }) {
     return this.questionService.findUnique({ id: reference.id });
   }
 }

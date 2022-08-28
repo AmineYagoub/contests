@@ -13,6 +13,7 @@ export class Question extends BaseModel {
 
   @Field({
     description: 'Identifies the correct answer for this Question.',
+    nullable: true,
   })
   correctAnswer: string;
 

@@ -40,7 +40,7 @@ export const useImportQuestions = () => {
 
   const uploadProps: UploadProps = {
     name: 'file',
-    beforeUpload(file, FileList) {
+    /*beforeUpload(file, FileList) { 
       QuestionActions.setImportProgress(5);
       JSZip.loadAsync(file) // read the Blob
         .then((zip) => {
@@ -105,10 +105,11 @@ export const useImportQuestions = () => {
               });
           });
         });
-    },
+    }, */
     onDrop(e) {
       console.log('Dropped files', e.dataTransfer.files);
     },
+    action: '/api/upload',
   };
   return {
     uploadProps,

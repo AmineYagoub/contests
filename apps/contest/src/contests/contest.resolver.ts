@@ -5,7 +5,6 @@ import {
 } from '@contests/dto';
 import {
   Args,
-  Int,
   Mutation,
   Query,
   Resolver,
@@ -21,8 +20,16 @@ export class ContestResolver {
   constructor(private contestService: ContestService) {}
 
   @Query(() => Contest, { nullable: true })
-  async findOneContestById(@Args('id', { type: () => Int }) id: number) {
-    return this.contestService.findUnique({ id });
+  async findOneContestById(
+    @Args('id') id: string,
+    @Args('isExam', {
+      type: () => Boolean,
+      defaultValue: false,
+      nullable: true,
+    })
+    isExam?: boolean
+  ) {
+    return this.contestService.findUnique({ id }, isExam);
   }
 
   @Query(() => ContestPaginationResponce, { nullable: true })
@@ -36,13 +43,13 @@ export class ContestResolver {
   }
 
   @Mutation(() => Contest, { nullable: true })
-  async deleteContestById(@Args('id', { type: () => Int }) id: number) {
+  async deleteContestById(@Args('id') id: string) {
     return this.contestService.delete({ id });
   }
 
   @Mutation(() => Contest)
   async updateContest(
-    @Args('id', { type: () => Int }) id: number,
+    @Args('id') id: string,
     @Args('input') data: UpdateContestDto
   ) {
     return this.contestService.update({ data, where: { id } });
@@ -55,7 +62,7 @@ export class ContestResolver {
    * @returns
    */
   @ResolveReference()
-  async resolveReference(reference: { __typename: string; id: number }) {
-    return this.contestService.findUnique({ id: reference.id });
+  async resolveReference(reference: { __typename: string; id: string }) {
+    return this.contestService.findUnique({ id: reference.id }, false);
   }
 }

@@ -50,7 +50,7 @@ export const useCreateContests = ({
         ? await UpdateContestMutation({
             variables: {
               input: payload,
-              id: Number(record.id),
+              id: record.id,
             },
           })
         : await CreateContestMutation({
