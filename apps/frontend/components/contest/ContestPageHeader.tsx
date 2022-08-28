@@ -1,13 +1,14 @@
 import { Button, Col, PageHeader, Row, Space, Statistic, Tag } from 'antd';
 import Link from 'next/link';
+import { useMemo } from 'react';
+import { useSnapshot } from 'valtio';
 
 import { AppRoutes } from '@/config/routes';
 import theme from '@/config/theme';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import styled from '@emotion/styled';
 import { getMapperLabel, studentMappedLevels } from '@/utils/mapper';
 import { ContestState } from '@/valtio/contest.state';
-import { useSnapshot } from 'valtio';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import styled from '@emotion/styled';
 
 const StyledStat = styled(Statistic)({
   ['.ant-statistic-content']: {
@@ -55,6 +56,10 @@ const deadline = (target: number) => Date.now() + 1000 * 60 * target + 1000;
 
 const ContestPageHeader = () => {
   const contestSnap = useSnapshot(ContestState);
+  const durationCount = useMemo(
+    () => deadline(contestSnap?.contest?.duration),
+    [contestSnap?.contest?.duration]
+  );
   if (!contestSnap.contest) {
     return;
   }
@@ -101,7 +106,7 @@ const ContestPageHeader = () => {
           {contestSnap.contestStarted ? (
             <StyledCountdown
               title="الوقت المتبقي"
-              value={deadline(contestSnap.contest.duration)}
+              value={durationCount}
               format="HH:mm:ss"
             />
           ) : (

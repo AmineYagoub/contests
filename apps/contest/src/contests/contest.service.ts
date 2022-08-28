@@ -158,6 +158,13 @@ export class ContestService {
     return shuffled;
   }
 
+  private normalizeOptions(options: string[]) {
+    if (options.length < 4) {
+      options.push('empty');
+    }
+    return options.map((opt) => opt.replace(/\r/g, ' '));
+  }
+
   /**
    * Paginate contests
    *

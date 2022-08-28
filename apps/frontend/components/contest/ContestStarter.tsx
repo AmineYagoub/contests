@@ -1,8 +1,9 @@
+import { AnimatePresence } from 'framer-motion';
+import { useSnapshot } from 'valtio';
+
 import { Question } from '@/graphql/graphql';
 import { ContestState } from '@/valtio/contest.state';
-import { AnimatePresence } from 'framer-motion';
 
-import { useSnapshot } from 'valtio';
 import ContestAnnulled from './ContestAnnulled';
 import ContestFinished from './ContestFinished';
 import ContestQuestionnaire from './ContestQuestionnaire';
@@ -13,13 +14,17 @@ const ContestStarter = () => {
   if (!contestSnap.contest) {
     return;
   }
-  const question = contestSnap.contest.questions[
-    contestSnap.contestCurrentIndex
-  ] as Question;
+
   return (
     <AnimatePresence mode="wait">
       {contestSnap.contestStarted ? (
-        <ContestQuestionnaire question={question} />
+        <ContestQuestionnaire
+          question={
+            contestSnap.contest.questions[
+              contestSnap.contestCurrentIndex
+            ] as Question
+          }
+        />
       ) : contestSnap.contestFinished ? (
         <ContestFinished />
       ) : contestSnap.contestAnnulled ? (

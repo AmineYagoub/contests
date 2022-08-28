@@ -1,8 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { promises as fs } from 'fs';
-import path from 'path';
 import formidable, { File } from 'formidable';
+import { promises as fs } from 'fs';
 import JSZip from 'jszip';
+import path from 'path';
+
+import { initializeApollo } from '@/config/createGraphQLClient';
 import {
   CreateQuestionDocument,
   CreateQuestionDto,
@@ -12,7 +14,6 @@ import {
   StudentLevel,
 } from '@/graphql/graphql';
 import { getLevelsValues } from '@/utils/mapper';
-import { initializeApollo } from '@/config/createGraphQLClient';
 
 /* Don't miss that! */
 export const config = {
@@ -43,15 +44,22 @@ const getQuestionType = (type: string) => {
 };
 
 const processFiles = async (path: string) => {
+  const result: CreateQuestionDto[] = [];
+  const entries: { zipEntry: JSZip.JSZipObject; relativePath: string }[] = [];
   const file = await fs.readFile(path);
   const zip = await JSZip.loadAsync(file);
-  const result: CreateQuestionDto[] = [];
-  zip.forEach(async (relativePath, zipEntry) => {
+
+  zip.forEach((relativePath, zipEntry) =>
+    entries.push({ relativePath, zipEntry })
+  );
+
+  for (const en of entries) {
+    const { relativePath, zipEntry } = en;
     const [, tag, entry, type] = relativePath.split('/');
     if (entry && !zipEntry.dir) {
       const data = await zip.file(relativePath).async('string');
       const questions = data.split(/\n\s/g);
-      questions.forEach((question, i) => {
+      questions.forEach((question) => {
         let levels = [];
         if (entry === '13') {
           levels = [entry];
@@ -83,7 +91,8 @@ const processFiles = async (path: string) => {
         result.push(questionObject);
       });
     }
-  });
+  }
+  console.log(result);
   return result;
 };
 
@@ -147,7 +156,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     for (const [, file] of files) {
       const tempPath = file.filepath;
       const newPath = targetPath + file.originalFilename;
-      await fs.rename(tempPath, newPath);
+      await fs.copyFile(tempPath, newPath);
       const questions = await processFiles(newPath);
       await saveQuestions(questions);
     }

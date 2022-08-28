@@ -1,10 +1,11 @@
 import { Divider } from 'antd';
 import { AnimatePresence, motion, useAnimationControls } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { CheckCircleOutlined } from '@ant-design/icons';
-import styled from '@emotion/styled';
+
 import { Question } from '@/graphql/graphql';
 import { ContestActions } from '@/valtio/contest.state';
+import { CheckCircleOutlined } from '@ant-design/icons';
+import styled from '@emotion/styled';
 
 export const StyledSection = styled(motion.section)({
   padding: 10,
@@ -106,7 +107,7 @@ const AnswerOptions = ({ data }: AnswerOptionProps) => {
     setSelected(index);
     setTimeout(() => {
       ContestActions.incrementQuestionIndex();
-    }, 600);
+    }, 1000);
   };
 
   return (
@@ -143,14 +144,17 @@ const ContestQuestionnaire = ({ question }: { question: Question }) => {
       initial={{ y: -30, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
     >
-      <motion.h2
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.8, opacity: 0 }}
-        transition={{ type: 'spring' }}
-      >
-        {question.title}
-      </motion.h2>
+      <AnimatePresence mode="wait">
+        <motion.h2
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.8, opacity: 0 }}
+          transition={{ type: 'spring', duration: 0.3 }}
+          key={question.title}
+        >
+          {question.title}
+        </motion.h2>
+      </AnimatePresence>
       <Divider />
 
       <AnswerOptions data={question.options} />
