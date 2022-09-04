@@ -17,7 +17,7 @@ function Paginate<T>(Node: Type<T>) {
 }
 
 @ObjectType()
-export class ContestPaginationResponce extends Paginate(Contest) {}
+export class ContestPaginationResponse extends Paginate(Contest) {}
 
 @ObjectType()
-export class QuestionPaginationResponce extends Paginate(Question) {}
+export class QuestionPaginationResponse extends Paginate(Question) {}

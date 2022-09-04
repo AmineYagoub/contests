@@ -11,7 +11,7 @@ import {
   ResolveReference,
 } from '@nestjs/graphql';
 
-import { QuestionPaginationResponce } from '../common/pagination.responce';
+import { QuestionPaginationResponse } from '../common/pagination.response';
 import { Question } from './question.model';
 import { QuestionService } from './question.service';
 
@@ -29,7 +29,7 @@ export class QuestionResolver {
     return this.questionService.delete({ id });
   }
 
-  @Query(() => QuestionPaginationResponce, { nullable: true })
+  @Query(() => QuestionPaginationResponse, { nullable: true })
   async paginateQuestions(@Args('params') params: QuestionPaginationDto) {
     return this.questionService.paginate(params);
   }

@@ -1,15 +1,9 @@
-import { StudentLevel } from '@contests/types';
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType({ isAbstract: true })
 export abstract class BaseModel {
   @Field(() => ID)
   id: string;
-
-  @Field(() => [StudentLevel], {
-    description: 'Identifies a list of levels that can be join this Contest.',
-  })
-  level: StudentLevel[];
 
   @Field(() => Boolean, {
     description: 'Identifies if the Question is published or not.',

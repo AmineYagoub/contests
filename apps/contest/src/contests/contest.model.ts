@@ -1,5 +1,6 @@
-import { ContestStatus, ContestType } from '@contests/types';
+import { ContestStatus, ContestType, StudentLevel } from '@contests/types';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Answer } from '../answers/answer.model';
 
 import { BaseModel } from '../common/base.model';
 import { Question } from '../questions/question.model';
@@ -22,10 +23,21 @@ export class Contest extends BaseModel {
   })
   type: ContestType;
 
+  @Field(() => [StudentLevel], {
+    description: 'Identifies a list of levels that can be join this Contest.',
+  })
+  level: StudentLevel[];
+
   @Field(() => [Tag], {
-    description: 'Identifies a list of tags that belongs to this Question.',
+    description: 'Identifies a list of tags that belongs to this contest.',
+    nullable: true,
   })
   tags: Tag[];
+
+  @Field(() => [Answer], {
+    description: 'Identifies a list of answers that belongs to this contest.',
+  })
+  answers: Answer[];
 
   @Field(() => ContestStatus, {
     description: 'Identifies the status of the Contest.',

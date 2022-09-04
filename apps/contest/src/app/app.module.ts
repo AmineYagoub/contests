@@ -9,6 +9,7 @@ import {
   MercuriusFederationDriver,
   MercuriusFederationDriverConfig,
 } from '@nestjs/mercurius';
+import { AnswerModule } from '../answers/answer.module';
 
 import { ContestModule } from '../contests/contest.module';
 import { QuestionModule } from '../questions/question.module';
@@ -23,6 +24,7 @@ import { TagModule } from '../tags/tag.module';
       inject: [contestGQLConfig.KEY],
     }),
     TagModule,
+    AnswerModule,
     ContestModule,
     QuestionModule,
   ],
