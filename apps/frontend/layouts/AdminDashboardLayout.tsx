@@ -1,7 +1,7 @@
 import { Layout, Menu } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { createElement, useState } from 'react';
+import { createElement, useEffect, useState } from 'react';
 
 import TeacherIcon from '@/components/icons/TeacherIcon';
 import { AppRoutes } from '@/config/routes';
@@ -20,6 +20,8 @@ import styled from '@emotion/styled';
 
 import { StyledHeader } from './HomeLayout';
 import StyledFooter from './StyledFooter';
+import { useReactiveVar } from '@apollo/client';
+import { socketVar } from '@/utils/app';
 
 const { Content, Sider } = Layout;
 
@@ -43,6 +45,14 @@ const StyledMenu = styled(Menu)({
 const AdminDashboardLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
+  const socket = useReactiveVar(socketVar);
+
+  useEffect(() => {
+    socket.connect();
+    return () => {
+      socket.disconnect();
+    };
+  }, [socket]);
 
   return (
     <Layout>

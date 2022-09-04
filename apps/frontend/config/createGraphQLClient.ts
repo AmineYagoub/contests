@@ -11,9 +11,9 @@ import {
   NormalizedCacheObject,
 } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
+import { production } from '.';
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
-const prod = process.env.NODE_ENV !== 'development';
 const isServer = typeof window === 'undefined';
 
 const defaultOptions: DefaultOptions = {
@@ -39,7 +39,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 const httpLink = new HttpLink({
-  uri: prod
+  uri: production
     ? process.env.NEXT_PUBLIC_PROD_GRAPHQL_ENDPOINT
     : process.env.NEXT_PUBLIC_DEV_GRAPHQL_ENDPOINT,
   credentials: 'same-origin', // Additional fetch() options like `credentials` or `headers`
@@ -51,7 +51,7 @@ function createApolloClient() {
     link: from([errorLink, httpLink]),
     cache: new InMemoryCache({}),
     defaultOptions,
-    connectToDevTools: !prod,
+    connectToDevTools: !production,
   });
 }
 

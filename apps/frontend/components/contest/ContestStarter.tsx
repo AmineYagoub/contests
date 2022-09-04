@@ -1,33 +1,80 @@
 import { AnimatePresence } from 'framer-motion';
 import { useSnapshot } from 'valtio';
 
-import { Question } from '@/graphql/graphql';
+import {
+  Question,
+  SelectedAnswerInput,
+  useCreateAnswerMutation,
+} from '@/graphql/graphql';
 import { ContestState } from '@/valtio/contest.state';
 
 import ContestAnnulled from './ContestAnnulled';
 import ContestFinished from './ContestFinished';
 import ContestQuestionnaire from './ContestQuestionnaire';
 import ContestWelcome from './ContestWelcome';
+import { CongratsAnimation } from '@/utils/CongratsAnimation';
+import { useEffect, useState } from 'react';
 
-const ContestStarter = () => {
+const ContestStarter = ({ contestId }: { contestId: string }) => {
   const contestSnap = useSnapshot(ContestState);
+  const [CreateAnswerMutation] = useCreateAnswerMutation();
+  const [loading, setLoading] = useState(false);
+  const [answerId, setAnswerId] = useState(null);
+
+  useEffect(() => {
+    const animation = new CongratsAnimation(document.querySelector('body'));
+    if (contestSnap.contestFinished) {
+      setLoading(true);
+      animation.render();
+      // TODO Handle if answers not saved
+      CreateAnswerMutation({
+        variables: {
+          data: {
+            userId: '123',
+            answers: contestSnap.answers as SelectedAnswerInput[],
+            contest: {
+              connect: {
+                id: contestId,
+              },
+            },
+          },
+        },
+      })
+        .then(({ data }) => {
+          setAnswerId(data.createAnswer.id);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+    return () => {
+      animation.destroy();
+    };
+  }, [contestSnap.contestFinished]);
+
   if (!contestSnap.contest) {
     return;
   }
 
+  const prevAnswer = contestSnap.answers.find(
+    (el) => el.questionIndex === contestSnap.contestCurrentIndex
+  );
+  const question = contestSnap.contest.questions[
+    contestSnap.contestCurrentIndex
+  ] as Question;
+
+  console.log(contestSnap.contest);
+
   return (
     <AnimatePresence mode="wait">
-      {contestSnap.contestStarted ? (
-        <ContestQuestionnaire
-          question={
-            contestSnap.contest.questions[
-              contestSnap.contestCurrentIndex
-            ] as Question
-          }
-          questionIndex={contestSnap.contestCurrentIndex}
-        />
+      {contestSnap.contestStarted && question ? (
+        <ContestQuestionnaire question={question} prevAnswer={prevAnswer} />
       ) : contestSnap.contestFinished ? (
-        <ContestFinished />
+        <ContestFinished
+          loading={loading}
+          answerId={answerId}
+          contestId={contestId}
+        />
       ) : contestSnap.contestAnnulled ? (
         <ContestAnnulled />
       ) : (

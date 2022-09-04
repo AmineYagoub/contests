@@ -11,11 +11,9 @@ import {
   CreateQuestionMutation,
   CreateQuestionMutationVariables,
   QuestionType,
-  StudentLevel,
 } from '@/graphql/graphql';
-import { getLevelsValues } from '@/utils/mapper';
+import { socket } from '@/utils/app';
 
-/* Don't miss that! */
 export const config = {
   api: {
     bodyParser: false,
@@ -23,14 +21,6 @@ export const config = {
 };
 
 type ProcessedFiles = Array<[string, File]>;
-
-const range = (start: string, end: number) => {
-  const result = [];
-  for (let i = Number(start); i <= end; i++) {
-    result.push(i);
-  }
-  return result;
-};
 
 const getQuestionType = (type: string) => {
   switch (true) {
@@ -41,6 +31,11 @@ const getQuestionType = (type: string) => {
     default:
       return QuestionType.Hard;
   }
+};
+
+const percentOf = (value: number, total: number) => {
+  const result = Math.round((value / total) * 100);
+  return result <= 5 ? 5 : result;
 };
 
 const processFiles = async (path: string) => {
@@ -55,17 +50,11 @@ const processFiles = async (path: string) => {
 
   for (const en of entries) {
     const { relativePath, zipEntry } = en;
-    const [, tag, entry, type] = relativePath.split('/');
-    if (entry && !zipEntry.dir) {
+    const [, tag, type] = relativePath.split('/');
+    if (tag && !zipEntry.dir) {
       const data = await zip.file(relativePath).async('string');
       const questions = data.split(/\n\s/g);
       questions.forEach((question) => {
-        let levels = [];
-        if (entry === '13') {
-          levels = [entry];
-        } else {
-          levels = range(entry, 19);
-        }
         const [title, ...options] = question.trim().split('\n');
         const correctAnswer = options.shift();
         const lesson = options.pop();
@@ -83,23 +72,23 @@ const processFiles = async (path: string) => {
               },
             ],
           },
-          level: levels.map((level) =>
-            getLevelsValues(String(level))
-          ) as StudentLevel[],
           type: getQuestionType(type),
         };
         result.push(questionObject);
       });
     }
   }
+
   return result;
 };
 
 const saveQuestions = async (questions: CreateQuestionDto[]) => {
+  socket.connect();
   const client = initializeApollo({});
-  try {
-    for (const question of questions) {
-      const data = await client.mutate<
+  let i = 0;
+  for (const question of questions) {
+    try {
+      await client.mutate<
         CreateQuestionMutation,
         CreateQuestionMutationVariables
       >({
@@ -108,11 +97,13 @@ const saveQuestions = async (questions: CreateQuestionDto[]) => {
           input: question,
         },
       });
-      console.log(data);
+      i++;
+      socket.emit('saveQuestionsProgress', percentOf(i, questions.length));
+    } catch (error) {
+      console.error(error);
     }
-  } catch (error) {
-    console.error(error);
   }
+  socket.disconnect();
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -134,7 +125,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
   ).catch((e) => {
-    console.log(e);
+    console.error(e);
     status = 500;
     resultBody = {
       status: 'fail',

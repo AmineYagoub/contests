@@ -24,8 +24,33 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type Answer = {
+  __typename?: 'Answer';
+  /** Identifies if this answer is annulled. */
+  annulled: Scalars['Boolean'];
+  /** Identifies the annulation reason. */
+  annulledReason: Scalars['String'];
+  /** Identifies the answer details. */
+  answers: Array<SelectedAnswerObject>;
+  /** Identifies contest id related to this answer. */
+  contestId: Scalars['String'];
+  /** Identifies the date and time when the object was created. */
+  created: Scalars['DateTime'];
+  id: Scalars['ID'];
+  /** Identifies the date and time when the object was last updated. */
+  updated: Scalars['DateTime'];
+  /** Identifies the user id hwo submit this answer. */
+  userId: Scalars['String'];
+};
+
+export type AnswerInput = {
+  id: Scalars['String'];
+};
+
 export type Contest = {
   __typename?: 'Contest';
+  /** Identifies a list of answers that belongs to this contest. */
+  answers: Array<Answer>;
   /** Identifies the author of the Question. */
   authorId: Scalars['Int'];
   /** Identifies a list of countries that can be allowed to join this Contest. */
@@ -55,14 +80,18 @@ export type Contest = {
   startTime: Scalars['DateTime'];
   /** Identifies the status of the Contest. */
   status: ContestStatus;
-  /** Identifies a list of tags that belongs to this Question. */
-  tags: Array<Tag>;
+  /** Identifies a list of tags that belongs to this contest. */
+  tags?: Maybe<Array<Tag>>;
   /** Identifies the title of the Contest. */
   title: Scalars['String'];
   /** Identifies the Type of this Contest. */
   type: ContestType;
   /** Identifies the date and time when the object was last updated. */
   updated: Scalars['DateTime'];
+};
+
+export type ContestConnectInput = {
+  connect: AnswerInput;
 };
 
 export type ContestPaginationDto = {
@@ -73,8 +102,8 @@ export type ContestPaginationDto = {
   where?: InputMaybe<WhereContestArgs>;
 };
 
-export type ContestPaginationResponce = {
-  __typename?: 'ContestPaginationResponce';
+export type ContestPaginationResponse = {
+  __typename?: 'ContestPaginationResponse';
   data?: Maybe<Array<Contest>>;
   total: Scalars['Int'];
 };
@@ -92,6 +121,14 @@ export enum ContestType {
   Regional = 'REGIONAL',
   Worldwide = 'WORLDWIDE',
 }
+
+export type CreateAnswerDto = {
+  annulled?: InputMaybe<Scalars['Boolean']>;
+  annulledReason?: InputMaybe<Scalars['String']>;
+  answers: Array<SelectedAnswerInput>;
+  contest: ContestConnectInput;
+  userId: Scalars['String'];
+};
 
 export type CreateContestDto = {
   authorId: Scalars['Int'];
@@ -115,7 +152,6 @@ export type CreateQuestionDto = {
   authorId: Scalars['Int'];
   correctAnswer: Scalars['String'];
   lesson: Scalars['String'];
-  level: Array<StudentLevel>;
   options: Array<Scalars['String']>;
   published?: InputMaybe<Scalars['Boolean']>;
   tags: TagConnectInput;
@@ -125,15 +161,22 @@ export type CreateQuestionDto = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createAnswer: Answer;
   createContest: Contest;
   createQuestion: Question;
   createTag: Tag;
+  deleteAnswerById?: Maybe<Answer>;
   deleteContestById?: Maybe<Contest>;
   deleteQuestionById?: Maybe<Question>;
   deleteTagById?: Maybe<Tag>;
+  updateAnswer: Answer;
   updateContest: Contest;
   updateQuestion: Question;
   updateTag: Tag;
+};
+
+export type MutationCreateAnswerArgs = {
+  data: CreateAnswerDto;
 };
 
 export type MutationCreateContestArgs = {
@@ -148,6 +191,10 @@ export type MutationCreateTagArgs = {
   title: Scalars['String'];
 };
 
+export type MutationDeleteAnswerByIdArgs = {
+  id: Scalars['String'];
+};
+
 export type MutationDeleteContestByIdArgs = {
   id: Scalars['String'];
 };
@@ -157,6 +204,11 @@ export type MutationDeleteQuestionByIdArgs = {
 };
 
 export type MutationDeleteTagByIdArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationUpdateAnswerArgs = {
+  data: UpdateAnswerDto;
   id: Scalars['String'];
 };
 
@@ -196,17 +248,22 @@ export type OrderQuestionArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  findOneAnswerById?: Maybe<Answer>;
   findOneContestById?: Maybe<Contest>;
   findOneQuestionById?: Maybe<Question>;
   findOneTagById?: Maybe<Tag>;
   findTags?: Maybe<Array<Tag>>;
-  paginateContest?: Maybe<ContestPaginationResponce>;
-  paginateQuestions?: Maybe<QuestionPaginationResponce>;
+  paginateContest?: Maybe<ContestPaginationResponse>;
+  paginateQuestions?: Maybe<QuestionPaginationResponse>;
+};
+
+export type QueryFindOneAnswerByIdArgs = {
+  id: Scalars['String'];
 };
 
 export type QueryFindOneContestByIdArgs = {
+  answerId?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
-  isExam?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryFindOneQuestionByIdArgs = {
@@ -240,14 +297,12 @@ export type Question = {
   id: Scalars['ID'];
   /** Identifies the lesson learned from this Question. */
   lesson: Scalars['String'];
-  /** Identifies a list of levels that can be join this Contest. */
-  level: Array<StudentLevel>;
-  /** Identifies a list of ansewers of this Question. */
+  /** Identifies a list of answers of this Question. */
   options: Array<Scalars['String']>;
   /** Identifies if the Question is published or not. */
   published: Scalars['Boolean'];
   /** Identifies a list of tags that belongs to this Question. */
-  tags: Array<Tag>;
+  tags?: Maybe<Array<Tag>>;
   /** Identifies the title of the Question. */
   title: Scalars['String'];
   /** Identifies the Type of this Question. */
@@ -265,8 +320,8 @@ export type QuestionPaginationDto = {
   where?: InputMaybe<WhereQuestionArgs>;
 };
 
-export type QuestionPaginationResponce = {
-  __typename?: 'QuestionPaginationResponce';
+export type QuestionPaginationResponse = {
+  __typename?: 'QuestionPaginationResponse';
   data?: Maybe<Array<Question>>;
   total: Scalars['Int'];
 };
@@ -277,6 +332,33 @@ export enum QuestionType {
   Hard = 'HARD',
   Medium = 'MEDIUM',
 }
+
+export type SelectedAnswerInput = {
+  /** Identifies the option selected by the user. */
+  option: Scalars['String'];
+  /** Identifies the index of the option selected by the user. */
+  optionIndex: Scalars['Int'];
+  /** Identifies the random list of options as received. */
+  options: Array<Scalars['String']>;
+  /** Identifies the id of the question. */
+  questionId: Scalars['String'];
+  /** Identifies the index of the question in the contest.questions Array. */
+  questionIndex: Scalars['Int'];
+};
+
+export type SelectedAnswerObject = {
+  __typename?: 'SelectedAnswerObject';
+  /** Identifies the option selected by the user. */
+  option: Scalars['String'];
+  /** Identifies the index of the option selected by the user. */
+  optionIndex: Scalars['Int'];
+  /** Identifies the random list of options as received. */
+  options: Array<Scalars['String']>;
+  /** Identifies the id of the question. */
+  questionId: Scalars['String'];
+  /** Identifies the index of the question in the contest.questions Array. */
+  questionIndex: Scalars['Int'];
+};
 
 /** Student Level */
 export enum StudentLevel {
@@ -313,6 +395,14 @@ export type TagInput = {
   title: Scalars['String'];
 };
 
+export type UpdateAnswerDto = {
+  annulled?: InputMaybe<Scalars['Boolean']>;
+  annulledReason?: InputMaybe<Scalars['String']>;
+  answers?: InputMaybe<Array<SelectedAnswerInput>>;
+  contest?: InputMaybe<ContestConnectInput>;
+  userId?: InputMaybe<Scalars['String']>;
+};
+
 export type UpdateContestDto = {
   authorId?: InputMaybe<Scalars['Int']>;
   countries?: InputMaybe<Array<Scalars['String']>>;
@@ -335,7 +425,6 @@ export type UpdateQuestionDto = {
   authorId?: InputMaybe<Scalars['Int']>;
   correctAnswer?: InputMaybe<Scalars['String']>;
   lesson?: InputMaybe<Scalars['String']>;
-  level?: InputMaybe<Array<StudentLevel>>;
   options?: InputMaybe<Array<Scalars['String']>>;
   published?: InputMaybe<Scalars['Boolean']>;
   tags?: InputMaybe<TagConnectInput>;
@@ -360,11 +449,61 @@ export type WhereQuestionArgs = {
   correctAnswer?: InputMaybe<Scalars['String']>;
   created?: InputMaybe<Array<Scalars['String']>>;
   lesson?: InputMaybe<Scalars['String']>;
-  level?: InputMaybe<Array<StudentLevel>>;
   options?: InputMaybe<Array<Scalars['String']>>;
   tags?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<QuestionType>;
+};
+
+export type CreateAnswerMutationVariables = Exact<{
+  data: CreateAnswerDto;
+}>;
+
+export type CreateAnswerMutation = {
+  __typename?: 'Mutation';
+  createAnswer: {
+    __typename?: 'Answer';
+    id: string;
+    created: any;
+    updated: any;
+  };
+};
+
+export type UpdateAnswerMutationVariables = Exact<{
+  id: Scalars['String'];
+  data: UpdateAnswerDto;
+}>;
+
+export type UpdateAnswerMutation = {
+  __typename?: 'Mutation';
+  updateAnswer: {
+    __typename?: 'Answer';
+    id: string;
+    created: any;
+    updated: any;
+  };
+};
+
+export type FindOneAnswerByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FindOneAnswerByIdQuery = {
+  __typename?: 'Query';
+  findOneAnswerById?: {
+    __typename?: 'Answer';
+    userId: string;
+    annulled: boolean;
+    annulledReason: string;
+    created: any;
+    updated: any;
+    answers: Array<{
+      __typename?: 'SelectedAnswerObject';
+      questionId: string;
+      questionIndex: number;
+      optionIndex: number;
+    }>;
+  } | null;
 };
 
 export type CreateContestMutationVariables = Exact<{
@@ -423,7 +562,6 @@ export type UpdateContestMutation = {
 
 export type FindByIdForExamQueryVariables = Exact<{
   id: Scalars['String'];
-  isExam?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FindByIdForExamQuery = {
@@ -447,7 +585,7 @@ export type FindByIdForExamQuery = {
     mediumQuestionCount: number;
     hardQuestionCount: number;
     maxParticipants: number;
-    tags: Array<{ __typename?: 'Tag'; title: string }>;
+    tags?: Array<{ __typename?: 'Tag'; title: string }> | null;
     questions?: Array<{
       __typename?: 'Question';
       id: string;
@@ -460,7 +598,7 @@ export type FindByIdForExamQuery = {
 
 export type FindByIdForReviewQueryVariables = Exact<{
   id: Scalars['String'];
-  isExam?: InputMaybe<Scalars['Boolean']>;
+  answerId?: InputMaybe<Scalars['String']>;
 }>;
 
 export type FindByIdForReviewQuery = {
@@ -484,18 +622,34 @@ export type FindByIdForReviewQuery = {
     mediumQuestionCount: number;
     hardQuestionCount: number;
     maxParticipants: number;
-    tags: Array<{ __typename?: 'Tag'; title: string }>;
+    tags?: Array<{ __typename?: 'Tag'; title: string }> | null;
     questions?: Array<{
       __typename?: 'Question';
       id: string;
+      title: string;
       options: Array<string>;
       type: QuestionType;
       correctAnswer?: string | null;
       usedCount?: number | null;
-      level: Array<StudentLevel>;
       lesson: string;
-      tags: Array<{ __typename?: 'Tag'; title: string }>;
+      tags?: Array<{ __typename?: 'Tag'; title: string }> | null;
     }> | null;
+    answers: Array<{
+      __typename?: 'Answer';
+      id: string;
+      contestId: string;
+      userId: string;
+      annulled: boolean;
+      annulledReason: string;
+      created: any;
+      updated: any;
+      answers: Array<{
+        __typename?: 'SelectedAnswerObject';
+        questionId: string;
+        option: string;
+        options: Array<string>;
+      }>;
+    }>;
   } | null;
 };
 
@@ -506,7 +660,7 @@ export type PaginateContestsQueryVariables = Exact<{
 export type PaginateContestsQuery = {
   __typename?: 'Query';
   paginateContest?: {
-    __typename?: 'ContestPaginationResponce';
+    __typename?: 'ContestPaginationResponse';
     total: number;
     data?: Array<{
       __typename?: 'Contest';
@@ -527,7 +681,7 @@ export type PaginateContestsQuery = {
       mediumQuestionCount: number;
       hardQuestionCount: number;
       maxParticipants: number;
-      tags: Array<{ __typename?: 'Tag'; title: string }>;
+      tags?: Array<{ __typename?: 'Tag'; title: string }> | null;
     }> | null;
   } | null;
 };
@@ -543,7 +697,6 @@ export type CreateQuestionMutation = {
     id: string;
     type: QuestionType;
     title: string;
-    level: Array<StudentLevel>;
     options: Array<string>;
     authorId: number;
     usedCount?: number | null;
@@ -574,7 +727,6 @@ export type UpdateQuestionMutation = {
     id: string;
     type: QuestionType;
     title: string;
-    level: Array<StudentLevel>;
     options: Array<string>;
     authorId: number;
     usedCount?: number | null;
@@ -591,7 +743,7 @@ export type PaginateQuestionsQueryVariables = Exact<{
 export type PaginateQuestionsQuery = {
   __typename?: 'Query';
   paginateQuestions?: {
-    __typename?: 'QuestionPaginationResponce';
+    __typename?: 'QuestionPaginationResponse';
     total: number;
     data?: Array<{
       __typename?: 'Question';
@@ -601,12 +753,11 @@ export type PaginateQuestionsQuery = {
       options: Array<string>;
       lesson: string;
       correctAnswer?: string | null;
-      level: Array<StudentLevel>;
       created: any;
       updated: any;
       authorId: number;
       usedCount?: number | null;
-      tags: Array<{ __typename?: 'Tag'; title: string }>;
+      tags?: Array<{ __typename?: 'Tag'; title: string }> | null;
     }> | null;
   } | null;
 };
@@ -620,6 +771,178 @@ export type FindTagsQuery = {
   findTags?: Array<{ __typename?: 'Tag'; title: string }> | null;
 };
 
+export const CreateAnswerDocument = gql`
+  mutation CreateAnswer($data: CreateAnswerDto!) {
+    createAnswer(data: $data) {
+      id
+      created
+      updated
+    }
+  }
+`;
+export type CreateAnswerMutationFn = Apollo.MutationFunction<
+  CreateAnswerMutation,
+  CreateAnswerMutationVariables
+>;
+
+/**
+ * __useCreateAnswerMutation__
+ *
+ * To run a mutation, you first call `useCreateAnswerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAnswerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAnswerMutation, { data, loading, error }] = useCreateAnswerMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateAnswerMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateAnswerMutation,
+    CreateAnswerMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateAnswerMutation,
+    CreateAnswerMutationVariables
+  >(CreateAnswerDocument, options);
+}
+export type CreateAnswerMutationHookResult = ReturnType<
+  typeof useCreateAnswerMutation
+>;
+export type CreateAnswerMutationResult =
+  Apollo.MutationResult<CreateAnswerMutation>;
+export type CreateAnswerMutationOptions = Apollo.BaseMutationOptions<
+  CreateAnswerMutation,
+  CreateAnswerMutationVariables
+>;
+export const UpdateAnswerDocument = gql`
+  mutation UpdateAnswer($id: String!, $data: UpdateAnswerDto!) {
+    updateAnswer(id: $id, data: $data) {
+      id
+      created
+      updated
+    }
+  }
+`;
+export type UpdateAnswerMutationFn = Apollo.MutationFunction<
+  UpdateAnswerMutation,
+  UpdateAnswerMutationVariables
+>;
+
+/**
+ * __useUpdateAnswerMutation__
+ *
+ * To run a mutation, you first call `useUpdateAnswerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAnswerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAnswerMutation, { data, loading, error }] = useUpdateAnswerMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateAnswerMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateAnswerMutation,
+    UpdateAnswerMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateAnswerMutation,
+    UpdateAnswerMutationVariables
+  >(UpdateAnswerDocument, options);
+}
+export type UpdateAnswerMutationHookResult = ReturnType<
+  typeof useUpdateAnswerMutation
+>;
+export type UpdateAnswerMutationResult =
+  Apollo.MutationResult<UpdateAnswerMutation>;
+export type UpdateAnswerMutationOptions = Apollo.BaseMutationOptions<
+  UpdateAnswerMutation,
+  UpdateAnswerMutationVariables
+>;
+export const FindOneAnswerByIdDocument = gql`
+  query FindOneAnswerById($id: String!) {
+    findOneAnswerById(id: $id) {
+      userId
+      answers {
+        questionId
+        questionIndex
+        optionIndex
+      }
+      annulled
+      annulledReason
+      created
+      updated
+    }
+  }
+`;
+
+/**
+ * __useFindOneAnswerByIdQuery__
+ *
+ * To run a query within a React component, call `useFindOneAnswerByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindOneAnswerByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindOneAnswerByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFindOneAnswerByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    FindOneAnswerByIdQuery,
+    FindOneAnswerByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    FindOneAnswerByIdQuery,
+    FindOneAnswerByIdQueryVariables
+  >(FindOneAnswerByIdDocument, options);
+}
+export function useFindOneAnswerByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FindOneAnswerByIdQuery,
+    FindOneAnswerByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    FindOneAnswerByIdQuery,
+    FindOneAnswerByIdQueryVariables
+  >(FindOneAnswerByIdDocument, options);
+}
+export type FindOneAnswerByIdQueryHookResult = ReturnType<
+  typeof useFindOneAnswerByIdQuery
+>;
+export type FindOneAnswerByIdLazyQueryHookResult = ReturnType<
+  typeof useFindOneAnswerByIdLazyQuery
+>;
+export type FindOneAnswerByIdQueryResult = Apollo.QueryResult<
+  FindOneAnswerByIdQuery,
+  FindOneAnswerByIdQueryVariables
+>;
 export const CreateContestDocument = gql`
   mutation CreateContest($input: CreateContestDto!) {
     createContest(input: $input) {
@@ -792,8 +1115,8 @@ export type UpdateContestMutationOptions = Apollo.BaseMutationOptions<
   UpdateContestMutationVariables
 >;
 export const FindByIdForExamDocument = gql`
-  query FindByIdForExam($id: String!, $isExam: Boolean) {
-    findOneContestById(id: $id, isExam: $isExam) {
+  query FindByIdForExam($id: String!) {
+    findOneContestById(id: $id) {
       id
       type
       tags {
@@ -837,7 +1160,6 @@ export const FindByIdForExamDocument = gql`
  * const { data, loading, error } = useFindByIdForExamQuery({
  *   variables: {
  *      id: // value for 'id'
- *      isExam: // value for 'isExam'
  *   },
  * });
  */
@@ -876,8 +1198,8 @@ export type FindByIdForExamQueryResult = Apollo.QueryResult<
   FindByIdForExamQueryVariables
 >;
 export const FindByIdForReviewDocument = gql`
-  query FindByIdForReview($id: String!, $isExam: Boolean) {
-    findOneContestById(id: $id, isExam: $isExam) {
+  query FindByIdForReview($id: String!, $answerId: String) {
+    findOneContestById(id: $id, answerId: $answerId) {
       id
       type
       tags {
@@ -885,6 +1207,7 @@ export const FindByIdForReviewDocument = gql`
       }
       questions {
         id
+        title
         options
         type
         tags {
@@ -892,8 +1215,21 @@ export const FindByIdForReviewDocument = gql`
         }
         correctAnswer
         usedCount
-        level
         lesson
+      }
+      answers {
+        id
+        contestId
+        userId
+        answers {
+          questionId
+          option
+          options
+        }
+        annulled
+        annulledReason
+        created
+        updated
       }
       title
       level
@@ -927,7 +1263,7 @@ export const FindByIdForReviewDocument = gql`
  * const { data, loading, error } = useFindByIdForReviewQuery({
  *   variables: {
  *      id: // value for 'id'
- *      isExam: // value for 'isExam'
+ *      answerId: // value for 'answerId'
  *   },
  * });
  */
@@ -1051,7 +1387,6 @@ export const CreateQuestionDocument = gql`
       id
       type
       title
-      level
       options
       authorId
       usedCount
@@ -1160,7 +1495,6 @@ export const UpdateQuestionDocument = gql`
       id
       type
       title
-      level
       options
       authorId
       usedCount
@@ -1228,7 +1562,6 @@ export const PaginateQuestionsDocument = gql`
         tags {
           title
         }
-        level
         created
         updated
         authorId

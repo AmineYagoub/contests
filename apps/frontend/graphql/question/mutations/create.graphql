@@ -3,7 +3,6 @@ mutation CreateQuestion($input: CreateQuestionDto!) {
     id
     type
     title
-    level
     options
     authorId
     usedCount

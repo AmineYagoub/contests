@@ -16,7 +16,7 @@ const DeleteQuestion = ({
     try {
       const data = await DeleteQuestionMutation({
         variables: {
-          id: Number(record.id),
+          id: record.id,
         },
       });
       if (data) {

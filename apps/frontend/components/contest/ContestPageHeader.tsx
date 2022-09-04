@@ -1,26 +1,56 @@
-import { Button, Col, PageHeader, Row, Space, Statistic, Tag } from 'antd';
+import {
+  Button,
+  Col,
+  Modal,
+  PageHeader,
+  Row,
+  Space,
+  Statistic,
+  Tag,
+} from 'antd';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { useSnapshot } from 'valtio';
 
 import { AppRoutes } from '@/config/routes';
-import theme from '@/config/theme';
 import { getMapperLabel, studentMappedLevels } from '@/utils/mapper';
 import { ContestActions, ContestState } from '@/valtio/contest.state';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
 
+const valueStyle = {
+  fontWeight: 800,
+  fontSize: '2rem',
+  backgroundImage:
+    'linear-gradient( 109.6deg, rgb(0, 191, 165) 11.2%, rgb(153, 225, 216) 100.2% )',
+  backgroundClip: 'text',
+  color: 'transparent',
+};
+
+const StyledStrong = styled('strong')({
+  ...valueStyle,
+  fontSize: '1.5rem',
+  padding: 5,
+});
+
 const StyledStat = styled(Statistic)({
   ['.ant-statistic-content']: {
-    height: 30,
+    height: 35,
     justifyContent: 'center',
+  },
+  ['.ant-statistic-title']: {
+    color: '#fff',
   },
 });
 
 const StyledStatLevels = styled(Statistic)({
   ['.ant-statistic-content']: {
-    height: 30,
+    height: 35,
     justifyContent: 'center',
+    color: '#fff !important',
+  },
+  ['.ant-statistic-title']: {
+    color: '#fff',
   },
   ['.ant-statistic-content-value']: {
     display: 'none',
@@ -30,8 +60,11 @@ const StyledStatLevels = styled(Statistic)({
 const { Countdown } = Statistic;
 const StyledCountdown = styled(Countdown)({
   ['.ant-statistic-content']: {
-    height: 30,
+    height: 35,
     justifyContent: 'center',
+  },
+  ['.ant-statistic-title']: {
+    color: '#fff',
   },
 });
 
@@ -66,29 +99,47 @@ const ContestPageHeader = () => {
   const { easyQuestionCount, mediumQuestionCount, hardQuestionCount } =
     contestSnap.contest;
   const count = easyQuestionCount + mediumQuestionCount + hardQuestionCount;
+
+  const onTimeFinished = () => {
+    Modal.warning({
+      title: 'إنتهى الوقت!',
+      content: 'انتهى الوقت المحدد للإجابة على أسئلة المسابقة.',
+      okText: 'مشاهدة نتيجة المسابقة',
+    });
+  };
+
   return (
     <PageHeader
       onBack={() => null}
       title={<Link href={AppRoutes.Home}>{`الرئيسية`}</Link>}
-      subTitle={<h1>{contestSnap.contest.title}</h1>}
-      style={{ backgroundColor: theme.successColor }}
+      subTitle={
+        <h1
+          style={{ color: '#fff' }}
+        >{`مسابقة ${contestSnap.contest.title}`}</h1>
+      }
+      style={{ backgroundColor: '#ffffff21' }}
       extra={
-        <StyledNavigationBtn>
-          <Button
-            icon={<RightOutlined />}
-            shape="circle"
-            size="large"
-            disabled={contestSnap.contestCurrentIndex <= 0}
-            onClick={() => ContestActions.decrementQuestionIndex()}
-          />
-          <strong>تصفح الأسئلة</strong>
-          <Button
-            icon={<LeftOutlined />}
-            shape="circle"
-            size="large"
-            disabled={!contestSnap.contestFinished}
-          />
-        </StyledNavigationBtn>
+        contestSnap.answers.length && (
+          <StyledNavigationBtn>
+            <Button
+              icon={<RightOutlined />}
+              shape="circle"
+              size="large"
+              disabled={contestSnap.contestCurrentIndex <= 0}
+              onClick={ContestActions.decrementQuestionIndex}
+            />
+            <StyledStrong>تصفح الأسئلة</StyledStrong>
+            <Button
+              icon={<LeftOutlined />}
+              shape="circle"
+              size="large"
+              disabled={
+                contestSnap.contestCurrentIndex >= contestSnap.answers.length
+              }
+              onClick={ContestActions.incrementQuestionIndex}
+            />
+          </StyledNavigationBtn>
+        )
       }
     >
       <Row justify="center">
@@ -109,14 +160,15 @@ const ContestPageHeader = () => {
               title="الوقت المتبقي"
               value={durationCount}
               format="HH:mm:ss"
-              valueStyle={{ color: theme.primaryColor }}
+              valueStyle={valueStyle}
+              onFinish={onTimeFinished}
             />
           ) : (
             <StyledStat
               title="زمن المسابقة"
               value={contestSnap.contest.duration}
               suffix="دقيقة"
-              valueStyle={{ color: theme.primaryColor }}
+              valueStyle={valueStyle}
             />
           )}
         </StyledCol>
@@ -125,7 +177,7 @@ const ContestPageHeader = () => {
             title="عدد الأسئلة"
             value={contestSnap.contestCurrentIndex}
             suffix={` /${count}`}
-            valueStyle={{ color: theme.primaryColor }}
+            valueStyle={valueStyle}
           />
         </StyledCol>
       </Row>

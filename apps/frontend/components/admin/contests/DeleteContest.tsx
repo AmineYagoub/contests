@@ -11,12 +11,12 @@ const DeleteContest = ({
   onSuccess: () => void;
 }) => {
   const [DeleteContestMutation, { loading }] = useDeleteContestMutation();
-
+  console.log(record);
   const confirmDelete = async () => {
     try {
       const data = await DeleteContestMutation({
         variables: {
-          id: Number(record.id),
+          id: record.id,
         },
       });
       if (data) {

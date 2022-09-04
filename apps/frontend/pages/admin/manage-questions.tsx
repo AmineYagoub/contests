@@ -11,23 +11,14 @@ import {
   SearchDatePickerIcon,
 } from '@/components/admin/tables/SearchDatePicker';
 import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
-import {
-  Question,
-  QuestionType,
-  StudentLevel,
-  Tag as TagModel,
-} from '@/graphql/graphql';
+import { Question, QuestionType, Tag as TagModel } from '@/graphql/graphql';
 import {
   QuestionsDataIndex,
   useSearchQuestions,
 } from '@/hooks/admin/manage-questions';
 import AdminDashboardLayout from '@/layout/AdminDashboardLayout';
 import { QuestionFields } from '@/utils/fields';
-import {
-  getMapperLabel,
-  questionMappedTypes,
-  studentMappedLevels,
-} from '@/utils/mapper';
+import { getMapperLabel, questionMappedTypes } from '@/utils/mapper';
 import { PlusOutlined } from '@ant-design/icons';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
@@ -44,7 +35,7 @@ const StyledSection = styled('section')({
   minHeight: 'calc(100vh - 200px)',
 });
 
-const ManageQuestions = () => {
+const ManageQuestions = (props) => {
   const { methods, filteredInfo, sortedInfo } = useSearchQuestions();
   const questionSnap = useSnapshot(QuestionState);
   const [visible, setVisible] = useState(false);
@@ -149,20 +140,9 @@ const ManageQuestions = () => {
     },
     {
       title: 'المستوى المستهدف',
-      dataIndex: QuestionFields.level,
-      key: QuestionFields.level,
-      filters: studentMappedLevels,
-      filterMultiple: true,
-      onFilter: methods.handleFilter,
-      filteredValue: filteredInfo.level || null,
-      render: (levels: StudentLevel[]) => {
-        return levels?.map((level) => {
-          return (
-            <Tag color="warning" key={level}>
-              {getMapperLabel<StudentLevel>(studentMappedLevels, level)}
-            </Tag>
-          );
-        });
+
+      render: () => {
+        return <span>wait</span>;
       },
     },
     {

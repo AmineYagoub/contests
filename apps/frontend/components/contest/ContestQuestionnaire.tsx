@@ -2,7 +2,7 @@ import { Divider } from 'antd';
 import { AnimatePresence, motion, useAnimationControls } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
-import { Question } from '@/graphql/graphql';
+import { Question, SelectedAnswerInput } from '@/graphql/graphql';
 import { ContestActions } from '@/valtio/contest.state';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
@@ -49,6 +49,7 @@ export const StyledContainer = styled(motion.div)({
 const tap = {
   scale: 1,
 };
+
 const focus = {
   scale: 1.03,
   color: 'white',
@@ -61,12 +62,12 @@ const hover = {
 };
 
 interface AnswerOptionProps {
-  data: string[];
-  questionIndex: number;
+  data: { id: string; options: string[] };
+  prevAnswer?: SelectedAnswerInput;
 }
 
-const AnswerOptions = ({ data, questionIndex }: AnswerOptionProps) => {
-  const [selected, setSelected] = useState(null);
+const AnswerOptions = ({ data, prevAnswer }: AnswerOptionProps) => {
+  const [selected, setSelected] = useState<number>(null);
   const controls = useAnimationControls();
 
   const list = {
@@ -88,8 +89,6 @@ const AnswerOptions = ({ data, questionIndex }: AnswerOptionProps) => {
     }),
   };
 
-  // TODO Show correct answer when user get back
-
   useEffect(() => {
     let t = null;
     if (selected !== null) {
@@ -104,9 +103,9 @@ const AnswerOptions = ({ data, questionIndex }: AnswerOptionProps) => {
     };
   }, [selected]);
 
-  const onTapStart = (index: number, el: string) => {
+  const onTapStart = (index: number, questionId: string, option: string) => {
     setSelected(index);
-    ContestActions.setAnswer(index, el);
+    ContestActions.setAnswer(index, questionId, option, data.options);
     setTimeout(() => {
       ContestActions.incrementQuestionIndex();
     }, 1000);
@@ -114,7 +113,7 @@ const AnswerOptions = ({ data, questionIndex }: AnswerOptionProps) => {
 
   return (
     <AnimatePresence mode="wait">
-      {data.map((el, i) => (
+      {data.options.map((option, i) => (
         <StyledContainer
           key={i}
           style={{ position: 'relative' }}
@@ -122,16 +121,19 @@ const AnswerOptions = ({ data, questionIndex }: AnswerOptionProps) => {
           variants={list}
           animate={controls}
         >
-          {selected === i && <StyledIcon />}
+          {(selected === i || prevAnswer?.optionIndex === i) && <StyledIcon />}
           <StyledAnswers
-            onTapStart={() => onTapStart(i, el)}
+            onTapStart={() => onTapStart(i, data.id, option)}
             onTapCancel={() => setSelected(null)}
             whileHover={hover}
             whileTap={tap}
             whileFocus={selected !== null ? focus : {}}
-            style={{ visibility: el === 'empty' ? 'hidden' : 'visible' }} // empty element just for animation to work
+            whileInView={prevAnswer?.optionIndex === i ? focus : {}}
+            style={{
+              visibility: option === 'empty' ? 'hidden' : 'visible', // empty title just for animation to work
+            }}
           >
-            {el}
+            {option}
           </StyledAnswers>
         </StyledContainer>
       ))}
@@ -141,10 +143,10 @@ const AnswerOptions = ({ data, questionIndex }: AnswerOptionProps) => {
 
 const ContestQuestionnaire = ({
   question,
-  questionIndex,
+  prevAnswer,
 }: {
   question: Question;
-  questionIndex: number;
+  prevAnswer?: SelectedAnswerInput;
 }) => {
   return (
     <StyledSection
@@ -160,13 +162,17 @@ const ContestQuestionnaire = ({
           exit={{ scale: 0.8, opacity: 0 }}
           transition={{ type: 'spring', duration: 0.3 }}
           key={question.title}
+          style={{ color: '#fff' }}
         >
           {question.title}
         </motion.h2>
       </AnimatePresence>
       <Divider />
 
-      <AnswerOptions data={question.options} questionIndex={questionIndex} />
+      <AnswerOptions
+        data={{ id: question.id, options: question.options }}
+        prevAnswer={prevAnswer}
+      />
     </StyledSection>
   );
 };

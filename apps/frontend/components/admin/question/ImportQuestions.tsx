@@ -3,9 +3,9 @@ import { useState } from 'react';
 
 import { FolderAddOutlined, CloudSyncOutlined } from '@ant-design/icons';
 import { useImportQuestions } from '@/hooks/questions/import-questions.hook';
-import { useSnapshot } from 'valtio';
-import { QuestionActions, QuestionState } from '@/valtio/question.state';
 import styled from '@emotion/styled';
+import { useReactiveVar } from '@apollo/client';
+import { socketVar } from '@/utils/app';
 
 const { Dragger } = Upload;
 
@@ -16,17 +16,23 @@ const StyledSection = styled('section')({
 
 const ImportQuestions = ({ onSuccess }: { onSuccess: () => void }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [importProgress, setImportProgress] = useState(0);
   const { uploadProps } = useImportQuestions();
-  const questionSnap = useSnapshot(QuestionState);
-
+  const socket = useReactiveVar(socketVar);
   const showModal = () => {
     setModalVisible(true);
   };
   const closeModal = () => {
     setModalVisible(false);
-    QuestionActions.setImportProgress(0);
+    setImportProgress(0);
     onSuccess();
   };
+
+  socket.on('saveQuestionsProgress', (data: number) => {
+    setImportProgress(data);
+  });
+
+  const loading = importProgress > 0 && importProgress < 100;
 
   return (
     <>
@@ -43,20 +49,25 @@ const ImportQuestions = ({ onSuccess }: { onSuccess: () => void }) => {
         title="إستيراد الأسئلة"
         style={{ top: 20 }}
         visible={modalVisible}
-        onOk={closeModal}
-        onCancel={closeModal}
         destroyOnClose
-        confirmLoading={
-          questionSnap.importProgress > 0 && questionSnap.importProgress <= 100
-        }
+        confirmLoading={loading}
         closable={false}
+        maskClosable
+        transitionName=""
+        maskTransitionName=""
+        footer={
+          <Button
+            type="primary"
+            onClick={closeModal}
+            loading={loading}
+            disabled={loading}
+          >
+            {loading ? 'يرجى الإنتظار ...' : 'إنهاء'}
+          </Button>
+        }
       >
-        <Dragger
-          {...uploadProps}
-          disabled={questionSnap.importProgress > 0}
-          showUploadList={false}
-        >
-          {questionSnap.importProgress === 0 ? (
+        <Dragger {...uploadProps} disabled={loading} showUploadList={false}>
+          {importProgress === 0 ? (
             <StyledSection>
               <p className="ant-upload-drag-icon">
                 <CloudSyncOutlined />
@@ -72,9 +83,14 @@ const ImportQuestions = ({ onSuccess }: { onSuccess: () => void }) => {
                   '0%': '#108ee9',
                   '100%': '#87d068',
                 }}
-                percent={questionSnap.importProgress}
+                percent={importProgress}
               />
-              <p>جاري إستيراد البيانات...</p>
+
+              <p>
+                {loading
+                  ? 'يرجى الإنتظار جاري إستيراد الأسئلة...'
+                  : 'تمت العملية بنجاح. يمكنك الضغط على زر إنهاء'}
+              </p>
             </StyledSection>
           )}
         </Dragger>

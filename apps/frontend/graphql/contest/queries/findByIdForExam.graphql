@@ -1,5 +1,5 @@
-query FindByIdForExam($id: String!, $isExam: Boolean) {
-  findOneContestById(id: $id, isExam: $isExam) {
+query FindByIdForExam($id: String!) {
+  findOneContestById(id: $id) {
     id
     type
     tags {
