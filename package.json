@@ -8,6 +8,7 @@
     "codegen": "graphql-codegen --config codegen.yml",
     "api": "nx run gateway:serve",
     "cts": "nx run contest:serve",
+    "wss": "nx run wss:serve",
     "auth": "nx run auth:serve",
     "ui": "rimraf apps/frontend/.next && nx run frontend:serve --port 8080",
     "start": "nx serve",
@@ -19,6 +20,7 @@
   },
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^4.7.0",
     "@apollo/client": "^3.6.9",
     "@apollo/gateway": "^2.0.5",
     "@apollo/subgraph": "^2.0.5",
@@ -33,6 +35,8 @@
     "@nestjs/mercurius": "^10.0.21",
     "@nestjs/platform-express": "^9.0.8",
     "@nestjs/platform-fastify": "^9.0.8",
+    "@nestjs/platform-socket.io": "^9.0.11",
+    "@nestjs/websockets": "^9.0.11",
     "@nrwl/next": "14.5.4",
     "@prisma/client": "^4.2.0",
     "antd": "^4.22.4",
@@ -56,6 +60,7 @@
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "0.13.9",
     "rxjs": "^7.5.6",
+    "socket.io-client": "^4.5.1",
     "stylis-plugin-rtl": "^2.1.1",
     "tslib": "^2.4.0",
     "valtio": "^1.6.4"

@@ -8,6 +8,7 @@
     "frontend": "apps/frontend",
     "frontend-e2e": "apps/frontend-e2e",
     "gateway": "apps/gateway",
-    "types": "libs/types"
+    "types": "libs/types",
+    "wss": "apps/wss"
   }
 }
