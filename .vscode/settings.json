@@ -1,3 +1,5 @@
 {
-  "cSpell.words": ["nestjs", "valtio"]
+  "cSpell.words": ["nestjs", "valtio"],
+  "WillLuke.nextjs.addTypesOnSave": true,
+  "WillLuke.nextjs.hasPrompted": true
 }
