@@ -4,3 +4,5 @@ export * from './lib/contests/update.dto';
 export * from './lib/questions/create.dto';
 export * from './lib/questions/update.dto';
 export * from './lib/questions/pagination.dto';
+export * from './lib/answers/create.dto';
+export * from './lib/answers/update.dto';

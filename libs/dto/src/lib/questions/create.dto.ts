@@ -6,7 +6,7 @@ import {
   IsString,
 } from 'class-validator';
 
-import { QuestionType, StudentLevel } from '@contests/types';
+import { QuestionType } from '@contests/types';
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { Prisma } from '@prisma/client';
 
@@ -51,11 +51,6 @@ export class CreateQuestionDto {
   @IsOptional()
   @IsString()
   lesson?: string;
-
-  @Field(() => [StudentLevel])
-  @IsNotEmpty()
-  @IsString({ each: true })
-  level: StudentLevel[];
 
   @Field(() => QuestionType)
   @IsNotEmpty()

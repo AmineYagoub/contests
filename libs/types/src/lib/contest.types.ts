@@ -1,4 +1,5 @@
 import { registerEnumType } from '@nestjs/graphql';
+import { Prisma } from '@prisma/client';
 
 export enum ContestStatus {
   OPEN = 'OPEN',
@@ -21,3 +22,15 @@ registerEnumType(ContestType, {
   name: 'ContestType',
   description: 'Contest Type',
 });
+
+export type PaginateContestParams = {
+  skip?: number;
+  take?: number;
+  cursor?: Prisma.ContestWhereUniqueInput;
+  where?: Prisma.ContestWhereInput;
+  orderBy?: Prisma.ContestOrderByWithRelationInput;
+  include?: {
+    questions?: boolean;
+    tags?: boolean;
+  };
+};
