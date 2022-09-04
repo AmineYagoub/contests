@@ -1,18 +1,12 @@
 import { proxy } from 'valtio';
 
-import { Contest } from '@/graphql/graphql';
+import { Contest, SelectedAnswerInput } from '@/graphql/graphql';
 import { cloneDeep } from '@apollo/client/utilities';
-
-type AnswerType = {
-  questionIndex: number;
-  optionIndex: number;
-  option: string;
-};
 
 interface ContestStorage {
   contest: Contest;
   contests: Contest[];
-  answers: AnswerType[];
+  answers: SelectedAnswerInput[];
   queryLoading: boolean;
   contestStarted: boolean;
   contestFinished: boolean;
@@ -37,6 +31,14 @@ const init: ContestStorage = {
 
 export const ContestState = proxy<ContestStorage>(init);
 
+// TODO Handle contest annulled
+// TODO Handle submitted
+// TODO Handle contest offline
+// TODO Handle show contest Result
+
+// TODO Handle Send contest Result by email
+// TODO Handle Send contest Result by notification to admin
+
 export const ContestActions = {
   setContest: (contest: Contest) => {
     ContestState.contest = contest;
@@ -44,12 +46,30 @@ export const ContestActions = {
   setContestsData: (contests: Contest[]) => {
     ContestState.contests = contests;
   },
-  setAnswer: (optionIndex: number, option: string) => {
-    ContestState.answers.push({
-      questionIndex: ContestState.contestCurrentIndex,
-      optionIndex,
-      option,
-    });
+  setAnswer: (
+    optionIndex: number,
+    questionId: string,
+    option: string,
+    options: string[]
+  ) => {
+    const find = ContestState.answers.findIndex(
+      (el) => el.questionId === questionId
+    );
+    if (find === -1) {
+      ContestState.answers.push({
+        questionIndex: ContestState.contestCurrentIndex,
+        optionIndex,
+        questionId,
+        option,
+        options,
+      });
+    } else {
+      ContestState.answers[find].optionIndex = optionIndex;
+    }
+    if (ContestState.answers.length === ContestState.contest.questions.length) {
+      ContestState.contestFinished = true;
+      ContestState.contestStarted = false;
+    }
   },
   setQueryLoading: (loading: boolean) => {
     ContestState.queryLoading = loading;

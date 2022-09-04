@@ -133,11 +133,6 @@ export class QuestionService {
               contains: String(value),
             };
             break;
-          case 'level':
-            filter.level = {
-              array_contains: String(value),
-            };
-            break;
           case 'type':
             filter.type = String(value);
             break;

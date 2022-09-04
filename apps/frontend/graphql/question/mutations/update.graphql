@@ -3,7 +3,6 @@ mutation UpdateQuestion($id: String!, $input: UpdateQuestionDto!) {
     id
     type
     title
-    level
     options
     authorId
     usedCount

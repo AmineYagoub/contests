@@ -38,12 +38,12 @@ const ContestForm = ({
   form: FormInstance;
   record?: Contest;
 }) => {
-  type ContriesType = {
+  type CountriesType = {
     name: string;
     flag: string;
   };
-  const [countries, setCountries] = useState<ContriesType[]>();
-  const [countriesStor, setCountriesStor] = useState<ContriesType[]>();
+  const [countries, setCountries] = useState<CountriesType[]>();
+  const [countriesStor, setCountriesStor] = useState<CountriesType[]>();
 
   const handleFetchCountries = (e: FocusEvent<HTMLElement, Element>) => {
     if (!countries) {
@@ -219,11 +219,13 @@ const ContestForm = ({
             label="مدة المسابقة"
             rules={[{ required: true, message: 'يرجى تحديد مدة المسابقة' }]}
             help="المدة الزمنية بالدقائق"
+            required
           >
             <InputNumber style={{ width: '100%' }} />
           </Form.Item>
         </Col>
       </Row>
+      <SelectTags />
       <Row gutter={16}>
         <Col span={12}>
           <Form.Item
@@ -277,7 +279,6 @@ const ContestForm = ({
       >
         <Select allowClear showArrow fieldNames={{ label: 'text' }} />
       </Form.Item>
-      <SelectTags />
     </Form>
   );
 };

@@ -1,0 +1,7 @@
+mutation CreateAnswer($data: CreateAnswerDto!) {
+  createAnswer(data: $data) {
+    id
+    created
+    updated
+  }
+}

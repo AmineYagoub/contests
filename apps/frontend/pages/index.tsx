@@ -1,11 +1,11 @@
-import { NextPageWithLayout } from '@/config/types';
-import { usePaginateContestsQuery } from '@/graphql/graphql';
-import HomeLayout from '@/layout/HomeLayout';
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { Spin } from 'antd';
 import Link from 'next/link';
+import HomeLayout from '@/layout/HomeLayout';
+import { NextPageWithLayout } from '@/config/types';
+import { usePaginateContestsQuery } from '@/graphql/graphql';
+import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
-const Index: NextPageWithLayout = () => {
+const Index: NextPageWithLayout = (props) => {
   const { data, loading } = usePaginateContestsQuery({
     variables: {
       params: { take: 10 },
@@ -20,7 +20,7 @@ const Index: NextPageWithLayout = () => {
 
       {data?.paginateContest.data.map((el) => (
         <div key={el.id}>
-          <Link href={`/contests/${el.id}`}>{el.title}</Link>
+          <Link href={`/profile/contests/${el.id}`}>{el.title}</Link>
         </div>
       ))}
     </>

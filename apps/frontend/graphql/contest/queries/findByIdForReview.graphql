@@ -1,5 +1,5 @@
-query FindByIdForReview($id: String!, $isExam: Boolean) {
-  findOneContestById(id: $id, isExam: $isExam) {
+query FindByIdForReview($id: String!, $answerId: String) {
+  findOneContestById(id: $id, answerId: $answerId) {
     id
     type
     tags {
@@ -7,6 +7,7 @@ query FindByIdForReview($id: String!, $isExam: Boolean) {
     }
     questions {
       id
+      title
       options
       type
       tags {
@@ -14,8 +15,21 @@ query FindByIdForReview($id: String!, $isExam: Boolean) {
       }
       correctAnswer
       usedCount
-      level
       lesson
+    }
+    answers {
+      id
+      contestId
+      userId
+      answers {
+        questionId
+        option
+        options
+      }
+      annulled
+      annulledReason
+      created
+      updated
     }
     title
     level

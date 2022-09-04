@@ -1,20 +1,12 @@
-import { QuestionType } from '@contests/types';
+import {
+  PaginateContestParams,
+  QuestionType,
+  SelectedQuestionFields,
+} from '@contests/types';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Contest, Prisma, Question } from '@prisma/client';
 
 import { PrismaService } from '../app/prisma.service';
-
-type PaginateContestParams = {
-  skip?: number;
-  take?: number;
-  cursor?: Prisma.ContestWhereUniqueInput;
-  where?: Prisma.ContestWhereInput;
-  orderBy?: Prisma.ContestOrderByWithRelationInput;
-  include?: {
-    questions?: boolean;
-    tags?: boolean;
-  };
-};
 
 @Injectable()
 export class ContestService {
@@ -27,10 +19,15 @@ export class ContestService {
    * @returns Promise<Contest>
    */
   async create(data: Prisma.ContestCreateInput): Promise<Contest> {
-    const { level, easyQuestionCount, mediumQuestionCount, hardQuestionCount } =
+    const { tags, easyQuestionCount, mediumQuestionCount, hardQuestionCount } =
       data;
-    const total = easyQuestionCount + mediumQuestionCount + hardQuestionCount;
-    const questions = await this.getConnectedQuestions(level, total);
+
+    const questions = await this.getConnectedQuestions(
+      tags,
+      easyQuestionCount,
+      mediumQuestionCount,
+      hardQuestionCount
+    );
     const results = questions.length
       ? {
           ...data,
@@ -45,36 +42,70 @@ export class ContestService {
   }
 
   /**
-   *
-   * @param level
-   * @param total
-   * @param contestId
    * @returns
    */
   private async getConnectedQuestions(
-    level: Prisma.NullTypes.JsonNull | Prisma.InputJsonValue,
-    total: number
-  ) {
-    if (!level) {
-      return [];
-    }
-    const levels = (level as Array<string>).map((el) => ({
-      level: {
-        array_contains: [el],
-      },
-    }));
-
+    tags: Prisma.TagCreateNestedManyWithoutContestsInput,
+    easy: number,
+    mid: number,
+    hard: number
+  ): Promise<SelectedQuestionFields[]> {
+    const topics = (
+      tags.connectOrCreate as Array<{
+        create: { title: string };
+      }>
+    ).map((el) => el.create.title);
     const questions = await this.prisma.question.findMany({
       where: {
-        OR: levels,
+        tags: {
+          every: {
+            title: {
+              in: topics,
+            },
+          },
+        },
       },
-      take: total,
       select: {
         id: true,
+        type: true,
       },
     });
-    return questions.map((el) => ({
-      id: el.id,
+    const easyQuestions = this.getQuestionsRandomly(
+      questions,
+      QuestionType.EASY,
+      easy
+    );
+    const midQuestions = this.getQuestionsRandomly(
+      questions,
+      QuestionType.MEDIUM,
+      mid
+    );
+    const hardQuestions = this.getQuestionsRandomly(
+      questions,
+      QuestionType.HARD,
+      hard
+    );
+    return [...easyQuestions, ...midQuestions, ...hardQuestions];
+  }
+
+  /**
+   * Get random questions on specific type.
+   *
+   * @param arr SelectedQuestionFields[]
+   * @param type QuestionType
+   * @param take number
+   * @returns SelectedQuestionFields[]
+   */
+  private getQuestionsRandomly(
+    arr: SelectedQuestionFields[],
+    type: QuestionType,
+    take: number
+  ): SelectedQuestionFields[] {
+    const shuffled = arr
+      .filter((el) => el.type === type)
+      .sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, take).map(({ id }) => ({
+      id,
     }));
   }
 
@@ -115,19 +146,24 @@ export class ContestService {
    */
   async findUnique(
     input: Prisma.ContestWhereUniqueInput,
-    isExam: boolean
+    answerId?: string
   ): Promise<Contest | null> {
     const contest = await this.prisma.contest.findUnique({
       where: input,
       include: {
         tags: true,
         questions: true,
+        answers: {
+          where: {
+            id: answerId,
+          },
+        },
       },
     });
     if (!contest) {
       throw new NotFoundException('contest not found');
     }
-    if (isExam) {
+    if (!answerId) {
       const { questions } = contest;
       contest.questions = this.normalizeQuestions(questions);
     }
@@ -207,7 +243,6 @@ export class ContestService {
       this.prisma.contest.count({ where }),
       this.prisma.contest.findMany(findArgs),
     ]);
-    console.log(data[1][0]);
     return {
       total: data[0],
       data: data[1],

@@ -48,7 +48,12 @@ function DebounceSelect<
     return debounce(loadOptions, debounceTimeout);
   }, [fetchOptions, debounceTimeout]);
   return (
-    <Form.Item name={QuestionFields.tags} label="الموضوعات">
+    <Form.Item
+      name={QuestionFields.tags}
+      label="الموضوعات"
+      rules={[{ required: true, message: 'يرجى تحديد موضوع واحد على الأقل.' }]}
+      required
+    >
       <Select
         allowClear
         showArrow

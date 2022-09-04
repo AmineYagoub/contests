@@ -14,7 +14,12 @@ const nextConfig = {
     }, */
   },
   images: {
-    domains: ['via.placeholder.com', 'flagcdn.com', 'upload.wikimedia.org'],
+    domains: [
+      'via.placeholder.com',
+      'flagcdn.com',
+      'upload.wikimedia.org',
+      'joeschmoe.io',
+    ],
   },
   i18n: {
     locales: ['ar'],

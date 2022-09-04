@@ -28,12 +28,13 @@ export class Question extends BaseModel {
   type: QuestionType;
 
   @Field(() => [String], {
-    description: 'Identifies a list of ansewers of this Question.',
+    description: 'Identifies a list of answers of this Question.',
   })
   options: string[];
 
   @Field(() => [Tag], {
     description: 'Identifies a list of tags that belongs to this Question.',
+    nullable: true,
   })
   tags: Tag[];
 

@@ -16,6 +16,9 @@ const data = [
 
 export const StyledSection = styled(motion.section)({
   padding: 10,
+  li: {
+    color: '#fff',
+  },
   h1: {
     fontSize: '3.5rem',
   },
@@ -48,7 +51,7 @@ const ContestWelcome = () => {
       <List
         size="default"
         dataSource={data}
-        renderItem={(item) => <List.Item>{item}</List.Item>}
+        renderItem={(item) => <List.Item>- {item}</List.Item>}
       />
       <StyledBtn
         size="large"

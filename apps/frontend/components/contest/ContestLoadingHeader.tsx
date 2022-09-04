@@ -1,6 +1,5 @@
 import theme from '@/config/theme';
 import { PageHeader, Row, Skeleton } from 'antd';
-import React from 'react';
 import { StyledCol } from './ContestPageHeader';
 
 const ContestLoadingHeader = () => {

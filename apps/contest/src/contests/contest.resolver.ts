@@ -11,7 +11,7 @@ import {
   ResolveReference,
 } from '@nestjs/graphql';
 
-import { ContestPaginationResponce } from '../common/pagination.responce';
+import { ContestPaginationResponse } from '../common/pagination.response';
 import { Contest } from './contest.model';
 import { ContestService } from './contest.service';
 
@@ -22,17 +22,12 @@ export class ContestResolver {
   @Query(() => Contest, { nullable: true })
   async findOneContestById(
     @Args('id') id: string,
-    @Args('isExam', {
-      type: () => Boolean,
-      defaultValue: false,
-      nullable: true,
-    })
-    isExam?: boolean
+    @Args('answerId', { nullable: true }) answerId?: string
   ) {
-    return this.contestService.findUnique({ id }, isExam);
+    return this.contestService.findUnique({ id }, answerId);
   }
 
-  @Query(() => ContestPaginationResponce, { nullable: true })
+  @Query(() => ContestPaginationResponse, { nullable: true })
   async paginateContest(@Args('params') params: ContestPaginationDto) {
     return this.contestService.paginate(params);
   }
@@ -63,6 +58,6 @@ export class ContestResolver {
    */
   @ResolveReference()
   async resolveReference(reference: { __typename: string; id: string }) {
-    return this.contestService.findUnique({ id: reference.id }, false);
+    return this.contestService.findUnique({ id: reference.id });
   }
 }

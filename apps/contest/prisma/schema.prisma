@@ -39,6 +39,7 @@ model Contest {
   updated               DateTime  @updatedAt
   tags                  Tag[]
   questions             Question[]
+  answers               Answer[]
 
   @@index([type(length: 100, sort: Desc)])
   @@index([status(length: 100, sort: Desc)])
@@ -51,10 +52,10 @@ model Contest {
 model Question {
   id                String    @id @default(uuid())
   type              String    @db.VarChar(100)
-  title             String    @db.VarChar(255) @unique
+  title             String    @db.VarChar(255)
   correctAnswer     String    @db.VarChar(255) 
   lesson            String?   @db.VarChar(255) @default("")
-  level             Json      @db.Json
+  // level             Json      @db.Json
   usedCount         Int?      @db.UnsignedInt @default(0)
   options           Json      @db.Json
   published         Boolean?  @default(true)
@@ -67,4 +68,18 @@ model Question {
   @@index([type(length: 100, sort: Desc)])
   @@index([usedCount(sort: Desc)])
   @@index([authorId, created(sort: Desc)])
+}
+
+model Answer {
+  id                String    @id @default(uuid())
+  contestId         String
+  userId            String
+  contest           Contest   @relation(fields: [contestId], references: [id], onDelete: Cascade)
+  answers           Json      @db.Json
+  annulled          Boolean?  @default(false)
+  annulledReason    String?   @db.VarChar(255) @default("")
+  created           DateTime  @default(now())
+  updated           DateTime  @updatedAt
+
+  @@index([userId, contestId(sort: Desc)])
 }
