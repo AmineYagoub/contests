@@ -28,6 +28,6 @@ RUN yarn install --production --ignore-scripts --prefer-offline
 
 # USER nest
 
-EXPOSE 3030
+EXPOSE 3003
 
 CMD ["node", "main"]
