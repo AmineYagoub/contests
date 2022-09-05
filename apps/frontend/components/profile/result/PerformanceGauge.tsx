@@ -1,13 +1,14 @@
-import * as echarts from 'echarts/core';
-import { GaugeChart } from 'echarts/charts';
-import { CanvasRenderer } from 'echarts/renderers';
-import ReactEChartsCore from 'echarts-for-react/lib/core';
-import { GridComponent, LegendComponent } from 'echarts/components';
-import type { EChartsOption, GaugeSeriesOption } from 'echarts';
 import { Col, Row } from 'antd';
-import styled from '@emotion/styled';
-import { GaugeValues } from '@/utils/types';
+import ReactEChartsCore from 'echarts-for-react/lib/core';
+import { GaugeChart } from 'echarts/charts';
+import { GridComponent, LegendComponent } from 'echarts/components';
+import * as echarts from 'echarts/core';
+import { CanvasRenderer } from 'echarts/renderers';
 
+import { GaugeValues } from '@/utils/types';
+import styled from '@emotion/styled';
+
+import type { EChartsOption, GaugeSeriesOption } from 'echarts';
 echarts.use([GridComponent, LegendComponent, CanvasRenderer, GaugeChart]);
 
 const StyledCol = styled(Col)({
@@ -30,7 +31,7 @@ const seriesOption: GaugeSeriesOption = {
 
   splitNumber: 10,
   itemStyle: {
-    color: '#FD7347',
+    color: '#ff8066',
   },
   progress: {
     show: true,
@@ -97,7 +98,7 @@ const PerformanceGauge = ({ values }: { values: GaugeValues }) => {
       {
         ...seriesOption,
         itemStyle: {
-          color: '#00c853',
+          color: '#00c9a7',
         },
         max: 100,
         data: [
@@ -115,7 +116,7 @@ const PerformanceGauge = ({ values }: { values: GaugeValues }) => {
       {
         ...seriesOption,
         itemStyle: {
-          color: '#00c853',
+          color: '#00c9a7',
         },
         max: 100,
         data: [
@@ -133,7 +134,7 @@ const PerformanceGauge = ({ values }: { values: GaugeValues }) => {
       {
         ...seriesOption,
         itemStyle: {
-          color: '#00c853',
+          color: '#00c9a7',
         },
         max: 100,
         data: [

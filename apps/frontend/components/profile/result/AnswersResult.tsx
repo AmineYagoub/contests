@@ -1,7 +1,8 @@
+import { Alert, Collapse } from 'antd';
+
+import { ResultType } from '@/utils/types';
 import { CaretRightOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
-import { Alert, Collapse } from 'antd';
-import { ResultType } from '@/utils/types';
 
 const { Panel } = Collapse;
 
@@ -16,6 +17,14 @@ const StyledAlert = styled(Alert)({
     ' rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset',
 });
 
+const StyledLesson = styled(Alert)({
+  backgroundColor: '#d6effa !important',
+  boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
+  ['.anticon']: {
+    color: '#1890ff !important',
+  },
+});
+
 const AnswersResult = ({ results }: { results: ResultType[] }) => {
   return (
     <Collapse
@@ -26,15 +35,31 @@ const AnswersResult = ({ results }: { results: ResultType[] }) => {
       )}
     >
       {results.map((el) => (
-        <StyledPanel header={el.title} key={el.questionId}>
-          {el.options.map((opt, i) => (
-            <StyledAlert
-              key={i}
-              description={opt}
-              type={el.correctAnswer === opt.trim() ? 'success' : 'info'}
-              showIcon
-            />
-          ))}
+        <StyledPanel header={<h3>{el.title}</h3>} key={el.questionId}>
+          {el.options.map(
+            (opt, i) =>
+              opt !== 'empty' && (
+                <StyledAlert
+                  key={i}
+                  description={opt}
+                  type={
+                    el.correctAnswer === opt.trim()
+                      ? 'success'
+                      : el.selectedOption === opt.trim() &&
+                        el.correctAnswer !== opt.trim()
+                      ? 'error'
+                      : 'info'
+                  }
+                  showIcon
+                />
+              )
+          )}
+          <StyledLesson
+            message="الدرس المستفاد"
+            description={el.lesson}
+            type="info"
+            showIcon
+          />
         </StyledPanel>
       ))}
     </Collapse>

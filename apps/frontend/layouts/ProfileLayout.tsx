@@ -1,13 +1,16 @@
-import styled from '@emotion/styled';
 import { Avatar, Badge, Button, Col, Layout, Row, Space } from 'antd';
+import Image from 'next/image';
+import { useEffect } from 'react';
+
 import theme from '@/config/theme';
+import { socketVar } from '@/utils/app';
+import { BellOutlined, MailOutlined } from '@ant-design/icons';
+import { useReactiveVar } from '@apollo/client';
+import styled from '@emotion/styled';
+
 import { Logo } from './AdminDashboardLayout';
 import StyledFooter from './StyledFooter';
-import Image from 'next/image';
-import { BellOutlined, MailOutlined } from '@ant-design/icons';
-import { useEffect } from 'react';
-import { useReactiveVar } from '@apollo/client';
-import { socketVar } from '@/utils/app';
+
 const { Content, Header } = Layout;
 
 export const StyledHeader = styled(Header)({
@@ -48,10 +51,17 @@ const ProfileLayout = ({ children }) => {
                   type="ghost"
                 />
               </Badge>
+              <Badge dot>
+                <Button
+                  icon={<BellOutlined style={{ color: theme.infoColor }} />}
+                  shape="circle"
+                  type="ghost"
+                />
+              </Badge>
               <Avatar
                 src={
                   <Image
-                    src="https://joeschmoe.io/api/v1/random"
+                    src="https://joeschmoe.io/api/v1/joe"
                     width={32}
                     height={32}
                     alt="avatar"

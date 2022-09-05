@@ -1,18 +1,19 @@
-import ProfileLayout from '@/layout/ProfileLayout';
+import { Col, Row } from 'antd';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import dynamic from 'next/dynamic';
+
+import AnswersResult from '@/components/profile/result/AnswersResult';
+import TotalResultDetails from '@/components/profile/result/TotalResultDetails';
+import { initializeApollo } from '@/config/createGraphQLClient';
 import { NextPageWithLayout } from '@/config/types';
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import {
   FindByIdForReviewDocument,
   FindByIdForReviewQuery,
   FindByIdForReviewQueryVariables,
 } from '@/graphql/graphql';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { initializeApollo } from '@/config/createGraphQLClient';
-import AnswersResult from '@/components/profile/result/AnswersResult';
-import { Col, Row } from 'antd';
-
-import dynamic from 'next/dynamic';
 import { useGenerateResult } from '@/hooks/contests/generate-result.hook';
+import ProfileLayout from '@/layout/ProfileLayout';
+import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 const PerformanceGauge = dynamic(
   () => import('@/components/profile/result/PerformanceGauge'),
@@ -24,11 +25,13 @@ const PerformanceGauge = dynamic(
 const ContestResultPage: NextPageWithLayout = ({
   contest,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { results, gaugeValues } = useGenerateResult(contest);
+  const { results, gaugeValues, contestMeta } = useGenerateResult(contest);
 
   return (
     <Row>
-      <Col span={6}></Col>
+      <Col span={6}>
+        <TotalResultDetails contestMeta={contestMeta} />
+      </Col>
       <Col span={14}>
         <PerformanceGauge values={gaugeValues} />
         <AnswersResult results={results} />

@@ -1,4 +1,5 @@
 import { AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 
 import {
@@ -6,14 +7,13 @@ import {
   SelectedAnswerInput,
   useCreateAnswerMutation,
 } from '@/graphql/graphql';
+import { CongratsAnimation } from '@/utils/CongratsAnimation';
 import { ContestState } from '@/valtio/contest.state';
 
 import ContestAnnulled from './ContestAnnulled';
 import ContestFinished from './ContestFinished';
 import ContestQuestionnaire from './ContestQuestionnaire';
 import ContestWelcome from './ContestWelcome';
-import { CongratsAnimation } from '@/utils/CongratsAnimation';
-import { useEffect, useState } from 'react';
 
 const ContestStarter = ({ contestId }: { contestId: string }) => {
   const contestSnap = useSnapshot(ContestState);
@@ -58,12 +58,10 @@ const ContestStarter = ({ contestId }: { contestId: string }) => {
 
   const prevAnswer = contestSnap.answers.find(
     (el) => el.questionIndex === contestSnap.contestCurrentIndex
-  );
+  ) as SelectedAnswerInput;
   const question = contestSnap.contest.questions[
     contestSnap.contestCurrentIndex
   ] as Question;
-
-  console.log(contestSnap.contest);
 
   return (
     <AnimatePresence mode="wait">

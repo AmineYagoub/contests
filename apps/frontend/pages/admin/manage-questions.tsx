@@ -1,6 +1,7 @@
 import { Space, Table, Tag } from 'antd';
 import moment from 'moment-timezone';
 import { useState } from 'react';
+import { useSnapshot } from 'valtio';
 
 import CreateQuestion from '@/components/admin/question/CreateQuestion';
 import DeleteQuestion from '@/components/admin/question/DeleteQuestion';
@@ -19,6 +20,7 @@ import {
 import AdminDashboardLayout from '@/layout/AdminDashboardLayout';
 import { QuestionFields } from '@/utils/fields';
 import { getMapperLabel, questionMappedTypes } from '@/utils/mapper';
+import { QuestionState } from '@/valtio/question.state';
 import { PlusOutlined } from '@ant-design/icons';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
@@ -26,8 +28,6 @@ import styled from '@emotion/styled';
 import { TableBtn } from './dashboard';
 
 import type { ColumnsType, ColumnType } from 'antd/es/table';
-import { useSnapshot } from 'valtio';
-import { QuestionState } from '@/valtio/question.state';
 const StyledSection = styled('section')({
   backgroundColor: '#f8f8f8 !important',
   position: 'relative',
@@ -139,13 +139,6 @@ const ManageQuestions = (props) => {
       },
     },
     {
-      title: 'المستوى المستهدف',
-
-      render: () => {
-        return <span>wait</span>;
-      },
-    },
-    {
       title: 'عدد الخيارات',
       dataIndex: QuestionFields.options,
       key: QuestionFields.options,
@@ -155,7 +148,7 @@ const ManageQuestions = (props) => {
         sortedInfo.columnKey === QuestionFields.options
           ? sortedInfo.order
           : null,
-      render: (options) => options?.length + 1, // Plus correctAnswer
+      render: (options) => options?.length + 1, // TODO Plus correctAnswer
     },
     {
       title: 'مرات الإستخدام',

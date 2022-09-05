@@ -15,6 +15,8 @@ export type ResultType = {
   options: string[];
   isTrue: boolean;
   correctAnswer: string;
+  lesson: string;
+  selectedOption?: string;
   type: QuestionType;
 };
 
@@ -22,4 +24,13 @@ export type GaugeValues = {
   [QuestionType.Easy]: number;
   [QuestionType.Medium]: number;
   [QuestionType.Hard]: number;
+};
+
+export type ContestMeta = {
+  title: string;
+  totalResult: number;
+  questionsCount: number;
+  truthyAnswersCount: number;
+  falsyAnswersCount: number;
+  duration: number;
 };
