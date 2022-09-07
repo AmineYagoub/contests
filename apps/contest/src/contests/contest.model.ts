@@ -1,7 +1,7 @@
 import { ContestStatus, ContestType, StudentLevel } from '@contests/types';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Answer } from '../answers/answer.model';
 
+import { Answer } from '../answers/answer.model';
 import { BaseModel } from '../common/base.model';
 import { Question } from '../questions/question.model';
 import { Tag } from '../tags/tag.model';
@@ -86,6 +86,7 @@ export class Contest extends BaseModel {
 
   @Field(() => Int, {
     description: 'Identifies the max number of Participants in the Contest.',
+    nullable: true,
   })
   maxParticipants: number;
 }
