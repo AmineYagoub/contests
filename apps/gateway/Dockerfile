@@ -27,6 +27,6 @@ RUN npm install @nestjs/config apollo-server-core
 
 # USER nest
 
-EXPOSE 3000
+EXPOSE 3005
 ## Launch the wait tool and then your application
 CMD ["node", "main"]
