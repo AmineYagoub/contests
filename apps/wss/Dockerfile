@@ -1,17 +1,11 @@
-FROM node:16-buster AS base
-RUN apt-get install -y --no-install-recommends git
+FROM node:16-alpine AS base
 
-FROM base as deps
+FROM base as builder
 WORKDIR /app
-COPY package.json ./
-RUN yarn install --frozen-lockfile
+COPY package*.json ./
+RUN npm install
 
-# Rebuild the source code only when needed
-FROM base AS builder
-
-WORKDIR /app
 COPY . .
-COPY --from=deps /app/node_modules ./node_modules
 RUN npx nx build wss --generatePackageJson --optimization 
 
 
@@ -21,13 +15,17 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-COPY --from=builder /app/dist/apps/wss/main.js ./main.js
-COPY --from=builder /app/dist/apps/wss/main.js.map ./main.js.map
-COPY --from=builder /app/dist/apps/wss/package.json ./package.json
-RUN yarn install --production --ignore-scripts --prefer-offline
+COPY --from=builder /app/dist/apps/wss ./
+
+RUN npm install
+
+
+## Add the wait script to the image
+# ADD https://github.com/vishnubob/wait-for-it/blob/master/wait-for-it.sh ./wait-for-it.sh
+# RUN chmod +x ./wait-for-it.sh
 
 # USER nest
 
 EXPOSE 3003
-
+## Launch the wait tool and then your application
 CMD ["node", "main"]
