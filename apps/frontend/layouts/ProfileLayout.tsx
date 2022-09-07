@@ -36,7 +36,7 @@ const ProfileLayout = ({ children }) => {
           <Col span={4}>
             <Logo />
           </Col>
-          <Col span={17}></Col>
+          <Col span={17} />
           <Col span={3}>
             <Space size={8}>
               <Button
@@ -44,13 +44,6 @@ const ProfileLayout = ({ children }) => {
                 shape="circle"
                 type="ghost"
               />
-              <Badge dot>
-                <Button
-                  icon={<BellOutlined style={{ color: theme.infoColor }} />}
-                  shape="circle"
-                  type="ghost"
-                />
-              </Badge>
               <Badge dot>
                 <Button
                   icon={<BellOutlined style={{ color: theme.infoColor }} />}
