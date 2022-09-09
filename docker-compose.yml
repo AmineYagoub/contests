@@ -11,8 +11,8 @@ services:
   frontend:
     image: docker.io/amineyagoub/olympiad-frontend
     environment:
-      #- NEXT_PUBLIC_PROD_WS_ENDPOINT=https://wss.arabic-olympiad.ga
-      #- NEXT_PUBLIC_PROD_GRAPHQL_ENDPOINT=https://api.arabic-olympiad.ga
+      - NEXT_PUBLIC_PROD_WS_ENDPOINT=https://olympiad-amineyagoub.cloud.okteto.net
+      - NEXT_PUBLIC_PROD_GRAPHQL_ENDPOINT=https://olympiad-amineyagoub.cloud.okteto.net
       - NEXT_PUBLIC_COUNTRIES_ENDPOINT=https://restcountries.com/v3.1/all
     ports:
       - 3000
