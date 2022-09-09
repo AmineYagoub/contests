@@ -19,8 +19,38 @@ services:
     volumes:
       - api-upload:/app/uploads
     depends_on:
+      api:
+        condition: service_healthy
+
+  contest:
+    image: docker.io/amineyagoub/olympiad-contest
+    hostname: contest
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=mysql://user:pass123@db:3306/mostaqil
+      - WAIT_HOSTS= db:3306
+    ports:
+      - 3001
+    depends_on:
       db:
         condition: service_healthy
+
+  api:
+    image: docker.io/amineyagoub/olympiad-gateway
+    restart: unless-stopped
+    environment:
+      - GATEWAY_CONTEST_SERVICE_HOST=http://contest:3001/graphql
+    depends_on:
+      contest:
+        condition: service_healthy
+    ports:
+      - 3005
+
+  wss:
+    image: docker.io/amineyagoub/olympiad-wss
+    restart: unless-stopped
+    ports:
+      - 3003
 
   db:
     image: docker.io/percona
