@@ -1,7 +1,7 @@
 services:
   olympiad:
     build:
-      context: reverse-proxy
+      context: ./reverse-proxy
       dockerfile: Dockerfile
     ports:
       - 80:80
