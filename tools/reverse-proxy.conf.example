@@ -1,0 +1,163 @@
+# sudo apt update
+# sudo apt install nginx
+# sudo apt install certbot python3-certbot-nginx
+# sudo unlink /etc/nginx/sites-enabled/default
+# sudo nano /etc/nginx/sites-available/reverse-proxy.conf
+# sudo ln -s /etc/nginx/sites-available/reverse-proxy.conf /etc/nginx/sites-enabled/reverse-proxy.conf
+# sudo nginx -t
+# sudo systemctl reload nginx
+# sudo certbot --nginx -d arabic-olympiad.ga -d www.arabic-olympiad.ga
+
+
+proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=STATIC:10m inactive=7d use_temp_path=off;
+
+upstream nextjs {
+    server 127.0.0.1:3000;
+}
+
+upstream wss {
+    server 127.0.0.1:3003;         
+}
+
+upstream api {
+    server 127.0.0.1:3005;
+}
+
+
+server {
+    server_name arabic-olympiad.ga www.arabic-olympiad.ga;
+
+    server_tokens off;
+
+    gzip on;
+    gzip_proxied any;
+    gzip_comp_level 4;
+    gzip_types text/css application/javascript image/svg+xml;
+   
+     
+    location ^~ /_next {
+       proxy_cache STATIC;
+       proxy_pass http://nextjs;
+    }
+
+    location ^~ /graphql {
+       proxy_pass http://api;
+    }
+
+    location ^~ /socket.io {
+        proxy_pass http://wss;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+    }
+
+    location ^~ /img {
+       proxy_pass http://nextjs;
+    }
+
+    location ~* ^/.*\\.(?:jpg|jpeg|gif|png|ico|cur|gz|svg|ttf)$ {
+       proxy_cache STATIC;
+       proxy_ignore_headers Cache-Control;
+       proxy_ignore_headers Set-Cookie;
+       proxy_cache_valid 60m;
+       add_header X-Cache-Status $upstream_cache_status; 
+    }
+
+    location / {
+       proxy_pass http://nextjs;
+       proxy_http_version  1.1;
+       proxy_cache_bypass  $http_upgrade;
+
+       proxy_set_header Host              $host; 
+       proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+       proxy_set_header X-Real-IP         $remote_addr;
+       proxy_set_header X-Forwarded-Host  $host;
+       proxy_set_header X-Forwarded-Proto $scheme;
+       proxy_set_header X-Forwarded-Port  $server_port;
+    }
+
+    location ~* \.(?:htaccess|htpasswd|ini|conf|txt)$ {
+       deny all;
+    }
+
+    listen [::]:443 ssl ipv6only=on; # managed by Certbot
+    listen 443 ssl http2; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/arabic-olympiad.ga/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/arabic-olympiad.ga/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+server {
+    server_name wss.arabic-olympiad.ga;
+    location / {
+       proxy_pass http://wss;
+   }
+
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/wss.arabic-olympiad.ga/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/wss.arabic-olympiad.ga/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+
+server {
+    if ($host = www.arabic-olympiad.ga) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = arabic-olympiad.ga) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    listen [::]:80;
+
+        
+    server_name arabic-olympiad.ga www.arabic-olympiad.ga;
+    return 404; # managed by Certbot
+}
+
+
+server {
+    if ($host = wss.arabic-olympiad.ga) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    server_name wss.arabic-olympiad.ga;
+    listen 80;
+    return 404; # managed by Certbot
+}
+
+server {
+    server_name api.arabic-olympiad.ga;
+    location / {
+       proxy_pass http://api;
+   }
+
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/api.arabic-olympiad.ga/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/api.arabic-olympiad.ga/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+
+server {
+    if ($host = api.arabic-olympiad.ga) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    server_name api.arabic-olympiad.ga;
+    listen 80;
+    return 404; # managed by Certbot
+}
