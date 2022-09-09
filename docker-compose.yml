@@ -1,6 +1,8 @@
 services:
   olympiad:
-    build: ./reverse-proxy
+    build:
+      context: reverse-proxy
+      dockerfile: Dockerfile
     ports:
       - 80:80
     depends_on:
