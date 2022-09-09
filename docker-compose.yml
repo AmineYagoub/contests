@@ -1,6 +1,6 @@
 services:
   olympiad:
-    build: reverse-proxy
+    build: ./reverse-proxy
     ports:
       - 80:80
     depends_on:
