@@ -13,6 +13,9 @@ RUN npx nx build frontend --generatePackageJson --optimization
 FROM base AS runner
 WORKDIR /app
 
+RUN mkdir uploads
+RUN chmod -R 777 uploads
+
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
