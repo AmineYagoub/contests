@@ -13,6 +13,7 @@ interface ContestStorage {
   contestSubmitted: boolean;
   contestAnnulled: boolean;
   mutationLoading: boolean;
+  contestTimeCounter: number;
   contestCurrentIndex: number;
 }
 
@@ -22,6 +23,7 @@ const init: ContestStorage = {
   answers: [],
   queryLoading: false,
   contestStarted: false,
+  contestTimeCounter: 0,
   contestCurrentIndex: 0,
   contestFinished: false,
   contestSubmitted: false,
@@ -38,6 +40,7 @@ export const ContestState = proxy<ContestStorage>(init);
 
 // TODO Handle Send contest Result by email
 // TODO Handle Send contest Result by notification to admin
+const deadline = (target: number) => Date.now() + 1000 * 60 * target + 1000;
 
 export const ContestActions = {
   setContest: (contest: Contest) => {
@@ -74,7 +77,13 @@ export const ContestActions = {
   setQueryLoading: (loading: boolean) => {
     ContestState.queryLoading = loading;
   },
+
   setContestStarted: (value: boolean) => {
+    if (value) {
+      ContestState.contestTimeCounter = deadline(
+        ContestState?.contest?.duration
+      );
+    }
     ContestState.contestStarted = value;
   },
   setContestFinished: (value: boolean) => {
@@ -83,8 +92,12 @@ export const ContestActions = {
   setContestSubmitted: (value: boolean) => {
     ContestState.contestSubmitted = value;
   },
-  setContestAnnulled: (value: boolean) => {
-    ContestState.contestAnnulled = value;
+  setContestAnnulled: () => {
+    if (ContestState.contestStarted) {
+      ContestState.contestStarted = false;
+      ContestState.contestFinished = false;
+      ContestState.contestAnnulled = true;
+    }
   },
   incrementQuestionIndex: () => {
     ContestState.contestCurrentIndex++;

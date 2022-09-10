@@ -103,6 +103,7 @@ const saveQuestions = async (questions: CreateQuestionDto[]) => {
       console.error(error);
     }
   }
+  socket.emit('saveQuestionsProgress', 100);
   socket.disconnect();
 };
 
@@ -120,9 +121,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       });
       form.on('end', () => resolve(files));
       form.on('error', (err) => reject(err));
-      form.parse(req, () => {
-        //
-      });
     }
   ).catch((e) => {
     console.error(e);

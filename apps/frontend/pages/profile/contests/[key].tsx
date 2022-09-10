@@ -1,13 +1,15 @@
 import { Layout, Spin } from 'antd';
-import styled from '@emotion/styled';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { Contest, useFindByIdForExamLazyQuery } from '@/graphql/graphql';
 import { useEffect } from 'react';
-import ContestPageHeader from '@/components/contest/ContestPageHeader';
+import { useSnapshot } from 'valtio';
+
 import ContestLoadingHeader from '@/components/contest/ContestLoadingHeader';
+import ContestPageHeader from '@/components/contest/ContestPageHeader';
 import ContestStarter from '@/components/contest/ContestStarter';
-import { ContestActions } from '@/valtio/contest.state';
+import { Contest, useFindByIdForExamLazyQuery } from '@/graphql/graphql';
+import { ContestActions, ContestState } from '@/valtio/contest.state';
+import styled from '@emotion/styled';
 
 const { Content } = Layout;
 const StyledContent = styled(Content)({
@@ -33,11 +35,12 @@ const StyledLayout = styled(Layout)({
 
 const StartContestPage: NextPage = (props) => {
   const router = useRouter();
+  const contestSnap = useSnapshot(ContestState);
   const [FindByIdForExamQuery, { loading }] = useFindByIdForExamLazyQuery();
 
   useEffect(() => {
     document.addEventListener('visibilitychange', function () {
-      alert('the tab hath changed');
+      ContestActions.setContestAnnulled();
     });
     if (router.query.key) {
       FindByIdForExamQuery({
@@ -54,6 +57,16 @@ const StartContestPage: NextPage = (props) => {
           console.log(error);
         });
     }
+
+    const handleRouteChange = (url: string) => {
+      if (url !== router.asPath) {
+        ContestActions.setContestAnnulled();
+      }
+    };
+    router.events.on('routeChangeStart', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
   }, [router.query.key]);
 
   return (

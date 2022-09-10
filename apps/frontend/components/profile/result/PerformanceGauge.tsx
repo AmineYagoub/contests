@@ -5,6 +5,7 @@ import { GridComponent, LegendComponent } from 'echarts/components';
 import * as echarts from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 
+import theme from '@/config/theme';
 import { GaugeValues } from '@/utils/types';
 import styled from '@emotion/styled';
 
@@ -31,7 +32,7 @@ const seriesOption: GaugeSeriesOption = {
 
   splitNumber: 10,
   itemStyle: {
-    color: '#ff8066',
+    color: theme.negativeColor,
   },
   progress: {
     show: true,
@@ -98,7 +99,7 @@ const PerformanceGauge = ({ values }: { values: GaugeValues }) => {
       {
         ...seriesOption,
         itemStyle: {
-          color: '#00c9a7',
+          color: values.EASY > 0 ? theme.positiveColor : theme.negativeColor,
         },
         max: 100,
         data: [
@@ -116,7 +117,7 @@ const PerformanceGauge = ({ values }: { values: GaugeValues }) => {
       {
         ...seriesOption,
         itemStyle: {
-          color: '#00c9a7',
+          color: values.MEDIUM > 0 ? theme.positiveColor : theme.negativeColor,
         },
         max: 100,
         data: [
@@ -134,7 +135,7 @@ const PerformanceGauge = ({ values }: { values: GaugeValues }) => {
       {
         ...seriesOption,
         itemStyle: {
-          color: '#00c9a7',
+          color: values.HARD > 0 ? theme.positiveColor : theme.negativeColor,
         },
         max: 100,
         data: [

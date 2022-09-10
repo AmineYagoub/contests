@@ -9,7 +9,6 @@ import {
   Tag,
 } from 'antd';
 import Link from 'next/link';
-import { useMemo } from 'react';
 import { useSnapshot } from 'valtio';
 
 import { AppRoutes } from '@/config/routes';
@@ -81,18 +80,13 @@ const StyledNavigationBtn = styled(Space)({
     backgroundImage:
       'linear-gradient(to right, #4776E6 0%, #8E54E9  51%, #4776E6  100%)',
     color: 'white',
-    boxShadow: ' 0 0 20px #eee',
+    boxShadow: '0 0 20px #eee',
   },
 });
 
-const deadline = (target: number) => Date.now() + 1000 * 60 * target + 1000;
-
 const ContestPageHeader = () => {
   const contestSnap = useSnapshot(ContestState);
-  const durationCount = useMemo(
-    () => deadline(contestSnap?.contest?.duration),
-    [contestSnap?.contest?.duration]
-  );
+
   if (!contestSnap.contest) {
     return;
   }
@@ -111,7 +105,11 @@ const ContestPageHeader = () => {
   return (
     <PageHeader
       onBack={() => null}
-      title={<Link href={AppRoutes.Home}>{`الرئيسية`}</Link>}
+      title={
+        !contestSnap.contestStarted && (
+          <Link href={AppRoutes.Home}>{`الرئيسية`}</Link>
+        )
+      }
       subTitle={
         <h1
           style={{ color: '#fff' }}
@@ -119,7 +117,7 @@ const ContestPageHeader = () => {
       }
       style={{ backgroundColor: '#ffffff21' }}
       extra={
-        contestSnap.answers.length && (
+        contestSnap.answers.length ? (
           <StyledNavigationBtn>
             <Button
               icon={<RightOutlined />}
@@ -139,7 +137,7 @@ const ContestPageHeader = () => {
               onClick={ContestActions.incrementQuestionIndex}
             />
           </StyledNavigationBtn>
-        )
+        ) : null
       }
     >
       <Row justify="center">
@@ -158,7 +156,7 @@ const ContestPageHeader = () => {
           {contestSnap.contestStarted ? (
             <StyledCountdown
               title="الوقت المتبقي"
-              value={durationCount}
+              value={contestSnap.contestTimeCounter}
               format="HH:mm:ss"
               valueStyle={valueStyle}
               onFinish={onTimeFinished}
