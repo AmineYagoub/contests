@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Tag } from '@prisma/client';
+import { Prisma, Tag } from '@prisma/contest-service';
 
 import { PrismaService } from '../app/prisma.service';
 

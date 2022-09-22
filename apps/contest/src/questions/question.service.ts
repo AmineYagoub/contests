@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma, Question } from '@prisma/client';
+import { Prisma, Question } from '@prisma/contest-service';
 
 import { PrismaService } from '../app/prisma.service';
 

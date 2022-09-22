@@ -6,12 +6,15 @@ import {
 import {
   Args,
   Mutation,
+  Parent,
   Query,
+  ResolveField,
   Resolver,
   ResolveReference,
 } from '@nestjs/graphql';
 
 import { ContestPaginationResponse } from '../common/pagination.response';
+import { User } from '../users/user.entity';
 import { Contest } from './contest.model';
 import { ContestService } from './contest.service';
 
@@ -59,5 +62,16 @@ export class ContestResolver {
   @ResolveReference()
   async resolveReference(reference: { __typename: string; id: string }) {
     return this.contestService.findUnique({ id: reference.id });
+  }
+
+  /**
+   * Resolve contest author.
+   *
+   * @param contest Contest
+   * @returns
+   */
+  @ResolveField(() => User)
+  user(@Parent() contest: Contest): unknown {
+    return { __typename: 'User', id: contest.authorId };
   }
 }

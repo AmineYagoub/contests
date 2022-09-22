@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
-import { ContestService } from './contest.service';
-import { ContestResolver } from './contest.resolver';
+
 import { PrismaService } from '../app/prisma.service';
+import { UsersResolvers } from '../users/user.resolver';
+import { ContestResolver } from './contest.resolver';
+import { ContestService } from './contest.service';
 
 @Module({
-  providers: [ContestResolver, ContestService, PrismaService],
+  providers: [ContestResolver, UsersResolvers, ContestService, PrismaService],
   exports: [ContestService],
 })
 export class ContestModule {}

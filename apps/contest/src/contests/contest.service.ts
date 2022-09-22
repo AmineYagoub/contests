@@ -4,7 +4,7 @@ import {
   SelectedQuestionFields,
 } from '@contests/types';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Contest, Prisma, Question } from '@prisma/client';
+import { Contest, Prisma, Question } from '@prisma/contest-service';
 
 import { PrismaService } from '../app/prisma.service';
 
@@ -42,7 +42,14 @@ export class ContestService {
   }
 
   /**
-   * @returns
+   * Get random list of questions.
+   *
+   * tags: Prisma.TagCreateNestedManyWithoutContestsInput,
+   * easy: number,
+   * mid: number,
+   * hard: number
+   *
+   * @returns Promise<SelectedQuestionFields[]>
    */
   private async getConnectedQuestions(
     tags: Prisma.TagCreateNestedManyWithoutContestsInput,
@@ -198,6 +205,7 @@ export class ContestService {
   }
 
   /**
+   * Add empty options.
    *
    * @param options
    * @returns
