@@ -9,6 +9,7 @@
     "frontend-e2e": "apps/frontend-e2e",
     "gateway": "apps/gateway",
     "types": "libs/types",
+    "utils": "libs/utils",
     "wss": "apps/wss"
   }
 }

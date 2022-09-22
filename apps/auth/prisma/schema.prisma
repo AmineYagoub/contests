@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../node_modules/@prisma/auth-service"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Permission {
+  id                    String    @id @default(uuid())
+  title                 String    @db.VarChar(100) @unique
+  description           String?   @db.VarChar(250) @default("")
+  created               DateTime  @default(now())
+  updated               DateTime  @updatedAt
+  roleId                String
+  role                  Role @relation(fields: [roleId], references: [id])
+}
+
+model Role {
+  id                    String    @id @default(uuid())
+  title                 String    @db.VarChar(100) @unique
+  description           String?   @db.VarChar(250) @default("")
+  created               DateTime  @default(now())
+  updated               DateTime  @updatedAt
+  permissions           Permission[]
+  users                 User[]
+}
+
+model User {
+  id                    String    @id @default(uuid())
+  firstName             String?   @db.VarChar(100) @default("")
+  lastName              String?   @db.VarChar(100) @default("")
+  email                 String    @db.VarChar(100) @unique
+  key                   Int       @db.UnsignedInt @unique
+  image                 String    @db.VarChar(255)
+  password              String    @db.Char(255)
+  emailConfirmed        Boolean?  @default(false)
+  agreement             Boolean?  @default(false)
+  isActive              Boolean?  @default(false)
+  created               DateTime  @default(now())
+  updated               DateTime  @updatedAt
+  roleId                String
+  role                  Role @relation(fields: [roleId], references: [id])
+  emailToken            EmailToken?
+
+  teacherId             String?
+  teacher               User?   @relation("StudentTeacher", fields: [teacherId], references: [id])
+  students              User[]  @relation("StudentTeacher")
+
+  @@index([firstName(length: 100, sort: Desc)])
+  @@index([emailConfirmed(sort: Desc)])
+}
+
+model EmailToken {
+  id                    String    @id @default(uuid())
+  value                 String    @db.Char(128) @unique
+  created               DateTime  @default(now())
+  updated               DateTime  @updatedAt
+  userId                String    @unique
+  user                  User      @relation(fields: [userId], references: [id])
+}
