@@ -17,7 +17,8 @@
     "paths": {
       "@contests/config": ["libs/config/src/index.ts"],
       "@contests/dto": ["libs/dto/src/index.ts"],
-      "@contests/types": ["libs/types/src/index.ts"]
+      "@contests/types": ["libs/types/src/index.ts"],
+      "@contests/utils": ["libs/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
