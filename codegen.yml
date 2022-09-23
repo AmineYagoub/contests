@@ -1,5 +1,5 @@
 overwrite: true
-schema: 'http://localhost:3000'
+schema: 'http://localhost:3005'
 documents: 'apps/frontend/graphql/**/**/*.graphql'
 generates:
   apps/frontend/graphql/graphql.ts:
