@@ -1,10 +1,16 @@
 import { Button, Divider, Form, Input } from 'antd';
-import AuthLayout from '@/layout/AuthLayout';
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import { NextPageWithLayout } from '@/config/types';
-import styled from '@emotion/styled';
 import Link from 'next/link';
-import { AppRoutes } from '@/config/routes';
+
+import {
+  emailRules,
+  passwordRules,
+  useSigning,
+} from '@/hooks/auth/signing.hook';
+import AuthLayout from '@/layout/AuthLayout';
+import { AppRoutes } from '@/utils/routes';
+import { NextPageWithLayout } from '@/utils/types';
+import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import styled from '@emotion/styled';
 
 const StyledForm = styled(Form)({
   maxWidth: 400,
@@ -15,36 +21,26 @@ const StyledForm = styled(Form)({
 });
 
 const SignInPage: NextPageWithLayout = () => {
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
-  };
+  const [form] = Form.useForm();
+  const { onFinish, onFinishFailed, loading } = useSigning(form);
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-  };
   return (
     <StyledForm
-      name="signin"
+      form={form}
+      name="signing"
       layout="vertical"
+      onSubmitCapture={(e) => e.preventDefault()}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
       size="large"
       colon
     >
-      <Form.Item
-        label="البريد الإلكتروني"
-        name="username"
-        rules={[{ required: true, message: 'Please input your username!' }]}
-      >
+      <Form.Item label="البريد الإلكتروني" name="email" rules={emailRules}>
         <Input />
       </Form.Item>
 
-      <Form.Item
-        label="كلمة السر"
-        name="password"
-        rules={[{ required: true, message: 'Please input your password!' }]}
-      >
+      <Form.Item label="كلمة السر" name="password" rules={passwordRules}>
         <Input.Password />
       </Form.Item>
 
@@ -56,7 +52,7 @@ const SignInPage: NextPageWithLayout = () => {
       </Button>
       <Divider>ليس لديك حساب؟</Divider>
       <Link href={AppRoutes.SignUp}>
-        <Button type="primary" ghost block>
+        <Button type="primary" ghost block loading={loading}>
           أنشئ حساب جديد
         </Button>
       </Link>

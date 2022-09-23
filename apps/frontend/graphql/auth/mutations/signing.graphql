@@ -1,0 +1,6 @@
+mutation Signing($input: SigningDto!) {
+  signing(input: $input) {
+    accessToken
+    refreshToken
+  }
+}

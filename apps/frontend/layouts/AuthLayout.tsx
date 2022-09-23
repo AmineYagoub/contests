@@ -1,6 +1,8 @@
-import { AppRoutes } from '@/config/routes';
 import { Layout, PageHeader } from 'antd';
 import Link from 'next/link';
+
+import { AppRoutes } from '@/utils/routes';
+
 import StyledFooter from './StyledFooter';
 
 const { Content } = Layout;
