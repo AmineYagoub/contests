@@ -15,7 +15,7 @@ const nextConfig = {
   },
   images: {
     domains: [
-      'via.placeholder.com',
+      'ui-avatars.com',
       'flagcdn.com',
       'upload.wikimedia.org',
       'joeschmoe.io',
