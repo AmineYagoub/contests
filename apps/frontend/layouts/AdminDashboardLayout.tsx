@@ -4,7 +4,8 @@ import { useRouter } from 'next/router';
 import { createElement, useEffect, useState } from 'react';
 
 import TeacherIcon from '@/components/icons/TeacherIcon';
-import { AppRoutes } from '@/config/routes';
+import { socketVar } from '@/utils/app';
+import { AppRoutes } from '@/utils/routes';
 import {
   BarChartOutlined,
   BellOutlined,
@@ -16,12 +17,11 @@ import {
   SettingOutlined,
   TrophyOutlined,
 } from '@ant-design/icons';
+import { useReactiveVar } from '@apollo/client';
 import styled from '@emotion/styled';
 
 import { StyledHeader } from './HomeLayout';
 import StyledFooter from './StyledFooter';
-import { useReactiveVar } from '@apollo/client';
-import { socketVar } from '@/utils/app';
 
 const { Content, Sider } = Layout;
 

@@ -1,10 +1,13 @@
-import styled from '@emotion/styled';
 import { Button, Col, Layout, Row } from 'antd';
-import theme from '@/config/theme';
-import { Logo } from './AdminDashboardLayout';
 import Link from 'next/link';
+
+import theme from '@/config/theme';
+import { AppRoutes } from '@/utils/routes';
+import styled from '@emotion/styled';
+
+import { Logo } from './AdminDashboardLayout';
 import StyledFooter from './StyledFooter';
-import { AppRoutes } from '@/config/routes';
+
 const { Content, Header } = Layout;
 
 export const StyledHeader = styled(Header)({

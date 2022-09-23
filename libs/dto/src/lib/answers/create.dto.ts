@@ -6,9 +6,10 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Field, InputType } from '@nestjs/graphql';
-import { Prisma } from '@prisma/client';
+
 import { SelectedAnswerInput } from '@contests/types';
+import { Field, InputType } from '@nestjs/graphql';
+import { Prisma } from '@prisma/contest-service';
 
 type AnswerIdType = {
   id: string;

@@ -1,8 +1,9 @@
 import { Spin } from 'antd';
 import Link from 'next/link';
-import HomeLayout from '@/layout/HomeLayout';
-import { NextPageWithLayout } from '@/config/types';
+
 import { usePaginateContestsQuery } from '@/graphql/graphql';
+import HomeLayout from '@/layout/HomeLayout';
+import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 const Index: NextPageWithLayout = (props) => {
@@ -18,7 +19,7 @@ const Index: NextPageWithLayout = (props) => {
       <h1>قريبا ...</h1>
       <Link href="/admin/dashboard">لوحة تحكم الادارة</Link>
 
-      {data?.paginateContest.data.map((el) => (
+      {data?.paginateContest?.data.map((el) => (
         <div key={el.id}>
           <Link href={`/profile/contests/${el.id}`}>{el.title}</Link>
         </div>

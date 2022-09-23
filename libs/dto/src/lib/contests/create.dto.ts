@@ -11,7 +11,7 @@ import {
 
 import { ContestStatus, ContestType, StudentLevel } from '@contests/types';
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/contest-service';
 
 import { TagConnectInput } from '../questions/create.dto';
 

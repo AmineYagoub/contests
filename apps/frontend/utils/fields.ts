@@ -22,6 +22,7 @@ export const ContestFields: { [P in ContestsDataIndex]: P } = {
   mediumQuestionCount: 'mediumQuestionCount',
   hardQuestionCount: 'hardQuestionCount',
   updated: 'updated',
+  user: 'user',
   __typename: '__typename',
 };
 

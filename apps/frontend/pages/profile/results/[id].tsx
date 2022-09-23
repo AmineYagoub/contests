@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic';
 import AnswersResult from '@/components/profile/result/AnswersResult';
 import TotalResultDetails from '@/components/profile/result/TotalResultDetails';
 import { initializeApollo } from '@/config/createGraphQLClient';
-import { NextPageWithLayout } from '@/config/types';
 import {
   FindByIdForReviewDocument,
   FindByIdForReviewQuery,
@@ -13,6 +12,7 @@ import {
 } from '@/graphql/graphql';
 import { useGenerateResult } from '@/hooks/contests/generate-result.hook';
 import ProfileLayout from '@/layout/ProfileLayout';
+import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 const PerformanceGauge = dynamic(

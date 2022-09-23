@@ -8,7 +8,7 @@ import {
 
 import { QuestionType } from '@contests/types';
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/contest-service';
 
 type TagTitle = {
   title: string;

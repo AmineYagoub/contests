@@ -47,6 +47,17 @@ export type AnswerInput = {
   id: Scalars['String'];
 };
 
+export type Auth = {
+  __typename?: 'Auth';
+  /** JWT access token */
+  accessToken: Scalars['String'];
+  /** JWT refresh token */
+  refreshToken: Scalars['String'];
+  /** JWT token type */
+  tokenType: Scalars['String'];
+  user: User;
+};
+
 export type Contest = {
   __typename?: 'Contest';
   /** Identifies a list of answers that belongs to this contest. */
@@ -67,7 +78,7 @@ export type Contest = {
   /** Identifies a list of levels that can be join this Contest. */
   level: Array<StudentLevel>;
   /** Identifies the max number of Participants in the Contest. */
-  maxParticipants: Scalars['Int'];
+  maxParticipants?: Maybe<Scalars['Int']>;
   /** Identifies how many medium questions in the Contest. */
   mediumQuestionCount: Scalars['Int'];
   /** Identifies a list of users ids that joins this contest. */
@@ -88,6 +99,7 @@ export type Contest = {
   type: ContestType;
   /** Identifies the date and time when the object was last updated. */
   updated: Scalars['DateTime'];
+  user: User;
 };
 
 export type ContestConnectInput = {
@@ -169,6 +181,8 @@ export type Mutation = {
   deleteContestById?: Maybe<Contest>;
   deleteQuestionById?: Maybe<Question>;
   deleteTagById?: Maybe<Tag>;
+  signing: Auth;
+  signup: Scalars['Boolean'];
   updateAnswer: Answer;
   updateContest: Contest;
   updateQuestion: Question;
@@ -205,6 +219,14 @@ export type MutationDeleteQuestionByIdArgs = {
 
 export type MutationDeleteTagByIdArgs = {
   id: Scalars['String'];
+};
+
+export type MutationSigningArgs = {
+  input: SigningDto;
+};
+
+export type MutationSignupArgs = {
+  input: SignUpDto;
 };
 
 export type MutationUpdateAnswerArgs = {
@@ -246,8 +268,28 @@ export type OrderQuestionArgs = {
   usedCount?: InputMaybe<OrderByType>;
 };
 
+export type Permission = {
+  __typename?: 'Permission';
+  /** Identifies the description of the Permission. */
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  /** Identifies the unique name of the Permission. */
+  title: PermissionTitle;
+};
+
+/** System Permissions */
+export enum PermissionTitle {
+  AccessDashboard = 'ACCESS_DASHBOARD',
+  ViewAnalytics = 'VIEW_ANALYTICS',
+  ViewMessages = 'VIEW_MESSAGES',
+  ViewRolesPermissions = 'VIEW_ROLES_PERMISSIONS',
+  ViewSettings = 'VIEW_SETTINGS',
+  ViewUsers = 'VIEW_USERS',
+}
+
 export type Query = {
   __typename?: 'Query';
+  countAllUsers: Scalars['Int'];
   findOneAnswerById?: Maybe<Answer>;
   findOneContestById?: Maybe<Contest>;
   findOneQuestionById?: Maybe<Question>;
@@ -333,6 +375,27 @@ export enum QuestionType {
   Medium = 'MEDIUM',
 }
 
+export type Role = {
+  __typename?: 'Role';
+  /** Identifies the description of the role. */
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  /** Identifies list of permissions associated whit this role. */
+  permissions?: Maybe<Array<Permission>>;
+  /** Identifies the unique name of the role. */
+  title: RoleTitle;
+};
+
+/** Users Roles */
+export enum RoleTitle {
+  Admin = 'ADMIN',
+  GoldenTeacher = 'GOLDEN_TEACHER',
+  Moderator = 'MODERATOR',
+  Student = 'STUDENT',
+  StudentTeacher = 'STUDENT_TEACHER',
+  Teacher = 'TEACHER',
+}
+
 export type SelectedAnswerInput = {
   /** Identifies the option selected by the user. */
   option: Scalars['String'];
@@ -358,6 +421,20 @@ export type SelectedAnswerObject = {
   questionId: Scalars['String'];
   /** Identifies the index of the question in the contest.questions Array. */
   questionIndex: Scalars['Int'];
+};
+
+export type SignUpDto = {
+  agreement: Scalars['Boolean'];
+  confirmPassword: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
+  role: RoleTitle;
+  teacherId?: InputMaybe<Scalars['String']>;
+};
+
+export type SigningDto = {
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
 
 /** Student Level */
@@ -433,6 +510,37 @@ export type UpdateQuestionDto = {
   usedCount?: InputMaybe<Scalars['Int']>;
 };
 
+export type User = {
+  __typename?: 'User';
+  /** Identifies if the user are accepted agreement. */
+  agreement: Scalars['Boolean'];
+  countUnreadMessages?: Maybe<Scalars['Int']>;
+  countUnreadNotifications?: Maybe<Scalars['Int']>;
+  /** Identifies the date and time when the object was created. */
+  created: Scalars['DateTime'];
+  /** Identifies the unique email of the user. */
+  email: Scalars['String'];
+  /** Identifies if the user email is confirmed. */
+  emailConfirmed: Scalars['Boolean'];
+  /** Identifies the first name of the user. */
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  /** Identifies the avatar of the user. */
+  image?: Maybe<Scalars['String']>;
+  /** Identifies if the user is active or banned. */
+  isActive: Scalars['Boolean'];
+  /** Identifies the unique key the user. */
+  key: Scalars['Int'];
+  /** Identifies the last name of the user. */
+  lastName?: Maybe<Scalars['String']>;
+  /** Identifies the role of the user. */
+  role: Role;
+  /** Identifies the unique email of the user. */
+  supervisor?: Maybe<User>;
+  /** Identifies the date and time when the object was last updated. */
+  updated: Scalars['DateTime'];
+};
+
 export type WhereContestArgs = {
   countries?: InputMaybe<Array<Scalars['String']>>;
   created?: InputMaybe<Array<Scalars['String']>>;
@@ -505,6 +613,21 @@ export type FindOneAnswerByIdQuery = {
     }>;
   } | null;
 };
+
+export type SigningMutationVariables = Exact<{
+  input: SigningDto;
+}>;
+
+export type SigningMutation = {
+  __typename?: 'Mutation';
+  signing: { __typename?: 'Auth'; accessToken: string; refreshToken: string };
+};
+
+export type SignUpMutationVariables = Exact<{
+  input: SignUpDto;
+}>;
+
+export type SignUpMutation = { __typename?: 'Mutation'; signup: boolean };
 
 export type CreateContestMutationVariables = Exact<{
   input: CreateContestDto;
@@ -584,7 +707,7 @@ export type FindByIdForExamQuery = {
     easyQuestionCount: number;
     mediumQuestionCount: number;
     hardQuestionCount: number;
-    maxParticipants: number;
+    maxParticipants?: number | null;
     tags?: Array<{ __typename?: 'Tag'; title: string }> | null;
     questions?: Array<{
       __typename?: 'Question';
@@ -621,7 +744,7 @@ export type FindByIdForReviewQuery = {
     easyQuestionCount: number;
     mediumQuestionCount: number;
     hardQuestionCount: number;
-    maxParticipants: number;
+    maxParticipants?: number | null;
     tags?: Array<{ __typename?: 'Tag'; title: string }> | null;
     questions?: Array<{
       __typename?: 'Question';
@@ -680,7 +803,7 @@ export type PaginateContestsQuery = {
       easyQuestionCount: number;
       mediumQuestionCount: number;
       hardQuestionCount: number;
-      maxParticipants: number;
+      maxParticipants?: number | null;
       tags?: Array<{ __typename?: 'Tag'; title: string }> | null;
     }> | null;
   } | null;
@@ -942,6 +1065,99 @@ export type FindOneAnswerByIdLazyQueryHookResult = ReturnType<
 export type FindOneAnswerByIdQueryResult = Apollo.QueryResult<
   FindOneAnswerByIdQuery,
   FindOneAnswerByIdQueryVariables
+>;
+export const SigningDocument = gql`
+  mutation Signing($input: SigningDto!) {
+    signing(input: $input) {
+      accessToken
+      refreshToken
+    }
+  }
+`;
+export type SigningMutationFn = Apollo.MutationFunction<
+  SigningMutation,
+  SigningMutationVariables
+>;
+
+/**
+ * __useSigningMutation__
+ *
+ * To run a mutation, you first call `useSigningMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSigningMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signingMutation, { data, loading, error }] = useSigningMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSigningMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SigningMutation,
+    SigningMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<SigningMutation, SigningMutationVariables>(
+    SigningDocument,
+    options
+  );
+}
+export type SigningMutationHookResult = ReturnType<typeof useSigningMutation>;
+export type SigningMutationResult = Apollo.MutationResult<SigningMutation>;
+export type SigningMutationOptions = Apollo.BaseMutationOptions<
+  SigningMutation,
+  SigningMutationVariables
+>;
+export const SignUpDocument = gql`
+  mutation SignUp($input: SignUpDto!) {
+    signup(input: $input)
+  }
+`;
+export type SignUpMutationFn = Apollo.MutationFunction<
+  SignUpMutation,
+  SignUpMutationVariables
+>;
+
+/**
+ * __useSignUpMutation__
+ *
+ * To run a mutation, you first call `useSignUpMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignUpMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signUpMutation, { data, loading, error }] = useSignUpMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSignUpMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SignUpMutation,
+    SignUpMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<SignUpMutation, SignUpMutationVariables>(
+    SignUpDocument,
+    options
+  );
+}
+export type SignUpMutationHookResult = ReturnType<typeof useSignUpMutation>;
+export type SignUpMutationResult = Apollo.MutationResult<SignUpMutation>;
+export type SignUpMutationOptions = Apollo.BaseMutationOptions<
+  SignUpMutation,
+  SignUpMutationVariables
 >;
 export const CreateContestDocument = gql`
   mutation CreateContest($input: CreateContestDto!) {

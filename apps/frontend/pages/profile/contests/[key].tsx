@@ -2,13 +2,12 @@ import { Layout, Spin } from 'antd';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useSnapshot } from 'valtio';
 
 import ContestLoadingHeader from '@/components/contest/ContestLoadingHeader';
 import ContestPageHeader from '@/components/contest/ContestPageHeader';
 import ContestStarter from '@/components/contest/ContestStarter';
 import { Contest, useFindByIdForExamLazyQuery } from '@/graphql/graphql';
-import { ContestActions, ContestState } from '@/valtio/contest.state';
+import { ContestActions } from '@/valtio/contest.state';
 import styled from '@emotion/styled';
 
 const { Content } = Layout;
@@ -33,9 +32,8 @@ const StyledLayout = styled(Layout)({
   left: 0,
 });
 
-const StartContestPage: NextPage = (props) => {
+const StartContestPage: NextPage = () => {
   const router = useRouter();
-  const contestSnap = useSnapshot(ContestState);
   const [FindByIdForExamQuery, { loading }] = useFindByIdForExamLazyQuery();
 
   useEffect(() => {

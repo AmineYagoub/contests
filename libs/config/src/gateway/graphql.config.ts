@@ -1,28 +1,66 @@
 import { ApolloServerPluginInlineTraceDisabled } from 'apollo-server-core';
 
 import { IntrospectAndCompose } from '@apollo/gateway';
-import { Inject } from '@nestjs/common';
+import { GatewayGraphQLError } from '@contests/types';
+import { HttpStatus, Inject } from '@nestjs/common';
 import { ConfigType, registerAs } from '@nestjs/config';
 
 import { isProd } from '../';
 
 export const GATEWAY_GQL_REGISTER_KEY = 'gatewayGQLConfig';
 
+const HttpResponsePlugin = {
+  async requestDidStart() {
+    return {
+      async willSendResponse({ response }) {
+        // response.http.headers.set('Custom-Header', 'hello');
+        if (response?.errors?.[0]?.status) {
+          response.http.status = response?.errors?.[0]?.status;
+        }
+      },
+    };
+  },
+};
+
 export const gatewayGQLConfig = registerAs(GATEWAY_GQL_REGISTER_KEY, () => ({
   server: {
-    // ... Apollo server options
     cors: true,
     context: ({ req, res }) => ({ req, res }),
     path: '/',
-    debug: !isProd,
-    playground: !isProd,
+    debug: false,
     introspection: !isProd,
-    csrfPrevention: isProd,
-    plugins: [ApolloServerPluginInlineTraceDisabled()],
+    csrfPrevention: true,
+    plugins: [HttpResponsePlugin, ApolloServerPluginInlineTraceDisabled()],
+    formatError(error: GatewayGraphQLError) {
+      if (error.extensions?.response?.body?.errors[0]?.extensions) {
+        return {
+          message: error.extensions?.response.statusText,
+          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          errors: error.extensions.response.body.errors[0].extensions,
+        };
+      }
+      if (
+        error.extensions?.response?.body?.errors[0]?.message.includes(
+          'findUniqueOrThrow()'
+        )
+      ) {
+        return {
+          message: 'Not Found',
+          status: HttpStatus.NOT_FOUND,
+        };
+      }
+      return error;
+    },
   },
   gateway: {
     supergraphSdl: new IntrospectAndCompose({
       subgraphs: [
+        {
+          name: 'AUTH_SERVICE',
+          url:
+            process.env.GATEWAY_AUTH_SERVICE_HOST ||
+            'http://localhost:3003/graphql',
+        },
         {
           name: 'CONTEST_SERVICE',
           url:

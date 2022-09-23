@@ -1,4 +1,11 @@
-import { QuestionType } from '@/graphql/graphql';
+import { NextPage } from 'next';
+import { ReactElement } from 'react';
+
+import { QuestionType, RoleTitle } from '@/graphql/graphql';
+
+export type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactElement;
+};
 
 export type Pagination = {
   offset: number;
@@ -33,4 +40,30 @@ export type ContestMeta = {
   truthyAnswersCount: number;
   falsyAnswersCount: number;
   duration: number;
+};
+
+export type SigningInput = {
+  email: string;
+  password: string;
+};
+
+export type SignUpInput = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  role: RoleTitle;
+  agreement: boolean;
+  teacherId?: string;
+};
+
+export type ConstraintsErrors = {
+  isEmail?: string;
+  isPasswordMatch?: string;
+  isAcceptAgreement?: string;
+  isStudentHasTeacher?: string;
+  minLength?: string;
+};
+
+export type GraphqlResponseError = {
+  constraints: ConstraintsErrors[];
 };

@@ -11,8 +11,8 @@ import {
 import Link from 'next/link';
 import { useSnapshot } from 'valtio';
 
-import { AppRoutes } from '@/config/routes';
 import { getMapperLabel, studentMappedLevels } from '@/utils/mapper';
+import { AppRoutes } from '@/utils/routes';
 import { ContestActions, ContestState } from '@/valtio/contest.state';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';

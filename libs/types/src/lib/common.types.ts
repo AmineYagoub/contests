@@ -1,3 +1,5 @@
+import { GraphQLError } from 'graphql';
+
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum StudentLevel {
@@ -14,3 +16,15 @@ registerEnumType(StudentLevel, {
   name: 'StudentLevel',
   description: 'Student Level',
 });
+
+export type GatewayGraphQLError = GraphQLError & {
+  extensions: {
+    response: {
+      status: number;
+      statusText: string;
+      body: {
+        errors: { extensions: object; message: string }[];
+      };
+    };
+  };
+};

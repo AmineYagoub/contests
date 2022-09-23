@@ -5,8 +5,8 @@ import Image from 'next/image';
 import LatestInstructors from '@/components/admin/dashboard/LatestInstructors';
 import LatestUsers from '@/components/admin/dashboard/LatestUsers';
 import StudentAgeChart from '@/components/admin/dashboard/StudentAgeChart';
-import { NextPageWithLayout } from '@/config/types';
 import AdminDashboardLayout from '@/layout/AdminDashboardLayout';
+import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
 
