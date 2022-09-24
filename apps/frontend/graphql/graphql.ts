@@ -181,6 +181,7 @@ export type Mutation = {
   deleteContestById?: Maybe<Contest>;
   deleteQuestionById?: Maybe<Question>;
   deleteTagById?: Maybe<Tag>;
+  resendEmailActivationCode: Scalars['Boolean'];
   signing: Auth;
   signup: Scalars['Boolean'];
   updateAnswer: Answer;
@@ -219,6 +220,10 @@ export type MutationDeleteQuestionByIdArgs = {
 
 export type MutationDeleteTagByIdArgs = {
   id: Scalars['String'];
+};
+
+export type MutationResendEmailActivationCodeArgs = {
+  email: Scalars['String'];
 };
 
 export type MutationSigningArgs = {
@@ -535,8 +540,8 @@ export type User = {
   lastName?: Maybe<Scalars['String']>;
   /** Identifies the role of the user. */
   role: Role;
-  /** Identifies the unique email of the user. */
-  supervisor?: Maybe<User>;
+  /** Identifies the supervisor teacher associated with that user. */
+  teacher?: Maybe<User>;
   /** Identifies the date and time when the object was last updated. */
   updated: Scalars['DateTime'];
 };
@@ -612,6 +617,15 @@ export type FindOneAnswerByIdQuery = {
       optionIndex: number;
     }>;
   } | null;
+};
+
+export type ResendEmailActivationCodeMutationVariables = Exact<{
+  email: Scalars['String'];
+}>;
+
+export type ResendEmailActivationCodeMutation = {
+  __typename?: 'Mutation';
+  resendEmailActivationCode: boolean;
 };
 
 export type SigningMutationVariables = Exact<{
@@ -1066,6 +1080,55 @@ export type FindOneAnswerByIdQueryResult = Apollo.QueryResult<
   FindOneAnswerByIdQuery,
   FindOneAnswerByIdQueryVariables
 >;
+export const ResendEmailActivationCodeDocument = gql`
+  mutation ResendEmailActivationCode($email: String!) {
+    resendEmailActivationCode(email: $email)
+  }
+`;
+export type ResendEmailActivationCodeMutationFn = Apollo.MutationFunction<
+  ResendEmailActivationCodeMutation,
+  ResendEmailActivationCodeMutationVariables
+>;
+
+/**
+ * __useResendEmailActivationCodeMutation__
+ *
+ * To run a mutation, you first call `useResendEmailActivationCodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useResendEmailActivationCodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [resendEmailActivationCodeMutation, { data, loading, error }] = useResendEmailActivationCodeMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useResendEmailActivationCodeMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ResendEmailActivationCodeMutation,
+    ResendEmailActivationCodeMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    ResendEmailActivationCodeMutation,
+    ResendEmailActivationCodeMutationVariables
+  >(ResendEmailActivationCodeDocument, options);
+}
+export type ResendEmailActivationCodeMutationHookResult = ReturnType<
+  typeof useResendEmailActivationCodeMutation
+>;
+export type ResendEmailActivationCodeMutationResult =
+  Apollo.MutationResult<ResendEmailActivationCodeMutation>;
+export type ResendEmailActivationCodeMutationOptions =
+  Apollo.BaseMutationOptions<
+    ResendEmailActivationCodeMutation,
+    ResendEmailActivationCodeMutationVariables
+  >;
 export const SigningDocument = gql`
   mutation Signing($input: SigningDto!) {
     signing(input: $input) {

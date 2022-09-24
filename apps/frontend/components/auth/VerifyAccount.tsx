@@ -1,8 +1,9 @@
 import { Badge, Button, Divider, Progress } from 'antd';
 import { motion } from 'framer-motion';
-import { FormEvent, ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 
 import theme from '@/config/theme';
+import { useResendEmailActivationCode } from '@/hooks/auth/signup.hook';
 import { MailOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
 
@@ -29,10 +30,8 @@ const VerifyAccount = ({
   email: string;
   isSuccess: boolean;
 }): ReactElement => {
-  const [message, setMessage] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
   const [progress, setProgress] = useState(0);
+  const { onSubmit, message, loading } = useResendEmailActivationCode();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -84,7 +83,13 @@ const VerifyAccount = ({
         ) : message ? (
           <span>{message}</span>
         ) : (
-          <Button type="primary" size="large" ghost loading={isLoading}>
+          <Button
+            type="primary"
+            size="large"
+            ghost
+            loading={loading}
+            onClick={() => onSubmit(email)}
+          >
             أعد إرسال رمز التفعيل
           </Button>
         )}
