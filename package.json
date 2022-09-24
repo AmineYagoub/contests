@@ -5,6 +5,7 @@
   "scripts": {
     "cts:dev": "(cd apps/contest/ && npx prisma migrate dev)",
     "cts:reset": "(cd apps/contest/ && npx prisma migrate reset && npx prisma generate)",
+    "auth:show": "(cd apps/auth/ && npx prisma studio)",
     "auth:dev": "(cd apps/auth/ && npx prisma migrate dev)",
     "auth:reset": "(cd apps/auth/ && npx prisma migrate reset && npx prisma generate)",
     "codegen": "graphql-codegen --config codegen.yml",
