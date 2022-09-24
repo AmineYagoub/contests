@@ -24,6 +24,17 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type ActivationToken = {
+  __typename?: 'ActivationToken';
+  /** Identifies the date and time when the token was created. */
+  created: Scalars['DateTime'];
+  id: Scalars['ID'];
+  /** Identifies the date and time when the token was updated. */
+  updated: Scalars['DateTime'];
+  /** Identifies the Token owner */
+  user: User;
+};
+
 export type Answer = {
   __typename?: 'Answer';
   /** Identifies if this answer is annulled. */
@@ -173,6 +184,7 @@ export type CreateQuestionDto = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  activateEmailToken: ActivationToken;
   createAnswer: Answer;
   createContest: Contest;
   createQuestion: Question;
@@ -188,6 +200,10 @@ export type Mutation = {
   updateContest: Contest;
   updateQuestion: Question;
   updateTag: Tag;
+};
+
+export type MutationActivateEmailTokenArgs = {
+  userId: Scalars['String'];
 };
 
 export type MutationCreateAnswerArgs = {
@@ -294,14 +310,19 @@ export enum PermissionTitle {
 
 export type Query = {
   __typename?: 'Query';
-  countAllUsers: Scalars['Int'];
+  findEmailToken: ActivationToken;
   findOneAnswerById?: Maybe<Answer>;
   findOneContestById?: Maybe<Contest>;
   findOneQuestionById?: Maybe<Question>;
   findOneTagById?: Maybe<Tag>;
   findTags?: Maybe<Array<Tag>>;
+  findUserById: User;
   paginateContest?: Maybe<ContestPaginationResponse>;
   paginateQuestions?: Maybe<QuestionPaginationResponse>;
+};
+
+export type QueryFindEmailTokenArgs = {
+  token: Scalars['String'];
 };
 
 export type QueryFindOneAnswerByIdArgs = {
@@ -323,6 +344,10 @@ export type QueryFindOneTagByIdArgs = {
 
 export type QueryFindTagsArgs = {
   title: Scalars['String'];
+};
+
+export type QueryFindUserByIdArgs = {
+  id: Scalars['String'];
 };
 
 export type QueryPaginateContestArgs = {
@@ -527,6 +552,8 @@ export type User = {
   email: Scalars['String'];
   /** Identifies if the user email is confirmed. */
   emailConfirmed: Scalars['Boolean'];
+  /** Identifies the role of the user. */
+  emailToken: Role;
   /** Identifies the first name of the user. */
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
@@ -619,6 +646,15 @@ export type FindOneAnswerByIdQuery = {
   } | null;
 };
 
+export type ActivateEmailTokenMutationVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+export type ActivateEmailTokenMutation = {
+  __typename?: 'Mutation';
+  activateEmailToken: { __typename?: 'ActivationToken'; id: string };
+};
+
 export type ResendEmailActivationCodeMutationVariables = Exact<{
   email: Scalars['String'];
 }>;
@@ -642,6 +678,21 @@ export type SignUpMutationVariables = Exact<{
 }>;
 
 export type SignUpMutation = { __typename?: 'Mutation'; signup: boolean };
+
+export type FindEmailTokenQueryVariables = Exact<{
+  token: Scalars['String'];
+}>;
+
+export type FindEmailTokenQuery = {
+  __typename?: 'Query';
+  findEmailToken: {
+    __typename?: 'ActivationToken';
+    id: string;
+    created: any;
+    updated: any;
+    user: { __typename?: 'User'; id: string; email: string };
+  };
+};
 
 export type CreateContestMutationVariables = Exact<{
   input: CreateContestDto;
@@ -908,6 +959,21 @@ export type FindTagsQuery = {
   findTags?: Array<{ __typename?: 'Tag'; title: string }> | null;
 };
 
+export type FindUserByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FindUserByIdQuery = {
+  __typename?: 'Query';
+  findUserById: {
+    __typename?: 'User';
+    id: string;
+    email: string;
+    firstName?: string | null;
+    lastName?: string | null;
+  };
+};
+
 export const CreateAnswerDocument = gql`
   mutation CreateAnswer($data: CreateAnswerDto!) {
     createAnswer(data: $data) {
@@ -1080,6 +1146,56 @@ export type FindOneAnswerByIdQueryResult = Apollo.QueryResult<
   FindOneAnswerByIdQuery,
   FindOneAnswerByIdQueryVariables
 >;
+export const ActivateEmailTokenDocument = gql`
+  mutation ActivateEmailToken($userId: String!) {
+    activateEmailToken(userId: $userId) {
+      id
+    }
+  }
+`;
+export type ActivateEmailTokenMutationFn = Apollo.MutationFunction<
+  ActivateEmailTokenMutation,
+  ActivateEmailTokenMutationVariables
+>;
+
+/**
+ * __useActivateEmailTokenMutation__
+ *
+ * To run a mutation, you first call `useActivateEmailTokenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useActivateEmailTokenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [activateEmailTokenMutation, { data, loading, error }] = useActivateEmailTokenMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useActivateEmailTokenMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ActivateEmailTokenMutation,
+    ActivateEmailTokenMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    ActivateEmailTokenMutation,
+    ActivateEmailTokenMutationVariables
+  >(ActivateEmailTokenDocument, options);
+}
+export type ActivateEmailTokenMutationHookResult = ReturnType<
+  typeof useActivateEmailTokenMutation
+>;
+export type ActivateEmailTokenMutationResult =
+  Apollo.MutationResult<ActivateEmailTokenMutation>;
+export type ActivateEmailTokenMutationOptions = Apollo.BaseMutationOptions<
+  ActivateEmailTokenMutation,
+  ActivateEmailTokenMutationVariables
+>;
 export const ResendEmailActivationCodeDocument = gql`
   mutation ResendEmailActivationCode($email: String!) {
     resendEmailActivationCode(email: $email)
@@ -1221,6 +1337,70 @@ export type SignUpMutationResult = Apollo.MutationResult<SignUpMutation>;
 export type SignUpMutationOptions = Apollo.BaseMutationOptions<
   SignUpMutation,
   SignUpMutationVariables
+>;
+export const FindEmailTokenDocument = gql`
+  query FindEmailToken($token: String!) {
+    findEmailToken(token: $token) {
+      id
+      created
+      updated
+      user {
+        id
+        email
+      }
+    }
+  }
+`;
+
+/**
+ * __useFindEmailTokenQuery__
+ *
+ * To run a query within a React component, call `useFindEmailTokenQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindEmailTokenQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindEmailTokenQuery({
+ *   variables: {
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useFindEmailTokenQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    FindEmailTokenQuery,
+    FindEmailTokenQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<FindEmailTokenQuery, FindEmailTokenQueryVariables>(
+    FindEmailTokenDocument,
+    options
+  );
+}
+export function useFindEmailTokenLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FindEmailTokenQuery,
+    FindEmailTokenQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<FindEmailTokenQuery, FindEmailTokenQueryVariables>(
+    FindEmailTokenDocument,
+    options
+  );
+}
+export type FindEmailTokenQueryHookResult = ReturnType<
+  typeof useFindEmailTokenQuery
+>;
+export type FindEmailTokenLazyQueryHookResult = ReturnType<
+  typeof useFindEmailTokenLazyQuery
+>;
+export type FindEmailTokenQueryResult = Apollo.QueryResult<
+  FindEmailTokenQuery,
+  FindEmailTokenQueryVariables
 >;
 export const CreateContestDocument = gql`
   mutation CreateContest($input: CreateContestDto!) {
@@ -1952,4 +2132,65 @@ export type FindTagsLazyQueryHookResult = ReturnType<
 export type FindTagsQueryResult = Apollo.QueryResult<
   FindTagsQuery,
   FindTagsQueryVariables
+>;
+export const FindUserByIdDocument = gql`
+  query FindUserById($id: String!) {
+    findUserById(id: $id) {
+      id
+      email
+      firstName
+      lastName
+    }
+  }
+`;
+
+/**
+ * __useFindUserByIdQuery__
+ *
+ * To run a query within a React component, call `useFindUserByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindUserByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindUserByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFindUserByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    FindUserByIdQuery,
+    FindUserByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<FindUserByIdQuery, FindUserByIdQueryVariables>(
+    FindUserByIdDocument,
+    options
+  );
+}
+export function useFindUserByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FindUserByIdQuery,
+    FindUserByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<FindUserByIdQuery, FindUserByIdQueryVariables>(
+    FindUserByIdDocument,
+    options
+  );
+}
+export type FindUserByIdQueryHookResult = ReturnType<
+  typeof useFindUserByIdQuery
+>;
+export type FindUserByIdLazyQueryHookResult = ReturnType<
+  typeof useFindUserByIdLazyQuery
+>;
+export type FindUserByIdQueryResult = Apollo.QueryResult<
+  FindUserByIdQuery,
+  FindUserByIdQueryVariables
 >;

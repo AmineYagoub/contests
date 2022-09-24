@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 
 import { PrismaService } from '../app/prisma.service';
-import { TokenService } from './activationToken.service';
+import { ActivationTokenResolver } from './activationToken.resolver';
+import { ActivationTokenService } from './activationToken.service';
 
 @Module({
   imports: [],
-  providers: [TokenService, PrismaService],
+  providers: [ActivationTokenService, ActivationTokenResolver, PrismaService],
 })
 export class ActivationTokenModule {}

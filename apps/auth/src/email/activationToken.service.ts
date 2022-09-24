@@ -4,15 +4,16 @@ import { createTransport, Transporter } from 'nodemailer';
 
 import { AUTH_CONFIG_REGISTER_KEY, AuthConfigType } from '@contests/config';
 import { USER_CREATED_EVENT, UserCreatedEvent } from '@contests/types';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OnEvent } from '@nestjs/event-emitter';
+import { Prisma } from '@prisma/auth-service';
 
 import { PrismaService } from '../app/prisma.service';
 
 import SMTPTransport = require('nodemailer/lib/smtp-transport');
 @Injectable()
-export class TokenService {
+export class ActivationTokenService {
   private transporter: Transporter<SMTPTransport.SentMessageInfo>;
   private config: AuthConfigType;
 
@@ -28,6 +29,43 @@ export class TokenService {
         user,
         pass,
       },
+    });
+  }
+
+  /**
+   * Find Email token by its unique key.
+   *
+   * @param input Prisma.EmailTokenWhereUniqueInput The unique key of the token.
+   * @returns Promise<ActivationToken | null>
+   */
+  async findUnique(input: Prisma.EmailTokenWhereUniqueInput) {
+    try {
+      return this.prisma.emailToken.findUniqueOrThrow({
+        where: input,
+        include: {
+          user: true,
+        },
+      });
+    } catch (error) {
+      Logger.error(error);
+    }
+  }
+
+  /**
+   * Delete Email token
+   *
+   * @param where Prisma.EmailTokenWhereUniqueInput.
+   * @returns Promise<EmailToken>
+   */
+  async activateToken(where: Prisma.EmailTokenWhereUniqueInput) {
+    return this.prisma.user.update({
+      data: {
+        emailConfirmed: true,
+        emailToken: {
+          delete: true,
+        },
+      },
+      where,
     });
   }
 
@@ -69,9 +107,7 @@ export class TokenService {
         });
       });
     } catch (error) {
-      throw new Error(error);
+      Logger.error(error);
     }
   }
 }
-// TODO 5 times in 10 minutes without verifying the number.
-// TODO Retry buffers help prevent both accidentally spamming users

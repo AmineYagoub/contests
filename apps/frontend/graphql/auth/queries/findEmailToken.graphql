@@ -1,0 +1,11 @@
+query FindEmailToken($token: String!) {
+  findEmailToken(token: $token) {
+    id
+    created
+    updated
+    user {
+      id
+      email
+    }
+  }
+}

@@ -1,13 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/auth-service';
 
 import { PrismaService } from '../app/prisma.service';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {
-    console.log();
-  }
+  constructor(private prisma: PrismaService) {}
 
   /**
    * Find a User by its unique key.
@@ -17,11 +15,14 @@ export class UserService {
    */
   async findUnique(input: Prisma.UserWhereUniqueInput) {
     try {
-      return this.prisma.user.findUnique({
+      return this.prisma.user.findUniqueOrThrow({
         where: input,
+        include: {
+          role: true,
+        },
       });
     } catch (error) {
-      console.error(error.message);
+      Logger.error(error);
     }
   }
 }

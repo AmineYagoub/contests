@@ -1,0 +1,5 @@
+mutation ActivateEmailToken($userId: String!) {
+  activateEmailToken(userId: $userId) {
+    id
+  }
+}

@@ -1,4 +1,4 @@
-import { Int, Query, Resolver, ResolveReference } from '@nestjs/graphql';
+import { Args, Query, Resolver, ResolveReference } from '@nestjs/graphql';
 
 import { User } from './user.model';
 import { UserService } from './user.service';
@@ -7,9 +7,9 @@ import { UserService } from './user.service';
 export class UserResolver {
   constructor(private userService: UserService) {}
 
-  @Query(() => Int)
-  countAllUsers() {
-    return 20;
+  @Query(() => User)
+  findUserById(@Args('id') id: string) {
+    return this.userService.findUnique({ id });
   }
 
   /**

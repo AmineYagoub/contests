@@ -37,6 +37,11 @@ export class User {
   })
   role?: Role;
 
+  @Field(() => Role, {
+    description: 'Identifies the role of the user.',
+  })
+  emailToken?: Role;
+
   @Field(() => User, {
     description: 'Identifies the supervisor teacher associated with that user.',
     nullable: true,
