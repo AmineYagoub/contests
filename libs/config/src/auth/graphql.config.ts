@@ -10,7 +10,6 @@ export const authGQLConfig = registerAs(AUTH_GQL_REGISTER_KEY, () => ({
   graphiql: !isProd,
   federationMetadata: true,
   debug: false,
-
   context: ({ req, res }) => ({ req, res }),
 }));
 
