@@ -33,13 +33,13 @@ export const authConfig = registerAs(AUTH_CONFIG_REGISTER_KEY, () => ({
     smtp: process.env.SMTP_SERVICE || 'gmail',
     user: process.env.SMTP_USER || 'yagoub.2.amine@gmail.com',
     pass: process.env.SMTP_PASSWORD || 'nobqrzcgufazldcy',
-    redirectUrl: process.env.REDIRECT_URL || 'http://localhost:3000/auth/',
+    baseUrl: process.env.BASE_URL || 'http://localhost:8080',
     templatePath: path.join(
       path.resolve(),
       isProd ? './assets/' : './apps/auth/src/assets/'
     ),
     from: process.env.MAIL_FROM || 'yagoub.2.amine@gmail.com',
-    subject: process.env.MAIL_SUBJECT || 'فريق عمل موقع تاجرة',
+    siteName: process.env.MAIL_SITE_NAME || 'منصة أولمبياد النحو العربي',
   },
 }));
 
