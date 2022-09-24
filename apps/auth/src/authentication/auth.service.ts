@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto';
+import mercurius from 'mercurius';
 
 import { AUTH_CONFIG_REGISTER_KEY, AuthConfigType } from '@contests/config';
 import { SignUpDto } from '@contests/dto';
@@ -9,7 +10,6 @@ import {
   Injectable,
   Logger,
   NotAcceptableException,
-  UnprocessableEntityException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -22,6 +22,7 @@ import { User } from '../users/user.model';
 import { NonceService } from './nonce.service';
 import { PasswordService } from './password.service';
 
+const { ErrorWithProps } = mercurius;
 @Injectable()
 export class AuthService {
   constructor(
@@ -74,24 +75,13 @@ export class AuthService {
           },
         };
       }
-      await this.prisma.user.create({ data: user });
-      this.eventEmitter.emit(USER_CREATED_EVENT, {
-        template: 'email-confirmation',
-        query: 'activation?token',
-        token: emailToken,
-        email,
-      });
-      return true;
+      const result = await this.prisma.user.create({ data: user });
+      return this.userCreatedEmitter(emailToken, result);
     } catch (error) {
-      if (Number(error.code) === 11000) {
-        Logger.log('Try to register new account with existing record', error);
-        const field = error.keyPattern['email']
-          ? 'email_exist'
-          : 'username_exist';
-        throw new UnprocessableEntityException([field]);
-      } else {
-        Logger.error(error);
+      if (error.code === 'P2002') {
+        throw new ErrorWithProps('error', error, 422);
       }
+      Logger.error(error);
     }
   }
 
@@ -125,7 +115,48 @@ export class AuthService {
       return await this.generateJWTTokenFor(user);
     } catch (error) {
       Logger.error(error);
-      throw new Error(error);
+    }
+  }
+
+  /**
+   * Emit USER_CREATED_EVENT when new user created.
+   *
+   * @param emailToken string
+   * @param user User
+   * @returns Boolean
+   */
+  private userCreatedEmitter(emailToken: string, user: User) {
+    this.eventEmitter.emit(USER_CREATED_EVENT, {
+      template: 'email-confirmation',
+      token: emailToken,
+      id: user.id,
+      email: user.email,
+    });
+    return true;
+  }
+
+  /**
+   * Resend activation code
+   *
+   * @param email
+   * @returns Promise<boolean>
+   */
+  async resendEmailActivationCode(email: string) {
+    try {
+      const emailToken = randomUUID();
+      const user = await this.prisma.user.update({
+        where: { email },
+        data: {
+          emailToken: {
+            update: {
+              value: emailToken,
+            },
+          },
+        },
+      });
+      return this.userCreatedEmitter(emailToken, user);
+    } catch (error) {
+      Logger.error(error);
     }
   }
 

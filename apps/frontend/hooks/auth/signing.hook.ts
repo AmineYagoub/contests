@@ -4,10 +4,10 @@ import { useRouter } from 'next/router';
 import { ValidateErrorEntity } from 'rc-field-form/es/interface';
 
 import { useSigningMutation } from '@/graphql/graphql';
+import { Logger } from '@/utils/app';
 import { ACCESS_TOKEN_NAME, REFRESH_TOKEN_NAME } from '@/utils/constant';
 
 import type { SigningInput } from '@/utils/types';
-
 export const useSigning = (form: FormInstance<unknown>) => {
   const [SigningMutation, { loading }] = useSigningMutation();
   const router = useRouter();
@@ -26,6 +26,7 @@ export const useSigning = (form: FormInstance<unknown>) => {
         router.push(String(router?.query?.from || '/'));
       }
     } catch (error) {
+      Logger.log(error);
       if (error.networkError?.statusCode === 404) {
         form.setFields([
           {
@@ -38,7 +39,7 @@ export const useSigning = (form: FormInstance<unknown>) => {
   };
 
   const onFinishFailed = (errorInfo: ValidateErrorEntity<unknown>) => {
-    console.log('Failed:', errorInfo);
+    Logger.log(errorInfo);
   };
 
   return { onFinish, onFinishFailed, loading };

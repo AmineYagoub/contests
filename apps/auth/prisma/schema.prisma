@@ -18,7 +18,7 @@ model Permission {
   created               DateTime  @default(now())
   updated               DateTime  @updatedAt
   roleId                String
-  role                  Role @relation(fields: [roleId], references: [id])
+  role                  Role @relation(fields: [roleId], references: [id] , onDelete: NoAction)
 }
 
 model Role {
@@ -46,10 +46,10 @@ model User {
   updated               DateTime  @updatedAt
   roleId                String
   role                  Role @relation(fields: [roleId], references: [id])
-  emailToken            EmailToken?
+  emailToken            EmailToken? 
 
   teacherId             String?
-  teacher               User?   @relation("StudentTeacher", fields: [teacherId], references: [id])
+  teacher               User?   @relation("StudentTeacher", fields: [teacherId], references: [id] , onDelete: SetNull)
   students              User[]  @relation("StudentTeacher")
 
   @@index([firstName(length: 100, sort: Desc)])
@@ -62,5 +62,5 @@ model EmailToken {
   created               DateTime  @default(now())
   updated               DateTime  @updatedAt
   userId                String    @unique
-  user                  User      @relation(fields: [userId], references: [id])
+  user                  User      @relation(fields: [userId], references: [id] , onDelete: Cascade)
 }

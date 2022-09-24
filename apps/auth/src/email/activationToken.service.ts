@@ -42,10 +42,8 @@ export class TokenService {
   async emailActivationCode(
     payload: UserCreatedEvent
   ): Promise<SMTPTransport.SentMessageInfo> {
-    const { templatePath, redirectUrl, from, subject } = this.config.mail;
-    const { email, token, query, template } = payload;
-
-    console.log(payload);
+    const { templatePath, baseUrl, from, siteName } = this.config.mail;
+    const { email, token, id, template } = payload;
 
     try {
       const emailTemplateSource = readFileSync(
@@ -54,12 +52,14 @@ export class TokenService {
       );
       const compiled = compile(emailTemplateSource);
       const htmlToSend = compiled({
-        link: `${redirectUrl}${query}=${token}`,
+        link: `${baseUrl}/auth/verify/${id}/${token}`,
+        baseUrl,
+        siteName,
       });
       const message = {
         from: from,
         to: email,
-        subject: subject,
+        subject: siteName,
         html: htmlToSend,
       };
       return new Promise((resolve, reject) => {

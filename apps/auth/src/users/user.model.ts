@@ -35,7 +35,7 @@ export class User {
   @Field(() => Role, {
     description: 'Identifies the role of the user.',
   })
-  role: Role;
+  role?: Role;
 
   @Field(() => User, {
     description: 'Identifies the supervisor teacher associated with that user.',

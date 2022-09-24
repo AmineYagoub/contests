@@ -3,12 +3,70 @@ import { Rule } from 'antd/lib/form';
 import { ValidateErrorEntity } from 'rc-field-form/es/interface';
 import { useState } from 'react';
 
-import { RoleTitle, useSignUpMutation } from '@/graphql/graphql';
+import {
+  RoleTitle,
+  useResendEmailActivationCodeMutation,
+  useSignUpMutation,
+} from '@/graphql/graphql';
+import { Logger } from '@/utils/app';
 import {
   ConstraintsErrors,
   GraphqlResponseError,
   SignUpInput,
 } from '@/utils/types';
+
+const handleSignUpErrors = (error: any, form: FormInstance<unknown>) => {
+  Logger.log(error);
+  if (error.networkError?.statusCode === 422) {
+    if (error.networkError?.result?.errors[0]?.errors.code === 'P2002') {
+      form.setFields([
+        {
+          name: 'email',
+          errors: ['هذا البريد الإلكتروني مسجل حاليا, يرجى تسجيل دخولك.'],
+        },
+      ]);
+      return false;
+    }
+    const validationErrors: ConstraintsErrors[] =
+      error.networkError?.result?.errors[0]?.errors?.map(
+        (el: GraphqlResponseError) => el.constraints
+      );
+    validationErrors.forEach((element) => {
+      if (element?.isEmail) {
+        form.setFields([
+          {
+            name: 'email',
+            errors: ['يرجى كتابة البريد الإلكتروني بشكل صحيح.'],
+          },
+        ]);
+      }
+      if (element?.minLength) {
+        form.setFields([
+          {
+            name: 'password',
+            errors: ['كلمة السر يجب أن تحتوي على 8 رموز أو أكثر.'],
+          },
+        ]);
+      }
+      if (element?.isPasswordMatch) {
+        form.setFields([
+          {
+            name: 'confirmPassword',
+            errors: ['يرجى التأكد من كلمة السر المدخلة.'],
+          },
+        ]);
+      }
+      if (element?.isStudentHasTeacher) {
+        form.setFields([
+          {
+            name: 'teacherId',
+            errors: ['يرجى تحديد إسم المشرف من القائمة.'],
+          },
+        ]);
+      }
+    });
+  }
+};
 
 export const useSignUp = (form: FormInstance<unknown>) => {
   const [SignUpMutation, { loading }] = useSignUpMutation();
@@ -51,52 +109,14 @@ export const useSignUp = (form: FormInstance<unknown>) => {
         setSuccess(true);
       }
     } catch (error) {
-      if (error.networkError?.statusCode === 422) {
-        const validationErrors: ConstraintsErrors[] =
-          error.networkError.result.errors[0].errors.map(
-            (el: GraphqlResponseError) => el.constraints
-          );
-        validationErrors.forEach((element) => {
-          if (element?.isEmail) {
-            form.setFields([
-              {
-                name: 'email',
-                errors: ['يرجى كتابة البريد الإلكتروني بشكل صحيح.'],
-              },
-            ]);
-          }
-          if (element?.minLength) {
-            form.setFields([
-              {
-                name: 'password',
-                errors: ['كلمة السر يجب أن تحتوي على 8 رموز أو أكثر.'],
-              },
-            ]);
-          }
-          if (element?.isPasswordMatch) {
-            form.setFields([
-              {
-                name: 'confirmPassword',
-                errors: ['يرجى التأكد من كلمة السر المدخلة.'],
-              },
-            ]);
-          }
-          if (element?.isStudentHasTeacher) {
-            form.setFields([
-              {
-                name: 'teacherId',
-                errors: ['يرجى تحديد إسم المشرف من القائمة.'],
-              },
-            ]);
-          }
-        });
-      }
+      handleSignUpErrors(error, form);
     }
   };
 
   const onFinishFailed = (errorInfo: ValidateErrorEntity<unknown>) => {
-    console.log('Failed:', errorInfo);
+    Logger.log(errorInfo);
   };
+
   const roleHandler = {
     handleInstructorSelect,
     handleRoleSelect,
@@ -114,6 +134,33 @@ export const useSignUp = (form: FormInstance<unknown>) => {
     isSuccess,
     registeredEmail,
   };
+};
+
+export const useResendEmailActivationCode = () => {
+  const [ResendEmailActivationCodeMutation, { loading }] =
+    useResendEmailActivationCodeMutation();
+  const [message, setMessage] = useState<string>(null);
+
+  const onSubmit = async (email: string) => {
+    try {
+      const { data } = await ResendEmailActivationCodeMutation({
+        variables: {
+          email,
+        },
+      });
+      if (data) {
+        setMessage(
+          'تم إرسال بريد التفعيل مرة أخرى, إذا واجهت نفس المشكلة يرجى التواصل مع فريق الدعم.'
+        );
+      }
+    } catch (error) {
+      Logger.log(error);
+      setMessage(
+        'لم نتمكن من إرسال بريد التفعيل مرة أخرى, يرجى التواصل مع فريق الدعم.'
+      );
+    }
+  };
+  return { onSubmit, message, loading };
 };
 
 export const emailRules: Rule[] = [
