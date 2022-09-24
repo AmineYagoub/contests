@@ -4,5 +4,5 @@ export type UserCreatedEvent = {
   token: string;
   email: string;
   template: string;
-  query: string;
+  id: string;
 };
