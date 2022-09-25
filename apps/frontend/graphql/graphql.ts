@@ -184,7 +184,8 @@ export type CreateQuestionDto = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  activateEmailToken: ActivationToken;
+  activateEmailToken: User;
+  activatePasswordToken: User;
   createAnswer: Answer;
   createContest: Contest;
   createQuestion: Question;
@@ -193,6 +194,7 @@ export type Mutation = {
   deleteContestById?: Maybe<Contest>;
   deleteQuestionById?: Maybe<Question>;
   deleteTagById?: Maybe<Tag>;
+  emailTokenToRecoverPassword: Scalars['Boolean'];
   resendEmailActivationCode: Scalars['Boolean'];
   signing: Auth;
   signup: Scalars['Boolean'];
@@ -200,9 +202,14 @@ export type Mutation = {
   updateContest: Contest;
   updateQuestion: Question;
   updateTag: Tag;
+  updateUser: User;
 };
 
 export type MutationActivateEmailTokenArgs = {
+  userId: Scalars['String'];
+};
+
+export type MutationActivatePasswordTokenArgs = {
   userId: Scalars['String'];
 };
 
@@ -238,6 +245,10 @@ export type MutationDeleteTagByIdArgs = {
   id: Scalars['String'];
 };
 
+export type MutationEmailTokenToRecoverPasswordArgs = {
+  email: Scalars['String'];
+};
+
 export type MutationResendEmailActivationCodeArgs = {
   email: Scalars['String'];
 };
@@ -268,6 +279,11 @@ export type MutationUpdateQuestionArgs = {
 export type MutationUpdateTagArgs = {
   id: Scalars['String'];
   title: Scalars['String'];
+};
+
+export type MutationUpdateUserArgs = {
+  id: Scalars['String'];
+  input: UpdateUserDto;
 };
 
 /** OrderBy Type */
@@ -540,6 +556,15 @@ export type UpdateQuestionDto = {
   usedCount?: InputMaybe<Scalars['Int']>;
 };
 
+export type UpdateUserDto = {
+  agreement?: InputMaybe<Scalars['Boolean']>;
+  confirmPassword?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+  role: RoleTitle;
+  teacherId?: InputMaybe<Scalars['String']>;
+};
+
 export type User = {
   __typename?: 'User';
   /** Identifies if the user are accepted agreement. */
@@ -652,7 +677,16 @@ export type ActivateEmailTokenMutationVariables = Exact<{
 
 export type ActivateEmailTokenMutation = {
   __typename?: 'Mutation';
-  activateEmailToken: { __typename?: 'ActivationToken'; id: string };
+  activateEmailToken: { __typename?: 'User'; id: string };
+};
+
+export type ActivatePasswordTokenMutationVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+export type ActivatePasswordTokenMutation = {
+  __typename?: 'Mutation';
+  activatePasswordToken: { __typename?: 'User'; id: string };
 };
 
 export type ResendEmailActivationCodeMutationVariables = Exact<{
@@ -662,6 +696,15 @@ export type ResendEmailActivationCodeMutationVariables = Exact<{
 export type ResendEmailActivationCodeMutation = {
   __typename?: 'Mutation';
   resendEmailActivationCode: boolean;
+};
+
+export type EmailTokenToRecoverPasswordMutationVariables = Exact<{
+  email: Scalars['String'];
+}>;
+
+export type EmailTokenToRecoverPasswordMutation = {
+  __typename?: 'Mutation';
+  emailTokenToRecoverPassword: boolean;
 };
 
 export type SigningMutationVariables = Exact<{
@@ -1196,6 +1239,56 @@ export type ActivateEmailTokenMutationOptions = Apollo.BaseMutationOptions<
   ActivateEmailTokenMutation,
   ActivateEmailTokenMutationVariables
 >;
+export const ActivatePasswordTokenDocument = gql`
+  mutation ActivatePasswordToken($userId: String!) {
+    activatePasswordToken(userId: $userId) {
+      id
+    }
+  }
+`;
+export type ActivatePasswordTokenMutationFn = Apollo.MutationFunction<
+  ActivatePasswordTokenMutation,
+  ActivatePasswordTokenMutationVariables
+>;
+
+/**
+ * __useActivatePasswordTokenMutation__
+ *
+ * To run a mutation, you first call `useActivatePasswordTokenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useActivatePasswordTokenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [activatePasswordTokenMutation, { data, loading, error }] = useActivatePasswordTokenMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useActivatePasswordTokenMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ActivatePasswordTokenMutation,
+    ActivatePasswordTokenMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    ActivatePasswordTokenMutation,
+    ActivatePasswordTokenMutationVariables
+  >(ActivatePasswordTokenDocument, options);
+}
+export type ActivatePasswordTokenMutationHookResult = ReturnType<
+  typeof useActivatePasswordTokenMutation
+>;
+export type ActivatePasswordTokenMutationResult =
+  Apollo.MutationResult<ActivatePasswordTokenMutation>;
+export type ActivatePasswordTokenMutationOptions = Apollo.BaseMutationOptions<
+  ActivatePasswordTokenMutation,
+  ActivatePasswordTokenMutationVariables
+>;
 export const ResendEmailActivationCodeDocument = gql`
   mutation ResendEmailActivationCode($email: String!) {
     resendEmailActivationCode(email: $email)
@@ -1244,6 +1337,55 @@ export type ResendEmailActivationCodeMutationOptions =
   Apollo.BaseMutationOptions<
     ResendEmailActivationCodeMutation,
     ResendEmailActivationCodeMutationVariables
+  >;
+export const EmailTokenToRecoverPasswordDocument = gql`
+  mutation EmailTokenToRecoverPassword($email: String!) {
+    emailTokenToRecoverPassword(email: $email)
+  }
+`;
+export type EmailTokenToRecoverPasswordMutationFn = Apollo.MutationFunction<
+  EmailTokenToRecoverPasswordMutation,
+  EmailTokenToRecoverPasswordMutationVariables
+>;
+
+/**
+ * __useEmailTokenToRecoverPasswordMutation__
+ *
+ * To run a mutation, you first call `useEmailTokenToRecoverPasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEmailTokenToRecoverPasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [emailTokenToRecoverPasswordMutation, { data, loading, error }] = useEmailTokenToRecoverPasswordMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useEmailTokenToRecoverPasswordMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    EmailTokenToRecoverPasswordMutation,
+    EmailTokenToRecoverPasswordMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    EmailTokenToRecoverPasswordMutation,
+    EmailTokenToRecoverPasswordMutationVariables
+  >(EmailTokenToRecoverPasswordDocument, options);
+}
+export type EmailTokenToRecoverPasswordMutationHookResult = ReturnType<
+  typeof useEmailTokenToRecoverPasswordMutation
+>;
+export type EmailTokenToRecoverPasswordMutationResult =
+  Apollo.MutationResult<EmailTokenToRecoverPasswordMutation>;
+export type EmailTokenToRecoverPasswordMutationOptions =
+  Apollo.BaseMutationOptions<
+    EmailTokenToRecoverPasswordMutation,
+    EmailTokenToRecoverPasswordMutationVariables
   >;
 export const SigningDocument = gql`
   mutation Signing($input: SigningDto!) {

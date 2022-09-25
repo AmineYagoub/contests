@@ -6,6 +6,7 @@ import {
   ResolveReference,
 } from '@nestjs/graphql';
 
+import { User } from '../users/user.model';
 import { ActivationToken } from './activationToken.model';
 import { ActivationTokenService } from './activationToken.service';
 
@@ -18,9 +19,14 @@ export class ActivationTokenResolver {
     return this.activationService.findUnique({ value: token });
   }
 
-  @Mutation(() => ActivationToken)
+  @Mutation(() => User)
   activateEmailToken(@Args('userId') id: string) {
-    return this.activationService.activateToken({ id });
+    return this.activationService.activateEmailToken({ id });
+  }
+
+  @Mutation(() => User)
+  activatePasswordToken(@Args('userId') id: string) {
+    return this.activationService.activatePasswordToken({ id });
   }
 
   /**

@@ -3,7 +3,11 @@ import { compile } from 'handlebars';
 import { createTransport, Transporter } from 'nodemailer';
 
 import { AUTH_CONFIG_REGISTER_KEY, AuthConfigType } from '@contests/config';
-import { USER_CREATED_EVENT, UserCreatedEvent } from '@contests/types';
+import {
+  USER_CHANGE_PASSWORD,
+  USER_CREATED_EVENT,
+  UserMutatedEvent,
+} from '@contests/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OnEvent } from '@nestjs/event-emitter';
@@ -52,12 +56,12 @@ export class ActivationTokenService {
   }
 
   /**
-   * Delete Email token
+   * Activate Email and Delete Email token
    *
    * @param where Prisma.EmailTokenWhereUniqueInput.
    * @returns Promise<EmailToken>
    */
-  async activateToken(where: Prisma.EmailTokenWhereUniqueInput) {
+  async activateEmailToken(where: Prisma.EmailTokenWhereUniqueInput) {
     return this.prisma.user.update({
       data: {
         emailConfirmed: true,
@@ -70,19 +74,64 @@ export class ActivationTokenService {
   }
 
   /**
+   * Activate Password token and delete it
+   *
+   * @param where Prisma.EmailTokenWhereUniqueInput.
+   * @returns Promise<EmailToken>
+   */
+  async activatePasswordToken(where: Prisma.EmailTokenWhereUniqueInput) {
+    return this.prisma.user.update({
+      data: {
+        emailToken: {
+          delete: true,
+        },
+      },
+      where,
+    });
+  }
+
+  /**
    * Send Activation code to user email
    *
-   * @param payload: UserCreatedEvent
+   * @param payload: UserMutatedEvent
    *
    * @returns Promise<SMTPTransport.SentMessageInfo>
    */
   @OnEvent(USER_CREATED_EVENT)
   async emailActivationCode(
-    payload: UserCreatedEvent
+    payload: UserMutatedEvent
+  ): Promise<SMTPTransport.SentMessageInfo> {
+    return this.sendEmail(payload, 'verify');
+  }
+
+  /**
+   * Send random token to user email in order to change user password
+   *
+   * @param payload: UserMutatedEvent
+   *
+   * @returns Promise<SMTPTransport.SentMessageInfo>
+   */
+  @OnEvent(USER_CHANGE_PASSWORD)
+  async emailPasswordChangeToken(
+    payload: UserMutatedEvent
+  ): Promise<SMTPTransport.SentMessageInfo> {
+    return this.sendEmail(payload, 'forgot');
+  }
+
+  /**
+   * Send Email to user.
+   *
+   * @param payload UserMutatedEvent
+   * @param path string
+   *
+   * @returns Promise<SMTPTransport.SentMessageInfo>
+   */
+  private async sendEmail(
+    payload: UserMutatedEvent,
+    path: string
   ): Promise<SMTPTransport.SentMessageInfo> {
     const { templatePath, baseUrl, from, siteName } = this.config.mail;
-    const { email, token, id, template } = payload;
-
+    const { email, template, id, token } = payload;
     try {
       const emailTemplateSource = readFileSync(
         `${templatePath}${template}.hbs`,
@@ -90,7 +139,7 @@ export class ActivationTokenService {
       );
       const compiled = compile(emailTemplateSource);
       const htmlToSend = compiled({
-        link: `${baseUrl}/auth/verify/${id}/${token}`,
+        link: `${baseUrl}/auth/${path}/${id}/${token}`,
         baseUrl,
         siteName,
       });

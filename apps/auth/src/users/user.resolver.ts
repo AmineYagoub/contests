@@ -1,4 +1,11 @@
-import { Args, Query, Resolver, ResolveReference } from '@nestjs/graphql';
+import { UpdateUserDto } from '@contests/dto';
+import {
+  Args,
+  Mutation,
+  Query,
+  Resolver,
+  ResolveReference,
+} from '@nestjs/graphql';
 
 import { User } from './user.model';
 import { UserService } from './user.service';
@@ -10,6 +17,11 @@ export class UserResolver {
   @Query(() => User)
   findUserById(@Args('id') id: string) {
     return this.userService.findUnique({ id });
+  }
+
+  @Mutation(() => User)
+  async updateUser(@Args('id') id: string, @Args('input') data: UpdateUserDto) {
+    return this.userService.update({ data, where: { id } });
   }
 
   /**

@@ -2,7 +2,6 @@ import { parse } from 'cookie';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { AUTH_CONFIG_REGISTER_KEY, AuthConfigType } from '@contests/config';
-import { JwtDto } from '@contests/dto';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
@@ -27,7 +26,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(request: Request, { key, nonce }: JwtDto): Promise<User> {
+  async validate(
+    request: Request,
+    { key, nonce }: { key: number; nonce: string }
+  ): Promise<User> {
     const cookies = request.headers['cookie'];
     if (!cookies) {
       throw new UnauthorizedException();

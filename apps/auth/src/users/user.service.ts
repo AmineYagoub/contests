@@ -25,4 +25,21 @@ export class UserService {
       Logger.error(error);
     }
   }
+
+  /**
+   * Update a User
+   *
+   * @param params Prisma.UserUpdateInput The User data.
+   * @returns Promise<User>
+   */
+  async update(params: {
+    where: Prisma.UserWhereUniqueInput;
+    data: Prisma.UserUpdateInput;
+  }) {
+    const { data, where } = params;
+    return this.prisma.user.update({
+      data,
+      where,
+    });
+  }
 }

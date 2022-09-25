@@ -3,7 +3,7 @@ import mercurius from 'mercurius';
 
 import { AUTH_CONFIG_REGISTER_KEY, AuthConfigType } from '@contests/config';
 import { SignUpDto } from '@contests/dto';
-import { USER_CREATED_EVENT } from '@contests/types';
+import { USER_CHANGE_PASSWORD, USER_CREATED_EVENT } from '@contests/types';
 import { generateUserKey } from '@contests/utils';
 import {
   BadRequestException,
@@ -76,7 +76,13 @@ export class AuthService {
         };
       }
       const result = await this.prisma.user.create({ data: user });
-      return this.userCreatedEmitter(emailToken, result);
+      this.eventEmitter.emit(USER_CREATED_EVENT, {
+        template: 'email-confirmation',
+        token: emailToken,
+        id: result.id,
+        email: result.email,
+      });
+      return true;
     } catch (error) {
       if (error.code === 'P2002') {
         throw new ErrorWithProps('error', error, 422);
@@ -119,45 +125,70 @@ export class AuthService {
   }
 
   /**
-   * Emit USER_CREATED_EVENT when new user created.
+   * Update user and Dispatch event.
    *
-   * @param emailToken string
-   * @param user User
-   * @returns Boolean
-   */
-  private userCreatedEmitter(emailToken: string, user: User) {
-    this.eventEmitter.emit(USER_CREATED_EVENT, {
-      template: 'email-confirmation',
-      token: emailToken,
-      id: user.id,
-      email: user.email,
-    });
-    return true;
-  }
-
-  /**
-   * Resend activation code
+   * @param email string
+   * @param template string
+   * @param event string
    *
-   * @param email
    * @returns Promise<boolean>
    */
-  async resendEmailActivationCode(email: string) {
+  private async mutateAndDispatchEvent(
+    email: string,
+    template: string,
+    event: string
+  ) {
     try {
-      const emailToken = randomUUID();
+      const token = randomUUID();
       const user = await this.prisma.user.update({
         where: { email },
         data: {
           emailToken: {
             update: {
-              value: emailToken,
+              value: token,
             },
           },
         },
       });
-      return this.userCreatedEmitter(emailToken, user);
+      this.eventEmitter.emit(event, {
+        template,
+        token,
+        id: user.id,
+        email: user.email,
+      });
+      return true;
     } catch (error) {
       Logger.error(error);
     }
+  }
+
+  /**
+   * Resend email activation code
+   *
+   * @param email
+   * @returns Promise<boolean>
+   */
+  async resendEmailActivationCode(email: string) {
+    return this.mutateAndDispatchEvent(
+      email,
+      'email-confirmation',
+      USER_CREATED_EVENT
+    );
+  }
+
+  /**
+   * Send Email token to recover user password
+   *
+   * @param email string
+   *
+   * @returns Promise<boolean>
+   */
+  async emailTokenToRecoverPassword(email: string) {
+    return this.mutateAndDispatchEvent(
+      email,
+      'password-confirmation',
+      USER_CHANGE_PASSWORD
+    );
   }
 
   /**

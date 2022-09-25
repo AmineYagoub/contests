@@ -30,6 +30,11 @@ export class AuthResolver {
     return this.authService.resendEmailActivationCode(email);
   }
 
+  @Mutation(() => Boolean)
+  async emailTokenToRecoverPassword(@Args('email') email: string) {
+    return this.authService.emailTokenToRecoverPassword(email);
+  }
+
   @ResolveField(() => User)
   async user(@Parent() auth: Auth) {
     return await this.authService.getUserFromJWTToken(auth.accessToken);

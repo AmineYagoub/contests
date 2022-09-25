@@ -8,7 +8,5 @@ export * from './lib/answers/create.dto';
 export * from './lib/answers/update.dto';
 export * from './lib/auth/signup.dto';
 export * from './lib/auth/signing.dto';
-export * from './lib/auth/changePassword.dto';
-export * from './lib/auth/updatePassword.dto';
 export * from './lib/auth/signingWithGoogle.dto';
-export * from './lib/auth/jwt.dto';
+export * from './lib/users/update.dto';
