@@ -1,4 +1,4 @@
-import { SigningDto, SignUpDto } from '@contests/dto';
+import { EmailDto, SigningDto, SignUpDto } from '@contests/dto';
 import {
   Args,
   Mutation,
@@ -26,13 +26,13 @@ export class AuthResolver {
   }
 
   @Mutation(() => Boolean)
-  async resendEmailActivationCode(@Args('email') email: string) {
-    return this.authService.resendEmailActivationCode(email);
+  async resendEmailActivationCode(@Args('input') data: EmailDto) {
+    return this.authService.resendEmailActivationCode(data.email);
   }
 
   @Mutation(() => Boolean)
-  async emailTokenToRecoverPassword(@Args('email') email: string) {
-    return this.authService.emailTokenToRecoverPassword(email);
+  async emailTokenToRecoverPassword(@Args('input') data: EmailDto) {
+    return this.authService.emailTokenToRecoverPassword(data.email);
   }
 
   @ResolveField(() => User)

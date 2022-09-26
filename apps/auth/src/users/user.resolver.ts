@@ -21,6 +21,7 @@ export class UserResolver {
 
   @Mutation(() => User)
   async updateUser(@Args('id') id: string, @Args('input') data: UpdateUserDto) {
+    delete data.confirmPassword;
     return this.userService.update({ data, where: { id } });
   }
 

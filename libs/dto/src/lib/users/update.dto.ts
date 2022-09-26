@@ -10,7 +10,7 @@ import { SignUpDto } from '../auth/signup.dto';
 export class UpdateUserDto extends PartialType(
   OmitType(SignUpDto, ['role'] as const)
 ) {
-  @Field(() => RoleTitle)
+  @Field(() => RoleTitle, { nullable: true })
   @IsOptional()
   @IsString()
   role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput;

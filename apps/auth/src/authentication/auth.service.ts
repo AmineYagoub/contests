@@ -6,10 +6,10 @@ import { SignUpDto } from '@contests/dto';
 import { USER_CHANGE_PASSWORD, USER_CREATED_EVENT } from '@contests/types';
 import { generateUserKey } from '@contests/utils';
 import {
-  BadRequestException,
+  HttpStatus,
   Injectable,
   Logger,
-  NotAcceptableException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -85,7 +85,11 @@ export class AuthService {
       return true;
     } catch (error) {
       if (error.code === 'P2002') {
-        throw new ErrorWithProps('error', error, 422);
+        throw new ErrorWithProps(
+          'error',
+          error,
+          HttpStatus.UNPROCESSABLE_ENTITY
+        );
       }
       Logger.error(error);
     }
@@ -105,7 +109,11 @@ export class AuthService {
         include: { role: true },
       });
       if (!user.isActive) {
-        throw new NotAcceptableException('User Banned');
+        throw new ErrorWithProps(
+          'User Banned',
+          { message: 'User Banned' },
+          HttpStatus.UNAUTHORIZED
+        );
       }
       const passwordValid = await this.passwordService.validatePassword(
         String(password),
@@ -113,14 +121,27 @@ export class AuthService {
       );
 
       if (!passwordValid) {
-        throw new BadRequestException('Invalid Password');
+        throw new ErrorWithProps(
+          'Invalid Password',
+          { message: 'Invalid Password' },
+          HttpStatus.UNAUTHORIZED
+        );
       }
       if (!user.emailConfirmed) {
-        throw new NotAcceptableException(`User Email Invalid - ${user.email}`);
+        throw new ErrorWithProps(
+          `User Email Invalid`,
+          { message: `User Email ${user.email} not confirmed` },
+          HttpStatus.UNAUTHORIZED
+        );
       }
       return await this.generateJWTTokenFor(user);
     } catch (error) {
       Logger.error(error);
+      throw new ErrorWithProps(
+        error,
+        error,
+        error.statusCode || HttpStatus.NOT_FOUND
+      );
     }
   }
 
@@ -144,8 +165,13 @@ export class AuthService {
         where: { email },
         data: {
           emailToken: {
-            update: {
-              value: token,
+            upsert: {
+              create: {
+                value: token,
+              },
+              update: {
+                value: token,
+              },
             },
           },
         },
@@ -159,6 +185,7 @@ export class AuthService {
       return true;
     } catch (error) {
       Logger.error(error);
+      throw new ErrorWithProps('error', error, HttpStatus.UNPROCESSABLE_ENTITY);
     }
   }
 

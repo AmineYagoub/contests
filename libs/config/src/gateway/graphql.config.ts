@@ -35,20 +35,20 @@ export const gatewayGQLConfig = registerAs(GATEWAY_GQL_REGISTER_KEY, () => ({
       if (error.extensions?.response?.body?.errors[0]?.extensions) {
         return {
           message: error.extensions?.response.statusText,
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          status: error.extensions.response.status,
           errors: error.extensions.response.body.errors[0].extensions,
         };
       }
-      if (
+      /* if (
         error.extensions?.response?.body?.errors[0]?.message.includes(
-          'findUniqueOrThrow()'
+          "findUniqueOrThrow()"
         )
       ) {
         return {
-          message: 'Not Found',
+          message: "Not Found",
           status: HttpStatus.NOT_FOUND,
         };
-      }
+      } */
       return error;
     },
   },

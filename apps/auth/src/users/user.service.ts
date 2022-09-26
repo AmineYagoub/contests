@@ -2,10 +2,14 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/auth-service';
 
 import { PrismaService } from '../app/prisma.service';
+import { PasswordService } from '../authentication/password.service';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly passwordService: PasswordService
+  ) {}
 
   /**
    * Find a User by its unique key.
@@ -37,6 +41,11 @@ export class UserService {
     data: Prisma.UserUpdateInput;
   }) {
     const { data, where } = params;
+    if (data.password) {
+      data.password = await this.passwordService.hashPassword(
+        String(data.password)
+      );
+    }
     return this.prisma.user.update({
       data,
       where,

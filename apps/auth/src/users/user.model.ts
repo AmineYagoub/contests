@@ -74,6 +74,7 @@ export class User {
 
   @Field(() => Boolean, {
     description: 'Identifies if the user is active or banned.',
+    defaultValue: true,
   })
   isActive: boolean;
 

@@ -40,8 +40,8 @@ model User {
   image                 String    @db.VarChar(255)
   password              String    @db.Char(255)
   emailConfirmed        Boolean?  @default(false)
-  agreement             Boolean?  @default(false)
-  isActive              Boolean?  @default(false)
+  agreement             Boolean
+  isActive              Boolean?  @default(true)
   created               DateTime  @default(now())
   updated               DateTime  @updatedAt
   roleId                String

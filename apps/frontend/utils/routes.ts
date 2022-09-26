@@ -5,6 +5,7 @@ export enum AppRoutes {
   Blog = '/blog',
   SignIn = '/auth/sign-in',
   SignUp = '/auth/sign-up',
+  ForgotPassword = '/auth/forgot/password',
   AdminManageDashboard = '/admin/dashboard',
   AdminManageContests = '/admin/manage-contests',
   AdminManageInstructors = '/admin/manage-instructors',

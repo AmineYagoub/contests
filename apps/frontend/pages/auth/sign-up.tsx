@@ -19,12 +19,12 @@ import styled from '@emotion/styled';
 
 const { Option } = Select;
 
-const layout = {
+export const formLayout = {
   labelCol: { span: 5 },
   wrapperCol: { span: 18 },
 };
 
-const StyledForm = styled(Form)({
+export const StyledForm = styled(Form)({
   maxWidth: 680,
   padding: '40px 25px !important',
   backgroundColor: '#fff',
@@ -62,7 +62,7 @@ const SignUpPage: NextPageWithLayout = () => {
           onFinishFailed={onFinishFailed}
           autoComplete="off"
           size="large"
-          {...layout}
+          {...formLayout}
         >
           <Form.Item label="البريد الإلكتروني" name="email" rules={emailRules}>
             <Input type="email" />
@@ -137,7 +137,7 @@ const SignUpPage: NextPageWithLayout = () => {
           <Form.Item
             name="agreement"
             valuePropName="checked"
-            wrapperCol={{ ...layout.wrapperCol, offset: 5 }}
+            wrapperCol={{ ...formLayout.wrapperCol, offset: 5 }}
             rules={[
               {
                 validator: (_, value) =>
@@ -160,13 +160,13 @@ const SignUpPage: NextPageWithLayout = () => {
             </Checkbox>
           </Form.Item>
 
-          <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 5 }}>
+          <Form.Item wrapperCol={{ ...formLayout.wrapperCol, offset: 5 }}>
             <Button type="primary" htmlType="submit" block loading={loading}>
               تسجيل حساب جديد
             </Button>
           </Form.Item>
           <Form.Item
-            wrapperCol={{ ...layout.wrapperCol, offset: 5 }}
+            wrapperCol={{ ...formLayout.wrapperCol, offset: 5 }}
             style={{ margin: 0 }}
           >
             <Divider>لديك حساب؟</Divider>

@@ -1,0 +1,6 @@
+mutation UpdateUser($id: String!, $input: UpdateUserDto!) {
+  updateUser(id: $id, input: $input) {
+    id
+    email
+  }
+}

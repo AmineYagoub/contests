@@ -145,7 +145,7 @@ export const useResendEmailActivationCode = () => {
     try {
       const { data } = await ResendEmailActivationCodeMutation({
         variables: {
-          email,
+          input: { email },
         },
       });
       if (data) {

@@ -1,3 +1,4 @@
+import { IDDto } from '@contests/dto';
 import {
   Args,
   Mutation,
@@ -20,13 +21,8 @@ export class ActivationTokenResolver {
   }
 
   @Mutation(() => User)
-  activateEmailToken(@Args('userId') id: string) {
-    return this.activationService.activateEmailToken({ id });
-  }
-
-  @Mutation(() => User)
-  activatePasswordToken(@Args('userId') id: string) {
-    return this.activationService.activatePasswordToken({ id });
+  activateEmailToken(@Args('input') data: IDDto) {
+    return this.activationService.activateEmailToken({ id: data.id });
   }
 
   /**

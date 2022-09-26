@@ -82,7 +82,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       >({
         mutation: ActivateEmailTokenDocument,
         variables: {
-          userId: id,
+          input: { id },
         },
       });
       return {

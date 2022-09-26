@@ -34,7 +34,18 @@ export const useSigning = (form: FormInstance<unknown>) => {
             errors: ['هذا البريد غير مسجل حاليا. يرجى تسجيل حسابك الجديد'],
           },
         ]);
+        return;
       }
+      form.setFields([
+        {
+          name: 'email',
+          errors: ['بيانات حسابك غير صحيحة, يرجى التحقق من بياناتك.'],
+        },
+        {
+          name: 'password',
+          errors: ['بيانات حسابك غير صحيحة, يرجى التحقق من بياناتك.'],
+        },
+      ]);
     }
   };
 

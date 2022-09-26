@@ -74,23 +74,6 @@ export class ActivationTokenService {
   }
 
   /**
-   * Activate Password token and delete it
-   *
-   * @param where Prisma.EmailTokenWhereUniqueInput.
-   * @returns Promise<EmailToken>
-   */
-  async activatePasswordToken(where: Prisma.EmailTokenWhereUniqueInput) {
-    return this.prisma.user.update({
-      data: {
-        emailToken: {
-          delete: true,
-        },
-      },
-      where,
-    });
-  }
-
-  /**
    * Send Activation code to user email
    *
    * @param payload: UserMutatedEvent

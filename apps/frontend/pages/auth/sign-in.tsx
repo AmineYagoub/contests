@@ -12,7 +12,7 @@ import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
 
-const StyledForm = styled(Form)({
+export const StyledForm = styled(Form)({
   maxWidth: 400,
   padding: '30px 50px !important',
   backgroundColor: '#fff',
@@ -45,7 +45,7 @@ const SignInPage: NextPageWithLayout = () => {
       </Form.Item>
 
       <Form.Item>
-        <Link href="/">نسيت كلمة السر؟</Link>
+        <Link href={AppRoutes.ForgotPassword}>نسيت كلمة السر؟</Link>
       </Form.Item>
       <Button type="primary" htmlType="submit" block>
         تسجيل الدخول
