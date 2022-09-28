@@ -335,7 +335,7 @@ export type Query = {
   findOneQuestionById?: Maybe<Question>;
   findOneTagById?: Maybe<Tag>;
   findTags?: Maybe<Array<Tag>>;
-  findUserById: User;
+  getAuthUser: User;
   paginateContest?: Maybe<ContestPaginationResponse>;
   paginateQuestions?: Maybe<QuestionPaginationResponse>;
 };
@@ -363,10 +363,6 @@ export type QueryFindOneTagByIdArgs = {
 
 export type QueryFindTagsArgs = {
   title: Scalars['String'];
-};
-
-export type QueryFindUserByIdArgs = {
-  id: Scalars['String'];
 };
 
 export type QueryPaginateContestArgs = {
@@ -707,7 +703,12 @@ export type SigningMutationVariables = Exact<{
 
 export type SigningMutation = {
   __typename?: 'Mutation';
-  signing: { __typename?: 'Auth'; accessToken: string; refreshToken: string };
+  signing: {
+    __typename?: 'Auth';
+    accessToken: string;
+    refreshToken: string;
+    tokenType: string;
+  };
 };
 
 export type SignUpMutationVariables = Exact<{
@@ -1006,18 +1007,21 @@ export type UpdateUserMutation = {
   updateUser: { __typename?: 'User'; id: string; email: string };
 };
 
-export type FindUserByIdQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
+export type GetAuthUserQueryVariables = Exact<{ [key: string]: never }>;
 
-export type FindUserByIdQuery = {
+export type GetAuthUserQuery = {
   __typename?: 'Query';
-  findUserById: {
+  getAuthUser: {
     __typename?: 'User';
     id: string;
+    key: number;
     email: string;
     firstName?: string | null;
     lastName?: string | null;
+    isActive: boolean;
+    emailConfirmed: boolean;
+    image?: string | null;
+    role: { __typename?: 'Role'; title: RoleTitle };
   };
 };
 
@@ -1346,6 +1350,7 @@ export const SigningDocument = gql`
     signing(input: $input) {
       accessToken
       refreshToken
+      tokenType
     }
   }
 `;
@@ -2281,64 +2286,68 @@ export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<
   UpdateUserMutation,
   UpdateUserMutationVariables
 >;
-export const FindUserByIdDocument = gql`
-  query FindUserById($id: String!) {
-    findUserById(id: $id) {
+export const GetAuthUserDocument = gql`
+  query GetAuthUser {
+    getAuthUser {
       id
+      key
       email
       firstName
       lastName
+      isActive
+      emailConfirmed
+      role {
+        title
+      }
+      image
     }
   }
 `;
 
 /**
- * __useFindUserByIdQuery__
+ * __useGetAuthUserQuery__
  *
- * To run a query within a React component, call `useFindUserByIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindUserByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetAuthUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAuthUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useFindUserByIdQuery({
+ * const { data, loading, error } = useGetAuthUserQuery({
  *   variables: {
- *      id: // value for 'id'
  *   },
  * });
  */
-export function useFindUserByIdQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    FindUserByIdQuery,
-    FindUserByIdQueryVariables
+export function useGetAuthUserQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetAuthUserQuery,
+    GetAuthUserQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<FindUserByIdQuery, FindUserByIdQueryVariables>(
-    FindUserByIdDocument,
+  return Apollo.useQuery<GetAuthUserQuery, GetAuthUserQueryVariables>(
+    GetAuthUserDocument,
     options
   );
 }
-export function useFindUserByIdLazyQuery(
+export function useGetAuthUserLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    FindUserByIdQuery,
-    FindUserByIdQueryVariables
+    GetAuthUserQuery,
+    GetAuthUserQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<FindUserByIdQuery, FindUserByIdQueryVariables>(
-    FindUserByIdDocument,
+  return Apollo.useLazyQuery<GetAuthUserQuery, GetAuthUserQueryVariables>(
+    GetAuthUserDocument,
     options
   );
 }
-export type FindUserByIdQueryHookResult = ReturnType<
-  typeof useFindUserByIdQuery
+export type GetAuthUserQueryHookResult = ReturnType<typeof useGetAuthUserQuery>;
+export type GetAuthUserLazyQueryHookResult = ReturnType<
+  typeof useGetAuthUserLazyQuery
 >;
-export type FindUserByIdLazyQueryHookResult = ReturnType<
-  typeof useFindUserByIdLazyQuery
->;
-export type FindUserByIdQueryResult = Apollo.QueryResult<
-  FindUserByIdQuery,
-  FindUserByIdQueryVariables
+export type GetAuthUserQueryResult = Apollo.QueryResult<
+  GetAuthUserQuery,
+  GetAuthUserQueryVariables
 >;

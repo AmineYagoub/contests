@@ -10,8 +10,10 @@ import {
   InMemoryCache,
   NormalizedCacheObject,
 } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
-import { production } from '.';
+
+import { config } from './';
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 const isServer = typeof window === 'undefined';
@@ -39,19 +41,29 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 const httpLink = new HttpLink({
-  uri: production
+  uri: config.isProduction
     ? process.env.NEXT_PUBLIC_PROD_GRAPHQL_ENDPOINT
     : process.env.NEXT_PUBLIC_DEV_GRAPHQL_ENDPOINT,
-  credentials: 'same-origin', // Additional fetch() options like `credentials` or `headers`
+  credentials: 'include', // Additional fetch() options like `credentials` or `headers`
+});
+
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem(config.jwtName);
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
 });
 
 function createApolloClient() {
   return new ApolloClient({
     ssrMode: isServer,
-    link: from([errorLink, httpLink]),
+    link: from([errorLink, authLink, httpLink]),
     cache: new InMemoryCache({}),
     defaultOptions,
-    connectToDevTools: !production,
+    connectToDevTools: !config.isProduction,
   });
 }
 
@@ -59,16 +71,9 @@ export function initializeApollo(
   initialState = null
 ): ApolloClient<NormalizedCacheObject> {
   const _apolloClient = apolloClient ?? createApolloClient();
-
-  // If your page has Next.js data fetching methods that use Apollo Client, the initial state
-  // gets hydrated here
   if (initialState) {
-    // Get existing cache, loaded during client side data fetching
     const existingCache = _apolloClient.extract();
-
-    // Merge the initialState from getStaticProps/getServerSideProps in the existing cache
     const data = merge(existingCache, initialState, {
-      // combine arrays using object equality (like in sets)
       arrayMerge: (destinationArray, sourceArray) => [
         ...sourceArray,
         ...destinationArray.filter((d) =>
@@ -76,15 +81,10 @@ export function initializeApollo(
         ),
       ],
     });
-
-    // Restore the cache with the merged data
     _apolloClient.cache.restore(data);
   }
-  // For SSG and SSR always create a new Apollo Client
   if (isServer) return _apolloClient;
-  // Create the Apollo Client once in the client
   if (!apolloClient) apolloClient = _apolloClient;
-
   return _apolloClient;
 }
 

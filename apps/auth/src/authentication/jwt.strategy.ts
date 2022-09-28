@@ -28,7 +28,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(
     request: Request,
-    { key, nonce }: { key: number; nonce: string }
+    { sub, nonce }: { sub: number; nonce: string }
   ): Promise<User> {
     const cookies = request.headers['cookie'];
     if (!cookies) {
@@ -45,7 +45,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
     // TODO looking up the userId in a list of revoked tokens,
     return this.prisma.user.findUniqueOrThrow({
-      where: { key },
+      where: { key: sub },
       include: { role: true },
     });
   }

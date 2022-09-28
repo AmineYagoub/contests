@@ -1,42 +1,45 @@
-import { createCipheriv, createDecipheriv, scryptSync } from 'crypto';
+import {
+  createCipheriv,
+  createDecipheriv,
+  randomUUID,
+  scryptSync,
+} from 'crypto';
 
 import { AUTH_CONFIG_REGISTER_KEY, AuthConfigType } from '@contests/config';
-import { Inject, Injectable, Logger, Scope } from '@nestjs/common';
+import { Injectable, Logger, Scope } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CONTEXT } from '@nestjs/graphql';
 
 @Injectable({ scope: Scope.REQUEST })
 export class NonceService {
   private config: AuthConfigType;
-  constructor(
-    private readonly configService: ConfigService,
-    @Inject(CONTEXT) private context
-  ) {
+  constructor(private readonly configService: ConfigService) {
     this.config = this.configService.get<AuthConfigType>(
       AUTH_CONFIG_REGISTER_KEY
     );
   }
 
   /**
+   * Generate encrypted random string.
+   *
    * @returns {Promise<String>}
    */
-  encrypt(text: string = this.getUserAgent()): Promise<string> {
+  encrypt(): Promise<string> {
     const { nonceEncryptKey, nonceEncryptAlg } = this.config.jwt;
     return new Promise((resolve) => {
       const key = scryptSync(nonceEncryptKey, 'salt', 24);
       const iv = Buffer.alloc(16, 0);
       const cipher = createCipheriv(nonceEncryptAlg, key, iv);
-      let encrypted = cipher.update(text, 'utf8', 'hex');
+      let encrypted = cipher.update(randomUUID(), 'utf8', 'hex');
       encrypted += cipher.final('hex');
       resolve(encrypted);
     });
   }
 
   /**
-   *
+   * Decrypt encrypted random string.
    * @returns {Promise<String>}
    */
-  decrypt(text: string = this.getUserAgent()): Promise<string> {
+  decrypt(text: string): Promise<string> {
     const { nonceEncryptKey, nonceEncryptAlg } = this.config.jwt;
     return new Promise((resolve) => {
       const key = scryptSync(nonceEncryptKey, 'salt', 24);
@@ -50,25 +53,15 @@ export class NonceService {
 
   /**
    *
-   * @returns {string}
-   */
-  private getUserAgent(): string {
-    return this.context.req.headers['user-agent'];
-  }
-
-  /**
-   *
    * @param nonce
    * @returns {Promise<boolean>}
    */
   async validateNonce(nonce: string, headers: string[]): Promise<boolean> {
     const { nonceName } = this.config.jwt;
     const regex = new RegExp('(^|;)\\s*' + nonceName + '\\s*=\\s*([^;]+)');
-    const { cookie } = this.context.req.headers;
+    const cookie = '';
     const nonceEncrypted = regex.exec(cookie)[2] ?? null;
-    const isNonce =
-      nonceEncrypted === nonce &&
-      (await this.decrypt()) === this.getUserAgent();
+    const isNonce = nonceEncrypted === nonce;
     if (!isNonce) {
       Logger.warn('Invalid Nonce:' + headers.join());
     }

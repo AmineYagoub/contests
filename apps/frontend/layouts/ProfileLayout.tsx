@@ -1,17 +1,31 @@
 import { Avatar, Badge, Button, Col, Layout, Row, Space } from 'antd';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { createElement, useEffect, useState } from 'react';
+import { useSnapshot } from 'valtio';
 
+import { withAuth } from '@/components/common/withAuth';
 import theme from '@/config/theme';
 import { socketVar } from '@/utils/app';
-import { BellOutlined, MailOutlined } from '@ant-design/icons';
+import { AppRoutes } from '@/utils/routes';
+import { AuthState } from '@/valtio/auth.state';
+import {
+  BarChartOutlined,
+  BellOutlined,
+  ContactsOutlined,
+  MailOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  TrophyOutlined,
+} from '@ant-design/icons';
 import { useReactiveVar } from '@apollo/client';
 import styled from '@emotion/styled';
 
-import { Logo } from './AdminDashboardLayout';
+import { Logo, StyledContent, StyledMenu } from './AdminDashboardLayout';
 import StyledFooter from './StyledFooter';
 
-const { Content, Header } = Layout;
+const { Header, Sider } = Layout;
 
 export const StyledHeader = styled(Header)({
   backgroundColor: `${theme.primaryColor} !important`,
@@ -22,8 +36,12 @@ export const StyledHeader = styled(Header)({
 
 const ProfileLayout = ({ children }) => {
   const socket = useReactiveVar(socketVar);
+  const [collapsed, setCollapsed] = useState(false);
+  const router = useRouter();
+  const userSnap = useSnapshot(AuthState);
+
   useEffect(() => {
-    socket.connect();
+    // socket.connect();
     return () => {
       socket.disconnect();
     };
@@ -31,44 +49,99 @@ const ProfileLayout = ({ children }) => {
 
   return (
     <Layout>
-      <StyledHeader>
-        <Row justify="space-between">
-          <Col span={4}>
-            <Logo />
-          </Col>
-          <Col span={17} />
-          <Col span={3}>
-            <Space size={8}>
-              <Button
-                icon={<MailOutlined style={{ color: theme.infoColor }} />}
-                shape="circle"
-                type="ghost"
-              />
-              <Badge dot>
+      <Sider trigger={null} collapsible collapsed={collapsed}>
+        <Logo />
+        <StyledMenu
+          mode="inline"
+          defaultSelectedKeys={[AppRoutes.AdminManageDashboard]}
+          selectedKeys={[router.pathname]}
+          items={[
+            {
+              key: AppRoutes.StudentDashboard,
+              icon: <BarChartOutlined style={{ fontSize: 18 }} />,
+
+              label: <Link href={AppRoutes.StudentDashboard}>لوحة التحكم</Link>,
+            },
+            {
+              key: AppRoutes.StudentProfile,
+              icon: <ContactsOutlined style={{ fontSize: 18 }} />,
+
+              label: (
+                <Link href={AppRoutes.StudentProfile}>البيانات الشخصية</Link>
+              ),
+            },
+            {
+              key: AppRoutes.StudentContests,
+              icon: <TrophyOutlined style={{ fontSize: 18 }} />,
+
+              label: <Link href={AppRoutes.StudentContests}>المسابقات</Link>,
+            },
+            {
+              key: AppRoutes.StudentMessages,
+              icon: <MailOutlined style={{ fontSize: 18 }} />,
+
+              label: <Link href={AppRoutes.StudentMessages}>الرسائل</Link>,
+            },
+            {
+              key: AppRoutes.StudentNotifications,
+              icon: <BellOutlined style={{ fontSize: 18 }} />,
+
+              label: (
+                <Link href={AppRoutes.StudentNotifications}>الإشعارات</Link>
+              ),
+            },
+          ]}
+        />
+      </Sider>
+      <Layout>
+        <StyledHeader>
+          <Row justify="space-between">
+            <Col span={2}>
+              {createElement(
+                !collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+                {
+                  className: 'trigger',
+                  onClick: () => setCollapsed(!collapsed),
+                }
+              )}
+            </Col>
+
+            <Col span={4}>
+              <Space size={8}>
                 <Button
-                  icon={<BellOutlined style={{ color: theme.infoColor }} />}
+                  icon={<MailOutlined style={{ color: theme.infoColor }} />}
                   shape="circle"
                   type="ghost"
                 />
-              </Badge>
-              <Avatar
-                src={
-                  <Image
-                    src="https://joeschmoe.io/api/v1/joe"
-                    width={32}
-                    height={32}
-                    alt="avatar"
+                <Badge dot>
+                  <Button
+                    icon={<BellOutlined style={{ color: theme.infoColor }} />}
+                    shape="circle"
+                    type="ghost"
                   />
-                }
-              />
-            </Space>
-          </Col>
-        </Row>
-      </StyledHeader>
-      <Content>{children}</Content>
-      <StyledFooter />
+                </Badge>
+                <Avatar
+                  src={
+                    <Image
+                      src="https://joeschmoe.io/api/v1/joe"
+                      width={32}
+                      height={32}
+                      alt="avatar"
+                    />
+                  }
+                />
+              </Space>
+            </Col>
+          </Row>
+        </StyledHeader>
+        <StyledContent>
+          {children}
+          <pre>{userSnap.user?.email}</pre>
+        </StyledContent>
+        <StyledFooter />
+      </Layout>
     </Layout>
   );
 };
 
-export default ProfileLayout;
+export default withAuth(ProfileLayout);

@@ -7,6 +7,7 @@ export const AUTH_GQL_REGISTER_KEY = 'authGQLConfig';
 
 export const authGQLConfig = registerAs(AUTH_GQL_REGISTER_KEY, () => ({
   autoSchemaFile: true,
+  cors: false,
   graphiql: !isProd,
   federationMetadata: true,
   debug: false,

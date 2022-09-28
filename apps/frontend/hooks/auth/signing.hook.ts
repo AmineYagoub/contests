@@ -3,9 +3,10 @@ import { Rule } from 'antd/lib/form';
 import { useRouter } from 'next/router';
 import { ValidateErrorEntity } from 'rc-field-form/es/interface';
 
+import { config } from '@/config/index';
 import { useSigningMutation } from '@/graphql/graphql';
 import { Logger } from '@/utils/app';
-import { ACCESS_TOKEN_NAME, REFRESH_TOKEN_NAME } from '@/utils/constant';
+import { AppRoutes } from '@/utils/routes';
 
 import type { SigningInput } from '@/utils/types';
 export const useSigning = (form: FormInstance<unknown>) => {
@@ -21,9 +22,9 @@ export const useSigning = (form: FormInstance<unknown>) => {
       });
       if (data) {
         const { accessToken, refreshToken } = data.signing;
-        localStorage.setItem(ACCESS_TOKEN_NAME, accessToken);
-        localStorage.setItem(REFRESH_TOKEN_NAME, refreshToken);
-        router.push(String(router?.query?.from || '/'));
+        localStorage.setItem(config.jwtName, accessToken);
+        localStorage.setItem(config.refreshJwtName, refreshToken);
+        router.push(String(router?.query?.from || AppRoutes.StudentDashboard));
       }
     } catch (error) {
       Logger.log(error);

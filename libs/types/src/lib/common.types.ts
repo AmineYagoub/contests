@@ -17,8 +17,12 @@ registerEnumType(StudentLevel, {
   description: 'Student Level',
 });
 
-export type GatewayGraphQLError = GraphQLError & {
+export type GatewayGraphQLError = {
   extensions: {
+    exception: {
+      status: number;
+      message: string;
+    };
     response: {
       status: number;
       statusText: string;
@@ -27,4 +31,4 @@ export type GatewayGraphQLError = GraphQLError & {
       };
     };
   };
-};
+} & GraphQLError;

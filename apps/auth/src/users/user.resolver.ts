@@ -1,4 +1,5 @@
 import { UpdateUserDto } from '@contests/dto';
+import { UserEntity } from '@contests/utils';
 import {
   Args,
   Mutation,
@@ -15,8 +16,8 @@ export class UserResolver {
   constructor(private userService: UserService) {}
 
   @Query(() => User)
-  findUserById(@Args('id') id: string) {
-    return this.userService.findUnique({ id });
+  getAuthUser(@UserEntity() user: User) {
+    return user;
   }
 
   @Mutation(() => User)

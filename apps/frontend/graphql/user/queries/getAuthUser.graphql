@@ -1,0 +1,15 @@
+query GetAuthUser {
+  getAuthUser {
+    id
+    key
+    email
+    firstName
+    lastName
+    isActive
+    emailConfirmed
+    role {
+      title
+    }
+    image
+  }
+}

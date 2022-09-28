@@ -1,8 +1,8 @@
 import { ApolloServerPluginInlineTraceDisabled } from 'apollo-server-core';
 
-import { IntrospectAndCompose } from '@apollo/gateway';
+import { IntrospectAndCompose, RemoteGraphQLDataSource } from '@apollo/gateway';
 import { GatewayGraphQLError } from '@contests/types';
-import { HttpStatus, Inject } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { ConfigType, registerAs } from '@nestjs/config';
 
 import { isProd } from '../';
@@ -13,7 +13,6 @@ const HttpResponsePlugin = {
   async requestDidStart() {
     return {
       async willSendResponse({ response }) {
-        // response.http.headers.set('Custom-Header', 'hello');
         if (response?.errors?.[0]?.status) {
           response.http.status = response?.errors?.[0]?.status;
         }
@@ -22,9 +21,38 @@ const HttpResponsePlugin = {
   },
 };
 
+class CookieDataSource extends RemoteGraphQLDataSource {
+  willSendRequest({ request, context }) {
+    if (context.req === undefined) {
+      request.http.headers.set(
+        process.env.GATEWAY_INIT_HEADER_NAME, // x-gateway
+        process.env.GATEWAY_INIT_HEADER_VALUE // superSecretGatewaySecret
+      );
+      return;
+    }
+
+    const { headers } = context.req;
+    if (headers !== undefined) {
+      Object.keys(headers).map(
+        (key) => request.http && request.http.headers.set(key, headers[key])
+      );
+    }
+  }
+  didReceiveResponse({ response, context }) {
+    const cookie = response.http.headers.get('Cookie');
+    if (cookie) {
+      context.res.setHeader('Set-Cookie', cookie);
+    }
+    return response;
+  }
+}
+
 export const gatewayGQLConfig = registerAs(GATEWAY_GQL_REGISTER_KEY, () => ({
   server: {
-    cors: true,
+    cors: {
+      origin: 'http://localhost:8080',
+      credentials: true,
+    },
     context: ({ req, res }) => ({ req, res }),
     path: '/',
     debug: false,
@@ -32,27 +60,20 @@ export const gatewayGQLConfig = registerAs(GATEWAY_GQL_REGISTER_KEY, () => ({
     csrfPrevention: true,
     plugins: [HttpResponsePlugin, ApolloServerPluginInlineTraceDisabled()],
     formatError(error: GatewayGraphQLError) {
-      if (error.extensions?.response?.body?.errors[0]?.extensions) {
+      // console.log(JSON.stringify(error, null, 2));
+      if (error.extensions?.exception) {
         return {
-          message: error.extensions?.response.statusText,
-          status: error.extensions.response.status,
-          errors: error.extensions.response.body.errors[0].extensions,
+          message: error.extensions?.exception.message,
+          status: error.extensions.exception.status,
         };
       }
-      /* if (
-        error.extensions?.response?.body?.errors[0]?.message.includes(
-          "findUniqueOrThrow()"
-        )
-      ) {
-        return {
-          message: "Not Found",
-          status: HttpStatus.NOT_FOUND,
-        };
-      } */
       return error;
     },
   },
   gateway: {
+    buildService({ name, url }) {
+      return new CookieDataSource({ url });
+    },
     supergraphSdl: new IntrospectAndCompose({
       subgraphs: [
         {

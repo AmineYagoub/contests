@@ -23,7 +23,9 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "frontend:build",
-        "dev": true
+        "dev": true,
+        "port": 8080,
+        "hostname": "localhost"
       },
       "configurations": {
         "development": {

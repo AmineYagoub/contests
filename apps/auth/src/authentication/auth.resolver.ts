@@ -1,4 +1,6 @@
 import { EmailDto, SigningDto, SignUpDto } from '@contests/dto';
+import { isPublic, NonceInterceptor } from '@contests/utils';
+import { UseInterceptors } from '@nestjs/common';
 import {
   Args,
   Mutation,
@@ -21,6 +23,8 @@ export class AuthResolver {
   }
 
   @Mutation(() => Auth)
+  @isPublic()
+  @UseInterceptors(NonceInterceptor)
   async signing(@Args('input') input: SigningDto) {
     return await this.authService.signing(input);
   }

@@ -25,7 +25,7 @@ import StyledFooter from './StyledFooter';
 
 const { Content, Sider } = Layout;
 
-const StyledContent = styled(Content)({
+export const StyledContent = styled(Content)({
   width: '95% !important',
   backgroundColor: 'transparent',
   marginTop: '1rem',
@@ -37,7 +37,7 @@ export const Logo = styled('div')({
   backgroundColor: 'rgba(255, 255, 255, 0.3)',
 });
 
-const StyledMenu = styled(Menu)({
+export const StyledMenu = styled(Menu)({
   height: 'calc(100% - 64px)',
   paddingTop: '22px !important',
 });

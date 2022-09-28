@@ -2,13 +2,12 @@ import { google } from 'googleapis';
 
 import { AUTH_CONFIG_REGISTER_KEY, AuthConfigType } from '@contests/config';
 import { SigningWithGoogleDto } from '@contests/dto';
-import { RoleTitle } from '@contests/types';
+import { JWTToken, RoleTitle } from '@contests/types';
 import { generateUserKey } from '@contests/utils';
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { PrismaService } from '../app/prisma.service';
-import { JWTToken } from '../jwt/jwt.model';
 import { AuthService } from './auth.service';
 
 import type { OAuth2Client } from 'google-auth-library';

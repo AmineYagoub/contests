@@ -14,4 +14,9 @@ export enum AppRoutes {
   AdminManageNotifications = '/admin/manage-notifications',
   AdminManageQuestions = '/admin/manage-questions',
   AdminManageSettings = '/admin/manage-settings',
+  StudentDashboard = '/profile/dashboard',
+  StudentProfile = '/profile/details',
+  StudentContests = '/profile/contests',
+  StudentMessages = '/profile/messages',
+  StudentNotifications = '/profile/notifications',
 }

@@ -1,15 +1,20 @@
 import { randomUUID } from 'crypto';
-import mercurius from 'mercurius';
 
 import { AUTH_CONFIG_REGISTER_KEY, AuthConfigType } from '@contests/config';
 import { SignUpDto } from '@contests/dto';
-import { USER_CHANGE_PASSWORD, USER_CREATED_EVENT } from '@contests/types';
+import {
+  JWTToken,
+  USER_CHANGE_PASSWORD,
+  USER_CREATED_EVENT,
+} from '@contests/types';
 import { generateUserKey } from '@contests/utils';
 import {
+  HttpException,
   HttpStatus,
   Injectable,
   Logger,
   UnauthorizedException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -17,12 +22,10 @@ import { JwtService } from '@nestjs/jwt';
 import { Prisma } from '@prisma/auth-service';
 
 import { PrismaService } from '../app/prisma.service';
-import { JWTToken } from '../jwt/jwt.model';
 import { User } from '../users/user.model';
 import { NonceService } from './nonce.service';
 import { PasswordService } from './password.service';
 
-const { ErrorWithProps } = mercurius;
 @Injectable()
 export class AuthService {
   constructor(
@@ -85,11 +88,7 @@ export class AuthService {
       return true;
     } catch (error) {
       if (error.code === 'P2002') {
-        throw new ErrorWithProps(
-          'error',
-          error,
-          HttpStatus.UNPROCESSABLE_ENTITY
-        );
+        throw new UnprocessableEntityException(error);
       }
       Logger.error(error);
     }
@@ -109,11 +108,7 @@ export class AuthService {
         include: { role: true },
       });
       if (!user.isActive) {
-        throw new ErrorWithProps(
-          'User Banned',
-          { message: 'User Banned' },
-          HttpStatus.UNAUTHORIZED
-        );
+        throw new UnauthorizedException('User Banned');
       }
       const passwordValid = await this.passwordService.validatePassword(
         String(password),
@@ -121,27 +116,17 @@ export class AuthService {
       );
 
       if (!passwordValid) {
-        throw new ErrorWithProps(
-          'Invalid Password',
-          { message: 'Invalid Password' },
-          HttpStatus.UNAUTHORIZED
-        );
+        throw new UnauthorizedException('Invalid Password');
       }
       if (!user.emailConfirmed) {
-        throw new ErrorWithProps(
-          `User Email Invalid`,
-          { message: `User Email ${user.email} not confirmed` },
-          HttpStatus.UNAUTHORIZED
+        throw new UnauthorizedException(
+          `User Email ${user.email} not confirmed`
         );
       }
       return await this.generateJWTTokenFor(user);
     } catch (error) {
       Logger.error(error);
-      throw new ErrorWithProps(
-        error,
-        error,
-        error.statusCode || HttpStatus.NOT_FOUND
-      );
+      throw new HttpException(error, error?.status || HttpStatus.NOT_FOUND);
     }
   }
 
@@ -185,7 +170,7 @@ export class AuthService {
       return true;
     } catch (error) {
       Logger.error(error);
-      throw new ErrorWithProps('error', error, HttpStatus.UNPROCESSABLE_ENTITY);
+      throw new UnprocessableEntityException(error);
     }
   }
 
