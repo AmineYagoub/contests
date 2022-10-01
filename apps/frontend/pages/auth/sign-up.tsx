@@ -1,14 +1,13 @@
-import { Button, Checkbox, Divider, Form, Input, Popover, Select } from 'antd';
+import { Button, Checkbox, Divider, Form, Input } from 'antd';
 import { AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
 import VerifyAccount from '@/components/auth/VerifyAccount';
-import { RoleTitle } from '@/graphql/graphql';
+import SelectRole from '@/components/common/SelectRole';
 import {
   confirmPasswordRules,
   emailRules,
   passwordRules,
-  roleRules,
   useSignUp,
 } from '@/hooks/auth/signup.hook';
 import AuthLayout from '@/layout/AuthLayout';
@@ -16,8 +15,6 @@ import { AppRoutes } from '@/utils/routes';
 import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
-
-const { Option } = Select;
 
 export const formLayout = {
   labelCol: { span: 5 },
@@ -45,7 +42,8 @@ const SignUpPage: NextPageWithLayout = () => {
     onFinish,
     onFinishFailed,
     loading,
-    roleHandler,
+    selectedSupervisor,
+    setSelectedSupervisor,
     isSuccess,
     registeredEmail,
   } = useSignUp(form);
@@ -68,48 +66,10 @@ const SignUpPage: NextPageWithLayout = () => {
             <Input type="email" />
           </Form.Item>
 
-          <Form.Item
-            label="نوع العضوية"
-            style={{ marginBottom: 0 }}
-            rules={[{ required: true, message: '' }]}
-          >
-            <Form.Item
-              style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}
-              name="role"
-              rules={roleRules}
-            >
-              <Select onChange={roleHandler.handleRoleSelect}>
-                <Option value={RoleTitle.Teacher}>معلم مشرف</Option>
-                <Option value={RoleTitle.StudentTeacher}>
-                  طالب مرتبط بمشرف
-                </Option>
-                <Option value={RoleTitle.Student}>طالب</Option>
-              </Select>
-            </Form.Item>
-            <Space>-</Space>
-            <Form.Item
-              style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}
-              name="teacherId"
-            >
-              <Popover
-                title="إختر المعلم المشرف"
-                trigger="click"
-                open={roleHandler.visible}
-                onOpenChange={roleHandler.handleVisibleChange}
-              >
-                <Select
-                  disabled={roleHandler.role !== RoleTitle.StudentTeacher}
-                  showSearch
-                  value={roleHandler.selectedSupervisor}
-                  onChange={roleHandler.handleInstructorSelect}
-                >
-                  <Option value="teacherId1">معلم 1</Option>
-                  <Option value="teacherId2">معلم 2</Option>
-                  <Option value="teacherId3">معلم 3</Option>
-                </Select>
-              </Popover>
-            </Form.Item>
-          </Form.Item>
+          <SelectRole
+            selectedSupervisor={selectedSupervisor}
+            setSelectedSupervisor={setSelectedSupervisor}
+          />
 
           <Form.Item
             label="كلمة السر"

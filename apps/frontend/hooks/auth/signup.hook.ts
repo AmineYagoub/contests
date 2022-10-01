@@ -4,7 +4,6 @@ import { ValidateErrorEntity } from 'rc-field-form/es/interface';
 import { useState } from 'react';
 
 import {
-  RoleTitle,
   useResendEmailActivationCodeMutation,
   useSignUpMutation,
 } from '@/graphql/graphql';
@@ -70,31 +69,9 @@ const handleSignUpErrors = (error: any, form: FormInstance<unknown>) => {
 
 export const useSignUp = (form: FormInstance<unknown>) => {
   const [SignUpMutation, { loading }] = useSignUpMutation();
-
-  const [registeredEmail, setRegisteredEmail] = useState<string>(null);
-
-  const [selectedSupervisor, setSelectedSupervisor] = useState<string>(null);
-  const [visible, setVisible] = useState<boolean>(false);
   const [isSuccess, setSuccess] = useState<boolean>(false);
-  const [role, setRole] = useState<RoleTitle>(null);
-
-  const handleRoleSelect = (value: RoleTitle) => {
-    setRole(value);
-    setVisible(true);
-    if (value !== RoleTitle.StudentTeacher) {
-      setSelectedSupervisor(null);
-      setVisible(false);
-    }
-  };
-
-  const handleInstructorSelect = (value: string) => {
-    setSelectedSupervisor(value);
-    setVisible(false);
-  };
-
-  const handleVisibleChange = (newVisible: boolean) => {
-    setVisible(newVisible);
-  };
+  const [registeredEmail, setRegisteredEmail] = useState<string>(null);
+  const [selectedSupervisor, setSelectedSupervisor] = useState<string>(null);
 
   const onFinish = async (values: SignUpInput) => {
     values.teacherId = selectedSupervisor;
@@ -117,22 +94,14 @@ export const useSignUp = (form: FormInstance<unknown>) => {
     Logger.log(errorInfo);
   };
 
-  const roleHandler = {
-    handleInstructorSelect,
-    handleRoleSelect,
-    handleVisibleChange,
-    role,
-    visible,
-    selectedSupervisor,
-  };
-
   return {
     onFinish,
     onFinishFailed,
     loading,
-    roleHandler,
     isSuccess,
     registeredEmail,
+    selectedSupervisor,
+    setSelectedSupervisor,
   };
 };
 
@@ -166,10 +135,6 @@ export const useResendEmailActivationCode = () => {
 export const emailRules: Rule[] = [
   { required: true, message: 'يرجى كتابة بريدك الإلكتروني.' },
   { type: 'email', message: 'يرجى كتابة بريدك الإلكتروني بشكل صحيح.' },
-];
-
-export const roleRules: Rule[] = [
-  { required: true, message: 'يرجى تحديد نوع العضوية الخاصة بك.' },
 ];
 
 export const passwordRules: Rule[] = [
