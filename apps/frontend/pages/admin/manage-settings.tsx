@@ -1,4 +1,4 @@
-import AdminDashboardLayout from '@/layout/AdminDashboardLayout';
+import AdminLayout from '@/layout/AdminLayout';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 const ManageSettings = () => {
@@ -10,6 +10,6 @@ const ManageSettings = () => {
 };
 
 ManageSettings.getLayout = (page: EmotionJSX.Element) => (
-  <AdminDashboardLayout>{page}</AdminDashboardLayout>
+  <AdminLayout>{page}</AdminLayout>
 );
 export default ManageSettings;

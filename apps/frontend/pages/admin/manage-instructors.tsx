@@ -1,6 +1,5 @@
-import AdminDashboardLayout from '@/layout/AdminDashboardLayout';
+import AdminLayout from '@/layout/AdminLayout';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import React from 'react';
 
 const ManageInstructors = () => {
   return (
@@ -11,6 +10,6 @@ const ManageInstructors = () => {
 };
 
 ManageInstructors.getLayout = (page: EmotionJSX.Element) => (
-  <AdminDashboardLayout>{page}</AdminDashboardLayout>
+  <AdminLayout>{page}</AdminLayout>
 );
 export default ManageInstructors;

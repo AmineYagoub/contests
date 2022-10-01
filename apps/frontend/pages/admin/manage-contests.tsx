@@ -14,8 +14,8 @@ import { Contest, ContestStatus, StudentLevel } from '@/graphql/graphql';
 import {
   ContestsDataIndex,
   useSearchContests,
-} from '@/hooks/admin/manage-contests';
-import AdminDashboardLayout from '@/layout/AdminDashboardLayout';
+} from '@/hooks/contests/manage.hook';
+import AdminLayout from '@/layout/AdminLayout';
 import { ContestFields } from '@/utils/fields';
 import {
   contestMappedStatus,
@@ -231,6 +231,6 @@ const ManageContests = () => {
 };
 
 ManageContests.getLayout = (page: EmotionJSX.Element) => (
-  <AdminDashboardLayout>{page}</AdminDashboardLayout>
+  <AdminLayout>{page}</AdminLayout>
 );
 export default ManageContests;

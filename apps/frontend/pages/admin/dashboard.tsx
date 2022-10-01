@@ -5,7 +5,7 @@ import Image from 'next/image';
 import LatestInstructors from '@/components/admin/dashboard/LatestInstructors';
 import LatestUsers from '@/components/admin/dashboard/LatestUsers';
 import StudentAgeChart from '@/components/admin/dashboard/StudentAgeChart';
-import AdminDashboardLayout from '@/layout/AdminDashboardLayout';
+import AdminLayout from '@/layout/AdminLayout';
 import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
@@ -125,6 +125,6 @@ const AdminDashboard: NextPageWithLayout = () => {
 };
 
 AdminDashboard.getLayout = (page: EmotionJSX.Element) => (
-  <AdminDashboardLayout>{page}</AdminDashboardLayout>
+  <AdminLayout>{page}</AdminLayout>
 );
 export default AdminDashboard;

@@ -16,8 +16,8 @@ import { Question, QuestionType, Tag as TagModel } from '@/graphql/graphql';
 import {
   QuestionsDataIndex,
   useSearchQuestions,
-} from '@/hooks/admin/manage-questions';
-import AdminDashboardLayout from '@/layout/AdminDashboardLayout';
+} from '@/hooks/admin/manage-questions.hook';
+import AdminLayout from '@/layout/AdminLayout';
 import { QuestionFields } from '@/utils/fields';
 import { getMapperLabel, questionMappedTypes } from '@/utils/mapper';
 import { QuestionState } from '@/valtio/question.state';
@@ -205,6 +205,6 @@ const ManageQuestions = (props) => {
 };
 
 ManageQuestions.getLayout = (page: EmotionJSX.Element) => (
-  <AdminDashboardLayout>{page}</AdminDashboardLayout>
+  <AdminLayout>{page}</AdminLayout>
 );
 export default ManageQuestions;
