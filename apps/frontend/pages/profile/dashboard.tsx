@@ -1,4 +1,3 @@
-import { withAuth } from '@/components/common/withAuth';
 import ProfileLayout from '@/layout/ProfileLayout';
 import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
