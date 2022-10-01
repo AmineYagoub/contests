@@ -2,10 +2,10 @@ import { Alert, Button, Drawer, Space } from 'antd';
 import { useState } from 'react';
 
 import { Contest } from '@/graphql/graphql';
+import { useCreateContests } from '@/hooks/contests/create.hook';
 import { EditOutlined, SaveOutlined } from '@ant-design/icons';
 
 import ContestForm from './ContestForm';
-import { useCreateContests } from '@/hooks/contests/create-contest.hook';
 
 const UpdateContest = ({
   onSuccess,

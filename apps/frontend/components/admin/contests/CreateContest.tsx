@@ -1,7 +1,9 @@
 import { Alert, Button, Drawer, Space } from 'antd';
+
+import { useCreateContests } from '@/hooks/contests/create.hook';
 import { SaveOutlined } from '@ant-design/icons';
+
 import ContestForm from './ContestForm';
-import { useCreateContests } from '@/hooks/contests/create-contest.hook';
 
 const CreateContest = ({
   visible,
