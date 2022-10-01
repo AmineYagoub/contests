@@ -42,7 +42,7 @@ export const StyledMenu = styled(Menu)({
   paddingTop: '22px !important',
 });
 
-const AdminDashboardLayout = ({ children }) => {
+const AdminLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
   const socket = useReactiveVar(socketVar);
@@ -155,4 +155,4 @@ const AdminDashboardLayout = ({ children }) => {
   );
 };
 
-export default AdminDashboardLayout;
+export default AdminLayout;
