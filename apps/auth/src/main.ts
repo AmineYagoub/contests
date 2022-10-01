@@ -1,8 +1,5 @@
-import { ValidationError } from 'class-validator';
-import mercurius from 'mercurius';
-
 import { authConfig, AuthConfigType } from '@contests/config';
-import { Logger, NotFoundException, ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
