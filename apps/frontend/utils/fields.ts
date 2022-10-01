@@ -1,5 +1,5 @@
-import { ContestsDataIndex } from '@/hooks/admin/manage-contests';
-import { QuestionsDataIndex } from '@/hooks/admin/manage-questions';
+import { QuestionsDataIndex } from '@/hooks/admin/manage-questions.hook';
+import { ContestsDataIndex } from '@/hooks/contests/manage.hook';
 
 export const ContestFields: { [P in ContestsDataIndex]: P } = {
   id: 'id',
