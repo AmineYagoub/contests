@@ -3,17 +3,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { createElement, useEffect, useState } from 'react';
-import { useSnapshot } from 'valtio';
 
 import { withAuth } from '@/components/common/withAuth';
 import theme from '@/config/theme';
 import { socketVar } from '@/utils/app';
 import { AppRoutes } from '@/utils/routes';
-import { AuthState } from '@/valtio/auth.state';
 import {
-  BarChartOutlined,
   BellOutlined,
   ContactsOutlined,
+  HomeOutlined,
   MailOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -22,7 +20,7 @@ import {
 import { useReactiveVar } from '@apollo/client';
 import styled from '@emotion/styled';
 
-import { Logo, StyledContent, StyledMenu } from './AdminDashboardLayout';
+import { Logo, StyledContent, StyledMenu } from './AdminLayout';
 import StyledFooter from './StyledFooter';
 
 const { Header, Sider } = Layout;
@@ -38,7 +36,6 @@ const ProfileLayout = ({ children }) => {
   const socket = useReactiveVar(socketVar);
   const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
-  const userSnap = useSnapshot(AuthState);
 
   useEffect(() => {
     // socket.connect();
@@ -58,9 +55,9 @@ const ProfileLayout = ({ children }) => {
           items={[
             {
               key: AppRoutes.StudentDashboard,
-              icon: <BarChartOutlined style={{ fontSize: 18 }} />,
+              icon: <HomeOutlined style={{ fontSize: 18 }} />,
 
-              label: <Link href={AppRoutes.StudentDashboard}>لوحة التحكم</Link>,
+              label: <Link href={AppRoutes.StudentDashboard}>الرئيسية</Link>,
             },
             {
               key: AppRoutes.StudentProfile,
@@ -134,10 +131,7 @@ const ProfileLayout = ({ children }) => {
             </Col>
           </Row>
         </StyledHeader>
-        <StyledContent>
-          {children}
-          <pre>{userSnap.user?.email}</pre>
-        </StyledContent>
+        <StyledContent>{children}</StyledContent>
         <StyledFooter />
       </Layout>
     </Layout>

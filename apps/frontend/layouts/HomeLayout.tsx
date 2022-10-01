@@ -5,7 +5,7 @@ import theme from '@/config/theme';
 import { AppRoutes } from '@/utils/routes';
 import styled from '@emotion/styled';
 
-import { Logo } from './AdminDashboardLayout';
+import { Logo } from './AdminLayout';
 import StyledFooter from './StyledFooter';
 
 const { Content, Header } = Layout;
