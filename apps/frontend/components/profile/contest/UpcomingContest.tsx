@@ -56,10 +56,6 @@ const UpcomingContest = ({ user }: { user: User }) => {
     ),
   });
 
-  const refetchData = () => {
-    methods.refetch();
-  };
-
   const columns: ColumnsType<ColumnType<Contest>> = [
     {
       title: 'عنوان المسابقة',
@@ -83,18 +79,6 @@ const UpcomingContest = ({ user }: { user: User }) => {
       ...getColumnSearchDateProps(ContestFields.created),
     },
     {
-      title: 'مدة المسابقة',
-      dataIndex: ContestFields.duration,
-      key: ContestFields.duration,
-      sorter: true,
-      sortDirections: ['descend', 'ascend'],
-      sortOrder:
-        sortedInfo.columnKey === ContestFields.duration
-          ? sortedInfo.order
-          : null,
-      render: (text) => `${text} دقيقة`,
-    },
-    {
       title: 'تاريخ البدء',
       dataIndex: ContestFields.startTime,
       key: ContestFields.startTime,
@@ -105,6 +89,18 @@ const UpcomingContest = ({ user }: { user: User }) => {
           ? sortedInfo.order
           : null,
       ...getColumnSearchDateProps(ContestFields.startTime),
+    },
+    {
+      title: 'مدة المسابقة',
+      dataIndex: ContestFields.duration,
+      key: ContestFields.duration,
+      sorter: true,
+      sortDirections: ['descend', 'ascend'],
+      sortOrder:
+        sortedInfo.columnKey === ContestFields.duration
+          ? sortedInfo.order
+          : null,
+      render: (text) => `${text} دقيقة`,
     },
     {
       title: 'حالة المسابقة',

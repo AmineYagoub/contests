@@ -55,6 +55,7 @@ const SelectCountry = ({ name, label, multiple = false }) => {
       name={name}
       label={label}
       help={multiple ? 'أتركه فارغا للسماح بجميع الدول' : ''}
+      rules={[{ required: !multiple, message: 'يرجى تحديد بلد جنسيتك' }]}
     >
       <Select
         mode={multiple ? 'multiple' : null}

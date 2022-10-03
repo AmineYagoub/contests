@@ -1,0 +1,19 @@
+query FindTeacher($name: String) {
+  findTeacher(name: $name) {
+    id
+    key
+    email
+    isActive
+    role {
+      title
+    }
+    profile {
+      __typename
+      ... on Teacher {
+        id
+        firstName
+        lastName
+      }
+    }
+  }
+}

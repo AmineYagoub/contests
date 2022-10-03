@@ -56,10 +56,6 @@ const FinishedContest = ({ user }: { user: User }) => {
     ),
   });
 
-  const refetchData = () => {
-    methods.refetch();
-  };
-
   const columns: ColumnsType<ColumnType<Contest>> = [
     {
       title: 'عنوان المسابقة',
@@ -83,6 +79,18 @@ const FinishedContest = ({ user }: { user: User }) => {
       ...getColumnSearchDateProps(ContestFields.created),
     },
     {
+      title: 'تاريخ الإنتهاء',
+      dataIndex: ContestFields.startTime,
+      key: ContestFields.startTime,
+      sorter: true,
+      sortDirections: ['descend', 'ascend'],
+      sortOrder:
+        sortedInfo.columnKey === ContestFields.startTime
+          ? sortedInfo.order
+          : null,
+      ...getColumnSearchDateProps(ContestFields.startTime),
+    },
+    {
       title: 'مدة المسابقة',
       dataIndex: ContestFields.duration,
       key: ContestFields.duration,
@@ -93,18 +101,6 @@ const FinishedContest = ({ user }: { user: User }) => {
           ? sortedInfo.order
           : null,
       render: (text) => `${text} دقيقة`,
-    },
-    {
-      title: 'تاريخ البدء',
-      dataIndex: ContestFields.startTime,
-      key: ContestFields.startTime,
-      sorter: true,
-      sortDirections: ['descend', 'ascend'],
-      sortOrder:
-        sortedInfo.columnKey === ContestFields.startTime
-          ? sortedInfo.order
-          : null,
-      ...getColumnSearchDateProps(ContestFields.startTime),
     },
     {
       title: 'حالة المسابقة',

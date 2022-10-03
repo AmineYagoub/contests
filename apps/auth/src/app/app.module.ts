@@ -15,6 +15,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 
 import { AuthModule } from '../authentication/auth.module';
 import { ActivationTokenModule } from '../email/activationToken.module';
+import { ProfileModule } from '../profile/profile.module';
 import { UserModule } from '../users/user.module';
 
 @Module({
@@ -28,6 +29,7 @@ import { UserModule } from '../users/user.module';
     }),
     AuthModule,
     UserModule,
+    ProfileModule,
     ActivationTokenModule,
   ],
   providers: [

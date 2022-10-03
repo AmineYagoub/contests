@@ -48,7 +48,7 @@ const httpLink = new HttpLink({
 });
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem(config.jwtName);
+  const token = isServer ? null : localStorage.getItem(config.jwtName);
   return {
     headers: {
       ...headers,

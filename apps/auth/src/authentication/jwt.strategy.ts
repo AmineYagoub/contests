@@ -46,7 +46,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // TODO looking up the userId in a list of revoked tokens,
     return this.prisma.user.findUniqueOrThrow({
       where: { key: sub },
-      include: { role: true },
+      include: { role: true, profile: { include: { teacher: true } } },
     });
   }
 }

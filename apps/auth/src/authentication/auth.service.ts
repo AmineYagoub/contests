@@ -4,6 +4,8 @@ import { AUTH_CONFIG_REGISTER_KEY, AuthConfigType } from '@contests/config';
 import { SignUpDto } from '@contests/dto';
 import {
   JWTToken,
+  RoleTitle,
+  StudentLevel,
   USER_CHANGE_PASSWORD,
   USER_CREATED_EVENT,
 } from '@contests/types';
@@ -44,40 +46,9 @@ export class AuthService {
    * @returns Promise<boolean>
    */
   async signUp(data: SignUpDto) {
-    const { password, email, agreement, role, teacherId } = data;
     try {
-      const hashedPassword = await this.passwordService.hashPassword(password);
       const emailToken = randomUUID();
-      const user: Prisma.UserCreateInput = {
-        password: hashedPassword,
-        key: generateUserKey(),
-        email,
-        agreement,
-        image: `https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user`,
-        role: {
-          connectOrCreate: {
-            create: {
-              title: role,
-            },
-            where: {
-              title: role,
-            },
-          },
-        },
-        emailToken: {
-          create: {
-            value: emailToken,
-          },
-        },
-      };
-
-      if (teacherId) {
-        user.teacher = {
-          connect: {
-            id: teacherId,
-          },
-        };
-      }
+      const user = await this.buildUser(data, emailToken);
       const result = await this.prisma.user.create({ data: user });
       this.eventEmitter.emit(USER_CREATED_EVENT, {
         template: 'email-confirmation',
@@ -92,6 +63,51 @@ export class AuthService {
       }
       Logger.error(error);
     }
+  }
+
+  /**
+   * Build Prisma User Input.
+   *
+   * @param data SignUpDto
+   * @param emailToken string
+   * @returns Promise<Prisma.UserCreateInput>
+   */
+  private async buildUser(data: SignUpDto, emailToken: string) {
+    const { password, email, agreement, role, teacherId } = data;
+    const hashedPassword = await this.passwordService.hashPassword(password);
+    const user: Prisma.UserCreateInput = {
+      password: hashedPassword,
+      key: generateUserKey(),
+      email,
+      agreement,
+      role: {
+        connectOrCreate: {
+          create: {
+            title: role,
+          },
+          where: {
+            title: role,
+          },
+        },
+      },
+      emailToken: {
+        create: {
+          value: emailToken,
+        },
+      },
+    };
+    if ([RoleTitle.STUDENT, RoleTitle.STUDENT_TEACHER].includes(role)) {
+      user.profile = {
+        create: {
+          level: StudentLevel.Student,
+          personalImage: `https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user`,
+        },
+      };
+      if (teacherId) {
+        user.profile.create.teacher.connect.id = teacherId;
+      }
+    }
+    return user;
   }
 
   /**

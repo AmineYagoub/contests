@@ -44,6 +44,7 @@ const SignUpPage: NextPageWithLayout = () => {
     loading,
     selectedSupervisor,
     setSelectedSupervisor,
+    clearErrors,
     isSuccess,
     registeredEmail,
   } = useSignUp(form);
@@ -60,6 +61,7 @@ const SignUpPage: NextPageWithLayout = () => {
           onFinishFailed={onFinishFailed}
           autoComplete="off"
           size="large"
+          onValuesChange={(field) => clearErrors(field, form)}
           {...formLayout}
         >
           <Form.Item label="البريد الإلكتروني" name="email" rules={emailRules}>
@@ -69,6 +71,7 @@ const SignUpPage: NextPageWithLayout = () => {
           <SelectRole
             selectedSupervisor={selectedSupervisor}
             setSelectedSupervisor={setSelectedSupervisor}
+            isSignUp
           />
 
           <Form.Item

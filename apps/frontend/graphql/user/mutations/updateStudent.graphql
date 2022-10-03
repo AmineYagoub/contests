@@ -1,5 +1,5 @@
-query GetAuthUser {
-  getAuthUser {
+mutation UpdateStudentProfile($id: String!, $input: UpdateStudentDto!) {
+  updateStudentProfile(id: $id, input: $input) {
     id
     key
     email
@@ -32,5 +32,6 @@ query GetAuthUser {
         lastName
       }
     }
+
   }
 }

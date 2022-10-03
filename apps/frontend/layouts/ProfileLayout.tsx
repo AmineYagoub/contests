@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button, Col, Layout, Row, Space } from 'antd';
+import { Alert, Avatar, Badge, Button, Col, Layout, Row, Space } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -10,6 +10,7 @@ import { socketVar } from '@/utils/app';
 import { AppRoutes } from '@/utils/routes';
 import {
   BellOutlined,
+  CheckCircleFilled,
   ContactsOutlined,
   HomeOutlined,
   MailOutlined,
@@ -50,7 +51,7 @@ const ProfileLayout = ({ children }) => {
         <Logo />
         <StyledMenu
           mode="inline"
-          defaultSelectedKeys={[AppRoutes.AdminManageDashboard]}
+          defaultSelectedKeys={[router.pathname]}
           selectedKeys={[router.pathname]}
           items={[
             {
@@ -117,21 +118,38 @@ const ProfileLayout = ({ children }) => {
                     type="ghost"
                   />
                 </Badge>
-                <Avatar
-                  src={
-                    <Image
-                      src="https://joeschmoe.io/api/v1/joe"
-                      width={32}
-                      height={32}
-                      alt="avatar"
-                    />
-                  }
-                />
+                <Badge
+                  offset={[5, 30]}
+                  count={<CheckCircleFilled style={{ color: 'aqua' }} />}
+                >
+                  <Avatar
+                    src={
+                      <Image
+                        src="https://joeschmoe.io/api/v1/joe"
+                        width={32}
+                        height={32}
+                        alt="avatar"
+                      />
+                    }
+                  />
+                </Badge>
               </Space>
             </Col>
           </Row>
         </StyledHeader>
-        <StyledContent>{children}</StyledContent>
+        <StyledContent>
+          <Alert
+            style={{ marginBottom: 10 }}
+            message="البيانات الشخصية الخاصة بك غير مكتملة"
+            showIcon
+            description="حتى تتمكن من المشاركة في المسابقات المنعقدة على الموقع يرجى إكمال ملفك الشخصي."
+            type="warning"
+            action={
+              <Link href={AppRoutes.StudentProfile}>صفحة البيانات الشخصية</Link>
+            }
+          />
+          {children}
+        </StyledContent>
         <StyledFooter />
       </Layout>
     </Layout>

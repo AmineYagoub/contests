@@ -1,5 +1,5 @@
 import { UpdateUserDto } from '@contests/dto';
-import { UserEntity } from '@contests/utils';
+import { isPublic, UserEntity } from '@contests/utils';
 import {
   Args,
   Mutation,
@@ -15,9 +15,10 @@ import { UserService } from './user.service';
 export class UserResolver {
   constructor(private userService: UserService) {}
 
-  @Query(() => User)
-  getAuthUser(@UserEntity() user: User) {
-    return user;
+  @isPublic()
+  @Query(() => [User])
+  findTeacher(@Args('name', { nullable: true }) name?: string) {
+    return this.userService.findTeacher(name);
   }
 
   @Mutation(() => User)
@@ -35,5 +36,10 @@ export class UserResolver {
   @ResolveReference()
   async resolveReference(reference: { __typename: string; id: string }) {
     return this.userService.findUnique({ id: reference.id });
+  }
+
+  @Query(() => User)
+  getAuthUser(@UserEntity() user: User) {
+    return user;
   }
 }

@@ -1,8 +1,8 @@
-import { Form, Popover, Select } from 'antd';
+import { Form, Popover, Select, Space, Tooltip } from 'antd';
 import { Rule } from 'antd/lib/form';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-import { RoleTitle } from '@/graphql/graphql';
+import { RoleTitle, Teacher, useFindTeacherQuery } from '@/graphql/graphql';
 import styled from '@emotion/styled';
 
 const { Option } = Select;
@@ -21,12 +21,17 @@ const roleRules: Rule[] = [
 const SelectRole = ({
   selectedSupervisor,
   setSelectedSupervisor,
+  isSignUp = true,
 }: {
   selectedSupervisor: string;
   setSelectedSupervisor: Dispatch<SetStateAction<string>>;
+  isSignUp: boolean;
 }) => {
   const [visible, setVisible] = useState<boolean>(false);
+  const [disabled, setDisabled] = useState<boolean>(false);
   const [role, setRole] = useState<RoleTitle>(null);
+
+  const { data, loading, refetch } = useFindTeacherQuery();
 
   const handleRoleSelect = (value: RoleTitle) => {
     setRole(value);
@@ -45,19 +50,30 @@ const SelectRole = ({
   const handleVisibleChange = (newVisible: boolean) => {
     setVisible(newVisible);
   };
+
+  const handleSearch = async (newValue: string) => {
+    await refetch({
+      name: newValue,
+    });
+  };
+
+  useEffect(() => {
+    if (role) {
+      setDisabled(role !== RoleTitle.StudentTeacher);
+      return;
+    }
+    setDisabled(!selectedSupervisor);
+  }, [selectedSupervisor, role]);
+
   return (
-    <Form.Item
-      label="نوع العضوية"
-      style={{ marginBottom: 0 }}
-      rules={[{ required: true, message: '' }]}
-    >
+    <Form.Item label="نوع العضوية" style={{ marginBottom: 0 }} required>
       <Form.Item
         style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}
         name="role"
         rules={roleRules}
       >
         <Select onChange={handleRoleSelect}>
-          <Option value={RoleTitle.Teacher}>معلم مشرف</Option>
+          {isSignUp && <Option value={RoleTitle.Teacher}>معلم مشرف</Option>}
           <Option value={RoleTitle.StudentTeacher}>طالب مرتبط بمشرف</Option>
           <Option value={RoleTitle.Student}>طالب</Option>
         </Select>
@@ -74,14 +90,36 @@ const SelectRole = ({
           onOpenChange={handleVisibleChange}
         >
           <Select
-            disabled={role !== RoleTitle.StudentTeacher}
+            disabled={disabled}
+            showArrow
+            filterOption={false}
             showSearch
             value={selectedSupervisor}
             onChange={handleInstructorSelect}
+            onSearch={handleSearch}
+            loading={loading}
           >
-            <Option value="teacherId1">معلم 1</Option>
-            <Option value="teacherId2">معلم 2</Option>
-            <Option value="teacherId3">معلم 3</Option>
+            {data?.findTeacher.map((el) => {
+              const { firstName, lastName, id } = el.profile as Teacher;
+              return (
+                <Option value={id} key={id}>
+                  {el.role.title === RoleTitle.GoldenTeacher ? (
+                    <Tooltip title="معلم ذهبي">
+                      <Space size={10} align="center">
+                        <span role="img" aria-label="China">
+                          &#127775;
+                        </span>
+                        <strong>{`${firstName} ${lastName}`}</strong>
+                      </Space>
+                    </Tooltip>
+                  ) : (
+                    <span
+                      style={{ display: 'inline-block', marginRight: 20 }}
+                    >{`${firstName} ${lastName}`}</span>
+                  )}
+                </Option>
+              );
+            })}
           </Select>
         </Popover>
       </Form.Item>

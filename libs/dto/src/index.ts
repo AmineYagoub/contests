@@ -10,6 +10,7 @@ export * from './lib/auth/signup.dto';
 export * from './lib/auth/signing.dto';
 export * from './lib/auth/signingWithGoogle.dto';
 export * from './lib/users/update.dto';
+export * from './lib/users/updateStudent.dto';
 
 import { IsEmail, IsUUID } from 'class-validator';
 

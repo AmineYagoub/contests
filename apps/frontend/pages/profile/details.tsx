@@ -7,25 +7,31 @@ import UserPassword from '@/components/profile/user/UserPassword';
 import { User } from '@/graphql/graphql';
 import ProfileLayout from '@/layout/ProfileLayout';
 import { AuthState } from '@/valtio/auth.state';
+import { CheckCircleOutlined } from '@ant-design/icons';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
-const ProfileDetails = () => {
-  const userSnap = useSnapshot(AuthState);
+const ProfileDetails = (props) => {
+  const user = useSnapshot(AuthState).user as User;
   const tabs = [
     {
-      label: 'البيانات الشخصية',
+      label: (
+        <span>
+          <CheckCircleOutlined style={{ color: 'darkcyan' }} />
+          البيانات الشخصية
+        </span>
+      ),
       key: '1',
-      children: <UserDetails user={userSnap.user as User} />,
+      children: <UserDetails user={user} />,
     },
     {
       label: 'الوثائق الشخصية',
       key: '2',
-      children: <UserDocuments user={userSnap.user as User} />,
+      children: <UserDocuments user={user} />,
     },
     {
       label: 'تغيير كلمة السر',
       key: '3',
-      children: <UserPassword user={userSnap.user as User} />,
+      children: <UserPassword user={user} />,
     },
   ];
 

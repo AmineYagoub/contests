@@ -1,9 +1,11 @@
+import { notification } from 'antd';
 import { FormInstance } from 'antd/es/form/Form';
 import { Rule } from 'antd/lib/form';
 import { ValidateErrorEntity } from 'rc-field-form/es/interface';
 import { useState } from 'react';
 
 import {
+  SignUpDto,
   useResendEmailActivationCodeMutation,
   useSignUpMutation,
 } from '@/graphql/graphql';
@@ -16,8 +18,14 @@ import {
 
 const handleSignUpErrors = (error: any, form: FormInstance<unknown>) => {
   Logger.log(error);
+  if (error.networkError?.statusCode === 400) {
+    notification.error({
+      message: 'لا يمكن معالجة طلبك! يرجى التواصل مع إدارة الموقع.',
+    });
+    return;
+  }
   if (error.networkError?.statusCode === 422) {
-    if (error.networkError?.result?.errors[0]?.errors.code === 'P2002') {
+    if (error.networkError?.result?.errors[0]?.message === 'P2002') {
       form.setFields([
         {
           name: 'email',
@@ -27,9 +35,7 @@ const handleSignUpErrors = (error: any, form: FormInstance<unknown>) => {
       return false;
     }
     const validationErrors: ConstraintsErrors[] =
-      error.networkError?.result?.errors[0]?.errors?.map(
-        (el: GraphqlResponseError) => el.constraints
-      );
+      error.networkError?.result?.errors[0]?.errors;
     validationErrors.forEach((element) => {
       if (element?.isEmail) {
         form.setFields([
@@ -63,7 +69,58 @@ const handleSignUpErrors = (error: any, form: FormInstance<unknown>) => {
           },
         ]);
       }
+      if (element?.isAcceptAgreement) {
+        form.setFields([
+          {
+            name: 'agreement',
+            errors: ['يرجى قراءة و قبول إتفاقية الإستخدام.'],
+          },
+        ]);
+      }
     });
+  }
+};
+
+const clearErrors = (field: SignUpDto, form: FormInstance<unknown>) => {
+  let target = null;
+  if (field.confirmPassword || field.password) {
+    form.setFields([
+      {
+        name: 'password',
+        errors: [],
+      },
+      {
+        name: 'confirmPassword',
+        errors: [],
+      },
+    ]);
+  }
+  if (field.role || field.teacherId) {
+    form.setFields([
+      {
+        name: 'teacherId',
+        errors: [],
+      },
+      {
+        name: 'role',
+        errors: [],
+      },
+    ]);
+  }
+  if (field.email) {
+    target = 'email';
+  }
+  if (field.agreement) {
+    target = 'agreement';
+  }
+
+  if (target) {
+    form.setFields([
+      {
+        name: target,
+        errors: [],
+      },
+    ]);
   }
 };
 
@@ -75,6 +132,7 @@ export const useSignUp = (form: FormInstance<unknown>) => {
 
   const onFinish = async (values: SignUpInput) => {
     values.teacherId = selectedSupervisor;
+    values.agreement = Boolean(values.agreement);
     setRegisteredEmail(values.email);
     try {
       const { data } = await SignUpMutation({
@@ -86,6 +144,7 @@ export const useSignUp = (form: FormInstance<unknown>) => {
         setSuccess(true);
       }
     } catch (error) {
+      Logger.log(error);
       handleSignUpErrors(error, form);
     }
   };
@@ -97,6 +156,7 @@ export const useSignUp = (form: FormInstance<unknown>) => {
   return {
     onFinish,
     onFinishFailed,
+    clearErrors,
     loading,
     isSuccess,
     registeredEmail,

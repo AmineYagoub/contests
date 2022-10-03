@@ -35,7 +35,7 @@ export class SignUpDto {
   @Field(() => RoleTitle)
   @IsNotEmpty()
   @IsString()
-  role: string;
+  role: RoleTitle;
 
   @Field({
     nullable: true,

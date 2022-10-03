@@ -35,7 +35,7 @@ export class GoogleAuthService {
   async authenticateWithGoogle(
     payload: SigningWithGoogleDto
   ): Promise<JWTToken> {
-    const { token, email, image } = payload;
+    const { token, email } = payload;
     const tokenInfo = await this.oauthClient.getTokenInfo(token);
     if (email !== tokenInfo.email) {
       throw new UnprocessableEntityException('invalid google token');
@@ -52,7 +52,6 @@ export class GoogleAuthService {
       }
       const user = await this.prisma.user.create({
         data: {
-          image,
           email,
           password: 'google',
           key: generateUserKey(),

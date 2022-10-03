@@ -8,6 +8,9 @@ import {
 } from '@nestjs/graphql';
 
 import { Role } from '../authorizations/role.model';
+import { Profile } from '../profile/profile.resolver';
+import { Student } from '../profile/student.model';
+import { Teacher } from '../profile/teacher.model';
 
 @ObjectType()
 @Directive('@key(fields: "id")')
@@ -16,37 +19,21 @@ export class User {
   id: string;
 
   @Field({
-    description: 'Identifies the first name of the user.',
-    nullable: true,
-  })
-  firstName?: string;
-
-  @Field({
-    description: 'Identifies the last name of the user.',
-    nullable: true,
-  })
-  lastName?: string;
-
-  @Field({
     description: 'Identifies the unique email of the user.',
   })
   email: string;
 
   @Field(() => Role, {
     description: 'Identifies the role of the user.',
+    nullable: true,
   })
   role?: Role;
 
-  @Field(() => Role, {
-    description: 'Identifies the role of the user.',
-  })
-  emailToken?: Role;
-
-  @Field(() => User, {
-    description: 'Identifies the supervisor teacher associated with that user.',
+  @Field(() => Profile, {
+    description: 'Identifies the Profile of the user.',
     nullable: true,
   })
-  teacher?: User;
+  profile?: Student | Teacher;
 
   @Field(() => Int, {
     description: 'Identifies the unique key the user.',
@@ -55,12 +42,6 @@ export class User {
 
   @HideField()
   password: string;
-
-  @Field({
-    description: 'Identifies the avatar of the user.',
-    nullable: true,
-  })
-  image?: string;
 
   @Field(() => Boolean, {
     description: 'Identifies if the user email is confirmed.',
@@ -88,11 +69,4 @@ export class User {
       'Identifies the date and time when the object was last updated.',
   })
   updated: Date;
-
-  /*   
-  @Field({ middleware: [checkRoleMiddleware] })
-  @Extensions({ role: Role.ADMIN })
-  users: premium teacher users
-  
-  */
 }

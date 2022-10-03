@@ -17,23 +17,26 @@ import { AuthService } from './auth.service';
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
+  @isPublic()
   @Mutation(() => Boolean)
   async signup(@Args('input') data: SignUpDto) {
     return this.authService.signUp(data);
   }
 
-  @Mutation(() => Auth)
   @isPublic()
+  @Mutation(() => Auth)
   @UseInterceptors(NonceInterceptor)
   async signing(@Args('input') input: SigningDto) {
     return await this.authService.signing(input);
   }
 
+  @isPublic()
   @Mutation(() => Boolean)
   async resendEmailActivationCode(@Args('input') data: EmailDto) {
     return this.authService.resendEmailActivationCode(data.email);
   }
 
+  @isPublic()
   @Mutation(() => Boolean)
   async emailTokenToRecoverPassword(@Args('input') data: EmailDto) {
     return this.authService.emailTokenToRecoverPassword(data.email);

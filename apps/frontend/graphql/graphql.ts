@@ -2,15 +2,9 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -135,14 +129,14 @@ export type ContestPaginationResponse = {
 export enum ContestStatus {
   Closed = 'CLOSED',
   NotStarted = 'NOT_STARTED',
-  Open = 'OPEN',
+  Open = 'OPEN'
 }
 
 /** Contest Type */
 export enum ContestType {
   Centralized = 'CENTRALIZED',
   Regional = 'REGIONAL',
-  Worldwide = 'WORLDWIDE',
+  Worldwide = 'WORLDWIDE'
 }
 
 export type CreateAnswerDto = {
@@ -208,81 +202,106 @@ export type Mutation = {
   updateAnswer: Answer;
   updateContest: Contest;
   updateQuestion: Question;
+  updateStudentProfile: User;
   updateTag: Tag;
   updateUser: User;
 };
+
 
 export type MutationActivateEmailTokenArgs = {
   input: IdDto;
 };
 
+
 export type MutationCreateAnswerArgs = {
   data: CreateAnswerDto;
 };
+
 
 export type MutationCreateContestArgs = {
   input: CreateContestDto;
 };
 
+
 export type MutationCreateQuestionArgs = {
   input: CreateQuestionDto;
 };
+
 
 export type MutationCreateTagArgs = {
   title: Scalars['String'];
 };
 
+
 export type MutationDeleteAnswerByIdArgs = {
   id: Scalars['String'];
 };
+
 
 export type MutationDeleteContestByIdArgs = {
   id: Scalars['String'];
 };
 
+
 export type MutationDeleteQuestionByIdArgs = {
   id: Scalars['String'];
 };
+
 
 export type MutationDeleteTagByIdArgs = {
   id: Scalars['String'];
 };
 
+
 export type MutationEmailTokenToRecoverPasswordArgs = {
   input: EmailDto;
 };
+
 
 export type MutationResendEmailActivationCodeArgs = {
   input: EmailDto;
 };
 
+
 export type MutationSigningArgs = {
   input: SigningDto;
 };
 
+
 export type MutationSignupArgs = {
   input: SignUpDto;
 };
+
 
 export type MutationUpdateAnswerArgs = {
   data: UpdateAnswerDto;
   id: Scalars['String'];
 };
 
+
 export type MutationUpdateContestArgs = {
   id: Scalars['String'];
   input: UpdateContestDto;
 };
+
 
 export type MutationUpdateQuestionArgs = {
   id: Scalars['String'];
   input: UpdateQuestionDto;
 };
 
+
+export type MutationUpdateStudentProfileArgs = {
+  id: Scalars['String'];
+  input: UpdateStudentDto;
+};
+
+
 export type MutationUpdateTagArgs = {
   id: Scalars['String'];
   title: Scalars['String'];
 };
+
 
 export type MutationUpdateUserArgs = {
   id: Scalars['String'];
@@ -292,7 +311,7 @@ export type MutationUpdateUserArgs = {
 /** OrderBy Type */
 export enum OrderByType {
   Asc = 'Asc',
-  Desc = 'Desc',
+  Desc = 'Desc'
 }
 
 export type OrderContestArgs = {
@@ -324,8 +343,10 @@ export enum PermissionTitle {
   ViewMessages = 'VIEW_MESSAGES',
   ViewRolesPermissions = 'VIEW_ROLES_PERMISSIONS',
   ViewSettings = 'VIEW_SETTINGS',
-  ViewUsers = 'VIEW_USERS',
+  ViewUsers = 'VIEW_USERS'
 }
+
+export type Profile = Student | Teacher;
 
 export type Query = {
   __typename?: 'Query';
@@ -335,39 +356,53 @@ export type Query = {
   findOneQuestionById?: Maybe<Question>;
   findOneTagById?: Maybe<Tag>;
   findTags?: Maybe<Array<Tag>>;
+  findTeacher: Array<User>;
   getAuthUser: User;
   paginateContest?: Maybe<ContestPaginationResponse>;
   paginateQuestions?: Maybe<QuestionPaginationResponse>;
 };
 
+
 export type QueryFindEmailTokenArgs = {
   token: Scalars['String'];
 };
 
+
 export type QueryFindOneAnswerByIdArgs = {
   id: Scalars['String'];
 };
+
 
 export type QueryFindOneContestByIdArgs = {
   answerId?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
 };
 
+
 export type QueryFindOneQuestionByIdArgs = {
   id: Scalars['String'];
 };
+
 
 export type QueryFindOneTagByIdArgs = {
   id: Scalars['String'];
 };
 
+
 export type QueryFindTagsArgs = {
   title: Scalars['String'];
 };
 
+
+export type QueryFindTeacherArgs = {
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
 export type QueryPaginateContestArgs = {
   params: ContestPaginationDto;
 };
+
 
 export type QueryPaginateQuestionsArgs = {
   params: QuestionPaginationDto;
@@ -417,7 +452,7 @@ export type QuestionPaginationResponse = {
 export enum QuestionType {
   Easy = 'EASY',
   Hard = 'HARD',
-  Medium = 'MEDIUM',
+  Medium = 'MEDIUM'
 }
 
 export type Role = {
@@ -438,7 +473,7 @@ export enum RoleTitle {
   Moderator = 'MODERATOR',
   Student = 'STUDENT',
   StudentTeacher = 'STUDENT_TEACHER',
-  Teacher = 'TEACHER',
+  Teacher = 'TEACHER'
 }
 
 export type SelectedAnswerInput = {
@@ -482,6 +517,33 @@ export type SigningDto = {
   password: Scalars['String'];
 };
 
+export type Student = {
+  __typename?: 'Student';
+  /** Identifies A copy of the birth certificate of the student. */
+  birthCertImage?: Maybe<Scalars['String']>;
+  /** Identifies the country of the user. */
+  country?: Maybe<Scalars['String']>;
+  /** Identifies the date and time when the object was created. */
+  created: Scalars['DateTime'];
+  /** Identifies the date and time when the object was created. */
+  dateOfBirth: Scalars['DateTime'];
+  /** Identifies the first name of the user. */
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  /** Identifies the last name of the user. */
+  lastName?: Maybe<Scalars['String']>;
+  /** Identifies An official letter approved by the school in which he is studying. */
+  letterImage?: Maybe<Scalars['String']>;
+  /** Identifies student level. */
+  level: StudentLevel;
+  /** Identifies the avatar of the user. */
+  personalImage?: Maybe<Scalars['String']>;
+  /** Identifies the supervisor teacher associated with that student. */
+  teacher?: Maybe<Teacher>;
+  /** Identifies the date and time when the object was last updated. */
+  updated: Scalars['DateTime'];
+};
+
 /** Student Level */
 export enum StudentLevel {
   Eighteen = 'Eighteen',
@@ -490,7 +552,8 @@ export enum StudentLevel {
   Nineteen = 'Nineteen',
   Seventeen = 'Seventeen',
   Sixteen = 'Sixteen',
-  Thirteen = 'Thirteen',
+  Student = 'Student',
+  Thirteen = 'Thirteen'
 }
 
 export type Tag = {
@@ -515,6 +578,25 @@ export type TagCreateInput = {
 
 export type TagInput = {
   title: Scalars['String'];
+};
+
+export type Teacher = {
+  __typename?: 'Teacher';
+  /** Identifies the country of the user. */
+  country?: Maybe<Scalars['String']>;
+  /** Identifies the date and time when the object was created. */
+  created: Scalars['DateTime'];
+  /** Identifies the first name of the user. */
+  firstName?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  /** Identifies the last name of the user. */
+  lastName?: Maybe<Scalars['String']>;
+  /** Identifies the avatar of the user. */
+  personalImage?: Maybe<Scalars['String']>;
+  /** Identifies a List of students affiliated with this teacher. */
+  students?: Maybe<Array<Student>>;
+  /** Identifies the date and time when the object was last updated. */
+  updated: Scalars['DateTime'];
 };
 
 export type UpdateAnswerDto = {
@@ -555,6 +637,16 @@ export type UpdateQuestionDto = {
   usedCount?: InputMaybe<Scalars['Int']>;
 };
 
+export type UpdateStudentDto = {
+  country: Scalars['String'];
+  dateOfBirth: Scalars['DateTime'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  level: StudentLevel;
+  role: RoleTitle;
+  teacherId?: InputMaybe<Scalars['String']>;
+};
+
 export type UpdateUserDto = {
   agreement?: InputMaybe<Scalars['Boolean']>;
   confirmPassword?: InputMaybe<Scalars['String']>;
@@ -576,23 +668,15 @@ export type User = {
   email: Scalars['String'];
   /** Identifies if the user email is confirmed. */
   emailConfirmed: Scalars['Boolean'];
-  /** Identifies the role of the user. */
-  emailToken: Role;
-  /** Identifies the first name of the user. */
-  firstName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  /** Identifies the avatar of the user. */
-  image?: Maybe<Scalars['String']>;
   /** Identifies if the user is active or banned. */
   isActive: Scalars['Boolean'];
   /** Identifies the unique key the user. */
   key: Scalars['Int'];
-  /** Identifies the last name of the user. */
-  lastName?: Maybe<Scalars['String']>;
+  /** Identifies the Profile of the user. */
+  profile?: Maybe<Profile>;
   /** Identifies the role of the user. */
-  role: Role;
-  /** Identifies the supervisor teacher associated with that user. */
-  teacher?: Maybe<User>;
+  role?: Maybe<Role>;
   /** Identifies the date and time when the object was last updated. */
   updated: Scalars['DateTime'];
 };
@@ -623,421 +707,185 @@ export type CreateAnswerMutationVariables = Exact<{
   data: CreateAnswerDto;
 }>;
 
-export type CreateAnswerMutation = {
-  __typename?: 'Mutation';
-  createAnswer: {
-    __typename?: 'Answer';
-    id: string;
-    created: any;
-    updated: any;
-  };
-};
+
+export type CreateAnswerMutation = { __typename?: 'Mutation', createAnswer: { __typename?: 'Answer', id: string, created: any, updated: any } };
 
 export type UpdateAnswerMutationVariables = Exact<{
   id: Scalars['String'];
   data: UpdateAnswerDto;
 }>;
 
-export type UpdateAnswerMutation = {
-  __typename?: 'Mutation';
-  updateAnswer: {
-    __typename?: 'Answer';
-    id: string;
-    created: any;
-    updated: any;
-  };
-};
+
+export type UpdateAnswerMutation = { __typename?: 'Mutation', updateAnswer: { __typename?: 'Answer', id: string, created: any, updated: any } };
 
 export type FindOneAnswerByIdQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
-export type FindOneAnswerByIdQuery = {
-  __typename?: 'Query';
-  findOneAnswerById?: {
-    __typename?: 'Answer';
-    userId: string;
-    annulled: boolean;
-    annulledReason: string;
-    created: any;
-    updated: any;
-    answers: Array<{
-      __typename?: 'SelectedAnswerObject';
-      questionId: string;
-      questionIndex: number;
-      optionIndex: number;
-    }>;
-  } | null;
-};
+
+export type FindOneAnswerByIdQuery = { __typename?: 'Query', findOneAnswerById?: { __typename?: 'Answer', userId: string, annulled: boolean, annulledReason: string, created: any, updated: any, answers: Array<{ __typename?: 'SelectedAnswerObject', questionId: string, questionIndex: number, optionIndex: number }> } | null };
 
 export type ActivateEmailTokenMutationVariables = Exact<{
   input: IdDto;
 }>;
 
-export type ActivateEmailTokenMutation = {
-  __typename?: 'Mutation';
-  activateEmailToken: { __typename?: 'User'; id: string };
-};
+
+export type ActivateEmailTokenMutation = { __typename?: 'Mutation', activateEmailToken: { __typename?: 'User', id: string } };
 
 export type ResendEmailActivationCodeMutationVariables = Exact<{
   input: EmailDto;
 }>;
 
-export type ResendEmailActivationCodeMutation = {
-  __typename?: 'Mutation';
-  resendEmailActivationCode: boolean;
-};
+
+export type ResendEmailActivationCodeMutation = { __typename?: 'Mutation', resendEmailActivationCode: boolean };
 
 export type EmailTokenToRecoverPasswordMutationVariables = Exact<{
   input: EmailDto;
 }>;
 
-export type EmailTokenToRecoverPasswordMutation = {
-  __typename?: 'Mutation';
-  emailTokenToRecoverPassword: boolean;
-};
+
+export type EmailTokenToRecoverPasswordMutation = { __typename?: 'Mutation', emailTokenToRecoverPassword: boolean };
 
 export type SigningMutationVariables = Exact<{
   input: SigningDto;
 }>;
 
-export type SigningMutation = {
-  __typename?: 'Mutation';
-  signing: {
-    __typename?: 'Auth';
-    accessToken: string;
-    refreshToken: string;
-    tokenType: string;
-  };
-};
+
+export type SigningMutation = { __typename?: 'Mutation', signing: { __typename?: 'Auth', accessToken: string, refreshToken: string, tokenType: string } };
 
 export type SignUpMutationVariables = Exact<{
   input: SignUpDto;
 }>;
 
-export type SignUpMutation = { __typename?: 'Mutation'; signup: boolean };
+
+export type SignUpMutation = { __typename?: 'Mutation', signup: boolean };
 
 export type FindEmailTokenQueryVariables = Exact<{
   token: Scalars['String'];
 }>;
 
-export type FindEmailTokenQuery = {
-  __typename?: 'Query';
-  findEmailToken: {
-    __typename?: 'ActivationToken';
-    id: string;
-    created: any;
-    updated: any;
-    user: { __typename?: 'User'; id: string; email: string };
-  };
-};
+
+export type FindEmailTokenQuery = { __typename?: 'Query', findEmailToken: { __typename?: 'ActivationToken', id: string, created: any, updated: any, user: { __typename?: 'User', id: string, email: string } } };
 
 export type CreateContestMutationVariables = Exact<{
   input: CreateContestDto;
 }>;
 
-export type CreateContestMutation = {
-  __typename?: 'Mutation';
-  createContest: {
-    __typename?: 'Contest';
-    id: string;
-    title: string;
-    level: Array<StudentLevel>;
-    status: ContestStatus;
-    startTime: any;
-    published: boolean;
-    created: any;
-    updated: any;
-  };
-};
+
+export type CreateContestMutation = { __typename?: 'Mutation', createContest: { __typename?: 'Contest', id: string, title: string, level: Array<StudentLevel>, status: ContestStatus, startTime: any, published: boolean, created: any, updated: any } };
 
 export type DeleteContestMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
-export type DeleteContestMutation = {
-  __typename?: 'Mutation';
-  deleteContestById?: { __typename?: 'Contest'; id: string } | null;
-};
+
+export type DeleteContestMutation = { __typename?: 'Mutation', deleteContestById?: { __typename?: 'Contest', id: string } | null };
 
 export type UpdateContestMutationVariables = Exact<{
   id: Scalars['String'];
   input: UpdateContestDto;
 }>;
 
-export type UpdateContestMutation = {
-  __typename?: 'Mutation';
-  updateContest: {
-    __typename?: 'Contest';
-    id: string;
-    title: string;
-    duration: number;
-    published: boolean;
-    level: Array<StudentLevel>;
-    created: any;
-    updated: any;
-    status: ContestStatus;
-    authorId: number;
-    startTime: any;
-    easyQuestionCount: number;
-    mediumQuestionCount: number;
-    hardQuestionCount: number;
-    participants?: Array<string> | null;
-  };
-};
+
+export type UpdateContestMutation = { __typename?: 'Mutation', updateContest: { __typename?: 'Contest', id: string, title: string, duration: number, published: boolean, level: Array<StudentLevel>, created: any, updated: any, status: ContestStatus, authorId: number, startTime: any, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, participants?: Array<string> | null } };
 
 export type FindByIdForExamQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
-export type FindByIdForExamQuery = {
-  __typename?: 'Query';
-  findOneContestById?: {
-    __typename?: 'Contest';
-    id: string;
-    type: ContestType;
-    title: string;
-    level: Array<StudentLevel>;
-    duration: number;
-    published: boolean;
-    countries?: Array<string> | null;
-    created: any;
-    updated: any;
-    status: ContestStatus;
-    authorId: number;
-    startTime: any;
-    participants?: Array<string> | null;
-    easyQuestionCount: number;
-    mediumQuestionCount: number;
-    hardQuestionCount: number;
-    maxParticipants?: number | null;
-    tags?: Array<{ __typename?: 'Tag'; title: string }> | null;
-    questions?: Array<{
-      __typename?: 'Question';
-      id: string;
-      title: string;
-      options: Array<string>;
-      type: QuestionType;
-    }> | null;
-  } | null;
-};
+
+export type FindByIdForExamQuery = { __typename?: 'Query', findOneContestById?: { __typename?: 'Contest', id: string, type: ContestType, title: string, level: Array<StudentLevel>, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, authorId: number, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, tags?: Array<{ __typename?: 'Tag', title: string }> | null, questions?: Array<{ __typename?: 'Question', id: string, title: string, options: Array<string>, type: QuestionType }> | null } | null };
 
 export type FindByIdForReviewQueryVariables = Exact<{
   id: Scalars['String'];
   answerId?: InputMaybe<Scalars['String']>;
 }>;
 
-export type FindByIdForReviewQuery = {
-  __typename?: 'Query';
-  findOneContestById?: {
-    __typename?: 'Contest';
-    id: string;
-    type: ContestType;
-    title: string;
-    level: Array<StudentLevel>;
-    duration: number;
-    published: boolean;
-    countries?: Array<string> | null;
-    created: any;
-    updated: any;
-    status: ContestStatus;
-    authorId: number;
-    startTime: any;
-    participants?: Array<string> | null;
-    easyQuestionCount: number;
-    mediumQuestionCount: number;
-    hardQuestionCount: number;
-    maxParticipants?: number | null;
-    tags?: Array<{ __typename?: 'Tag'; title: string }> | null;
-    questions?: Array<{
-      __typename?: 'Question';
-      id: string;
-      title: string;
-      options: Array<string>;
-      type: QuestionType;
-      correctAnswer?: string | null;
-      usedCount?: number | null;
-      lesson: string;
-      tags?: Array<{ __typename?: 'Tag'; title: string }> | null;
-    }> | null;
-    answers: Array<{
-      __typename?: 'Answer';
-      id: string;
-      contestId: string;
-      userId: string;
-      annulled: boolean;
-      annulledReason: string;
-      created: any;
-      updated: any;
-      answers: Array<{
-        __typename?: 'SelectedAnswerObject';
-        questionId: string;
-        option: string;
-        options: Array<string>;
-      }>;
-    }>;
-  } | null;
-};
+
+export type FindByIdForReviewQuery = { __typename?: 'Query', findOneContestById?: { __typename?: 'Contest', id: string, type: ContestType, title: string, level: Array<StudentLevel>, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, authorId: number, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, tags?: Array<{ __typename?: 'Tag', title: string }> | null, questions?: Array<{ __typename?: 'Question', id: string, title: string, options: Array<string>, type: QuestionType, correctAnswer?: string | null, usedCount?: number | null, lesson: string, tags?: Array<{ __typename?: 'Tag', title: string }> | null }> | null, answers: Array<{ __typename?: 'Answer', id: string, contestId: string, userId: string, annulled: boolean, annulledReason: string, created: any, updated: any, answers: Array<{ __typename?: 'SelectedAnswerObject', questionId: string, option: string, options: Array<string> }> }> } | null };
 
 export type PaginateContestsQueryVariables = Exact<{
   params: ContestPaginationDto;
 }>;
 
-export type PaginateContestsQuery = {
-  __typename?: 'Query';
-  paginateContest?: {
-    __typename?: 'ContestPaginationResponse';
-    total: number;
-    data?: Array<{
-      __typename?: 'Contest';
-      id: string;
-      type: ContestType;
-      title: string;
-      level: Array<StudentLevel>;
-      duration: number;
-      published: boolean;
-      countries?: Array<string> | null;
-      created: any;
-      updated: any;
-      status: ContestStatus;
-      authorId: number;
-      startTime: any;
-      participants?: Array<string> | null;
-      easyQuestionCount: number;
-      mediumQuestionCount: number;
-      hardQuestionCount: number;
-      maxParticipants?: number | null;
-      tags?: Array<{ __typename?: 'Tag'; title: string }> | null;
-    }> | null;
-  } | null;
-};
+
+export type PaginateContestsQuery = { __typename?: 'Query', paginateContest?: { __typename?: 'ContestPaginationResponse', total: number, data?: Array<{ __typename?: 'Contest', id: string, type: ContestType, title: string, level: Array<StudentLevel>, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, authorId: number, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, tags?: Array<{ __typename?: 'Tag', title: string }> | null }> | null } | null };
 
 export type CreateQuestionMutationVariables = Exact<{
   input: CreateQuestionDto;
 }>;
 
-export type CreateQuestionMutation = {
-  __typename?: 'Mutation';
-  createQuestion: {
-    __typename?: 'Question';
-    id: string;
-    type: QuestionType;
-    title: string;
-    options: Array<string>;
-    authorId: number;
-    usedCount?: number | null;
-    published: boolean;
-    created: any;
-    updated: any;
-  };
-};
+
+export type CreateQuestionMutation = { __typename?: 'Mutation', createQuestion: { __typename?: 'Question', id: string, type: QuestionType, title: string, options: Array<string>, authorId: number, usedCount?: number | null, published: boolean, created: any, updated: any } };
 
 export type DeleteQuestionMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
-export type DeleteQuestionMutation = {
-  __typename?: 'Mutation';
-  deleteQuestionById?: { __typename?: 'Question'; id: string } | null;
-};
+
+export type DeleteQuestionMutation = { __typename?: 'Mutation', deleteQuestionById?: { __typename?: 'Question', id: string } | null };
 
 export type UpdateQuestionMutationVariables = Exact<{
   id: Scalars['String'];
   input: UpdateQuestionDto;
 }>;
 
-export type UpdateQuestionMutation = {
-  __typename?: 'Mutation';
-  updateQuestion: {
-    __typename?: 'Question';
-    id: string;
-    type: QuestionType;
-    title: string;
-    options: Array<string>;
-    authorId: number;
-    usedCount?: number | null;
-    published: boolean;
-    created: any;
-    updated: any;
-  };
-};
+
+export type UpdateQuestionMutation = { __typename?: 'Mutation', updateQuestion: { __typename?: 'Question', id: string, type: QuestionType, title: string, options: Array<string>, authorId: number, usedCount?: number | null, published: boolean, created: any, updated: any } };
 
 export type PaginateQuestionsQueryVariables = Exact<{
   params: QuestionPaginationDto;
 }>;
 
-export type PaginateQuestionsQuery = {
-  __typename?: 'Query';
-  paginateQuestions?: {
-    __typename?: 'QuestionPaginationResponse';
-    total: number;
-    data?: Array<{
-      __typename?: 'Question';
-      id: string;
-      title: string;
-      type: QuestionType;
-      options: Array<string>;
-      lesson: string;
-      correctAnswer?: string | null;
-      created: any;
-      updated: any;
-      authorId: number;
-      usedCount?: number | null;
-      tags?: Array<{ __typename?: 'Tag'; title: string }> | null;
-    }> | null;
-  } | null;
-};
+
+export type PaginateQuestionsQuery = { __typename?: 'Query', paginateQuestions?: { __typename?: 'QuestionPaginationResponse', total: number, data?: Array<{ __typename?: 'Question', id: string, title: string, type: QuestionType, options: Array<string>, lesson: string, correctAnswer?: string | null, created: any, updated: any, authorId: number, usedCount?: number | null, tags?: Array<{ __typename?: 'Tag', title: string }> | null }> | null } | null };
 
 export type FindTagsQueryVariables = Exact<{
   title: Scalars['String'];
 }>;
 
-export type FindTagsQuery = {
-  __typename?: 'Query';
-  findTags?: Array<{ __typename?: 'Tag'; title: string }> | null;
-};
+
+export type FindTagsQuery = { __typename?: 'Query', findTags?: Array<{ __typename?: 'Tag', title: string }> | null };
 
 export type UpdateUserMutationVariables = Exact<{
   id: Scalars['String'];
   input: UpdateUserDto;
 }>;
 
-export type UpdateUserMutation = {
-  __typename?: 'Mutation';
-  updateUser: { __typename?: 'User'; id: string; email: string };
-};
 
-export type GetAuthUserQueryVariables = Exact<{ [key: string]: never }>;
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, email: string } };
 
-export type GetAuthUserQuery = {
-  __typename?: 'Query';
-  getAuthUser: {
-    __typename?: 'User';
-    id: string;
-    key: number;
-    email: string;
-    firstName?: string | null;
-    lastName?: string | null;
-    isActive: boolean;
-    emailConfirmed: boolean;
-    image?: string | null;
-    role: { __typename?: 'Role'; title: RoleTitle };
-  };
-};
+export type UpdateStudentProfileMutationVariables = Exact<{
+  id: Scalars['String'];
+  input: UpdateStudentDto;
+}>;
+
+
+export type UpdateStudentProfileMutation = { __typename?: 'Mutation', updateStudentProfile: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth: any, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } };
+
+export type FindTeacherQueryVariables = Exact<{
+  name?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type FindTeacherQuery = { __typename?: 'Query', findTeacher: Array<{ __typename?: 'User', id: string, key: number, email: string, isActive: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student' } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null }> };
+
+export type GetAuthUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth: any, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } };
+
 
 export const CreateAnswerDocument = gql`
-  mutation CreateAnswer($data: CreateAnswerDto!) {
-    createAnswer(data: $data) {
-      id
-      created
-      updated
-    }
+    mutation CreateAnswer($data: CreateAnswerDto!) {
+  createAnswer(data: $data) {
+    id
+    created
+    updated
   }
-`;
-export type CreateAnswerMutationFn = Apollo.MutationFunction<
-  CreateAnswerMutation,
-  CreateAnswerMutationVariables
->;
+}
+    `;
+export type CreateAnswerMutationFn = Apollo.MutationFunction<CreateAnswerMutation, CreateAnswerMutationVariables>;
 
 /**
  * __useCreateAnswerMutation__
@@ -1056,40 +904,23 @@ export type CreateAnswerMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useCreateAnswerMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateAnswerMutation,
-    CreateAnswerMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    CreateAnswerMutation,
-    CreateAnswerMutationVariables
-  >(CreateAnswerDocument, options);
-}
-export type CreateAnswerMutationHookResult = ReturnType<
-  typeof useCreateAnswerMutation
->;
-export type CreateAnswerMutationResult =
-  Apollo.MutationResult<CreateAnswerMutation>;
-export type CreateAnswerMutationOptions = Apollo.BaseMutationOptions<
-  CreateAnswerMutation,
-  CreateAnswerMutationVariables
->;
+export function useCreateAnswerMutation(baseOptions?: Apollo.MutationHookOptions<CreateAnswerMutation, CreateAnswerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateAnswerMutation, CreateAnswerMutationVariables>(CreateAnswerDocument, options);
+      }
+export type CreateAnswerMutationHookResult = ReturnType<typeof useCreateAnswerMutation>;
+export type CreateAnswerMutationResult = Apollo.MutationResult<CreateAnswerMutation>;
+export type CreateAnswerMutationOptions = Apollo.BaseMutationOptions<CreateAnswerMutation, CreateAnswerMutationVariables>;
 export const UpdateAnswerDocument = gql`
-  mutation UpdateAnswer($id: String!, $data: UpdateAnswerDto!) {
-    updateAnswer(id: $id, data: $data) {
-      id
-      created
-      updated
-    }
+    mutation UpdateAnswer($id: String!, $data: UpdateAnswerDto!) {
+  updateAnswer(id: $id, data: $data) {
+    id
+    created
+    updated
   }
-`;
-export type UpdateAnswerMutationFn = Apollo.MutationFunction<
-  UpdateAnswerMutation,
-  UpdateAnswerMutationVariables
->;
+}
+    `;
+export type UpdateAnswerMutationFn = Apollo.MutationFunction<UpdateAnswerMutation, UpdateAnswerMutationVariables>;
 
 /**
  * __useUpdateAnswerMutation__
@@ -1109,43 +940,29 @@ export type UpdateAnswerMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useUpdateAnswerMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateAnswerMutation,
-    UpdateAnswerMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateAnswerMutation,
-    UpdateAnswerMutationVariables
-  >(UpdateAnswerDocument, options);
-}
-export type UpdateAnswerMutationHookResult = ReturnType<
-  typeof useUpdateAnswerMutation
->;
-export type UpdateAnswerMutationResult =
-  Apollo.MutationResult<UpdateAnswerMutation>;
-export type UpdateAnswerMutationOptions = Apollo.BaseMutationOptions<
-  UpdateAnswerMutation,
-  UpdateAnswerMutationVariables
->;
-export const FindOneAnswerByIdDocument = gql`
-  query FindOneAnswerById($id: String!) {
-    findOneAnswerById(id: $id) {
-      userId
-      answers {
-        questionId
-        questionIndex
-        optionIndex
+export function useUpdateAnswerMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAnswerMutation, UpdateAnswerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateAnswerMutation, UpdateAnswerMutationVariables>(UpdateAnswerDocument, options);
       }
-      annulled
-      annulledReason
-      created
-      updated
+export type UpdateAnswerMutationHookResult = ReturnType<typeof useUpdateAnswerMutation>;
+export type UpdateAnswerMutationResult = Apollo.MutationResult<UpdateAnswerMutation>;
+export type UpdateAnswerMutationOptions = Apollo.BaseMutationOptions<UpdateAnswerMutation, UpdateAnswerMutationVariables>;
+export const FindOneAnswerByIdDocument = gql`
+    query FindOneAnswerById($id: String!) {
+  findOneAnswerById(id: $id) {
+    userId
+    answers {
+      questionId
+      questionIndex
+      optionIndex
     }
+    annulled
+    annulledReason
+    created
+    updated
   }
-`;
+}
+    `;
 
 /**
  * __useFindOneAnswerByIdQuery__
@@ -1163,51 +980,25 @@ export const FindOneAnswerByIdDocument = gql`
  *   },
  * });
  */
-export function useFindOneAnswerByIdQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    FindOneAnswerByIdQuery,
-    FindOneAnswerByIdQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    FindOneAnswerByIdQuery,
-    FindOneAnswerByIdQueryVariables
-  >(FindOneAnswerByIdDocument, options);
-}
-export function useFindOneAnswerByIdLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    FindOneAnswerByIdQuery,
-    FindOneAnswerByIdQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    FindOneAnswerByIdQuery,
-    FindOneAnswerByIdQueryVariables
-  >(FindOneAnswerByIdDocument, options);
-}
-export type FindOneAnswerByIdQueryHookResult = ReturnType<
-  typeof useFindOneAnswerByIdQuery
->;
-export type FindOneAnswerByIdLazyQueryHookResult = ReturnType<
-  typeof useFindOneAnswerByIdLazyQuery
->;
-export type FindOneAnswerByIdQueryResult = Apollo.QueryResult<
-  FindOneAnswerByIdQuery,
-  FindOneAnswerByIdQueryVariables
->;
+export function useFindOneAnswerByIdQuery(baseOptions: Apollo.QueryHookOptions<FindOneAnswerByIdQuery, FindOneAnswerByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindOneAnswerByIdQuery, FindOneAnswerByIdQueryVariables>(FindOneAnswerByIdDocument, options);
+      }
+export function useFindOneAnswerByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOneAnswerByIdQuery, FindOneAnswerByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindOneAnswerByIdQuery, FindOneAnswerByIdQueryVariables>(FindOneAnswerByIdDocument, options);
+        }
+export type FindOneAnswerByIdQueryHookResult = ReturnType<typeof useFindOneAnswerByIdQuery>;
+export type FindOneAnswerByIdLazyQueryHookResult = ReturnType<typeof useFindOneAnswerByIdLazyQuery>;
+export type FindOneAnswerByIdQueryResult = Apollo.QueryResult<FindOneAnswerByIdQuery, FindOneAnswerByIdQueryVariables>;
 export const ActivateEmailTokenDocument = gql`
-  mutation ActivateEmailToken($input: IDDto!) {
-    activateEmailToken(input: $input) {
-      id
-    }
+    mutation ActivateEmailToken($input: IDDto!) {
+  activateEmailToken(input: $input) {
+    id
   }
-`;
-export type ActivateEmailTokenMutationFn = Apollo.MutationFunction<
-  ActivateEmailTokenMutation,
-  ActivateEmailTokenMutationVariables
->;
+}
+    `;
+export type ActivateEmailTokenMutationFn = Apollo.MutationFunction<ActivateEmailTokenMutation, ActivateEmailTokenMutationVariables>;
 
 /**
  * __useActivateEmailTokenMutation__
@@ -1226,36 +1017,19 @@ export type ActivateEmailTokenMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useActivateEmailTokenMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    ActivateEmailTokenMutation,
-    ActivateEmailTokenMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    ActivateEmailTokenMutation,
-    ActivateEmailTokenMutationVariables
-  >(ActivateEmailTokenDocument, options);
-}
-export type ActivateEmailTokenMutationHookResult = ReturnType<
-  typeof useActivateEmailTokenMutation
->;
-export type ActivateEmailTokenMutationResult =
-  Apollo.MutationResult<ActivateEmailTokenMutation>;
-export type ActivateEmailTokenMutationOptions = Apollo.BaseMutationOptions<
-  ActivateEmailTokenMutation,
-  ActivateEmailTokenMutationVariables
->;
+export function useActivateEmailTokenMutation(baseOptions?: Apollo.MutationHookOptions<ActivateEmailTokenMutation, ActivateEmailTokenMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ActivateEmailTokenMutation, ActivateEmailTokenMutationVariables>(ActivateEmailTokenDocument, options);
+      }
+export type ActivateEmailTokenMutationHookResult = ReturnType<typeof useActivateEmailTokenMutation>;
+export type ActivateEmailTokenMutationResult = Apollo.MutationResult<ActivateEmailTokenMutation>;
+export type ActivateEmailTokenMutationOptions = Apollo.BaseMutationOptions<ActivateEmailTokenMutation, ActivateEmailTokenMutationVariables>;
 export const ResendEmailActivationCodeDocument = gql`
-  mutation ResendEmailActivationCode($input: EmailDto!) {
-    resendEmailActivationCode(input: $input)
-  }
-`;
-export type ResendEmailActivationCodeMutationFn = Apollo.MutationFunction<
-  ResendEmailActivationCodeMutation,
-  ResendEmailActivationCodeMutationVariables
->;
+    mutation ResendEmailActivationCode($input: EmailDto!) {
+  resendEmailActivationCode(input: $input)
+}
+    `;
+export type ResendEmailActivationCodeMutationFn = Apollo.MutationFunction<ResendEmailActivationCodeMutation, ResendEmailActivationCodeMutationVariables>;
 
 /**
  * __useResendEmailActivationCodeMutation__
@@ -1274,37 +1048,19 @@ export type ResendEmailActivationCodeMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useResendEmailActivationCodeMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    ResendEmailActivationCodeMutation,
-    ResendEmailActivationCodeMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    ResendEmailActivationCodeMutation,
-    ResendEmailActivationCodeMutationVariables
-  >(ResendEmailActivationCodeDocument, options);
-}
-export type ResendEmailActivationCodeMutationHookResult = ReturnType<
-  typeof useResendEmailActivationCodeMutation
->;
-export type ResendEmailActivationCodeMutationResult =
-  Apollo.MutationResult<ResendEmailActivationCodeMutation>;
-export type ResendEmailActivationCodeMutationOptions =
-  Apollo.BaseMutationOptions<
-    ResendEmailActivationCodeMutation,
-    ResendEmailActivationCodeMutationVariables
-  >;
+export function useResendEmailActivationCodeMutation(baseOptions?: Apollo.MutationHookOptions<ResendEmailActivationCodeMutation, ResendEmailActivationCodeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ResendEmailActivationCodeMutation, ResendEmailActivationCodeMutationVariables>(ResendEmailActivationCodeDocument, options);
+      }
+export type ResendEmailActivationCodeMutationHookResult = ReturnType<typeof useResendEmailActivationCodeMutation>;
+export type ResendEmailActivationCodeMutationResult = Apollo.MutationResult<ResendEmailActivationCodeMutation>;
+export type ResendEmailActivationCodeMutationOptions = Apollo.BaseMutationOptions<ResendEmailActivationCodeMutation, ResendEmailActivationCodeMutationVariables>;
 export const EmailTokenToRecoverPasswordDocument = gql`
-  mutation EmailTokenToRecoverPassword($input: EmailDto!) {
-    emailTokenToRecoverPassword(input: $input)
-  }
-`;
-export type EmailTokenToRecoverPasswordMutationFn = Apollo.MutationFunction<
-  EmailTokenToRecoverPasswordMutation,
-  EmailTokenToRecoverPasswordMutationVariables
->;
+    mutation EmailTokenToRecoverPassword($input: EmailDto!) {
+  emailTokenToRecoverPassword(input: $input)
+}
+    `;
+export type EmailTokenToRecoverPasswordMutationFn = Apollo.MutationFunction<EmailTokenToRecoverPasswordMutation, EmailTokenToRecoverPasswordMutationVariables>;
 
 /**
  * __useEmailTokenToRecoverPasswordMutation__
@@ -1323,41 +1079,23 @@ export type EmailTokenToRecoverPasswordMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useEmailTokenToRecoverPasswordMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    EmailTokenToRecoverPasswordMutation,
-    EmailTokenToRecoverPasswordMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    EmailTokenToRecoverPasswordMutation,
-    EmailTokenToRecoverPasswordMutationVariables
-  >(EmailTokenToRecoverPasswordDocument, options);
-}
-export type EmailTokenToRecoverPasswordMutationHookResult = ReturnType<
-  typeof useEmailTokenToRecoverPasswordMutation
->;
-export type EmailTokenToRecoverPasswordMutationResult =
-  Apollo.MutationResult<EmailTokenToRecoverPasswordMutation>;
-export type EmailTokenToRecoverPasswordMutationOptions =
-  Apollo.BaseMutationOptions<
-    EmailTokenToRecoverPasswordMutation,
-    EmailTokenToRecoverPasswordMutationVariables
-  >;
+export function useEmailTokenToRecoverPasswordMutation(baseOptions?: Apollo.MutationHookOptions<EmailTokenToRecoverPasswordMutation, EmailTokenToRecoverPasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EmailTokenToRecoverPasswordMutation, EmailTokenToRecoverPasswordMutationVariables>(EmailTokenToRecoverPasswordDocument, options);
+      }
+export type EmailTokenToRecoverPasswordMutationHookResult = ReturnType<typeof useEmailTokenToRecoverPasswordMutation>;
+export type EmailTokenToRecoverPasswordMutationResult = Apollo.MutationResult<EmailTokenToRecoverPasswordMutation>;
+export type EmailTokenToRecoverPasswordMutationOptions = Apollo.BaseMutationOptions<EmailTokenToRecoverPasswordMutation, EmailTokenToRecoverPasswordMutationVariables>;
 export const SigningDocument = gql`
-  mutation Signing($input: SigningDto!) {
-    signing(input: $input) {
-      accessToken
-      refreshToken
-      tokenType
-    }
+    mutation Signing($input: SigningDto!) {
+  signing(input: $input) {
+    accessToken
+    refreshToken
+    tokenType
   }
-`;
-export type SigningMutationFn = Apollo.MutationFunction<
-  SigningMutation,
-  SigningMutationVariables
->;
+}
+    `;
+export type SigningMutationFn = Apollo.MutationFunction<SigningMutation, SigningMutationVariables>;
 
 /**
  * __useSigningMutation__
@@ -1376,33 +1114,19 @@ export type SigningMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useSigningMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    SigningMutation,
-    SigningMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<SigningMutation, SigningMutationVariables>(
-    SigningDocument,
-    options
-  );
-}
+export function useSigningMutation(baseOptions?: Apollo.MutationHookOptions<SigningMutation, SigningMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SigningMutation, SigningMutationVariables>(SigningDocument, options);
+      }
 export type SigningMutationHookResult = ReturnType<typeof useSigningMutation>;
 export type SigningMutationResult = Apollo.MutationResult<SigningMutation>;
-export type SigningMutationOptions = Apollo.BaseMutationOptions<
-  SigningMutation,
-  SigningMutationVariables
->;
+export type SigningMutationOptions = Apollo.BaseMutationOptions<SigningMutation, SigningMutationVariables>;
 export const SignUpDocument = gql`
-  mutation SignUp($input: SignUpDto!) {
-    signup(input: $input)
-  }
-`;
-export type SignUpMutationFn = Apollo.MutationFunction<
-  SignUpMutation,
-  SignUpMutationVariables
->;
+    mutation SignUp($input: SignUpDto!) {
+  signup(input: $input)
+}
+    `;
+export type SignUpMutationFn = Apollo.MutationFunction<SignUpMutation, SignUpMutationVariables>;
 
 /**
  * __useSignUpMutation__
@@ -1421,37 +1145,26 @@ export type SignUpMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useSignUpMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    SignUpMutation,
-    SignUpMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<SignUpMutation, SignUpMutationVariables>(
-    SignUpDocument,
-    options
-  );
-}
+export function useSignUpMutation(baseOptions?: Apollo.MutationHookOptions<SignUpMutation, SignUpMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SignUpMutation, SignUpMutationVariables>(SignUpDocument, options);
+      }
 export type SignUpMutationHookResult = ReturnType<typeof useSignUpMutation>;
 export type SignUpMutationResult = Apollo.MutationResult<SignUpMutation>;
-export type SignUpMutationOptions = Apollo.BaseMutationOptions<
-  SignUpMutation,
-  SignUpMutationVariables
->;
+export type SignUpMutationOptions = Apollo.BaseMutationOptions<SignUpMutation, SignUpMutationVariables>;
 export const FindEmailTokenDocument = gql`
-  query FindEmailToken($token: String!) {
-    findEmailToken(token: $token) {
+    query FindEmailToken($token: String!) {
+  findEmailToken(token: $token) {
+    id
+    created
+    updated
+    user {
       id
-      created
-      updated
-      user {
-        id
-        email
-      }
+      email
     }
   }
-`;
+}
+    `;
 
 /**
  * __useFindEmailTokenQuery__
@@ -1469,58 +1182,32 @@ export const FindEmailTokenDocument = gql`
  *   },
  * });
  */
-export function useFindEmailTokenQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    FindEmailTokenQuery,
-    FindEmailTokenQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<FindEmailTokenQuery, FindEmailTokenQueryVariables>(
-    FindEmailTokenDocument,
-    options
-  );
-}
-export function useFindEmailTokenLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    FindEmailTokenQuery,
-    FindEmailTokenQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<FindEmailTokenQuery, FindEmailTokenQueryVariables>(
-    FindEmailTokenDocument,
-    options
-  );
-}
-export type FindEmailTokenQueryHookResult = ReturnType<
-  typeof useFindEmailTokenQuery
->;
-export type FindEmailTokenLazyQueryHookResult = ReturnType<
-  typeof useFindEmailTokenLazyQuery
->;
-export type FindEmailTokenQueryResult = Apollo.QueryResult<
-  FindEmailTokenQuery,
-  FindEmailTokenQueryVariables
->;
+export function useFindEmailTokenQuery(baseOptions: Apollo.QueryHookOptions<FindEmailTokenQuery, FindEmailTokenQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindEmailTokenQuery, FindEmailTokenQueryVariables>(FindEmailTokenDocument, options);
+      }
+export function useFindEmailTokenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindEmailTokenQuery, FindEmailTokenQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindEmailTokenQuery, FindEmailTokenQueryVariables>(FindEmailTokenDocument, options);
+        }
+export type FindEmailTokenQueryHookResult = ReturnType<typeof useFindEmailTokenQuery>;
+export type FindEmailTokenLazyQueryHookResult = ReturnType<typeof useFindEmailTokenLazyQuery>;
+export type FindEmailTokenQueryResult = Apollo.QueryResult<FindEmailTokenQuery, FindEmailTokenQueryVariables>;
 export const CreateContestDocument = gql`
-  mutation CreateContest($input: CreateContestDto!) {
-    createContest(input: $input) {
-      id
-      title
-      level
-      status
-      startTime
-      published
-      created
-      updated
-    }
+    mutation CreateContest($input: CreateContestDto!) {
+  createContest(input: $input) {
+    id
+    title
+    level
+    status
+    startTime
+    published
+    created
+    updated
   }
-`;
-export type CreateContestMutationFn = Apollo.MutationFunction<
-  CreateContestMutation,
-  CreateContestMutationVariables
->;
+}
+    `;
+export type CreateContestMutationFn = Apollo.MutationFunction<CreateContestMutation, CreateContestMutationVariables>;
 
 /**
  * __useCreateContestMutation__
@@ -1539,38 +1226,21 @@ export type CreateContestMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useCreateContestMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateContestMutation,
-    CreateContestMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    CreateContestMutation,
-    CreateContestMutationVariables
-  >(CreateContestDocument, options);
-}
-export type CreateContestMutationHookResult = ReturnType<
-  typeof useCreateContestMutation
->;
-export type CreateContestMutationResult =
-  Apollo.MutationResult<CreateContestMutation>;
-export type CreateContestMutationOptions = Apollo.BaseMutationOptions<
-  CreateContestMutation,
-  CreateContestMutationVariables
->;
+export function useCreateContestMutation(baseOptions?: Apollo.MutationHookOptions<CreateContestMutation, CreateContestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateContestMutation, CreateContestMutationVariables>(CreateContestDocument, options);
+      }
+export type CreateContestMutationHookResult = ReturnType<typeof useCreateContestMutation>;
+export type CreateContestMutationResult = Apollo.MutationResult<CreateContestMutation>;
+export type CreateContestMutationOptions = Apollo.BaseMutationOptions<CreateContestMutation, CreateContestMutationVariables>;
 export const DeleteContestDocument = gql`
-  mutation DeleteContest($id: String!) {
-    deleteContestById(id: $id) {
-      id
-    }
+    mutation DeleteContest($id: String!) {
+  deleteContestById(id: $id) {
+    id
   }
-`;
-export type DeleteContestMutationFn = Apollo.MutationFunction<
-  DeleteContestMutation,
-  DeleteContestMutationVariables
->;
+}
+    `;
+export type DeleteContestMutationFn = Apollo.MutationFunction<DeleteContestMutation, DeleteContestMutationVariables>;
 
 /**
  * __useDeleteContestMutation__
@@ -1589,51 +1259,34 @@ export type DeleteContestMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useDeleteContestMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    DeleteContestMutation,
-    DeleteContestMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    DeleteContestMutation,
-    DeleteContestMutationVariables
-  >(DeleteContestDocument, options);
-}
-export type DeleteContestMutationHookResult = ReturnType<
-  typeof useDeleteContestMutation
->;
-export type DeleteContestMutationResult =
-  Apollo.MutationResult<DeleteContestMutation>;
-export type DeleteContestMutationOptions = Apollo.BaseMutationOptions<
-  DeleteContestMutation,
-  DeleteContestMutationVariables
->;
+export function useDeleteContestMutation(baseOptions?: Apollo.MutationHookOptions<DeleteContestMutation, DeleteContestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteContestMutation, DeleteContestMutationVariables>(DeleteContestDocument, options);
+      }
+export type DeleteContestMutationHookResult = ReturnType<typeof useDeleteContestMutation>;
+export type DeleteContestMutationResult = Apollo.MutationResult<DeleteContestMutation>;
+export type DeleteContestMutationOptions = Apollo.BaseMutationOptions<DeleteContestMutation, DeleteContestMutationVariables>;
 export const UpdateContestDocument = gql`
-  mutation UpdateContest($id: String!, $input: UpdateContestDto!) {
-    updateContest(id: $id, input: $input) {
-      id
-      title
-      duration
-      published
-      level
-      created
-      updated
-      status
-      authorId
-      startTime
-      easyQuestionCount
-      mediumQuestionCount
-      hardQuestionCount
-      participants
-    }
+    mutation UpdateContest($id: String!, $input: UpdateContestDto!) {
+  updateContest(id: $id, input: $input) {
+    id
+    title
+    duration
+    published
+    level
+    created
+    updated
+    status
+    authorId
+    startTime
+    easyQuestionCount
+    mediumQuestionCount
+    hardQuestionCount
+    participants
   }
-`;
-export type UpdateContestMutationFn = Apollo.MutationFunction<
-  UpdateContestMutation,
-  UpdateContestMutationVariables
->;
+}
+    `;
+export type UpdateContestMutationFn = Apollo.MutationFunction<UpdateContestMutation, UpdateContestMutationVariables>;
 
 /**
  * __useUpdateContestMutation__
@@ -1653,59 +1306,45 @@ export type UpdateContestMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useUpdateContestMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateContestMutation,
-    UpdateContestMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateContestMutation,
-    UpdateContestMutationVariables
-  >(UpdateContestDocument, options);
-}
-export type UpdateContestMutationHookResult = ReturnType<
-  typeof useUpdateContestMutation
->;
-export type UpdateContestMutationResult =
-  Apollo.MutationResult<UpdateContestMutation>;
-export type UpdateContestMutationOptions = Apollo.BaseMutationOptions<
-  UpdateContestMutation,
-  UpdateContestMutationVariables
->;
+export function useUpdateContestMutation(baseOptions?: Apollo.MutationHookOptions<UpdateContestMutation, UpdateContestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateContestMutation, UpdateContestMutationVariables>(UpdateContestDocument, options);
+      }
+export type UpdateContestMutationHookResult = ReturnType<typeof useUpdateContestMutation>;
+export type UpdateContestMutationResult = Apollo.MutationResult<UpdateContestMutation>;
+export type UpdateContestMutationOptions = Apollo.BaseMutationOptions<UpdateContestMutation, UpdateContestMutationVariables>;
 export const FindByIdForExamDocument = gql`
-  query FindByIdForExam($id: String!) {
-    findOneContestById(id: $id) {
-      id
-      type
-      tags {
-        title
-      }
-      questions {
-        id
-        title
-        options
-        type
-      }
+    query FindByIdForExam($id: String!) {
+  findOneContestById(id: $id) {
+    id
+    type
+    tags {
       title
-      level
-      duration
-      published
-      countries
-      created
-      updated
-      status
-      authorId
-      startTime
-      participants
-      easyQuestionCount
-      mediumQuestionCount
-      hardQuestionCount
-      maxParticipants
     }
+    questions {
+      id
+      title
+      options
+      type
+    }
+    title
+    level
+    duration
+    published
+    countries
+    created
+    updated
+    status
+    authorId
+    startTime
+    participants
+    easyQuestionCount
+    mediumQuestionCount
+    hardQuestionCount
+    maxParticipants
   }
-`;
+}
+    `;
 
 /**
  * __useFindByIdForExamQuery__
@@ -1723,92 +1362,69 @@ export const FindByIdForExamDocument = gql`
  *   },
  * });
  */
-export function useFindByIdForExamQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    FindByIdForExamQuery,
-    FindByIdForExamQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<FindByIdForExamQuery, FindByIdForExamQueryVariables>(
-    FindByIdForExamDocument,
-    options
-  );
-}
-export function useFindByIdForExamLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    FindByIdForExamQuery,
-    FindByIdForExamQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    FindByIdForExamQuery,
-    FindByIdForExamQueryVariables
-  >(FindByIdForExamDocument, options);
-}
-export type FindByIdForExamQueryHookResult = ReturnType<
-  typeof useFindByIdForExamQuery
->;
-export type FindByIdForExamLazyQueryHookResult = ReturnType<
-  typeof useFindByIdForExamLazyQuery
->;
-export type FindByIdForExamQueryResult = Apollo.QueryResult<
-  FindByIdForExamQuery,
-  FindByIdForExamQueryVariables
->;
+export function useFindByIdForExamQuery(baseOptions: Apollo.QueryHookOptions<FindByIdForExamQuery, FindByIdForExamQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindByIdForExamQuery, FindByIdForExamQueryVariables>(FindByIdForExamDocument, options);
+      }
+export function useFindByIdForExamLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindByIdForExamQuery, FindByIdForExamQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindByIdForExamQuery, FindByIdForExamQueryVariables>(FindByIdForExamDocument, options);
+        }
+export type FindByIdForExamQueryHookResult = ReturnType<typeof useFindByIdForExamQuery>;
+export type FindByIdForExamLazyQueryHookResult = ReturnType<typeof useFindByIdForExamLazyQuery>;
+export type FindByIdForExamQueryResult = Apollo.QueryResult<FindByIdForExamQuery, FindByIdForExamQueryVariables>;
 export const FindByIdForReviewDocument = gql`
-  query FindByIdForReview($id: String!, $answerId: String) {
-    findOneContestById(id: $id, answerId: $answerId) {
+    query FindByIdForReview($id: String!, $answerId: String) {
+  findOneContestById(id: $id, answerId: $answerId) {
+    id
+    type
+    tags {
+      title
+    }
+    questions {
       id
+      title
+      options
       type
       tags {
         title
       }
-      questions {
-        id
-        title
-        options
-        type
-        tags {
-          title
-        }
-        correctAnswer
-        usedCount
-        lesson
-      }
+      correctAnswer
+      usedCount
+      lesson
+    }
+    answers {
+      id
+      contestId
+      userId
       answers {
-        id
-        contestId
-        userId
-        answers {
-          questionId
-          option
-          options
-        }
-        annulled
-        annulledReason
-        created
-        updated
+        questionId
+        option
+        options
       }
-      title
-      level
-      duration
-      published
-      countries
+      annulled
+      annulledReason
       created
       updated
-      status
-      authorId
-      startTime
-      participants
-      easyQuestionCount
-      mediumQuestionCount
-      hardQuestionCount
-      maxParticipants
     }
+    title
+    level
+    duration
+    published
+    countries
+    created
+    updated
+    status
+    authorId
+    startTime
+    participants
+    easyQuestionCount
+    mediumQuestionCount
+    hardQuestionCount
+    maxParticipants
   }
-`;
+}
+    `;
 
 /**
  * __useFindByIdForReviewQuery__
@@ -1827,69 +1443,46 @@ export const FindByIdForReviewDocument = gql`
  *   },
  * });
  */
-export function useFindByIdForReviewQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    FindByIdForReviewQuery,
-    FindByIdForReviewQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    FindByIdForReviewQuery,
-    FindByIdForReviewQueryVariables
-  >(FindByIdForReviewDocument, options);
-}
-export function useFindByIdForReviewLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    FindByIdForReviewQuery,
-    FindByIdForReviewQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    FindByIdForReviewQuery,
-    FindByIdForReviewQueryVariables
-  >(FindByIdForReviewDocument, options);
-}
-export type FindByIdForReviewQueryHookResult = ReturnType<
-  typeof useFindByIdForReviewQuery
->;
-export type FindByIdForReviewLazyQueryHookResult = ReturnType<
-  typeof useFindByIdForReviewLazyQuery
->;
-export type FindByIdForReviewQueryResult = Apollo.QueryResult<
-  FindByIdForReviewQuery,
-  FindByIdForReviewQueryVariables
->;
-export const PaginateContestsDocument = gql`
-  query PaginateContests($params: ContestPaginationDto!) {
-    paginateContest(params: $params) {
-      total
-      data {
-        id
-        type
-        tags {
-          title
-        }
-        title
-        level
-        duration
-        published
-        countries
-        created
-        updated
-        status
-        authorId
-        startTime
-        participants
-        easyQuestionCount
-        mediumQuestionCount
-        hardQuestionCount
-        maxParticipants
+export function useFindByIdForReviewQuery(baseOptions: Apollo.QueryHookOptions<FindByIdForReviewQuery, FindByIdForReviewQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindByIdForReviewQuery, FindByIdForReviewQueryVariables>(FindByIdForReviewDocument, options);
       }
+export function useFindByIdForReviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindByIdForReviewQuery, FindByIdForReviewQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindByIdForReviewQuery, FindByIdForReviewQueryVariables>(FindByIdForReviewDocument, options);
+        }
+export type FindByIdForReviewQueryHookResult = ReturnType<typeof useFindByIdForReviewQuery>;
+export type FindByIdForReviewLazyQueryHookResult = ReturnType<typeof useFindByIdForReviewLazyQuery>;
+export type FindByIdForReviewQueryResult = Apollo.QueryResult<FindByIdForReviewQuery, FindByIdForReviewQueryVariables>;
+export const PaginateContestsDocument = gql`
+    query PaginateContests($params: ContestPaginationDto!) {
+  paginateContest(params: $params) {
+    total
+    data {
+      id
+      type
+      tags {
+        title
+      }
+      title
+      level
+      duration
+      published
+      countries
+      created
+      updated
+      status
+      authorId
+      startTime
+      participants
+      easyQuestionCount
+      mediumQuestionCount
+      hardQuestionCount
+      maxParticipants
     }
   }
-`;
+}
+    `;
 
 /**
  * __usePaginateContestsQuery__
@@ -1907,59 +1500,33 @@ export const PaginateContestsDocument = gql`
  *   },
  * });
  */
-export function usePaginateContestsQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    PaginateContestsQuery,
-    PaginateContestsQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<PaginateContestsQuery, PaginateContestsQueryVariables>(
-    PaginateContestsDocument,
-    options
-  );
-}
-export function usePaginateContestsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    PaginateContestsQuery,
-    PaginateContestsQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    PaginateContestsQuery,
-    PaginateContestsQueryVariables
-  >(PaginateContestsDocument, options);
-}
-export type PaginateContestsQueryHookResult = ReturnType<
-  typeof usePaginateContestsQuery
->;
-export type PaginateContestsLazyQueryHookResult = ReturnType<
-  typeof usePaginateContestsLazyQuery
->;
-export type PaginateContestsQueryResult = Apollo.QueryResult<
-  PaginateContestsQuery,
-  PaginateContestsQueryVariables
->;
+export function usePaginateContestsQuery(baseOptions: Apollo.QueryHookOptions<PaginateContestsQuery, PaginateContestsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PaginateContestsQuery, PaginateContestsQueryVariables>(PaginateContestsDocument, options);
+      }
+export function usePaginateContestsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaginateContestsQuery, PaginateContestsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PaginateContestsQuery, PaginateContestsQueryVariables>(PaginateContestsDocument, options);
+        }
+export type PaginateContestsQueryHookResult = ReturnType<typeof usePaginateContestsQuery>;
+export type PaginateContestsLazyQueryHookResult = ReturnType<typeof usePaginateContestsLazyQuery>;
+export type PaginateContestsQueryResult = Apollo.QueryResult<PaginateContestsQuery, PaginateContestsQueryVariables>;
 export const CreateQuestionDocument = gql`
-  mutation CreateQuestion($input: CreateQuestionDto!) {
-    createQuestion(input: $input) {
-      id
-      type
-      title
-      options
-      authorId
-      usedCount
-      published
-      created
-      updated
-    }
+    mutation CreateQuestion($input: CreateQuestionDto!) {
+  createQuestion(input: $input) {
+    id
+    type
+    title
+    options
+    authorId
+    usedCount
+    published
+    created
+    updated
   }
-`;
-export type CreateQuestionMutationFn = Apollo.MutationFunction<
-  CreateQuestionMutation,
-  CreateQuestionMutationVariables
->;
+}
+    `;
+export type CreateQuestionMutationFn = Apollo.MutationFunction<CreateQuestionMutation, CreateQuestionMutationVariables>;
 
 /**
  * __useCreateQuestionMutation__
@@ -1978,38 +1545,21 @@ export type CreateQuestionMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useCreateQuestionMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateQuestionMutation,
-    CreateQuestionMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    CreateQuestionMutation,
-    CreateQuestionMutationVariables
-  >(CreateQuestionDocument, options);
-}
-export type CreateQuestionMutationHookResult = ReturnType<
-  typeof useCreateQuestionMutation
->;
-export type CreateQuestionMutationResult =
-  Apollo.MutationResult<CreateQuestionMutation>;
-export type CreateQuestionMutationOptions = Apollo.BaseMutationOptions<
-  CreateQuestionMutation,
-  CreateQuestionMutationVariables
->;
+export function useCreateQuestionMutation(baseOptions?: Apollo.MutationHookOptions<CreateQuestionMutation, CreateQuestionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateQuestionMutation, CreateQuestionMutationVariables>(CreateQuestionDocument, options);
+      }
+export type CreateQuestionMutationHookResult = ReturnType<typeof useCreateQuestionMutation>;
+export type CreateQuestionMutationResult = Apollo.MutationResult<CreateQuestionMutation>;
+export type CreateQuestionMutationOptions = Apollo.BaseMutationOptions<CreateQuestionMutation, CreateQuestionMutationVariables>;
 export const DeleteQuestionDocument = gql`
-  mutation DeleteQuestion($id: String!) {
-    deleteQuestionById(id: $id) {
-      id
-    }
+    mutation DeleteQuestion($id: String!) {
+  deleteQuestionById(id: $id) {
+    id
   }
-`;
-export type DeleteQuestionMutationFn = Apollo.MutationFunction<
-  DeleteQuestionMutation,
-  DeleteQuestionMutationVariables
->;
+}
+    `;
+export type DeleteQuestionMutationFn = Apollo.MutationFunction<DeleteQuestionMutation, DeleteQuestionMutationVariables>;
 
 /**
  * __useDeleteQuestionMutation__
@@ -2028,46 +1578,29 @@ export type DeleteQuestionMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useDeleteQuestionMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    DeleteQuestionMutation,
-    DeleteQuestionMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    DeleteQuestionMutation,
-    DeleteQuestionMutationVariables
-  >(DeleteQuestionDocument, options);
-}
-export type DeleteQuestionMutationHookResult = ReturnType<
-  typeof useDeleteQuestionMutation
->;
-export type DeleteQuestionMutationResult =
-  Apollo.MutationResult<DeleteQuestionMutation>;
-export type DeleteQuestionMutationOptions = Apollo.BaseMutationOptions<
-  DeleteQuestionMutation,
-  DeleteQuestionMutationVariables
->;
+export function useDeleteQuestionMutation(baseOptions?: Apollo.MutationHookOptions<DeleteQuestionMutation, DeleteQuestionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteQuestionMutation, DeleteQuestionMutationVariables>(DeleteQuestionDocument, options);
+      }
+export type DeleteQuestionMutationHookResult = ReturnType<typeof useDeleteQuestionMutation>;
+export type DeleteQuestionMutationResult = Apollo.MutationResult<DeleteQuestionMutation>;
+export type DeleteQuestionMutationOptions = Apollo.BaseMutationOptions<DeleteQuestionMutation, DeleteQuestionMutationVariables>;
 export const UpdateQuestionDocument = gql`
-  mutation UpdateQuestion($id: String!, $input: UpdateQuestionDto!) {
-    updateQuestion(id: $id, input: $input) {
-      id
-      type
-      title
-      options
-      authorId
-      usedCount
-      published
-      created
-      updated
-    }
+    mutation UpdateQuestion($id: String!, $input: UpdateQuestionDto!) {
+  updateQuestion(id: $id, input: $input) {
+    id
+    type
+    title
+    options
+    authorId
+    usedCount
+    published
+    created
+    updated
   }
-`;
-export type UpdateQuestionMutationFn = Apollo.MutationFunction<
-  UpdateQuestionMutation,
-  UpdateQuestionMutationVariables
->;
+}
+    `;
+export type UpdateQuestionMutationFn = Apollo.MutationFunction<UpdateQuestionMutation, UpdateQuestionMutationVariables>;
 
 /**
  * __useUpdateQuestionMutation__
@@ -2087,49 +1620,35 @@ export type UpdateQuestionMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useUpdateQuestionMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateQuestionMutation,
-    UpdateQuestionMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateQuestionMutation,
-    UpdateQuestionMutationVariables
-  >(UpdateQuestionDocument, options);
-}
-export type UpdateQuestionMutationHookResult = ReturnType<
-  typeof useUpdateQuestionMutation
->;
-export type UpdateQuestionMutationResult =
-  Apollo.MutationResult<UpdateQuestionMutation>;
-export type UpdateQuestionMutationOptions = Apollo.BaseMutationOptions<
-  UpdateQuestionMutation,
-  UpdateQuestionMutationVariables
->;
-export const PaginateQuestionsDocument = gql`
-  query PaginateQuestions($params: QuestionPaginationDto!) {
-    paginateQuestions(params: $params) {
-      total
-      data {
-        id
-        title
-        type
-        options
-        lesson
-        correctAnswer
-        tags {
-          title
-        }
-        created
-        updated
-        authorId
-        usedCount
+export function useUpdateQuestionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateQuestionMutation, UpdateQuestionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateQuestionMutation, UpdateQuestionMutationVariables>(UpdateQuestionDocument, options);
       }
+export type UpdateQuestionMutationHookResult = ReturnType<typeof useUpdateQuestionMutation>;
+export type UpdateQuestionMutationResult = Apollo.MutationResult<UpdateQuestionMutation>;
+export type UpdateQuestionMutationOptions = Apollo.BaseMutationOptions<UpdateQuestionMutation, UpdateQuestionMutationVariables>;
+export const PaginateQuestionsDocument = gql`
+    query PaginateQuestions($params: QuestionPaginationDto!) {
+  paginateQuestions(params: $params) {
+    total
+    data {
+      id
+      title
+      type
+      options
+      lesson
+      correctAnswer
+      tags {
+        title
+      }
+      created
+      updated
+      authorId
+      usedCount
     }
   }
-`;
+}
+    `;
 
 /**
  * __usePaginateQuestionsQuery__
@@ -2147,47 +1666,24 @@ export const PaginateQuestionsDocument = gql`
  *   },
  * });
  */
-export function usePaginateQuestionsQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    PaginateQuestionsQuery,
-    PaginateQuestionsQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    PaginateQuestionsQuery,
-    PaginateQuestionsQueryVariables
-  >(PaginateQuestionsDocument, options);
-}
-export function usePaginateQuestionsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    PaginateQuestionsQuery,
-    PaginateQuestionsQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    PaginateQuestionsQuery,
-    PaginateQuestionsQueryVariables
-  >(PaginateQuestionsDocument, options);
-}
-export type PaginateQuestionsQueryHookResult = ReturnType<
-  typeof usePaginateQuestionsQuery
->;
-export type PaginateQuestionsLazyQueryHookResult = ReturnType<
-  typeof usePaginateQuestionsLazyQuery
->;
-export type PaginateQuestionsQueryResult = Apollo.QueryResult<
-  PaginateQuestionsQuery,
-  PaginateQuestionsQueryVariables
->;
+export function usePaginateQuestionsQuery(baseOptions: Apollo.QueryHookOptions<PaginateQuestionsQuery, PaginateQuestionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PaginateQuestionsQuery, PaginateQuestionsQueryVariables>(PaginateQuestionsDocument, options);
+      }
+export function usePaginateQuestionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaginateQuestionsQuery, PaginateQuestionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PaginateQuestionsQuery, PaginateQuestionsQueryVariables>(PaginateQuestionsDocument, options);
+        }
+export type PaginateQuestionsQueryHookResult = ReturnType<typeof usePaginateQuestionsQuery>;
+export type PaginateQuestionsLazyQueryHookResult = ReturnType<typeof usePaginateQuestionsLazyQuery>;
+export type PaginateQuestionsQueryResult = Apollo.QueryResult<PaginateQuestionsQuery, PaginateQuestionsQueryVariables>;
 export const FindTagsDocument = gql`
-  query FindTags($title: String!) {
-    findTags(title: $title) {
-      title
-    }
+    query FindTags($title: String!) {
+  findTags(title: $title) {
+    title
   }
-`;
+}
+    `;
 
 /**
  * __useFindTagsQuery__
@@ -2205,47 +1701,26 @@ export const FindTagsDocument = gql`
  *   },
  * });
  */
-export function useFindTagsQuery(
-  baseOptions: Apollo.QueryHookOptions<FindTagsQuery, FindTagsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<FindTagsQuery, FindTagsQueryVariables>(
-    FindTagsDocument,
-    options
-  );
-}
-export function useFindTagsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    FindTagsQuery,
-    FindTagsQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<FindTagsQuery, FindTagsQueryVariables>(
-    FindTagsDocument,
-    options
-  );
-}
+export function useFindTagsQuery(baseOptions: Apollo.QueryHookOptions<FindTagsQuery, FindTagsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindTagsQuery, FindTagsQueryVariables>(FindTagsDocument, options);
+      }
+export function useFindTagsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindTagsQuery, FindTagsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindTagsQuery, FindTagsQueryVariables>(FindTagsDocument, options);
+        }
 export type FindTagsQueryHookResult = ReturnType<typeof useFindTagsQuery>;
-export type FindTagsLazyQueryHookResult = ReturnType<
-  typeof useFindTagsLazyQuery
->;
-export type FindTagsQueryResult = Apollo.QueryResult<
-  FindTagsQuery,
-  FindTagsQueryVariables
->;
+export type FindTagsLazyQueryHookResult = ReturnType<typeof useFindTagsLazyQuery>;
+export type FindTagsQueryResult = Apollo.QueryResult<FindTagsQuery, FindTagsQueryVariables>;
 export const UpdateUserDocument = gql`
-  mutation UpdateUser($id: String!, $input: UpdateUserDto!) {
-    updateUser(id: $id, input: $input) {
-      id
-      email
-    }
+    mutation UpdateUser($id: String!, $input: UpdateUserDto!) {
+  updateUser(id: $id, input: $input) {
+    id
+    email
   }
-`;
-export type UpdateUserMutationFn = Apollo.MutationFunction<
-  UpdateUserMutation,
-  UpdateUserMutationVariables
->;
+}
+    `;
+export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
 
 /**
  * __useUpdateUserMutation__
@@ -2265,44 +1740,165 @@ export type UpdateUserMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useUpdateUserMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateUserMutation,
-    UpdateUserMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(
-    UpdateUserDocument,
-    options
-  );
-}
-export type UpdateUserMutationHookResult = ReturnType<
-  typeof useUpdateUserMutation
->;
-export type UpdateUserMutationResult =
-  Apollo.MutationResult<UpdateUserMutation>;
-export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<
-  UpdateUserMutation,
-  UpdateUserMutationVariables
->;
-export const GetAuthUserDocument = gql`
-  query GetAuthUser {
-    getAuthUser {
-      id
-      key
-      email
-      firstName
-      lastName
-      isActive
-      emailConfirmed
-      role {
-        title
+export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
       }
-      image
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const UpdateStudentProfileDocument = gql`
+    mutation UpdateStudentProfile($id: String!, $input: UpdateStudentDto!) {
+  updateStudentProfile(id: $id, input: $input) {
+    id
+    key
+    email
+    isActive
+    emailConfirmed
+    role {
+      title
+    }
+    profile {
+      __typename
+      ... on Student {
+        id
+        firstName
+        lastName
+        level
+        country
+        personalImage
+        birthCertImage
+        letterImage
+        dateOfBirth
+        teacher {
+          id
+          firstName
+          lastName
+        }
+      }
+      ... on Teacher {
+        id
+        firstName
+        lastName
+      }
     }
   }
-`;
+}
+    `;
+export type UpdateStudentProfileMutationFn = Apollo.MutationFunction<UpdateStudentProfileMutation, UpdateStudentProfileMutationVariables>;
+
+/**
+ * __useUpdateStudentProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateStudentProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateStudentProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateStudentProfileMutation, { data, loading, error }] = useUpdateStudentProfileMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateStudentProfileMutation(baseOptions?: Apollo.MutationHookOptions<UpdateStudentProfileMutation, UpdateStudentProfileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateStudentProfileMutation, UpdateStudentProfileMutationVariables>(UpdateStudentProfileDocument, options);
+      }
+export type UpdateStudentProfileMutationHookResult = ReturnType<typeof useUpdateStudentProfileMutation>;
+export type UpdateStudentProfileMutationResult = Apollo.MutationResult<UpdateStudentProfileMutation>;
+export type UpdateStudentProfileMutationOptions = Apollo.BaseMutationOptions<UpdateStudentProfileMutation, UpdateStudentProfileMutationVariables>;
+export const FindTeacherDocument = gql`
+    query FindTeacher($name: String) {
+  findTeacher(name: $name) {
+    id
+    key
+    email
+    isActive
+    role {
+      title
+    }
+    profile {
+      __typename
+      ... on Teacher {
+        id
+        firstName
+        lastName
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindTeacherQuery__
+ *
+ * To run a query within a React component, call `useFindTeacherQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindTeacherQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindTeacherQuery({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useFindTeacherQuery(baseOptions?: Apollo.QueryHookOptions<FindTeacherQuery, FindTeacherQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindTeacherQuery, FindTeacherQueryVariables>(FindTeacherDocument, options);
+      }
+export function useFindTeacherLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindTeacherQuery, FindTeacherQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindTeacherQuery, FindTeacherQueryVariables>(FindTeacherDocument, options);
+        }
+export type FindTeacherQueryHookResult = ReturnType<typeof useFindTeacherQuery>;
+export type FindTeacherLazyQueryHookResult = ReturnType<typeof useFindTeacherLazyQuery>;
+export type FindTeacherQueryResult = Apollo.QueryResult<FindTeacherQuery, FindTeacherQueryVariables>;
+export const GetAuthUserDocument = gql`
+    query GetAuthUser {
+  getAuthUser {
+    id
+    key
+    email
+    isActive
+    emailConfirmed
+    role {
+      title
+    }
+    profile {
+      __typename
+      ... on Student {
+        id
+        firstName
+        lastName
+        level
+        country
+        personalImage
+        birthCertImage
+        letterImage
+        dateOfBirth
+        teacher {
+          id
+          firstName
+          lastName
+        }
+      }
+      ... on Teacher {
+        id
+        firstName
+        lastName
+      }
+    }
+  }
+}
+    `;
 
 /**
  * __useGetAuthUserQuery__
@@ -2319,35 +1915,14 @@ export const GetAuthUserDocument = gql`
  *   },
  * });
  */
-export function useGetAuthUserQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetAuthUserQuery,
-    GetAuthUserQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetAuthUserQuery, GetAuthUserQueryVariables>(
-    GetAuthUserDocument,
-    options
-  );
-}
-export function useGetAuthUserLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetAuthUserQuery,
-    GetAuthUserQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetAuthUserQuery, GetAuthUserQueryVariables>(
-    GetAuthUserDocument,
-    options
-  );
-}
+export function useGetAuthUserQuery(baseOptions?: Apollo.QueryHookOptions<GetAuthUserQuery, GetAuthUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAuthUserQuery, GetAuthUserQueryVariables>(GetAuthUserDocument, options);
+      }
+export function useGetAuthUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAuthUserQuery, GetAuthUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAuthUserQuery, GetAuthUserQueryVariables>(GetAuthUserDocument, options);
+        }
 export type GetAuthUserQueryHookResult = ReturnType<typeof useGetAuthUserQuery>;
-export type GetAuthUserLazyQueryHookResult = ReturnType<
-  typeof useGetAuthUserLazyQuery
->;
-export type GetAuthUserQueryResult = Apollo.QueryResult<
-  GetAuthUserQuery,
-  GetAuthUserQueryVariables
->;
+export type GetAuthUserLazyQueryHookResult = ReturnType<typeof useGetAuthUserLazyQuery>;
+export type GetAuthUserQueryResult = Apollo.QueryResult<GetAuthUserQuery, GetAuthUserQueryVariables>;

@@ -23,8 +23,7 @@ const VerifyEmail: NextPageWithLayout = ({ succeed }: { succeed: boolean }) => {
   useEffect(() => {
     if (succeed) {
       notification.success({
-        message: 'حسابك أصبح مفعل',
-        description: 'تم تفعيل حسابك بنجاح, يرجى تسجيل الدخول.',
+        message: 'تم تفعيل حسابك بنجاح, يرجى تسجيل الدخول.',
       });
       router.push(AppRoutes.SignIn);
     } else {
@@ -63,7 +62,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   }
   const [id, token] = query.verify;
   const client = initializeApollo({ headers: req?.headers });
-
   try {
     const {
       data: { findEmailToken },

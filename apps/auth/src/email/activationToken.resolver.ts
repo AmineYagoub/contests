@@ -1,4 +1,5 @@
 import { IDDto } from '@contests/dto';
+import { isPublic } from '@contests/utils';
 import {
   Args,
   Mutation,
@@ -15,11 +16,13 @@ import { ActivationTokenService } from './activationToken.service';
 export class ActivationTokenResolver {
   constructor(private activationService: ActivationTokenService) {}
 
+  @isPublic()
   @Query(() => ActivationToken)
   findEmailToken(@Args('token') token: string) {
     return this.activationService.findUnique({ value: token });
   }
 
+  @isPublic()
   @Mutation(() => User)
   activateEmailToken(@Args('input') data: IDDto) {
     return this.activationService.activateEmailToken({ id: data.id });

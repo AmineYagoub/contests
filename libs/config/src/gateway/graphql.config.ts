@@ -59,14 +59,28 @@ export const gatewayGQLConfig = registerAs(GATEWAY_GQL_REGISTER_KEY, () => ({
     introspection: !isProd,
     csrfPrevention: true,
     plugins: [HttpResponsePlugin, ApolloServerPluginInlineTraceDisabled()],
-    formatError(error: GatewayGraphQLError) {
+    formatError(error: any) {
       // console.log(JSON.stringify(error, null, 2));
-      if (error.extensions?.exception) {
+      if (error.extensions?.exception?.cause) {
         return {
-          message: error.extensions?.exception.message,
+          message: error.extensions?.exception.cause.code,
           status: error.extensions.exception.status,
         };
       }
+      if (error.extensions) {
+        const messages = (
+          error as GatewayGraphQLError
+        ).extensions?.exception.response.validationErrors.map(
+          (el) => el.constraints
+        );
+
+        return {
+          errors: messages,
+          message: error.message,
+          status: error.extensions.exception.status,
+        };
+      }
+
       return error;
     },
   },
