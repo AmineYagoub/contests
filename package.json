@@ -46,6 +46,7 @@
     "@nrwl/next": "14.5.4",
     "@prisma/client": "^4.2.0",
     "antd": "^4.22.4",
+    "antd-img-crop": "^4.2.5",
     "apollo-server-express": "^3.10.2",
     "apollo-server-fastify": "^3.10.2",
     "argon2": "^0.29.1",

@@ -18,7 +18,7 @@ export const formLayout = {
 
 const UserPassword = ({ user }: { user: User }) => {
   const [form] = Form.useForm();
-  const { onFinish, onFinishFailed } = useUser(form);
+  const { onFinish, onFinishFailed } = useUser(form, user);
   return (
     <StyledForm
       form={form}
