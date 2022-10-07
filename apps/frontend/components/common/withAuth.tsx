@@ -41,11 +41,11 @@ export function withAuth<P>(
           }
           const user = data.getAuthUser as User;
           AuthActions.setUser(user);
-          if (user.role.title === RoleTitle.Admin) {
+          /* if (user.role.title === RoleTitle.Admin) {
             router.push(AppRoutes.AdminManageDashboard);
           } else {
             router.push(AppRoutes.StudentDashboard);
-          }
+          } */
         })
         .catch((error) => {
           router.push(AppRoutes.SignIn);
