@@ -10,11 +10,7 @@ import {
   useSignUpMutation,
 } from '@/graphql/graphql';
 import { Logger } from '@/utils/app';
-import {
-  ConstraintsErrors,
-  GraphqlResponseError,
-  SignUpInput,
-} from '@/utils/types';
+import { ConstraintsErrors, SignUpInput } from '@/utils/types';
 
 const handleSignUpErrors = (error: any, form: FormInstance<unknown>) => {
   Logger.log(error);
@@ -78,7 +74,11 @@ const handleSignUpErrors = (error: any, form: FormInstance<unknown>) => {
         ]);
       }
     });
+    return;
   }
+  notification.error({
+    message: 'حدث خطأ, يرجى إعادة تحديث الصفحة و المحاولة من جديد !',
+  });
 };
 
 const clearErrors = (field: SignUpDto, form: FormInstance<unknown>) => {
@@ -144,7 +144,6 @@ export const useSignUp = (form: FormInstance<unknown>) => {
         setSuccess(true);
       }
     } catch (error) {
-      Logger.log(error);
       handleSignUpErrors(error, form);
     }
   };
