@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  db:
+    image: percona
+    restart: unless-stopped
+    volumes:
+      - api-data:/var/lib/mysql
+    # Uncomment to change startup options
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass123
+      MYSQL_DATABASE: mostaqil
+    ports:
+      - 3306:3306
+    networks:
+      - db_network
+
+  minio:
+    image: bitnami/minio
+    volumes:
+      - minio_data:/data
+    environment:
+      MINIO_ROOT_USER: minio-root-user
+      MINIO_ROOT_PASSWORD: minio-root-password
+    ports:
+      - 9000:9000
+      - 9001:9001
+    networks:
+      - db_network
+
+    #Nginx Service
+  webserver:
+    image: bitnami/nginx
+    container_name: webserver
+    restart: unless-stopped
+    volumes:
+      # - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/reverse_proxy.conf:/opt/bitnami/nginx/conf/server_blocks/reverse_proxy.conf:ro
+    ports:
+      - '8080:8080'
+      - '8081:8081'
+      - '443:443'
+    depends_on:
+      - minio
+    networks:
+      - db_network
+
+volumes:
+  api-data: null
+  minio_data: null
+
+networks:
+  db_network:
