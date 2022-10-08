@@ -7,25 +7,6 @@ const withTM = require('next-transpile-modules')(['echarts', 'zrender']);
  **/
 const nextConfig = {
   reactStrictMode: true,
-  /*   async headers() {
-    return [
-      {
-        source: "/:path*",
-        has: [
-          {
-            type: "cookie",
-            key: "fgp_nonce",
-          },
-        ],
-        headers: [
-          {
-            key: "set-cookie",
-            value: "fgp_nonce",
-          },
-        ],
-      },
-    ];
-  }, */
   compiler: {
     emotion: true,
     /*     removeConsole: {
@@ -38,6 +19,7 @@ const nextConfig = {
       'flagcdn.com',
       'upload.wikimedia.org',
       'joeschmoe.io',
+      'localhost',
     ],
   },
   i18n: {
