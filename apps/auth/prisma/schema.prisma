@@ -55,9 +55,9 @@ model Profile {
   firstName             String?   @db.VarChar(100) @default("") 
   lastName              String?   @db.VarChar(100) @default("")
   level                 String?   @db.Char(64) @default("")
-  personalImage         String?   @db.VarChar(255) @default("")
-  birthCertImage        String?   @db.VarChar(255) @default("")
-  letterImage           String?   @db.VarChar(255) @default("")
+  personalImage         String?   @db.VarChar(1000) @default("")
+  birthCertImage        String?   @db.VarChar(1000) @default("")
+  letterImage           String?   @db.VarChar(1000) @default("")
   country               String?   @db.VarChar(255) @default("")
   dateOfBirth           DateTime? 
   created               DateTime  @default(now())
