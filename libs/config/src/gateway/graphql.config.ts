@@ -50,7 +50,7 @@ class CookieDataSource extends RemoteGraphQLDataSource {
 export const gatewayGQLConfig = registerAs(GATEWAY_GQL_REGISTER_KEY, () => ({
   server: {
     cors: {
-      origin: 'http://localhost:8080',
+      origin: 'http://localhost:3000',
       credentials: true,
     },
     context: ({ req, res }) => ({ req, res }),
