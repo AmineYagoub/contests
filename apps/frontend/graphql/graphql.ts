@@ -202,6 +202,7 @@ export type Mutation = {
   updateAnswer: Answer;
   updateContest: Contest;
   updateQuestion: Question;
+  updateStudentDocuments: User;
   updateStudentProfile: User;
   updateTag: Tag;
   updateUser: User;
@@ -288,6 +289,12 @@ export type MutationUpdateContestArgs = {
 export type MutationUpdateQuestionArgs = {
   id: Scalars['String'];
   input: UpdateQuestionDto;
+};
+
+
+export type MutationUpdateStudentDocumentsArgs = {
+  id: Scalars['String'];
+  input: UpdateDocumentsDto;
 };
 
 
@@ -625,6 +632,12 @@ export type UpdateContestDto = {
   type?: InputMaybe<ContestType>;
 };
 
+export type UpdateDocumentsDto = {
+  birthCertImage?: InputMaybe<Scalars['String']>;
+  letterImage?: InputMaybe<Scalars['String']>;
+  personalImage?: InputMaybe<Scalars['String']>;
+};
+
 export type UpdateQuestionDto = {
   authorId?: InputMaybe<Scalars['Int']>;
   correctAnswer?: InputMaybe<Scalars['String']>;
@@ -854,6 +867,14 @@ export type UpdateUserMutationVariables = Exact<{
 
 
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, email: string } };
+
+export type UpdateStudentDocumentsMutationVariables = Exact<{
+  id: Scalars['String'];
+  input: UpdateDocumentsDto;
+}>;
+
+
+export type UpdateStudentDocumentsMutation = { __typename?: 'Mutation', updateStudentDocuments: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth: any, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } };
 
 export type UpdateStudentProfileMutationVariables = Exact<{
   id: Scalars['String'];
@@ -1747,6 +1768,71 @@ export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
 export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
 export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const UpdateStudentDocumentsDocument = gql`
+    mutation UpdateStudentDocuments($id: String!, $input: UpdateDocumentsDto!) {
+  updateStudentDocuments(id: $id, input: $input) {
+    id
+    key
+    email
+    isActive
+    emailConfirmed
+    role {
+      title
+    }
+    profile {
+      __typename
+      ... on Student {
+        id
+        firstName
+        lastName
+        level
+        country
+        personalImage
+        birthCertImage
+        letterImage
+        dateOfBirth
+        teacher {
+          id
+          firstName
+          lastName
+        }
+      }
+      ... on Teacher {
+        id
+        firstName
+        lastName
+      }
+    }
+  }
+}
+    `;
+export type UpdateStudentDocumentsMutationFn = Apollo.MutationFunction<UpdateStudentDocumentsMutation, UpdateStudentDocumentsMutationVariables>;
+
+/**
+ * __useUpdateStudentDocumentsMutation__
+ *
+ * To run a mutation, you first call `useUpdateStudentDocumentsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateStudentDocumentsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateStudentDocumentsMutation, { data, loading, error }] = useUpdateStudentDocumentsMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateStudentDocumentsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateStudentDocumentsMutation, UpdateStudentDocumentsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateStudentDocumentsMutation, UpdateStudentDocumentsMutationVariables>(UpdateStudentDocumentsDocument, options);
+      }
+export type UpdateStudentDocumentsMutationHookResult = ReturnType<typeof useUpdateStudentDocumentsMutation>;
+export type UpdateStudentDocumentsMutationResult = Apollo.MutationResult<UpdateStudentDocumentsMutation>;
+export type UpdateStudentDocumentsMutationOptions = Apollo.BaseMutationOptions<UpdateStudentDocumentsMutation, UpdateStudentDocumentsMutationVariables>;
 export const UpdateStudentProfileDocument = gql`
     mutation UpdateStudentProfile($id: String!, $input: UpdateStudentDto!) {
   updateStudentProfile(id: $id, input: $input) {

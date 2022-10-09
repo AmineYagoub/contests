@@ -1,6 +1,6 @@
 import { validate as isValidUUID } from 'uuid';
 
-import { UpdateStudentDto } from '@contests/dto';
+import { UpdateDocumentsDto, UpdateStudentDto } from '@contests/dto';
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/auth-service';
 
@@ -86,7 +86,38 @@ export class ProfileService {
       }
       return updated;
     } catch (error) {
-      console.log(JSON.stringify(error, null, 2));
+      Logger.error(error);
+    }
+  }
+
+  /**
+   * Update the Documents of student.
+   *
+   * @param params Prisma.UserUpdateInput The User data.
+   * @returns Promise<User>
+   */
+  async updateStudentDocuments(params: {
+    where: Prisma.UserWhereUniqueInput;
+    data: UpdateDocumentsDto;
+  }) {
+    const { data, where } = params;
+    try {
+      return await this.prisma.user.update({
+        where,
+        data: {
+          profile: {
+            update: data,
+          },
+        },
+        include: {
+          profile: {
+            include: { teacher: true },
+          },
+          role: true,
+        },
+      });
+    } catch (error) {
+      Logger.error(error);
     }
   }
 }

@@ -1,4 +1,4 @@
-import { UpdateStudentDto } from '@contests/dto';
+import { UpdateDocumentsDto, UpdateStudentDto } from '@contests/dto';
 import { Args, createUnionType, Mutation, Resolver } from '@nestjs/graphql';
 
 import { User } from '../users/user.model';
@@ -28,5 +28,13 @@ export class ProfileResolver {
     @Args('input') data: UpdateStudentDto
   ) {
     return this.profileService.updateStudentProfile({ data, where: { id } });
+  }
+
+  @Mutation(() => User)
+  async updateStudentDocuments(
+    @Args('id') id: string,
+    @Args('input') data: UpdateDocumentsDto
+  ) {
+    return this.profileService.updateStudentDocuments({ data, where: { id } });
   }
 }

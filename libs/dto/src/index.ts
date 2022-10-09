@@ -11,6 +11,7 @@ export * from './lib/auth/signing.dto';
 export * from './lib/auth/signingWithGoogle.dto';
 export * from './lib/users/update.dto';
 export * from './lib/users/updateStudent.dto';
+export * from './lib/users/updateDocuments.dto';
 
 import { IsEmail, IsUUID } from 'class-validator';
 

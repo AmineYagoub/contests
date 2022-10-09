@@ -14,30 +14,31 @@ import {
 import { Logger } from '@/utils/app';
 import { AuthActions } from '@/valtio/auth.state';
 
-import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
-
+import type { RcFile } from 'antd/es/upload/interface';
 export const useUser = (form: FormInstance<unknown>, user: User) => {
   const [selectedSupervisor, setSelectedSupervisor] = useState<string>(null);
   const [UpdateStudentProfileMutation, { loading }] =
     useUpdateStudentProfileMutation();
 
   useEffect(() => {
-    const profile = user.profile as Student;
-    form.setFieldsValue({
-      email: user?.email,
-      firstName: profile.firstName,
-      lastName: profile.lastName,
-      role: user.role.title,
-      teacherId: profile.teacher?.id,
-      country: profile.country,
-      level: profile.level === StudentLevel.Student ? null : profile.level,
-      dateOfBirth: moment(profile.dateOfBirth),
-    });
+    if (user) {
+      const profile = user.profile as Student;
+      form.setFieldsValue({
+        email: user?.email,
+        firstName: profile?.firstName,
+        lastName: profile?.lastName,
+        role: user.role.title,
+        teacherId: profile?.teacher?.id,
+        country: profile?.country,
+        level: profile?.level === StudentLevel.Student ? null : profile?.level,
+        dateOfBirth: moment(profile?.dateOfBirth),
+      });
 
-    if (profile.teacher) {
-      setSelectedSupervisor(
-        `${profile.teacher.firstName} ${profile.teacher.lastName}`
-      );
+      if (profile?.teacher) {
+        setSelectedSupervisor(
+          `${profile.teacher.firstName} ${profile.teacher.lastName}`
+        );
+      }
     }
   }, [form, user]);
 
@@ -85,26 +86,9 @@ export const useUser = (form: FormInstance<unknown>, user: User) => {
   };
 };
 
-export const useUploadDocuments = () => {
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const onFinish = (errorInfo: ValidateErrorEntity<unknown>) => {
-    Logger.log(errorInfo);
-  };
-  const onFinishFailed = (errorInfo: ValidateErrorEntity<unknown>) => {
-    Logger.log(errorInfo);
-  };
-  const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-  };
-  const uploadProps: UploadProps = {
-    listType: 'picture',
-    action: '/api/upload-documents',
-    defaultFileList: [...fileList],
-    onChange,
-  };
-  return {
-    uploadProps,
-    onFinish,
-    onFinishFailed,
-  };
+export type RcCustomRequestOptions = {
+  file: string | Blob | RcFile;
+  onError?: (error: Error) => void;
+  onProgress?: (event: Event) => void;
+  onSuccess?: (body: Response, xhr?: XMLHttpRequest) => void;
 };

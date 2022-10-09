@@ -34,16 +34,16 @@ export const StyledHeader = styled(Header)({
 });
 
 const ProfileLayout = ({ children }) => {
-  const socket = useReactiveVar(socketVar);
+  // const socket = useReactiveVar(socketVar);
   const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    // socket.connect();
+  /*   useEffect(() => {
+    socket.connect();
     return () => {
       socket.disconnect();
     };
-  }, [socket]);
+  }, [socket]); */
 
   return (
     <Layout>

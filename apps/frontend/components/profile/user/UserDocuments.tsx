@@ -1,15 +1,23 @@
-import { Button, Form, Space, Tooltip, Upload } from 'antd';
-import ImgCrop from 'antd-img-crop';
+import { Form, Space, Tooltip } from 'antd';
 
 import { User } from '@/graphql/graphql';
-import { useUploadDocuments, useUser } from '@/hooks/profile/user.hook';
-import { CloudUploadOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { useUploadDocuments } from '@/hooks/profile/document.hook';
+import { InfoCircleOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
+import DocumentCard from './DocumentCard';
 
 const StyledForm = styled(Form)({
   maxWidth: 450,
   padding: '20px 5px !important',
   margin: '0 !important',
+});
+
+const { Item } = Form;
+
+const StyledItem = styled(Item)({
+  ['.ant-row']: {
+    alignItems: 'center',
+  },
 });
 
 const formLayout = {
@@ -30,30 +38,26 @@ const Label = ({ label, help }: { label: string; help: string }) => {
 
 const UserDocuments = ({ user }: { user: User }) => {
   const [form] = Form.useForm();
-  const { onFinish, onFinishFailed, uploadProps } = useUploadDocuments();
+  const { onUploadChange, docsList, loading, onDelete, confirmLoading } =
+    useUploadDocuments(user);
   return (
-    <StyledForm
-      form={form}
-      name="user-documents"
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      autoComplete="off"
-      size="large"
-      {...formLayout}
-    >
-      <Form.Item
+    <StyledForm form={form} name="user-documents" size="large" {...formLayout}>
+      <StyledItem
         label={<Label label="الصورة الشخصية" help="صورة شخصية حديثة" />}
         name="personalImage"
       >
-        <ImgCrop rotate>
-          <Upload {...uploadProps}>
-            <Button icon={<CloudUploadOutlined />} block type="primary" ghost>
-              رفع الصورة الشخصية
-            </Button>
-          </Upload>
-        </ImgCrop>
-      </Form.Item>
-      <Form.Item
+        <DocumentCard
+          name="personalImage"
+          url={docsList?.personalImage.url}
+          id={user.id}
+          label="رفع الصورة الشخصية"
+          onChange={onUploadChange}
+          loading={loading}
+          onDelete={onDelete}
+          confirmLoading={confirmLoading}
+        />
+      </StyledItem>
+      <StyledItem
         label={
           <Label
             label="إثبات الهوية"
@@ -62,31 +66,38 @@ const UserDocuments = ({ user }: { user: User }) => {
         }
         name="birthCertImage"
       >
-        <Upload
-          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-          listType="picture"
-        >
-          <Button icon={<CloudUploadOutlined />} block type="primary" ghost>
-            رفع شهادة الميلاد
-          </Button>
-        </Upload>
-      </Form.Item>
+        <DocumentCard
+          name="birthCertImage"
+          url={docsList?.birthCertImage.url}
+          id={user.id}
+          label="رفع شهادة الميلاد"
+          onChange={onUploadChange}
+          loading={loading}
+          onDelete={onDelete}
+          confirmLoading={confirmLoading}
+        />
+      </StyledItem>
 
-      <Form.Item
+      <StyledItem
         label={
-          <Label label="خطاب معتمد من المدرسة" help="خطاب معتمد من المدرسة" />
+          <Label
+            label="خطاب معتمد من المدرسة"
+            help="شهادة مدرسية أو خطاب معتمد من المدرسة موضح به سنك والصف الدراسي الملتحق به"
+          />
         }
         name="letterImage"
       >
-        <Upload
-          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-          listType="picture"
-        >
-          <Button icon={<CloudUploadOutlined />} block type="primary" ghost>
-            رفع الخطاب
-          </Button>
-        </Upload>
-      </Form.Item>
+        <DocumentCard
+          name="letterImage"
+          url={docsList?.letterImage.url}
+          id={user.id}
+          label="رفع الخطاب"
+          onChange={onUploadChange}
+          loading={loading}
+          onDelete={onDelete}
+          confirmLoading={confirmLoading}
+        />
+      </StyledItem>
     </StyledForm>
   );
 };
