@@ -1,8 +1,12 @@
-import { UpdateUserDto } from '@contests/dto';
+import { UpdateUserDto, UserPaginationDto } from '@contests/dto';
 import { isPublic, UserEntity } from '@contests/utils';
+import { Type } from '@nestjs/common';
 import {
   Args,
+  Field,
+  Int,
   Mutation,
+  ObjectType,
   Query,
   Resolver,
   ResolveReference,
@@ -10,6 +14,21 @@ import {
 
 import { User } from './user.model';
 import { UserService } from './user.service';
+
+function Paginate<T>(Node: Type<T>) {
+  @ObjectType({ isAbstract: true })
+  abstract class PaginateType {
+    @Field(() => Int)
+    total: number;
+
+    @Field(() => [Node], { nullable: true })
+    data: T[];
+  }
+  return PaginateType;
+}
+
+@ObjectType()
+class UserPaginationResponse extends Paginate(User) {}
 
 @Resolver(() => User)
 export class UserResolver {
@@ -25,6 +44,11 @@ export class UserResolver {
   async updateUser(@Args('id') id: string, @Args('input') data: UpdateUserDto) {
     delete data.confirmPassword;
     return this.userService.update({ data, where: { id } });
+  }
+
+  @Query(() => UserPaginationResponse, { nullable: true })
+  async paginateUsers(@Args('params') params: UserPaginationDto) {
+    return this.userService.paginate(params);
   }
 
   /**

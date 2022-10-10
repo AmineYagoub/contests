@@ -334,6 +334,10 @@ export type OrderQuestionArgs = {
   usedCount?: InputMaybe<OrderByType>;
 };
 
+export type OrderUserArgs = {
+  created?: InputMaybe<OrderByType>;
+};
+
 export type Permission = {
   __typename?: 'Permission';
   /** Identifies the description of the Permission. */
@@ -367,6 +371,7 @@ export type Query = {
   getAuthUser: User;
   paginateContest?: Maybe<ContestPaginationResponse>;
   paginateQuestions?: Maybe<QuestionPaginationResponse>;
+  paginateUsers?: Maybe<UserPaginationResponse>;
 };
 
 
@@ -413,6 +418,11 @@ export type QueryPaginateContestArgs = {
 
 export type QueryPaginateQuestionsArgs = {
   params: QuestionPaginationDto;
+};
+
+
+export type QueryPaginateUsersArgs = {
+  params: UserPaginationDto;
 };
 
 export type Question = {
@@ -695,6 +705,19 @@ export type User = {
   updated: Scalars['DateTime'];
 };
 
+export type UserPaginationDto = {
+  orderBy?: InputMaybe<OrderUserArgs>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WhereUserArgs>;
+};
+
+export type UserPaginationResponse = {
+  __typename?: 'UserPaginationResponse';
+  data?: Maybe<Array<User>>;
+  total: Scalars['Int'];
+};
+
 export type WhereContestArgs = {
   countries?: InputMaybe<Array<Scalars['String']>>;
   created?: InputMaybe<Array<Scalars['String']>>;
@@ -715,6 +738,15 @@ export type WhereQuestionArgs = {
   tags?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
   type?: InputMaybe<QuestionType>;
+};
+
+export type WhereUserArgs = {
+  country?: InputMaybe<Scalars['String']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  isActive?: InputMaybe<Scalars['Boolean']>;
+  lastName?: InputMaybe<Scalars['String']>;
+  level?: InputMaybe<StudentLevel>;
+  role?: InputMaybe<RoleTitle>;
 };
 
 export type CreateAnswerMutationVariables = Exact<{
@@ -896,6 +928,13 @@ export type GetAuthUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth: any, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } };
+
+export type PaginateUsersQueryVariables = Exact<{
+  params: UserPaginationDto;
+}>;
+
+
+export type PaginateUsersQuery = { __typename?: 'Query', paginateUsers?: { __typename?: 'UserPaginationResponse', total: number, data?: Array<{ __typename?: 'User', id: string, key: number, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth: any, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null }> | null } | null };
 
 
 export const CreateAnswerDocument = gql`
@@ -2013,3 +2052,71 @@ export function useGetAuthUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetAuthUserQueryHookResult = ReturnType<typeof useGetAuthUserQuery>;
 export type GetAuthUserLazyQueryHookResult = ReturnType<typeof useGetAuthUserLazyQuery>;
 export type GetAuthUserQueryResult = Apollo.QueryResult<GetAuthUserQuery, GetAuthUserQueryVariables>;
+export const PaginateUsersDocument = gql`
+    query PaginateUsers($params: UserPaginationDto!) {
+  paginateUsers(params: $params) {
+    total
+    data {
+      id
+      key
+      role {
+        title
+      }
+      isActive
+      emailConfirmed
+      profile {
+        __typename
+        ... on Student {
+          id
+          firstName
+          lastName
+          level
+          country
+          personalImage
+          birthCertImage
+          letterImage
+          dateOfBirth
+          teacher {
+            id
+            firstName
+            lastName
+          }
+        }
+        ... on Teacher {
+          id
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __usePaginateUsersQuery__
+ *
+ * To run a query within a React component, call `usePaginateUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePaginateUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePaginateUsersQuery({
+ *   variables: {
+ *      params: // value for 'params'
+ *   },
+ * });
+ */
+export function usePaginateUsersQuery(baseOptions: Apollo.QueryHookOptions<PaginateUsersQuery, PaginateUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PaginateUsersQuery, PaginateUsersQueryVariables>(PaginateUsersDocument, options);
+      }
+export function usePaginateUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaginateUsersQuery, PaginateUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PaginateUsersQuery, PaginateUsersQueryVariables>(PaginateUsersDocument, options);
+        }
+export type PaginateUsersQueryHookResult = ReturnType<typeof usePaginateUsersQuery>;
+export type PaginateUsersLazyQueryHookResult = ReturnType<typeof usePaginateUsersLazyQuery>;
+export type PaginateUsersQueryResult = Apollo.QueryResult<PaginateUsersQuery, PaginateUsersQueryVariables>;

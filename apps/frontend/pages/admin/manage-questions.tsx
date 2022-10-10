@@ -13,12 +13,9 @@ import {
 } from '@/components/admin/tables/SearchDatePicker';
 import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
 import { Question, QuestionType, Tag as TagModel } from '@/graphql/graphql';
-import {
-  QuestionsDataIndex,
-  useSearchQuestions,
-} from '@/hooks/admin/manage-questions.hook';
+import { useSearchQuestions } from '@/hooks/admin/manage-questions.hook';
 import AdminLayout from '@/layout/AdminLayout';
-import { QuestionFields } from '@/utils/fields';
+import { QuestionFields, QuestionsDataIndex } from '@/utils/fields';
 import { getMapperLabel, questionMappedTypes } from '@/utils/mapper';
 import { QuestionState } from '@/valtio/question.state';
 import { PlusOutlined } from '@ant-design/icons';
@@ -35,7 +32,7 @@ const StyledSection = styled('section')({
   minHeight: 'calc(100vh - 200px)',
 });
 
-const ManageQuestions = (props) => {
+const ManageQuestions = () => {
   const { methods, filteredInfo, sortedInfo } = useSearchQuestions();
   const questionSnap = useSnapshot(QuestionState);
   const [visible, setVisible] = useState(false);

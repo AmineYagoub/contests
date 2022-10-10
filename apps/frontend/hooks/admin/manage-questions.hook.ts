@@ -8,7 +8,7 @@ import {
   usePaginateQuestionsQuery,
   WhereQuestionArgs,
 } from '@/graphql/graphql';
-import { QuestionFields } from '@/utils/fields';
+import { QuestionFields, QuestionsDataIndex } from '@/utils/fields';
 import { Pagination } from '@/utils/types';
 
 import type {
@@ -18,8 +18,6 @@ import type {
   SorterResult,
 } from 'antd/es/table/interface';
 import { QuestionActions } from '@/valtio/question.state';
-
-export type QuestionsDataIndex = keyof Question;
 
 export const useSearchQuestions = () => {
   const [pagination, setPagination] = useState<Pagination>({
