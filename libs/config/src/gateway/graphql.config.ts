@@ -67,6 +67,13 @@ export const gatewayGQLConfig = registerAs(GATEWAY_GQL_REGISTER_KEY, () => ({
           status: error.extensions.exception.status,
         };
       }
+      if (error.extensions?.response?.statusCode === 422) {
+        return {
+          errors: error.extensions?.response?.error,
+          message: error.extensions?.response?.message,
+          status: error.extensions?.response?.statusCode,
+        };
+      }
       if (error.extensions) {
         const messages = (
           error as GatewayGraphQLError
@@ -77,7 +84,9 @@ export const gatewayGQLConfig = registerAs(GATEWAY_GQL_REGISTER_KEY, () => ({
         return {
           errors: messages,
           message: error.message,
-          status: error.extensions.exception.status,
+          status:
+            error.extensions.exception.status ||
+            error.extensions.exception.response.status,
         };
       }
 

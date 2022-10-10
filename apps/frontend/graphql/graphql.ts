@@ -663,6 +663,7 @@ export type UpdateStudentDto = {
 export type UpdateUserDto = {
   agreement?: InputMaybe<Scalars['Boolean']>;
   confirmPassword?: InputMaybe<Scalars['String']>;
+  currentPassword?: InputMaybe<Scalars['String']>;
   email?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
   role?: InputMaybe<RoleTitle>;

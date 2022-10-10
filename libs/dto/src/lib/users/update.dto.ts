@@ -10,6 +10,11 @@ import { SignUpDto } from '../auth/signup.dto';
 export class UpdateUserDto extends PartialType(
   OmitType(SignUpDto, ['role'] as const)
 ) {
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  currentPassword: string;
+
   @Field(() => RoleTitle, { nullable: true })
   @IsOptional()
   @IsString()

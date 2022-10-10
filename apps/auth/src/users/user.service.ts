@@ -1,5 +1,11 @@
+import { UpdateUserDto } from '@contests/dto';
 import { RoleTitle } from '@contests/types';
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  UnauthorizedException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/auth-service';
 
 import { PrismaService } from '../app/prisma.service';
@@ -78,10 +84,25 @@ export class UserService {
    */
   async update(params: {
     where: Prisma.UserWhereUniqueInput;
-    data: Prisma.UserUpdateInput;
+    data: UpdateUserDto;
   }) {
     const { data, where } = params;
     if (data.password) {
+      const user = await this.prisma.user.findUniqueOrThrow({
+        where,
+      });
+      if (!user.isActive) {
+        throw new UnauthorizedException('User Banned');
+      }
+      const passwordValid = await this.passwordService.validatePassword(
+        String(data.currentPassword),
+        user.password
+      );
+
+      if (!passwordValid) {
+        throw new UnprocessableEntityException('Invalid Password');
+      }
+      delete data.currentPassword;
       data.password = await this.passwordService.hashPassword(
         String(data.password)
       );
