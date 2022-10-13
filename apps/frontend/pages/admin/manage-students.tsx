@@ -1,9 +1,12 @@
-import { Student, User } from '@/graphql/graphql';
-import { useSearchStudents } from '@/hooks/admin/manage-students.hook';
 import AdminLayout from '@/layout/AdminLayout';
-import { StudentFields, StudentsDataIndex, UserFields } from '@/utils/fields';
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import { RoleTitle, Student, StudentLevel, User } from '@/graphql/graphql';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
+import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import {
+  useSearchStudents,
+  useUpdateStudents,
+} from '@/hooks/admin/manage-students.hook';
+import { StudentFields, StudentsDataIndex, UserFields } from '@/utils/fields';
 import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
 import {
   SearchDatePicker,
@@ -11,13 +14,40 @@ import {
 } from '@/components/admin/tables/SearchDatePicker';
 import moment from 'moment-timezone';
 import { Button, Space, Switch, Table, Tag } from 'antd';
-import { DeleteColumnOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { useSnapshot } from 'valtio';
 import { StudentState } from '@/valtio/student.state';
+import {
+  getMapperLabel,
+  rolesMappedTypes,
+  studentMappedLevels,
+} from '@/utils/mapper';
+import styled from '@emotion/styled';
+import ViewStudentProfile from '@/components/admin/users/ViewStudentProfile';
+import { useState } from 'react';
+
+const StyledSection = styled('section')({
+  backgroundColor: '#f8f8f8 !important',
+  position: 'relative',
+  overflow: 'hidden',
+  minHeight: 'calc(100vh - 200px)',
+});
 
 const ManageStudents = () => {
-  const { methods } = useSearchStudents();
+  const { methods, filteredInfo } = useSearchStudents();
   const studentSnap = useSnapshot(StudentState);
+  const [visible, setVisible] = useState(false);
+  const [profileId, setProfileId] = useState<string>(null);
+  const { onUserStateChange, loading: l } = useUpdateStudents();
+
+  const showDrawer = (id: string) => {
+    setVisible(true);
+    setProfileId(id);
+  };
+
+  const onClose = () => {
+    setVisible(false);
+  };
 
   const getColumnSearchProps = (
     dataIndex: StudentsDataIndex
@@ -31,8 +61,8 @@ const ManageStudents = () => {
       />
     ),
     filterIcon: (filtered: boolean) => <SearchIcon filtered={filtered} />,
-    //filteredValue: filteredInfo[dataIndex] || null,
-    // onFilter: methods.handleFilter,
+    filteredValue: filteredInfo[dataIndex] || null,
+    onFilter: methods.handleFilter,
   });
 
   const getColumnSearchDateProps = (
@@ -86,16 +116,39 @@ const ManageStudents = () => {
     {
       title: 'المستوى',
       key: StudentFields.level,
-      render: (record: User) => (
-        <span>{(record.profile as Student).level}</span>
-      ),
+      filters: studentMappedLevels,
+      filterMultiple: false,
+      onFilter: methods.handleFilter,
+      filteredValue: filteredInfo.level || null,
+      render: (record: User) => {
+        return (
+          <Tag color="blue">
+            {getMapperLabel<StudentLevel>(
+              studentMappedLevels,
+              (record.profile as Student).level
+            )}
+          </Tag>
+        );
+      },
       ...getColumnSearchProps(StudentFields.level),
     },
     {
       title: 'البريد الإلكتروني',
       key: UserFields.emailConfirmed,
-      sorter: true,
-      sortDirections: ['descend', 'ascend'],
+      dataIndex: UserFields.emailConfirmed,
+      filters: [
+        {
+          text: 'مفعل',
+          value: true,
+        },
+        {
+          text: 'غير مفعل',
+          value: false,
+        },
+      ],
+      filterMultiple: false,
+      onFilter: methods.handleFilter,
+      filteredValue: filteredInfo.emailConfirmed || null,
       render: (emailConfirmed: boolean) => {
         const color = emailConfirmed ? 'green' : 'red';
         return <Tag color={color}>{emailConfirmed ? 'مفعل' : 'غير مفعل'}</Tag>;
@@ -104,19 +157,54 @@ const ManageStudents = () => {
     {
       title: 'نوع العضوية',
       key: UserFields.role,
-      render: (record: User) => <span>{record.role.title}</span>,
+      filters: [
+        {
+          text: 'طالب مرتبط بمشرف',
+          value: RoleTitle.StudentTeacher,
+        },
+        {
+          text: 'طالب',
+          value: RoleTitle.Student,
+        },
+      ],
+      filterMultiple: false,
+      onFilter: methods.handleFilter,
+      filteredValue: filteredInfo.role || null,
+      render: (record: User) =>
+        record.role.title === RoleTitle.StudentTeacher ? (
+          <Tag color="gold">
+            {getMapperLabel(rolesMappedTypes, record.role.title)}
+          </Tag>
+        ) : (
+          <span>{getMapperLabel(rolesMappedTypes, record.role.title)}</span>
+        ),
     },
     {
       title: 'حالة العضوية',
       key: UserFields.isActive,
       dataIndex: UserFields.isActive,
-      render: (isActive: boolean, record) => {
+      filters: [
+        {
+          text: 'نشط',
+          value: true,
+        },
+        {
+          text: 'غير نشط',
+          value: false,
+        },
+      ],
+      filterMultiple: false,
+      onFilter: methods.handleFilter,
+      filteredValue: filteredInfo.isActive || null,
+      render: (isActive: boolean, record: User) => {
         return (
           <Switch
             checkedChildren="نشط"
-            unCheckedChildren="محظور"
+            unCheckedChildren="غير نشط"
             defaultChecked={isActive}
-            // onChange={(value) => onStatChange(value, record)}
+            checked={record.isActive}
+            onChange={(value) => onUserStateChange(value, record.id)}
+            loading={l}
           />
         );
       },
@@ -128,23 +216,30 @@ const ManageStudents = () => {
       filteredValue: null,
       render: (record) => (
         <Space size="small">
-          <Button icon={<DeleteColumnOutlined />} shape="circle" />
-          <Button icon={<DeleteColumnOutlined />} shape="circle" />
+          <Button icon={<DeleteOutlined />} shape="circle" />
+          <Button
+            icon={<EyeOutlined />}
+            shape="circle"
+            onClick={() => showDrawer(record.id)}
+          />
         </Space>
       ),
     },
   ];
 
   return (
-    <Table
-      columns={columns}
-      dataSource={studentSnap.students}
-      loading={studentSnap.queryLoading}
-      size="large"
-      onChange={methods.handleTableChange}
-      pagination={methods.handlePagination}
-      style={{ minHeight: 500 }}
-    />
+    <StyledSection>
+      <Table
+        columns={columns}
+        dataSource={studentSnap.students}
+        loading={studentSnap.queryLoading}
+        size="large"
+        onChange={methods.handleTableChange}
+        pagination={methods.handlePagination}
+        style={{ minHeight: 500 }}
+      />
+      <ViewStudentProfile id={profileId} onClose={onClose} visible={visible} />
+    </StyledSection>
   );
 };
 

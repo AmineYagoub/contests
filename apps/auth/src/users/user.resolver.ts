@@ -40,12 +40,20 @@ export class UserResolver {
     return this.userService.findTeacher(name);
   }
 
+  @isPublic()
+  @Query(() => User)
+  findStudent(@Args('id') id: string) {
+    return this.userService.findUnique({ id });
+  }
+
+  @isPublic()
   @Mutation(() => User)
   async updateUser(@Args('id') id: string, @Args('input') data: UpdateUserDto) {
     delete data.confirmPassword;
     return this.userService.update({ data, where: { id } });
   }
 
+  @isPublic()
   @Query(() => UserPaginationResponse, { nullable: true })
   async paginateUsers(@Args('params') params: UserPaginationDto) {
     return this.userService.paginate(params);

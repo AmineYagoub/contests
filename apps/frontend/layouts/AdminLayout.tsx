@@ -47,12 +47,12 @@ const AdminLayout = ({ children }) => {
   const router = useRouter();
   const socket = useReactiveVar(socketVar);
 
-  useEffect(() => {
+  /*   useEffect(() => {
     socket.connect();
     return () => {
       socket.disconnect();
     };
-  }, [socket]);
+  }, [socket]); */
 
   return (
     <Layout>

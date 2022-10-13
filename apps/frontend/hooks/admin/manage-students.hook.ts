@@ -8,16 +8,20 @@ import type {
   FilterValue,
   SorterResult,
 } from 'antd/es/table/interface';
-import { StudentsDataIndex, UserFields } from '@/utils/fields';
+import { StudentFields, StudentsDataIndex, UserFields } from '@/utils/fields';
 import {
   OrderByType,
   OrderUserArgs,
+  RoleTitle,
+  Student,
   usePaginateUsersQuery,
   User,
+  useUpdateUserMutation,
   WhereUserArgs,
 } from '@/graphql/graphql';
-import { StudentActions } from '@/valtio/student.state';
+import { StudentActions, StudentState } from '@/valtio/student.state';
 import { TableProps } from 'antd/es/table';
+import { getLevelsValues } from '@/utils/mapper';
 
 export const useSearchStudents = () => {
   const [pagination, setPagination] = useState<Pagination>({
@@ -28,7 +32,9 @@ export const useSearchStudents = () => {
     hasPrevPage: false,
   });
 
-  const [where, setWhere] = useState<WhereUserArgs>(null);
+  const [where, setWhere] = useState<WhereUserArgs>({
+    role: [RoleTitle.Student, RoleTitle.StudentTeacher],
+  });
   const [orderBy, setOrderBy] = useState<OrderUserArgs>(null);
   const [filteredInfo, setFilteredInfo] = useState<
     Record<string, FilterValue | null>
@@ -44,7 +50,7 @@ export const useSearchStudents = () => {
       offset: 0,
       limit: 10,
     });
-    setWhere(null);
+    setWhere({ role: [RoleTitle.Student, RoleTitle.StudentTeacher] });
     setOrderBy(null);
   };
 
@@ -54,10 +60,9 @@ export const useSearchStudents = () => {
     dataIndex: StudentsDataIndex
   ) => {
     confirm();
-    console.log(dataIndex, selectedKeys);
   };
 
-  const handleFilter = (value: string | number | boolean, record: User) => {
+  const handleFilter = (value: string | number | boolean, record: Student) => {
     //console.log(value, record);
     return true;
   };
@@ -74,7 +79,7 @@ export const useSearchStudents = () => {
     }));
   };
 
-  const { data, loading, refetch } = usePaginateUsersQuery({
+  const { data, loading } = usePaginateUsersQuery({
     variables: {
       params: {
         take: pagination.limit,
@@ -102,21 +107,6 @@ export const useSearchStudents = () => {
     };
   }, [data]);
 
-  const refetchData = () => {
-    StudentActions.setQueryLoading(true);
-    refetch()
-      .then(({ data }) => {
-        const results = data?.paginateUsers?.data.map((d) => ({
-          key: d.id,
-          ...d,
-        }));
-        StudentActions.setStudentsData(results as User[]);
-      })
-      .finally(() => {
-        StudentActions.setQueryLoading(false);
-      });
-  };
-
   const handleTableChange: TableProps<ColumnType<User>>['onChange'] = (
     pagination,
     filters,
@@ -134,10 +124,17 @@ export const useSearchStudents = () => {
       }
     }
 
-    const w: WhereUserArgs = {};
+    const w: WhereUserArgs = {
+      role: [RoleTitle.Student, RoleTitle.StudentTeacher],
+    };
     for (const [key, value] of Object.entries(filters)) {
       if (value) {
-        w[key] = key === UserFields.created ? value : value[0];
+        w[key] =
+          key === UserFields.created
+            ? value
+            : key === StudentFields.level
+            ? getLevelsValues(String(value))
+            : value[0];
       }
     }
 
@@ -148,7 +145,6 @@ export const useSearchStudents = () => {
   };
 
   const methods = {
-    refetchData,
     handleReset,
     handleFilter,
     handleSearch,
@@ -169,4 +165,21 @@ export const useSearchStudents = () => {
     filteredInfo,
     sortedInfo,
   };
+};
+
+export const useUpdateStudents = () => {
+  const [UpdateUserMutation, { loading }] = useUpdateUserMutation();
+
+  const onUserStateChange = (value: boolean, id: string) => {
+    UpdateUserMutation({
+      variables: { id: id, input: { isActive: value } },
+    }).then(() => {
+      for (const el of StudentState.students) {
+        if (el.id === id) {
+          el.isActive = value;
+        }
+      }
+    });
+  };
+  return { loading, onUserStateChange };
 };

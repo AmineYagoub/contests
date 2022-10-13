@@ -1,5 +1,5 @@
 import { Question, Student, User } from '@/graphql/graphql';
-import { ContestsDataIndex } from '@/hooks/contests/manage.hook';
+import { ContestsDataIndex } from '@/hooks/contests/manage-contests.hook';
 
 export const ContestFields: { [P in ContestsDataIndex]: P } = {
   id: 'id',

@@ -2,6 +2,7 @@ import {
   ContestStatus,
   ContestType,
   QuestionType,
+  RoleTitle,
   StudentLevel,
 } from '@/graphql/graphql';
 
@@ -83,6 +84,33 @@ export const questionMappedTypes: Mapper<QuestionType>[] = [
   {
     text: 'صعب',
     value: QuestionType?.Hard,
+  },
+];
+
+export const rolesMappedTypes: Mapper<RoleTitle>[] = [
+  {
+    text: 'المدير',
+    value: RoleTitle.Admin,
+  },
+  {
+    text: 'المشرف',
+    value: RoleTitle.Moderator,
+  },
+  {
+    text: 'معلم ذهبي',
+    value: RoleTitle.GoldenTeacher,
+  },
+  {
+    text: 'معلم',
+    value: RoleTitle.Teacher,
+  },
+  {
+    text: 'طالب',
+    value: RoleTitle.Student,
+  },
+  {
+    text: 'طالب مرتبط بمشرف',
+    value: RoleTitle.StudentTeacher,
   },
 ];
 

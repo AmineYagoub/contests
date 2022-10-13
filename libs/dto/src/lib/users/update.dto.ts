@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 import { RoleTitle } from '@contests/types';
 import { Field, InputType, OmitType, PartialType } from '@nestjs/graphql';
@@ -14,6 +14,11 @@ export class UpdateUserDto extends PartialType(
   @IsOptional()
   @IsString()
   currentPassword: string;
+
+  @Field(() => Boolean, { nullable: true })
+  @IsOptional()
+  @IsBoolean()
+  isActive: boolean;
 
   @Field(() => RoleTitle, { nullable: true })
   @IsOptional()

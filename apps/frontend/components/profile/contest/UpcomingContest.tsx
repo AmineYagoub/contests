@@ -10,7 +10,7 @@ import { Contest, ContestStatus, User } from '@/graphql/graphql';
 import {
   ContestsDataIndex,
   useSearchContests,
-} from '@/hooks/contests/manage.hook';
+} from '@/hooks/contests/manage-contests.hook';
 import { ContestFields } from '@/utils/fields';
 import { contestMappedStatus, getMapperLabel } from '@/utils/mapper';
 

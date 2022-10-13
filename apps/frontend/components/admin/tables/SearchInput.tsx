@@ -32,7 +32,7 @@ export function SearchInput<T>(props: SearchInputProps<T>) {
     <div style={{ padding: 8 }}>
       <Input
         ref={searchInput}
-        placeholder={`البحث عن ${dataIndex}`}
+        placeholder="البحث عن ..."
         value={selectedKeys[0]}
         onChange={(e) =>
           setSelectedKeys(e.target.value ? [e.target.value] : [])

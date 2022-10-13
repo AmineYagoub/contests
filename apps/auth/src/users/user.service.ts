@@ -1,5 +1,6 @@
 import { UpdateUserDto } from '@contests/dto';
 import { RoleTitle } from '@contests/types';
+import { getUsers } from '@contests/utils';
 import {
   Injectable,
   Logger,
@@ -17,7 +18,54 @@ export class UserService {
   constructor(
     private prisma: PrismaService,
     private readonly passwordService: PasswordService
-  ) {}
+  ) {
+    /*     
+    this.prisma.user.deleteMany().then(() => {
+      this.seedUsers();
+    }); 
+    */
+  }
+
+  /**
+   * Seed dummy data.
+   *
+   * @returns
+   */
+  private async seedUsers() {
+    try {
+      const { teachers, students } = await getUsers(
+        this.passwordService.hashPassword
+      );
+      const res: User[] = [];
+      for (const user of teachers) {
+        res.push(
+          await this.prisma.user.create({
+            data: user,
+            include: { profile: true },
+          })
+        );
+      }
+      let i = 0;
+      for (const user of students) {
+        if (
+          user.role.connectOrCreate.where.title === RoleTitle.STUDENT_TEACHER
+        ) {
+          user.profile.create.teacher = {
+            connect: {
+              id: res[i].profile.id,
+            },
+          };
+        }
+        i++;
+        res.push(await this.prisma.user.create({ data: user }));
+        if (i > 5) {
+          i = 0;
+        }
+      }
+    } catch (error) {
+      Logger.log(error);
+    }
+  }
 
   /**
    * Find a User by its unique key.
@@ -31,6 +79,7 @@ export class UserService {
         where: input,
         include: {
           role: true,
+          profile: { include: { teacher: true } },
         },
       });
     } catch (error) {
@@ -171,38 +220,35 @@ export class UserService {
   private buildWhere(
     where?: Prisma.ProfileWhereInput & Prisma.UserWhereInput
   ): Prisma.UserWhereInput {
-    const filter: Prisma.ProfileWhereInput & Prisma.UserWhereInput = {};
+    let filter: Prisma.ProfileWhereInput & Prisma.UserWhereInput = {};
     if (where) {
       for (const [key, value] of Object.entries(where)) {
-        switch (key) {
-          case 'firstName':
-          case 'lastName':
-          case 'country':
-          case 'level':
-            filter[key] = {
+        if (['firstName', 'lastName', 'country', 'level'].includes(key)) {
+          filter.profile = {
+            ...filter.profile,
+            [key]: {
               contains: String(value),
-            };
-            break;
-          case 'emailConfirmed':
-            filter.emailConfirmed = Boolean(value);
-            break;
-
-          case 'role':
-            filter.role = {
-              title: {
-                contains: String(value),
-              },
-            };
-            break;
-
-          case 'created':
-            filter.created = {
-              lte: new Date(value[1]),
-              gte: new Date(value[0]),
-            };
-            break;
-          default:
-            break;
+            },
+          };
+        }
+        if (['emailConfirmed', 'isActive'].includes(key)) {
+          filter = {
+            ...filter,
+            [key]: value,
+          };
+        }
+        if (key === 'role') {
+          filter.role = {
+            title: {
+              in: value as RoleTitle[],
+            },
+          };
+        }
+        if (key === 'created') {
+          filter.created = {
+            lte: new Date(value[1]),
+            gte: new Date(value[0]),
+          };
         }
       }
     }

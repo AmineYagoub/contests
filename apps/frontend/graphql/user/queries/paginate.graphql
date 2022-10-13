@@ -8,6 +8,7 @@ query PaginateUsers($params: UserPaginationDto!) {
         title
       }
       isActive
+      created
       emailConfirmed
       profile {
       __typename
@@ -17,15 +18,6 @@ query PaginateUsers($params: UserPaginationDto!) {
         lastName
         level
         country
-        personalImage
-        birthCertImage
-        letterImage
-        dateOfBirth
-        teacher {
-          id
-          firstName
-          lastName
-        }
       }
       ... on Teacher {
         id

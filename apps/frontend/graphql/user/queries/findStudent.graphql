@@ -1,0 +1,36 @@
+query FindStudent($id: String!) {
+  findStudent(id: $id) {
+    id
+    key
+    email
+    emailConfirmed
+    isActive
+    created
+    role {
+      title
+    }
+    profile {
+      __typename
+      ... on Teacher {
+        id
+      }
+      ... on Student {
+        id
+        level
+        country
+        firstName
+        lastName
+        dateOfBirth
+        letterImage
+        personalImage
+        birthCertImage
+        teacher {
+          id
+          firstName
+          lastName
+          personalImage
+        }
+      }
+    }
+  }
+}
