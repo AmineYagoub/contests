@@ -79,7 +79,7 @@ export const useSearchStudents = () => {
     }));
   };
 
-  const { data, loading } = usePaginateUsersQuery({
+  const { data, refetch } = usePaginateUsersQuery({
     variables: {
       params: {
         take: pagination.limit,
@@ -92,7 +92,7 @@ export const useSearchStudents = () => {
   });
 
   useEffect(() => {
-    StudentActions.setQueryLoading(loading);
+    StudentActions.setQueryLoading(true);
     if (data) {
       StudentActions.setQueryLoading(false);
       const results = data?.paginateUsers?.data.map((d) => ({
@@ -106,6 +106,21 @@ export const useSearchStudents = () => {
       StudentActions.setQueryLoading(false);
     };
   }, [data]);
+
+  const refetchData = () => {
+    StudentActions.setQueryLoading(true);
+    refetch()
+      .then(({ data }) => {
+        const results = data?.paginateUsers?.data.map((d) => ({
+          key: d.id,
+          ...d,
+        }));
+        StudentActions.setStudentsData(results as User[]);
+      })
+      .finally(() => {
+        StudentActions.setQueryLoading(false);
+      });
+  };
 
   const handleTableChange: TableProps<ColumnType<User>>['onChange'] = (
     pagination,
@@ -150,6 +165,7 @@ export const useSearchStudents = () => {
     handleSearch,
     handleTableChange,
     clearAllFilters,
+    refetchData,
     handlePagination: {
       total: data?.paginateUsers?.total ?? 0,
       pageSize: pagination.limit,

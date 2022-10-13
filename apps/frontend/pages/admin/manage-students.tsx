@@ -14,7 +14,7 @@ import {
 } from '@/components/admin/tables/SearchDatePicker';
 import moment from 'moment-timezone';
 import { Button, Space, Switch, Table, Tag } from 'antd';
-import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import { EyeOutlined } from '@ant-design/icons';
 import { useSnapshot } from 'valtio';
 import { StudentState } from '@/valtio/student.state';
 import {
@@ -25,6 +25,7 @@ import {
 import styled from '@emotion/styled';
 import ViewStudentProfile from '@/components/admin/users/ViewStudentProfile';
 import { useState } from 'react';
+import DeleteUser from '@/components/admin/users/DeleteUser';
 
 const StyledSection = styled('section')({
   backgroundColor: '#f8f8f8 !important',
@@ -216,7 +217,7 @@ const ManageStudents = () => {
       filteredValue: null,
       render: (record) => (
         <Space size="small">
-          <Button icon={<DeleteOutlined />} shape="circle" />
+          <DeleteUser record={record} onSuccess={methods.refetchData} />
           <Button
             icon={<EyeOutlined />}
             shape="circle"

@@ -254,4 +254,16 @@ export class UserService {
     }
     return filter;
   }
+
+  /**
+   * Delete a User
+   *
+   * @param where Prisma.UserWhereInput The User where input.
+   * @returns  Promise<User>
+   */
+  async delete(where: Prisma.UserWhereUniqueInput) {
+    return this.prisma.user.delete({
+      where,
+    });
+  }
 }

@@ -59,6 +59,12 @@ export class UserResolver {
     return this.userService.paginate(params);
   }
 
+  @isPublic()
+  @Mutation(() => User, { nullable: true })
+  async deleteUserById(@Args('id') id: string) {
+    return this.userService.delete({ id });
+  }
+
   /**
    * Resolve user type
    *
