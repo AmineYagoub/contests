@@ -10,3 +10,4 @@ export * from './lib/decorators/isStudentHasTeacher.decorator';
 export * from './lib/decorators/isPublic.decorator';
 export * from './lib/interceptors/nonce.interceptor';
 export * from './lib/guards/auth.guard';
+export * from './lib/seed/seed';
