@@ -14,7 +14,7 @@ import { Contest, ContestStatus, StudentLevel } from '@/graphql/graphql';
 import {
   ContestsDataIndex,
   useSearchContests,
-} from '@/hooks/contests/manage.hook';
+} from '@/hooks/admin/manage-contests.hook';
 import AdminLayout from '@/layout/AdminLayout';
 import { ContestFields } from '@/utils/fields';
 import {
