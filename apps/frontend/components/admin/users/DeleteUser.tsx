@@ -1,6 +1,6 @@
 import { Button, Popconfirm } from 'antd';
 
-import { Contest, useDeleteUserMutation } from '@/graphql/graphql';
+import { useDeleteUserMutation, User } from '@/graphql/graphql';
 import { DeleteOutlined } from '@ant-design/icons';
 import { Logger } from '@/utils/app';
 
@@ -8,7 +8,7 @@ const DeleteUser = ({
   record,
   onSuccess,
 }: {
-  record: Contest;
+  record: User;
   onSuccess: () => void;
 }) => {
   const [DeleteUserMutation, { loading }] = useDeleteUserMutation();
