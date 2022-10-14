@@ -35,7 +35,7 @@ export const useSearchStudents = () => {
   const [where, setWhere] = useState<WhereUserArgs>({
     role: [RoleTitle.Student, RoleTitle.StudentTeacher],
   });
-  const [orderBy, setOrderBy] = useState<OrderUserArgs>(null);
+  const [orderBy, setOrderBy] = useState<OrderUserArgs>({});
   const [filteredInfo, setFilteredInfo] = useState<
     Record<string, FilterValue | null>
   >({});
@@ -51,7 +51,7 @@ export const useSearchStudents = () => {
       limit: 10,
     });
     setWhere({ role: [RoleTitle.Student, RoleTitle.StudentTeacher] });
-    setOrderBy(null);
+    setOrderBy({});
   };
 
   const handleSearch = (

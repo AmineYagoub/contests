@@ -1,15 +1,25 @@
 import {
+  Avatar,
   Button,
+  Card,
   Col,
   Descriptions,
   Drawer,
   Image,
+  Popover,
   Row,
+  Skeleton,
   Space,
   Switch,
   Tag,
 } from 'antd';
-import { Student, StudentLevel, useFindStudentQuery } from '@/graphql/graphql';
+import {
+  RoleTitle,
+  Student,
+  StudentLevel,
+  useFindUserQuery,
+  User,
+} from '@/graphql/graphql';
 import moment from 'moment-timezone';
 import styled from '@emotion/styled';
 import {
@@ -21,6 +31,7 @@ import ViewStudentSkeleton from './ViewStudentSkeleton';
 import { MailOutlined, WarningOutlined } from '@ant-design/icons';
 import StyledButton from '@/components/common/StyledButton';
 import { useUpdateStudents } from '@/hooks/admin/manage-students.hook';
+import { memo, useEffect, useState } from 'react';
 
 const StyledDescriptions = styled(Descriptions)({
   table: {
@@ -29,20 +40,68 @@ const StyledDescriptions = styled(Descriptions)({
   },
 });
 
+const UserRole = memo<{ user: User }>(function UserRole({ user }) {
+  const role = getMapperLabel(rolesMappedTypes, user.role.title);
+  const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+  };
+  useEffect(() => {
+    let t: NodeJS.Timeout;
+    if (open) {
+      t = setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    }
+    return () => {
+      clearTimeout(t);
+    };
+  }, [open]);
+  if (user.role.title === RoleTitle.StudentTeacher) {
+    const teacher = (user.profile as Student).teacher;
+    return (
+      <Popover
+        content={
+          <Card style={{ width: 300, maxHeight: 150 }}>
+            <Skeleton loading={loading} avatar active>
+              <Card.Meta
+                avatar={<Avatar src={teacher?.personalImage} />}
+                title={`${teacher?.firstName} ${teacher?.lastName}`}
+                description={teacher.country}
+              />
+            </Skeleton>
+          </Card>
+        }
+        trigger="click"
+        open={open}
+        onOpenChange={handleOpenChange}
+        style={{ width: 300, maxHeight: 150 }}
+      >
+        <Button type="link" style={{ height: 'unset', padding: 'unset' }}>
+          {role}
+        </Button>
+      </Popover>
+    );
+  }
+  return <span>{role}</span>;
+});
+
 const ViewStudentProfile = ({
-  id,
+  profileKey,
   visible,
   onClose,
 }: {
-  id: string;
+  profileKey: number;
   visible: boolean;
   onClose: () => void;
 }) => {
-  const { data, loading } = useFindStudentQuery({
-    variables: { id },
+  const { data, loading } = useFindUserQuery({
+    variables: { key: profileKey },
     skip: !visible,
   });
-  const user = data?.findStudent;
+  const user = data?.findUser;
   const profile = user?.profile as Student;
 
   const { onUserStateChange, loading: l } = useUpdateStudents();
@@ -142,7 +201,7 @@ const ViewStudentProfile = ({
                 )}
               </Descriptions.Item>
               <Descriptions.Item label="نوع العضوية">
-                {getMapperLabel(rolesMappedTypes, user.role.title)}
+                <UserRole user={user as User} />
               </Descriptions.Item>
               <Descriptions.Item label="حالة العضوية">
                 <Switch

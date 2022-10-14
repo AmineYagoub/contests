@@ -1,5 +1,5 @@
-query FindStudent($id: String!) {
-  findStudent(id: $id) {
+query FindUser($key: Int!) {
+  findUser(key: $key) {
     id
     key
     email
@@ -13,6 +13,10 @@ query FindStudent($id: String!) {
       __typename
       ... on Teacher {
         id
+        country
+        firstName
+        lastName
+        personalImage
       }
       ... on Student {
         id
@@ -26,6 +30,7 @@ query FindStudent($id: String!) {
         birthCertImage
         teacher {
           id
+          country
           firstName
           lastName
           personalImage

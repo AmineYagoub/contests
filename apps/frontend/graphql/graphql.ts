@@ -372,9 +372,9 @@ export type Query = {
   findOneContestById?: Maybe<Contest>;
   findOneQuestionById?: Maybe<Question>;
   findOneTagById?: Maybe<Tag>;
-  findStudent: User;
   findTags?: Maybe<Array<Tag>>;
   findTeacher: Array<User>;
+  findUser: User;
   getAuthUser: User;
   paginateContest?: Maybe<ContestPaginationResponse>;
   paginateQuestions?: Maybe<QuestionPaginationResponse>;
@@ -408,11 +408,6 @@ export type QueryFindOneTagByIdArgs = {
 };
 
 
-export type QueryFindStudentArgs = {
-  id: Scalars['String'];
-};
-
-
 export type QueryFindTagsArgs = {
   title: Scalars['String'];
 };
@@ -420,6 +415,11 @@ export type QueryFindTagsArgs = {
 
 export type QueryFindTeacherArgs = {
   name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryFindUserArgs = {
+  key: Scalars['Int'];
 };
 
 
@@ -559,6 +559,8 @@ export type Student = {
   /** Identifies the first name of the user. */
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  /** Identifies the first name of the user. */
+  key?: Maybe<Scalars['Int']>;
   /** Identifies the last name of the user. */
   lastName?: Maybe<Scalars['String']>;
   /** Identifies An official letter approved by the school in which he is studying. */
@@ -618,6 +620,8 @@ export type Teacher = {
   /** Identifies the first name of the user. */
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  /** Identifies the first name of the user. */
+  key?: Maybe<Scalars['Int']>;
   /** Identifies the last name of the user. */
   lastName?: Maybe<Scalars['String']>;
   /** Identifies the avatar of the user. */
@@ -938,19 +942,19 @@ export type UpdateStudentProfileMutationVariables = Exact<{
 
 export type UpdateStudentProfileMutation = { __typename?: 'Mutation', updateStudentProfile: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth: any, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } };
 
-export type FindStudentQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type FindStudentQuery = { __typename?: 'Query', findStudent: { __typename?: 'User', id: string, key: number, email: string, emailConfirmed: boolean, isActive: boolean, created: any, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth: any, letterImage?: string | null, personalImage?: string | null, birthCertImage?: string | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | null } | { __typename: 'Teacher', id: string } | null } };
-
 export type FindTeacherQueryVariables = Exact<{
   name?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type FindTeacherQuery = { __typename?: 'Query', findTeacher: Array<{ __typename?: 'User', id: string, key: number, email: string, isActive: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student' } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null }> };
+export type FindTeacherQuery = { __typename?: 'Query', findTeacher: Array<{ __typename?: 'User', id: string, key: number, email: string, isActive: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student' } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, country?: string | null, personalImage?: string | null } | null }> };
+
+export type FindUserQueryVariables = Exact<{
+  key: Scalars['Int'];
+}>;
+
+
+export type FindUserQuery = { __typename?: 'Query', findUser: { __typename?: 'User', id: string, key: number, email: string, emailConfirmed: boolean, isActive: boolean, created: any, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth: any, letterImage?: string | null, personalImage?: string | null, birthCertImage?: string | null, teacher?: { __typename?: 'Teacher', country?: string | null, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | null } };
 
 export type GetAuthUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1999,72 +2003,6 @@ export function useUpdateStudentProfileMutation(baseOptions?: Apollo.MutationHoo
 export type UpdateStudentProfileMutationHookResult = ReturnType<typeof useUpdateStudentProfileMutation>;
 export type UpdateStudentProfileMutationResult = Apollo.MutationResult<UpdateStudentProfileMutation>;
 export type UpdateStudentProfileMutationOptions = Apollo.BaseMutationOptions<UpdateStudentProfileMutation, UpdateStudentProfileMutationVariables>;
-export const FindStudentDocument = gql`
-    query FindStudent($id: String!) {
-  findStudent(id: $id) {
-    id
-    key
-    email
-    emailConfirmed
-    isActive
-    created
-    role {
-      title
-    }
-    profile {
-      __typename
-      ... on Teacher {
-        id
-      }
-      ... on Student {
-        id
-        level
-        country
-        firstName
-        lastName
-        dateOfBirth
-        letterImage
-        personalImage
-        birthCertImage
-        teacher {
-          id
-          firstName
-          lastName
-          personalImage
-        }
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useFindStudentQuery__
- *
- * To run a query within a React component, call `useFindStudentQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindStudentQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFindStudentQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useFindStudentQuery(baseOptions: Apollo.QueryHookOptions<FindStudentQuery, FindStudentQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<FindStudentQuery, FindStudentQueryVariables>(FindStudentDocument, options);
-      }
-export function useFindStudentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindStudentQuery, FindStudentQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<FindStudentQuery, FindStudentQueryVariables>(FindStudentDocument, options);
-        }
-export type FindStudentQueryHookResult = ReturnType<typeof useFindStudentQuery>;
-export type FindStudentLazyQueryHookResult = ReturnType<typeof useFindStudentLazyQuery>;
-export type FindStudentQueryResult = Apollo.QueryResult<FindStudentQuery, FindStudentQueryVariables>;
 export const FindTeacherDocument = gql`
     query FindTeacher($name: String) {
   findTeacher(name: $name) {
@@ -2081,6 +2019,8 @@ export const FindTeacherDocument = gql`
         id
         firstName
         lastName
+        country
+        personalImage
       }
     }
   }
@@ -2114,6 +2054,76 @@ export function useFindTeacherLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type FindTeacherQueryHookResult = ReturnType<typeof useFindTeacherQuery>;
 export type FindTeacherLazyQueryHookResult = ReturnType<typeof useFindTeacherLazyQuery>;
 export type FindTeacherQueryResult = Apollo.QueryResult<FindTeacherQuery, FindTeacherQueryVariables>;
+export const FindUserDocument = gql`
+    query FindUser($key: Int!) {
+  findUser(key: $key) {
+    id
+    key
+    email
+    emailConfirmed
+    isActive
+    created
+    role {
+      title
+    }
+    profile {
+      __typename
+      ... on Teacher {
+        id
+        country
+        firstName
+        lastName
+        personalImage
+      }
+      ... on Student {
+        id
+        level
+        country
+        firstName
+        lastName
+        dateOfBirth
+        letterImage
+        personalImage
+        birthCertImage
+        teacher {
+          country
+          firstName
+          lastName
+          personalImage
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindUserQuery__
+ *
+ * To run a query within a React component, call `useFindUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindUserQuery({
+ *   variables: {
+ *      key: // value for 'key'
+ *   },
+ * });
+ */
+export function useFindUserQuery(baseOptions: Apollo.QueryHookOptions<FindUserQuery, FindUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindUserQuery, FindUserQueryVariables>(FindUserDocument, options);
+      }
+export function useFindUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindUserQuery, FindUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindUserQuery, FindUserQueryVariables>(FindUserDocument, options);
+        }
+export type FindUserQueryHookResult = ReturnType<typeof useFindUserQuery>;
+export type FindUserLazyQueryHookResult = ReturnType<typeof useFindUserLazyQuery>;
+export type FindUserQueryResult = Apollo.QueryResult<FindUserQuery, FindUserQueryVariables>;
 export const GetAuthUserDocument = gql`
     query GetAuthUser {
   getAuthUser {

@@ -13,6 +13,8 @@ query FindTeacher($name: String) {
         id
         firstName
         lastName
+        country
+        personalImage
       }
     }
   }

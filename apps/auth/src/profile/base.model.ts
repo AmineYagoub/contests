@@ -1,9 +1,15 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType({ isAbstract: true })
 export abstract class BaseProfile {
   @Field(() => ID)
   id: string;
+
+  @Field(() => Int, {
+    description: 'Identifies the first name of the user.',
+    nullable: true,
+  })
+  key?: number;
 
   @Field({
     description: 'Identifies the first name of the user.',

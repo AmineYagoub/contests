@@ -26,6 +26,7 @@ import styled from '@emotion/styled';
 import ViewStudentProfile from '@/components/admin/users/ViewStudentProfile';
 import { useState } from 'react';
 import DeleteUser from '@/components/admin/users/DeleteUser';
+import { TableBtn } from './dashboard';
 
 const StyledSection = styled('section')({
   backgroundColor: '#f8f8f8 !important',
@@ -38,12 +39,12 @@ const ManageStudents = () => {
   const { methods, filteredInfo } = useSearchStudents();
   const studentSnap = useSnapshot(StudentState);
   const [visible, setVisible] = useState(false);
-  const [profileId, setProfileId] = useState<string>(null);
+  const [profileKey, setProfileKey] = useState<number>(null);
   const { onUserStateChange, loading: l } = useUpdateStudents();
 
-  const showDrawer = (id: string) => {
+  const showDrawer = (key: number) => {
     setVisible(true);
-    setProfileId(id);
+    setProfileKey(key);
   };
 
   const onClose = () => {
@@ -215,13 +216,13 @@ const ManageStudents = () => {
       title: 'الإجراءات',
       key: 'action',
       filteredValue: null,
-      render: (record) => (
+      render: (record: User) => (
         <Space size="small">
           <DeleteUser record={record} onSuccess={methods.refetchData} />
           <Button
             icon={<EyeOutlined />}
             shape="circle"
-            onClick={() => showDrawer(record.id)}
+            onClick={() => showDrawer(record.key)}
           />
         </Space>
       ),
@@ -230,6 +231,7 @@ const ManageStudents = () => {
 
   return (
     <StyledSection>
+      <TableBtn onClick={methods.clearAllFilters}>إعادة الضبط</TableBtn>
       <Table
         columns={columns}
         dataSource={studentSnap.students}
@@ -239,7 +241,11 @@ const ManageStudents = () => {
         pagination={methods.handlePagination}
         style={{ minHeight: 500 }}
       />
-      <ViewStudentProfile id={profileId} onClose={onClose} visible={visible} />
+      <ViewStudentProfile
+        profileKey={profileKey}
+        onClose={onClose}
+        visible={visible}
+      />
     </StyledSection>
   );
 };
