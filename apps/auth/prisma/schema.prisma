@@ -21,6 +21,18 @@ model Permission {
   role                  Role      @relation(fields: [roleId], references: [id] , onDelete: NoAction)
 }
 
+model Subscription {
+  id                    String    @id @default(uuid())
+  title                 String    @db.VarChar(100) @unique
+  subTitle              String    @db.VarChar(250)
+  price                 Int       @db.UnsignedSmallInt
+  options               Json      @db.Json
+  created               DateTime  @default(now())
+  updated               DateTime  @updatedAt
+  roleId                String    @unique
+  role                  Role      @relation(fields: [roleId], references: [id], onDelete: NoAction)
+}
+
 model Role {
   id                    String    @id @default(uuid())
   title                 String    @db.VarChar(100) @unique
@@ -29,6 +41,7 @@ model Role {
   updated               DateTime  @updatedAt
   permissions           Permission[]
   users                 User[]
+  subscription          Subscription?
 }
 
 model User {
@@ -59,6 +72,7 @@ model Profile {
   birthCertImage        String?   @db.VarChar(1000) @default("")
   letterImage           String?   @db.VarChar(1000) @default("")
   country               String?   @db.VarChar(255) @default("")
+  phone                 Json?     @db.Json
   dateOfBirth           DateTime? 
   created               DateTime  @default(now())
   updated               DateTime  @updatedAt
