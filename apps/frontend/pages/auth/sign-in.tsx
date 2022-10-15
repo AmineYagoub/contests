@@ -22,7 +22,7 @@ export const StyledForm = styled(Form)({
 
 const SignInPage: NextPageWithLayout = () => {
   const [form] = Form.useForm();
-  const { onFinish, onFinishFailed, loading } = useSigning(form);
+  const { onFinish, onFinishFailed, loading, clearErrors } = useSigning(form);
 
   return (
     <StyledForm
@@ -32,6 +32,7 @@ const SignInPage: NextPageWithLayout = () => {
       onSubmitCapture={(e) => e.preventDefault()}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
+      onValuesChange={(field) => clearErrors(field, form)}
       autoComplete="off"
       size="large"
       colon

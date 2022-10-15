@@ -9,6 +9,22 @@ import { Logger } from '@/utils/app';
 import { AppRoutes } from '@/utils/routes';
 
 import type { SigningInput } from '@/utils/types';
+
+const clearErrors = (field: SigningInput, form: FormInstance<unknown>) => {
+  if (field.email || field.password) {
+    form.setFields([
+      {
+        name: 'password',
+        errors: [],
+      },
+      {
+        name: 'email',
+        errors: [],
+      },
+    ]);
+  }
+};
+
 export const useSigning = (form: FormInstance<unknown>) => {
   const [SigningMutation, { loading }] = useSigningMutation();
   const router = useRouter();
@@ -24,7 +40,12 @@ export const useSigning = (form: FormInstance<unknown>) => {
         const { accessToken, refreshToken } = data.signing;
         localStorage.setItem(config.jwtName, accessToken);
         localStorage.setItem(config.refreshJwtName, refreshToken);
-        router.push(String(router?.query?.from || AppRoutes.StudentDashboard));
+        router.push({
+          pathname: AppRoutes.StudentDashboard,
+          query: {
+            from: 'login',
+          },
+        });
       }
     } catch (error) {
       Logger.log(error);
@@ -54,7 +75,7 @@ export const useSigning = (form: FormInstance<unknown>) => {
     Logger.log(errorInfo);
   };
 
-  return { onFinish, onFinishFailed, loading };
+  return { onFinish, onFinishFailed, loading, clearErrors };
 };
 
 export const emailRules: Rule[] = [
