@@ -41,11 +41,19 @@ export function withAuth<P>(
           }
           const user = data.getAuthUser as User;
           AuthActions.setUser(user);
-          /* if (user.role.title === RoleTitle.Admin) {
-            router.push(AppRoutes.AdminManageDashboard);
-          } else {
-            router.push(AppRoutes.StudentDashboard);
-          } */
+          if (router.query?.from === 'login') {
+            const path =
+              user.role.title === RoleTitle.Admin
+                ? AppRoutes.AdminManageDashboard
+                : [RoleTitle.GoldenTeacher, RoleTitle.Teacher].includes(
+                    user.role.title
+                  )
+                ? AppRoutes.TeacherDashboard
+                : AppRoutes.StudentDashboard;
+            router.push({
+              pathname: path,
+            });
+          }
         })
         .catch((error) => {
           router.push(AppRoutes.SignIn);
@@ -54,7 +62,7 @@ export function withAuth<P>(
         .finally(() => {
           setLoading(false);
         });
-    }, []);
+    }, [GetAuthUserQuery, router]);
 
     return loading ? (
       <AuthLayout>
