@@ -26,6 +26,6 @@ const ProfileContests = () => {
   return <Tabs defaultActiveKey="1" type="card" size="large" items={tabs} />;
 };
 ProfileContests.getLayout = (page: EmotionJSX.Element) => (
-  <ProfileLayout>{page}</ProfileLayout>
+  <ProfileLayout isTeacher={false}>{page}</ProfileLayout>
 );
 export default ProfileContests;

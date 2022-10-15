@@ -10,7 +10,7 @@ import {
   FindByIdForReviewQuery,
   FindByIdForReviewQueryVariables,
 } from '@/graphql/graphql';
-import { useGenerateResult } from '@/hooks/contests/generate-result.hook';
+import { useGenerateResult } from '@/hooks/contests/result.hook';
 import ProfileLayout from '@/layout/ProfileLayout';
 import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
@@ -40,7 +40,7 @@ const ContestResultPage: NextPageWithLayout = ({
   );
 };
 ContestResultPage.getLayout = (page: EmotionJSX.Element) => (
-  <ProfileLayout>{page}</ProfileLayout>
+  <ProfileLayout isTeacher={false}>{page}</ProfileLayout>
 );
 export default ContestResultPage;
 

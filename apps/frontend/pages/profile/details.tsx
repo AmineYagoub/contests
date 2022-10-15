@@ -38,7 +38,7 @@ const ProfileDetails = (props) => {
   return <Tabs defaultActiveKey="1" type="card" size="large" items={tabs} />;
 };
 ProfileDetails.getLayout = (page: EmotionJSX.Element) => (
-  <ProfileLayout>{page}</ProfileLayout>
+  <ProfileLayout isTeacher={false}>{page}</ProfileLayout>
 );
 
 export default ProfileDetails;

@@ -3,8 +3,8 @@ import { RoleTitle, Student, StudentLevel, User } from '@/graphql/graphql';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import {
-  useSearchStudents,
-  useUpdateStudents,
+  useSearchUsers,
+  useUpdateUsers,
 } from '@/hooks/admin/manage-students.hook';
 import { StudentFields, StudentsDataIndex, UserFields } from '@/utils/fields';
 import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
@@ -16,7 +16,7 @@ import moment from 'moment-timezone';
 import { Button, Space, Switch, Table, Tag } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 import { useSnapshot } from 'valtio';
-import { StudentState } from '@/valtio/student.state';
+import { UsersState } from '@/valtio/user.state';
 import {
   getMapperLabel,
   rolesMappedTypes,
@@ -36,11 +36,11 @@ const StyledSection = styled('section')({
 });
 
 const ManageStudents = () => {
-  const { methods, filteredInfo } = useSearchStudents();
-  const studentSnap = useSnapshot(StudentState);
+  const { methods, filteredInfo } = useSearchUsers('student');
+  const studentSnap = useSnapshot(UsersState);
   const [visible, setVisible] = useState(false);
   const [profileKey, setProfileKey] = useState<number>(null);
-  const { onUserStateChange, loading: l } = useUpdateStudents();
+  const { onUserStateChange, loading: l } = useUpdateUsers();
 
   const showDrawer = (key: number) => {
     setVisible(true);
@@ -234,7 +234,7 @@ const ManageStudents = () => {
       <TableBtn onClick={methods.clearAllFilters}>إعادة الضبط</TableBtn>
       <Table
         columns={columns}
-        dataSource={studentSnap.students}
+        dataSource={studentSnap.users}
         loading={studentSnap.queryLoading}
         size="large"
         onChange={methods.handleTableChange}

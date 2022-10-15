@@ -1,5 +1,5 @@
 import { User, useUpdateUserMutation } from '@/graphql/graphql';
-import { StudentState } from '@/valtio/student.state';
+import { UsersState } from '@/valtio/user.state';
 import { Switch } from 'antd';
 import { FC, useState } from 'react';
 
@@ -14,7 +14,7 @@ const SwitchStudentIsActive: FC<{ user: User; inTable: boolean }> = ({
       variables: { id: user.id, input: { isActive: value } },
     }).then(() => {
       if (inTable) {
-        for (const el of StudentState.students) {
+        for (const el of UsersState.users) {
           if (el.id === user.id) {
             el.isActive = value;
           }

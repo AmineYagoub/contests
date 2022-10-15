@@ -11,6 +11,6 @@ const ProfileDashboard: NextPageWithLayout = () => {
   return <div>ProfileDashboard</div>;
 };
 ProfileDashboard.getLayout = (page: EmotionJSX.Element) => (
-  <ProfileLayout>{page}</ProfileLayout>
+  <ProfileLayout isTeacher={false}>{page}</ProfileLayout>
 );
 export default ProfileDashboard;

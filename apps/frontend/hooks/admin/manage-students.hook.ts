@@ -19,11 +19,16 @@ import {
   useUpdateUserMutation,
   WhereUserArgs,
 } from '@/graphql/graphql';
-import { StudentActions, StudentState } from '@/valtio/student.state';
+import { UsersActions, UsersState } from '@/valtio/user.state';
 import { TableProps } from 'antd/es/table';
 import { getLevelsValues } from '@/utils/mapper';
+import { Logger } from '@/utils/app';
 
-export const useSearchStudents = () => {
+export const useSearchUsers = (role: 'student' | 'teacher') => {
+  const roles =
+    role === 'student'
+      ? [RoleTitle.Student, RoleTitle.StudentTeacher]
+      : [RoleTitle.Teacher, RoleTitle.GoldenTeacher];
   const [pagination, setPagination] = useState<Pagination>({
     offset: 0,
     limit: 10,
@@ -33,7 +38,7 @@ export const useSearchStudents = () => {
   });
 
   const [where, setWhere] = useState<WhereUserArgs>({
-    role: [RoleTitle.Student, RoleTitle.StudentTeacher],
+    role: roles,
   });
   const [orderBy, setOrderBy] = useState<OrderUserArgs>({});
   const [filteredInfo, setFilteredInfo] = useState<
@@ -50,7 +55,7 @@ export const useSearchStudents = () => {
       offset: 0,
       limit: 10,
     });
-    setWhere({ role: [RoleTitle.Student, RoleTitle.StudentTeacher] });
+    setWhere({ role: roles });
     setOrderBy({});
   };
 
@@ -92,33 +97,33 @@ export const useSearchStudents = () => {
   });
 
   useEffect(() => {
-    StudentActions.setQueryLoading(true);
+    UsersActions.setQueryLoading(true);
     if (data) {
-      StudentActions.setQueryLoading(false);
+      UsersActions.setQueryLoading(false);
       const results = data?.paginateUsers?.data.map((d) => ({
         key: d.id,
         ...d,
       }));
-      StudentActions.setStudentsData(results as User[]);
+      UsersActions.setUsersData(results as User[]);
     }
     return () => {
-      StudentActions.setStudentsData([]);
-      StudentActions.setQueryLoading(false);
+      UsersActions.setUsersData([]);
+      UsersActions.setQueryLoading(false);
     };
   }, [data]);
 
   const refetchData = () => {
-    StudentActions.setQueryLoading(true);
+    UsersActions.setQueryLoading(true);
     refetch()
       .then(({ data }) => {
         const results = data?.paginateUsers?.data.map((d) => ({
           key: d.id,
           ...d,
         }));
-        StudentActions.setStudentsData(results as User[]);
+        UsersActions.setUsersData(results as User[]);
       })
       .finally(() => {
-        StudentActions.setQueryLoading(false);
+        UsersActions.setQueryLoading(false);
       });
   };
 
@@ -140,7 +145,7 @@ export const useSearchStudents = () => {
     }
 
     const w: WhereUserArgs = {
-      role: [RoleTitle.Student, RoleTitle.StudentTeacher],
+      role: roles,
     };
     for (const [key, value] of Object.entries(filters)) {
       if (value) {
@@ -183,19 +188,41 @@ export const useSearchStudents = () => {
   };
 };
 
-export const useUpdateStudents = () => {
+export const useUpdateUsers = () => {
   const [UpdateUserMutation, { loading }] = useUpdateUserMutation();
 
   const onUserStateChange = (value: boolean, id: string) => {
-    UpdateUserMutation({
-      variables: { id: id, input: { isActive: value } },
-    }).then(() => {
-      for (const el of StudentState.students) {
-        if (el.id === id) {
-          el.isActive = value;
+    try {
+      UpdateUserMutation({
+        variables: { id: id, input: { isActive: value } },
+      }).then(() => {
+        for (const el of UsersState.users) {
+          if (el.id === id) {
+            el.isActive = value;
+          }
         }
-      }
-    });
+      });
+    } catch (error) {
+      Logger.log(error);
+    }
   };
-  return { loading, onUserStateChange };
+
+  const onUserRoleChange = (value: boolean, id: string) => {
+    try {
+      const role = value ? RoleTitle.GoldenTeacher : RoleTitle.Teacher;
+      UpdateUserMutation({
+        variables: { id: id, input: { role } },
+      }).then(() => {
+        for (const el of UsersState.users) {
+          if (el.id === id) {
+            el.role.title = role;
+          }
+        }
+      });
+    } catch (error) {
+      Logger.log(error);
+    }
+  };
+
+  return { loading, onUserStateChange, onUserRoleChange };
 };
