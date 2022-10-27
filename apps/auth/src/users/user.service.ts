@@ -136,6 +136,7 @@ export class UserService {
     data: UpdateUserDto;
   }) {
     const { data, where } = params;
+    const { currentPassword, role, ...payload } = data;
     if (data.password) {
       const user = await this.prisma.user.findUniqueOrThrow({
         where,
@@ -144,20 +145,32 @@ export class UserService {
         throw new UnauthorizedException('User Banned');
       }
       const passwordValid = await this.passwordService.validatePassword(
-        String(data.currentPassword),
+        String(currentPassword),
         user.password
       );
 
       if (!passwordValid) {
         throw new UnprocessableEntityException('Invalid Password');
       }
-      delete data.currentPassword;
-      data.password = await this.passwordService.hashPassword(
+
+      payload.password = await this.passwordService.hashPassword(
         String(data.password)
       );
     }
+    if (data.role) {
+      (payload as Prisma.UserUpdateInput).role = {
+        connectOrCreate: {
+          create: {
+            title: role,
+          },
+          where: {
+            title: role,
+          },
+        },
+      };
+    }
     return this.prisma.user.update({
-      data,
+      data: payload,
       where,
     });
   }

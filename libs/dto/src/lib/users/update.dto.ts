@@ -1,15 +1,10 @@
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
-
-import { RoleTitle } from '@contests/types';
-import { Field, InputType, OmitType, PartialType } from '@nestjs/graphql';
-import { Prisma } from '@prisma/auth-service';
+import { Field, InputType, PartialType } from '@nestjs/graphql';
 
 import { SignUpDto } from '../auth/signup.dto';
 
 @InputType()
-export class UpdateUserDto extends PartialType(
-  OmitType(SignUpDto, ['role'] as const)
-) {
+export class UpdateUserDto extends PartialType(SignUpDto) {
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
@@ -19,9 +14,4 @@ export class UpdateUserDto extends PartialType(
   @IsOptional()
   @IsBoolean()
   isActive: boolean;
-
-  @Field(() => RoleTitle, { nullable: true })
-  @IsOptional()
-  @IsString()
-  role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput;
 }

@@ -126,6 +126,11 @@ export class AuthService {
       if (!user.isActive) {
         throw new UnauthorizedException('User Banned');
       }
+      if (!user.emailConfirmed) {
+        throw new UnauthorizedException(
+          `User Email ${user.email} not confirmed`
+        );
+      }
       const passwordValid = await this.passwordService.validatePassword(
         String(password),
         user.password
@@ -133,11 +138,6 @@ export class AuthService {
 
       if (!passwordValid) {
         throw new UnauthorizedException('Invalid Password');
-      }
-      if (!user.emailConfirmed) {
-        throw new UnauthorizedException(
-          `User Email ${user.email} not confirmed`
-        );
       }
       return await this.generateJWTTokenFor(user);
     } catch (error) {

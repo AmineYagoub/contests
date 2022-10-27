@@ -954,7 +954,7 @@ export type FindUserQueryVariables = Exact<{
 }>;
 
 
-export type FindUserQuery = { __typename?: 'Query', findUser: { __typename?: 'User', id: string, key: number, email: string, emailConfirmed: boolean, isActive: boolean, created: any, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth: any, letterImage?: string | null, personalImage?: string | null, birthCertImage?: string | null, teacher?: { __typename?: 'Teacher', country?: string | null, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | null } };
+export type FindUserQuery = { __typename?: 'Query', findUser: { __typename?: 'User', id: string, key: number, email: string, emailConfirmed: boolean, isActive: boolean, created: any, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth: any, letterImage?: string | null, personalImage?: string | null, birthCertImage?: string | null, teacher?: { __typename?: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | null } };
 
 export type GetAuthUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -966,7 +966,7 @@ export type PaginateUsersQueryVariables = Exact<{
 }>;
 
 
-export type PaginateUsersQuery = { __typename?: 'Query', paginateUsers?: { __typename?: 'UserPaginationResponse', total: number, data?: Array<{ __typename?: 'User', id: string, key: number, isActive: boolean, created: any, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null }> | null } | null };
+export type PaginateUsersQuery = { __typename?: 'Query', paginateUsers?: { __typename?: 'UserPaginationResponse', total: number, data?: Array<{ __typename?: 'User', id: string, key: number, isActive: boolean, created: any, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, country?: string | null } | null }> | null } | null };
 
 
 export const CreateAnswerDocument = gql`
@@ -2086,6 +2086,7 @@ export const FindUserDocument = gql`
         personalImage
         birthCertImage
         teacher {
+          id
           country
           firstName
           lastName
@@ -2215,6 +2216,7 @@ export const PaginateUsersDocument = gql`
           id
           firstName
           lastName
+          country
         }
       }
     }

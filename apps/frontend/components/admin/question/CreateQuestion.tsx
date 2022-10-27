@@ -1,6 +1,6 @@
 import { Alert, Button, Drawer, Space } from 'antd';
 
-import { useCreateQuestions } from '@/hooks/questions/create-question.hook';
+import { useCreateQuestions } from '@/hooks/questions/create.hook';
 import { SaveOutlined } from '@ant-design/icons';
 
 import QuestionForm from './QuestionForm';

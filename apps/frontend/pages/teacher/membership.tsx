@@ -49,6 +49,14 @@ const TeacherMembership = () => {
           <StyledButton type="primary" ghost block shape="round">
             الحالية
           </StyledButton>
+          <StyledList>
+            <li>
+              <CheckOutlined /> <span>الإشراف على الطلبة</span>
+            </li>
+            <li>
+              <CheckOutlined /> <span>إرسال رسائل خاصة</span>
+            </li>
+          </StyledList>
         </Card.Grid>
         <Card.Grid style={gridStyle}>
           <StyledH1>الشهري</StyledH1>
@@ -63,13 +71,13 @@ const TeacherMembership = () => {
           <StyledList>
             <li>
               <CheckOutlined /> <span>العضوية الذهبية</span>
-            </li>{' '}
+            </li>
             <li>
               <CheckOutlined /> <span>العضوية الذهبية</span>
-            </li>{' '}
+            </li>
             <li>
               <CheckOutlined /> <span>العضوية الذهبية</span>
-            </li>{' '}
+            </li>
             <li>
               <CheckOutlined /> <span>العضوية الذهبية</span>
             </li>

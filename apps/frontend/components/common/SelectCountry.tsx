@@ -1,3 +1,4 @@
+import { Logger } from '@/utils/app';
 import { Form, Select } from 'antd';
 import Image from 'next/image';
 import { FocusEvent, useEffect, useState } from 'react';
@@ -24,7 +25,8 @@ const SelectCountry = ({ name, label, multiple = false }) => {
           }));
           setCountries(c);
           setCountriesStor(c);
-        });
+        })
+        .catch((e) => Logger.log(e));
     }
   };
 

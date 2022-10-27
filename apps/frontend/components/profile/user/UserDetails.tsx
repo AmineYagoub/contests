@@ -2,12 +2,16 @@ import { Button, DatePicker, Form, Input, Select } from 'antd';
 
 import SelectCountry from '@/components/common/SelectCountry';
 import SelectRole from '@/components/common/SelectRole';
-import { User } from '@/graphql/graphql';
+import { RoleTitle, User } from '@/graphql/graphql';
 import { emailRules } from '@/hooks/auth/signup.hook';
 import { useUser } from '@/hooks/profile/user.hook';
 import { formLayout } from '@/pages/auth/sign-up';
 import { studentMappedLevels } from '@/utils/mapper';
 import styled from '@emotion/styled';
+import CountryPhoneInput, { ConfigProvider } from 'antd-country-phone-input';
+import en from 'world_countries_lists/data/countries/en/world.json';
+import 'antd-country-phone-input/dist/index.css';
+import TeacherAvatar from './TeacherAvatar';
 
 const StyledForm = styled(Form)({
   maxWidth: 680,
@@ -24,6 +28,9 @@ const Space = styled('span')({
 
 const UserDetails = ({ user }: { user: User }) => {
   const [form] = Form.useForm();
+  const isTeacher = [RoleTitle.GoldenTeacher, RoleTitle.Teacher].includes(
+    user.role.title
+  );
   const {
     onFinish,
     onFinishFailed,
@@ -41,6 +48,11 @@ const UserDetails = ({ user }: { user: User }) => {
       size="large"
       {...formLayout}
     >
+      {isTeacher && (
+        <Form.Item label="الصورة الشخصية" name="personalImage">
+          <TeacherAvatar />
+        </Form.Item>
+      )}
       <Form.Item label="الإسم الكامل" style={{ marginBottom: 0 }} required>
         <Form.Item
           style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}
@@ -62,11 +74,13 @@ const UserDetails = ({ user }: { user: User }) => {
         <Input type="email" disabled />
       </Form.Item>
 
-      <SelectRole
-        selectedSupervisor={selectedSupervisor}
-        setSelectedSupervisor={setSelectedSupervisor}
-        isSignUp={false}
-      />
+      {!isTeacher && (
+        <SelectRole
+          selectedSupervisor={selectedSupervisor}
+          setSelectedSupervisor={setSelectedSupervisor}
+          isSignUp={false}
+        />
+      )}
 
       <SelectCountry name="country" label="الجنسية" />
 
@@ -82,19 +96,44 @@ const UserDetails = ({ user }: { user: User }) => {
         />
       </Form.Item>
 
-      <Form.Item
-        name="level"
-        label="حدد مرحلتك السنية"
-        rules={[{ required: true, message: 'يرجى تحديد حدد مرحلتك السنية ' }]}
-      >
-        <Select
-          allowClear
-          showArrow
-          options={studentMappedLevels}
-          fieldNames={{ label: 'text' }}
-          style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}
-        />
-      </Form.Item>
+      {isTeacher && (
+        <ConfigProvider locale={en}>
+          <Form.Item
+            name="phone"
+            label="رقم الهاتف"
+            style={{
+              width: 'calc(50% - 16px)',
+            }}
+            initialValue={{
+              short: 'eg',
+            }}
+          >
+            <CountryPhoneInput
+              size="small"
+              style={{
+                direction: 'ltr',
+                marginRight: 73,
+              }}
+            />
+          </Form.Item>
+        </ConfigProvider>
+      )}
+
+      {!isTeacher && (
+        <Form.Item
+          name="level"
+          label="حدد مرحلتك السنية"
+          rules={[{ required: true, message: 'يرجى تحديد حدد مرحلتك السنية ' }]}
+        >
+          <Select
+            allowClear
+            showArrow
+            options={studentMappedLevels}
+            fieldNames={{ label: 'text' }}
+            style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}
+          />
+        </Form.Item>
+      )}
 
       <Form.Item wrapperCol={{ ...formLayout.wrapperCol, offset: 5 }}>
         <Button type="primary" htmlType="submit" block loading={loading}>

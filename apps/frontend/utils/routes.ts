@@ -19,4 +19,10 @@ export enum AppRoutes {
   StudentContests = '/profile/contests',
   StudentMessages = '/profile/messages',
   StudentNotifications = '/profile/notifications',
+  TeacherDashboard = '/teacher/dashboard',
+  TeacherProfile = '/teacher/details',
+  TeacherContests = '/teacher/contests',
+  TeacherMessages = '/teacher/messages',
+  TeacherNotifications = '/teacher/notifications',
+  TeacherMembership = '/teacher/membership',
 }

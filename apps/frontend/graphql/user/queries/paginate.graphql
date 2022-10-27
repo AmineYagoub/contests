@@ -23,6 +23,7 @@ query PaginateUsers($params: UserPaginationDto!) {
         id
         firstName
         lastName
+        country
       }
     }
     }

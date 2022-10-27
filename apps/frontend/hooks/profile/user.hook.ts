@@ -43,8 +43,10 @@ export const useUser = (form: FormInstance<unknown>, user: User) => {
   }, [form, user]);
 
   const onFinish = async (values: UpdateStudentDto) => {
-    const { firstName, lastName, level, role, country, dateOfBirth } = values;
+    //const { firstName, lastName, level, role, country, dateOfBirth } = values;
+    console.log(values);
     try {
+      /*
       const { data } = await UpdateStudentProfileMutation({
         variables: {
           id: user.id,
@@ -64,7 +66,7 @@ export const useUser = (form: FormInstance<unknown>, user: User) => {
           message: 'تم تحديث بياناتك بنجاح !',
         });
         AuthActions.setUser(data?.updateStudentProfile as User);
-      }
+      } */
     } catch (error) {
       notification.error({
         message: 'حدث خطأ, يرجى إعادة تحديث الصفحة و المحاولة من جديد !',

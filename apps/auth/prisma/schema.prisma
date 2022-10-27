@@ -24,13 +24,28 @@ model Permission {
 model Subscription {
   id                    String    @id @default(uuid())
   title                 String    @db.VarChar(100) @unique
+  status                String    @db.VarChar(250)
+  created               DateTime  @default(now())
+  updated               DateTime  @updatedAt
+  
+  profileId             String    @unique
+  profile               Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  memberShipId          String    @unique
+  memberShip            MemberShip @relation(fields: [memberShipId], references: [id], onDelete: Cascade)
+}
+
+model MemberShip {
+  id                    String    @id @default(uuid())
+  title                 String    @db.VarChar(100) @unique
   subTitle              String    @db.VarChar(250)
   price                 Int       @db.UnsignedSmallInt
+  contestCount          Int       @db.UnsignedSmallInt
   options               Json      @db.Json
   created               DateTime  @default(now())
   updated               DateTime  @updatedAt
-  roleId                String    @unique
-  role                  Role      @relation(fields: [roleId], references: [id], onDelete: NoAction)
+  roles                 Role[]
+  subscription          Subscription[]
 }
 
 model Role {
@@ -41,7 +56,9 @@ model Role {
   updated               DateTime  @updatedAt
   permissions           Permission[]
   users                 User[]
-  subscription          Subscription?
+  memberShipStatus      Boolean?  @default(false)
+  memberShipId          String    
+  memberShip            MemberShip @relation(fields: [memberShipId], references: [id], onDelete: NoAction)
 }
 
 model User {
@@ -82,6 +99,8 @@ model Profile {
   teacherId             String?
   teacher               Profile?   @relation("StudentTeacher", fields: [teacherId], references: [id] , onDelete: SetNull)
   students              Profile[]  @relation("StudentTeacher")
+
+  subscriptions         Subscription[]
 
   @@index([firstName( sort: Desc)])
   @@index([level( sort: Desc)])
