@@ -7,6 +7,7 @@ on:
     branches:
       - dev
 
+jobs:
   build-and-deploy-auth:
     name: Build and Deploy auth
     runs-on: ubuntu-latest
