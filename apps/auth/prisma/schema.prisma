@@ -3,7 +3,8 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../../../node_modules/@prisma/auth-service"
+  // output   = "../../../node_modules/@prisma/auth-service" // Dev
+  output   = "../node_modules/@prisma/auth-service" // Production
 }
 
 datasource db {
@@ -27,7 +28,7 @@ model Subscription {
   status                String    @db.VarChar(250)
   created               DateTime  @default(now())
   updated               DateTime  @updatedAt
-  
+
   profileId             String    @unique
   profile               Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
@@ -57,7 +58,7 @@ model Role {
   permissions           Permission[]
   users                 User[]
   memberShipStatus      Boolean?  @default(false)
-  memberShipId          String    
+  memberShipId          String
   memberShip            MemberShip @relation(fields: [memberShipId], references: [id], onDelete: NoAction)
 }
 
@@ -74,7 +75,7 @@ model User {
 
   roleId                String
   role                  Role      @relation(fields: [roleId], references: [id])
-  emailToken            EmailToken? 
+  emailToken            EmailToken?
   profile               Profile?
 
   @@index([emailConfirmed(sort: Desc)])
@@ -82,7 +83,7 @@ model User {
 
 model Profile {
   id                    String    @id @default(uuid())
-  firstName             String?   @db.VarChar(100) @default("") 
+  firstName             String?   @db.VarChar(100) @default("")
   lastName              String?   @db.VarChar(100) @default("")
   level                 String?   @db.Char(64) @default("")
   personalImage         String?   @db.VarChar(1000) @default("")
@@ -90,7 +91,7 @@ model Profile {
   letterImage           String?   @db.VarChar(1000) @default("")
   country               String?   @db.VarChar(255) @default("")
   phone                 Json?     @db.Json
-  dateOfBirth           DateTime? 
+  dateOfBirth           DateTime?
   created               DateTime  @default(now())
   updated               DateTime  @updatedAt
   userId                String    @unique

@@ -3,7 +3,8 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../../../node_modules/@prisma/contest-service"
+  // output   = "../../../node_modules/@prisma/contest-service"  // Dev
+  output   = "../node_modules/@prisma/contest-service"  // Production
 }
 
 datasource db {
@@ -28,9 +29,9 @@ model Contest {
   level                 Json      @db.Json
   duration              Int?      @db.UnsignedSmallInt @default(40)
   startTime             DateTime  @db.DateTime
-  easyQuestionCount     Int       @db.UnsignedInt 
-  mediumQuestionCount   Int       @db.UnsignedInt 
-  hardQuestionCount     Int       @db.UnsignedInt 
+  easyQuestionCount     Int       @db.UnsignedInt
+  mediumQuestionCount   Int       @db.UnsignedInt
+  hardQuestionCount     Int       @db.UnsignedInt
   maxParticipants       Int?      @db.UnsignedInt @default(0)
   participants          Json?     @db.Json
   countries             Json?     @db.Json
@@ -54,7 +55,7 @@ model Question {
   id                String    @id @default(uuid())
   type              String    @db.VarChar(100)
   title             String    @db.VarChar(255)
-  correctAnswer     String    @db.VarChar(255) 
+  correctAnswer     String    @db.VarChar(255)
   lesson            String?   @db.VarChar(255) @default("")
   // level             Json      @db.Json
   usedCount         Int?      @db.UnsignedInt @default(0)
