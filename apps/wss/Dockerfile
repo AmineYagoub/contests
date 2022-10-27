@@ -12,7 +12,7 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-RUN npx nx build wss --generatePackageJson --optimization 
+RUN npx nx build wss --generatePackageJson --optimization
 
 
 # Production image, copy all the files and run next
@@ -32,6 +32,6 @@ RUN npm install
 
 # USER nest
 
-EXPOSE 3003
+EXPOSE 3002
 ## Launch the wait tool and then your application
 CMD ["node", "main"]
