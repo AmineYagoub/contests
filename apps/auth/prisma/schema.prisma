@@ -3,8 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../../../node_modules/@prisma/auth-service" // Dev
-  // output   = "../node_modules/@prisma/auth-service" // Production
+  output   = "../../../node_modules/@prisma/auth-service"
 }
 
 datasource db {
@@ -58,8 +57,8 @@ model Role {
   permissions           Permission[]
   users                 User[]
   memberShipStatus      Boolean?  @default(false)
-  memberShipId          String
-  memberShip            MemberShip @relation(fields: [memberShipId], references: [id], onDelete: NoAction)
+  memberShipId          String?
+  memberShip            MemberShip? @relation(fields: [memberShipId], references: [id], onDelete: NoAction)
 }
 
 model User {
