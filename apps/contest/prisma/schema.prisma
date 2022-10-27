@@ -3,8 +3,8 @@
 
 generator client {
   provider = "prisma-client-js"
-  // output   = "../../../node_modules/@prisma/contest-service"  // Dev
-  output   = "../node_modules/@prisma/contest-service"  // Production
+  output   = "../../../node_modules/@prisma/contest-service"  // Dev
+  // output   = "../node_modules/@prisma/contest-service"  // Production
 }
 
 datasource db {
