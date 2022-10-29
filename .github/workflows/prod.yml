@@ -15,6 +15,20 @@ jobs:
   build-and-deploy-auth:
     name: Build and Deploy auth
     runs-on: ubuntu-latest
+    services:
+      # Label used to access the service container
+      percona:
+        # Docker Hub PostgreSQL image
+        image: percona
+        # Provide the password for postgres
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: user
+          MYSQL_PASSWORD: pass123
+          MYSQL_DATABASE: olympiad
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 3306:3306
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -36,7 +50,7 @@ jobs:
           tags: ${{ env.AUTH_TEST_TAG }}
       - name: Test
         run: |
-          docker run --rm ${{ env.AUTH_TEST_TAG }}
+          docker run -e DATABASE_URL=mysql://user:pass123@percona:3306/olympiad -e WAIT_HOSTS= percona:3306 --rm ${{ env.AUTH_TEST_TAG }}
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
