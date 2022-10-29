@@ -50,7 +50,7 @@ jobs:
           tags: ${{ env.AUTH_TEST_TAG }}
       - name: Test
         run: |
-          docker run -e DATABASE_URL=mysql://user:pass123@percona:3306/olympiad -e WAIT_HOSTS= percona:3306 --rm ${{ env.AUTH_TEST_TAG }}
+          docker run -e DATABASE_URL=mysql://user:pass123@localhost:3306/olympiad -e WAIT_HOSTS= localhost:3306 --rm ${{ env.AUTH_TEST_TAG }}
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
