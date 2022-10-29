@@ -77,12 +77,12 @@ jobs:
         ports:
           - 3306:3306
       contest:
-        image: ${{ env.CTS_LATEST_TAG }}
+        image: $CTS_LATEST_TAG
         env:
           DATABASE_URL: mysql://user:pass123@percona:3306/olympiad
           WAIT_HOSTS: percona:3306
       auth:
-        image: ${{ env.AUTH_LATEST_TAG }}
+        image: $AUTH_LATEST_TAG
         env:
           DATABASE_URL: mysql://user:pass123@percona:3306/olympiad
           WAIT_HOSTS: percona:3306
