@@ -15,6 +15,16 @@ jobs:
   build-and-deploy-auth:
     name: Build and Deploy auth
     runs-on: ubuntu-latest
+    services:
+      percona:
+        image: percona
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: user
+          MYSQL_PASSWORD: pass123
+          MYSQL_DATABASE: olympiad
+        ports:
+          - 3306:3306
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -34,19 +44,12 @@ jobs:
           file: apps/auth/Dockerfile
           load: true
           tags: ${{ env.AUTH_TEST_TAG }}
+
       - name: Test auth container
         run: |
-          docker network create auth-app
-          docker run --network auth-app --network-alias mysql \
-              -e MYSQL_ROOT_PASSWORD=root \
-              -e MYSQL_USER=user \
-              -e MYSQL_PASSWORD=pass123 \
-              -e MYSQL_DATABASE=olympiad \
-              -dp 3306:3306 percona
-          docker run --network auth-app --network-alias mysql \
-              -e DATABASE_URL=mysql://user:pass123@localhost:3306/olympiad \
-              -e WAIT_HOSTS=localhost:3306 \
-              -e WAIT_TIMEOUT=60 \
+          docker run -itd --network=${{ job.services.percona.network }} \
+              -e DATABASE_URL=mysql://user:pass123@percona:3306/olympiad \
+              -e WAIT_HOSTS=percona:3306 \
               --rm ${{ env.AUTH_TEST_TAG }}
       - name: Build and push
         uses: docker/build-push-action@v3
