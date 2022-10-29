@@ -34,18 +34,14 @@ jobs:
           file: apps/auth/Dockerfile
           load: true
           tags: ${{ env.AUTH_TEST_TAG }}
-      - name: Create Docker network
-        run: docker network create auth-app
-      - name: Create Percona container
         run: |
+          docker network create auth-app
           docker run --network auth-app --network-alias mysql \
-            -e MYSQL_ROOT_PASSWORD=root \
-            -e MYSQL_USER=user \
-            -e MYSQL_PASSWORD=pass123 \
-            -e MYSQL_DATABASE=olympiad \
-            -d percona
-      - name: Test auth container
-        run: |
+              -e MYSQL_ROOT_PASSWORD=root \
+              -e MYSQL_USER=user \
+              -e MYSQL_PASSWORD=pass123 \
+              -e MYSQL_DATABASE=olympiad \
+              -d percona
           docker run --network auth-app --network-alias mysql \
           -e DATABASE_URL=mysql://user:pass123@percona:3306/olympiad -e WAIT_HOSTS= percona:3306 --rm ${{ env.AUTH_TEST_TAG }}
       - name: Build and push
