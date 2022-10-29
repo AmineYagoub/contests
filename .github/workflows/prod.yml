@@ -38,13 +38,12 @@ jobs:
         run: docker network create auth-app
       - name: Create Percona container
         run: |
-          docker run -d \
-            --network auth-app --network-alias mysql \
+          docker run --network auth-app --network-alias mysql \
             -e MYSQL_ROOT_PASSWORD: root \
             -e MYSQL_USER: user \
             -e MYSQL_PASSWORD: pass123 \
             -e MYSQL_DATABASE: olympiad \
-            percona
+            -d percona
       - name: Test auth container
         run: |
           docker run --network auth-app --network-alias mysql \
