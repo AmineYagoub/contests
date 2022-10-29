@@ -44,7 +44,9 @@ jobs:
               -e MYSQL_DATABASE=olympiad \
               -d percona
           docker run --network auth-app --network-alias mysql \
-              -e DATABASE_URL=mysql://user:pass123@percona:3306/olympiad -e WAIT_HOSTS= percona:3306 --rm ${{ env.AUTH_TEST_TAG }}
+              -e DATABASE_URL=mysql://user:pass123@percona:3306/olympiad \
+              -e WAIT_HOSTS=percona:3306 \
+              --rm ${{ env.AUTH_TEST_TAG }}
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
