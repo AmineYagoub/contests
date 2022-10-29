@@ -56,6 +56,5 @@ jobs:
         with:
           context: .
           file: apps/auth/Dockerfile
-          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ env.AUTH_LATEST_TAG }}
