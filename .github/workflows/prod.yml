@@ -15,6 +15,7 @@ jobs:
   build-and-deploy-auth:
     name: Build and Deploy auth
     runs-on: ubuntu-latest
+    container: ubuntu
     services:
       # Label used to access the service container
       percona:
