@@ -77,12 +77,12 @@ jobs:
         ports:
           - 3306:3306
       contest:
-        image: docker.io/${{ env.CTS_LATEST_TAG }}
+        image: ${{ env.CTS_LATEST_TAG }}
         env:
           DATABASE_URL: mysql://user:pass123@percona:3306/olympiad
           WAIT_HOSTS: percona:3306
       auth:
-        image: docker.io/${{ env.AUTH_LATEST_TAG }}
+        image: ${{ env.AUTH_LATEST_TAG }}
         env:
           DATABASE_URL: mysql://user:pass123@percona:3306/olympiad
           WAIT_HOSTS: percona:3306
