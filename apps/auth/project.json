@@ -10,6 +10,7 @@
         "outputPath": "dist/apps/auth",
         "main": "apps/auth/src/main.ts",
         "tsConfig": "apps/auth/tsconfig.app.json",
+        "webpackConfig": "apps/auth/webpack.config.js",
         "assets": ["apps/auth/src/assets"]
       },
       "configurations": {

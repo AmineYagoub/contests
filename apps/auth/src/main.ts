@@ -21,7 +21,7 @@ async function bootstrap() {
   );
   const config = app.get<AuthConfigType>(authConfig.KEY);
   await app.listen(config.port, '0.0.0.0');
-  Logger.log(`🚀 Auth Application is running on: ${config.url}/graphiql`);
+  Logger.log(`🚀 Auth Application is running on: ${config.url}/graphql`);
 }
 
 bootstrap();
