@@ -10,6 +10,7 @@
         "outputPath": "dist/apps/contest",
         "main": "apps/contest/src/main.ts",
         "tsConfig": "apps/contest/tsconfig.app.json",
+        "webpackConfig": "apps/contest/webpack.config.js",
         "assets": ["apps/contest/src/assets"]
       },
       "configurations": {
