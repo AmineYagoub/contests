@@ -1,11 +1,25 @@
 import { ApolloServerPluginInlineTraceDisabled } from 'apollo-server-core';
-
+import { ValidationError } from 'class-validator';
+import { GraphQLError } from 'graphql';
 import { IntrospectAndCompose, RemoteGraphQLDataSource } from '@apollo/gateway';
-import { GatewayGraphQLError } from '@contests/types';
 import { Inject } from '@nestjs/common';
 import { ConfigType, registerAs } from '@nestjs/config';
 
 import { isProd } from '../';
+
+type GatewayGraphQLError = {
+  extensions: {
+    exception: {
+      status: number;
+      message: string;
+      response: {
+        statusCode: number;
+        validationErrors: ValidationError[];
+        statusText: string;
+      };
+    };
+  };
+} & GraphQLError;
 
 export const GATEWAY_GQL_REGISTER_KEY = 'gatewayGQLConfig';
 

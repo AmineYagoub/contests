@@ -1,6 +1,3 @@
-import { ValidationError } from 'class-validator';
-import { GraphQLError } from 'graphql';
-
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum StudentLevel {
@@ -18,17 +15,3 @@ registerEnumType(StudentLevel, {
   name: 'StudentLevel',
   description: 'Student Level',
 });
-
-export type GatewayGraphQLError = {
-  extensions: {
-    exception: {
-      status: number;
-      message: string;
-      response: {
-        statusCode: number;
-        validationErrors: ValidationError[];
-        statusText: string;
-      };
-    };
-  };
-} & GraphQLError;

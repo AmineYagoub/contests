@@ -1,4 +1,4 @@
-import { StudentLevel } from '@contests/types';
+import { StudentLevel } from '@contests/types/auth';
 import { Directive, Field, ObjectType } from '@nestjs/graphql';
 
 import { BaseProfile } from './base.model';
