@@ -1,8 +1,8 @@
 import { google } from 'googleapis';
 
 import { AUTH_CONFIG_REGISTER_KEY, AuthConfigType } from '@contests/config';
-import { SigningWithGoogleDto } from '@contests/dto';
-import { JWTToken, RoleTitle } from '@contests/types';
+import { SigningWithGoogleDto } from '@contests/dto/auth';
+import { JWTToken, RoleTitle } from '@contests/types/auth';
 import { generateUserKey } from '@contests/utils';
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

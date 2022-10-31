@@ -1,14 +1,14 @@
 import { randomUUID } from 'crypto';
 
 import { AUTH_CONFIG_REGISTER_KEY, AuthConfigType } from '@contests/config';
-import { SignUpDto } from '@contests/dto';
+import { SignUpDto } from '@contests/dto/auth';
 import {
   JWTToken,
   RoleTitle,
   StudentLevel,
   USER_CHANGE_PASSWORD,
   USER_CREATED_EVENT,
-} from '@contests/types';
+} from '@contests/types/auth';
 import { generateUserKey } from '@contests/utils';
 import {
   HttpException,

@@ -1,4 +1,4 @@
-import { RoleTitle } from '@contests/types';
+import { RoleTitle } from '@contests/types/auth';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import { Permission } from './permission.model';

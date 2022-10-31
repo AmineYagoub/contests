@@ -1,4 +1,4 @@
-import { IDDto } from '@contests/dto';
+import { IDDto } from '@contests/dto/auth';
 import { isPublic } from '@contests/utils';
 import {
   Args,

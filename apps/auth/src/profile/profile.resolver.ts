@@ -1,4 +1,4 @@
-import { UpdateDocumentsDto, UpdateStudentDto } from '@contests/dto';
+import { UpdateDocumentsDto, UpdateStudentDto } from '@contests/dto/auth';
 import { Args, createUnionType, Mutation, Resolver } from '@nestjs/graphql';
 
 import { User } from '../users/user.model';

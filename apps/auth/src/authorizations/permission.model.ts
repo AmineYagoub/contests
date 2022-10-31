@@ -1,4 +1,4 @@
-import { PermissionTitle } from '@contests/types';
+import { PermissionTitle } from '@contests/types/auth';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()

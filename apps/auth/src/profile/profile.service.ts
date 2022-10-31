@@ -1,6 +1,6 @@
 import { validate as isValidUUID } from 'uuid';
 
-import { UpdateDocumentsDto, UpdateStudentDto } from '@contests/dto';
+import { UpdateDocumentsDto, UpdateStudentDto } from '@contests/dto/auth';
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/auth-service';
 

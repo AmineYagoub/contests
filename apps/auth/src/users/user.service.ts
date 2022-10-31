@@ -1,5 +1,5 @@
-import { UpdateUserDto } from '@contests/dto';
-import { RoleTitle } from '@contests/types';
+import { UpdateUserDto } from '@contests/dto/auth';
+import { RoleTitle } from '@contests/types/auth';
 import { getUsers } from '@contests/utils';
 import {
   Injectable,
@@ -19,11 +19,9 @@ export class UserService {
     private prisma: PrismaService,
     private readonly passwordService: PasswordService
   ) {
-    /*
     this.prisma.user.deleteMany().then(() => {
       this.seedUsers();
     });
-    */
   }
 
   /**

@@ -1,4 +1,4 @@
-import { UpdateUserDto, UserPaginationDto } from '@contests/dto';
+import { UpdateUserDto, UserPaginationDto } from '@contests/dto/auth';
 import { isPublic, UserEntity } from '@contests/utils';
 import { Type } from '@nestjs/common';
 import {

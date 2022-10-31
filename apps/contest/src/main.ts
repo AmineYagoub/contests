@@ -7,7 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = app.get<ContestConfigType>(contestConfig.KEY);
   await app.listen(config.port, '0.0.0.0');
-  Logger.log(`🚀 Contest Application is running on: ${config.url}/graphiql`);
+  Logger.log(`🚀 Contest Application is running on: ${config.url}/graphql`);
 }
 
 bootstrap();

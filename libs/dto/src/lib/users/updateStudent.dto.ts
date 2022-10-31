@@ -1,6 +1,6 @@
 import { IsDate, IsNotEmpty, IsString } from 'class-validator';
 
-import { RoleTitle, StudentLevel } from '@contests/types';
+import { RoleTitle, StudentLevel } from '@contests/types/auth';
 import { isStudentHasTeacher } from '@contests/utils';
 import { Field, InputType } from '@nestjs/graphql';
 

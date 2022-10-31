@@ -1,4 +1,4 @@
-import { JWTToken } from '@contests/types';
+import { JWTToken } from '@contests/types/auth';
 import { ObjectType } from '@nestjs/graphql';
 
 import { User } from '../users/user.model';

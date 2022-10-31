@@ -1,4 +1,4 @@
-import { OrderByType, PaginatedArgs, RoleTitle } from '@contests/types';
+import { OrderByType, PaginatedArgs, RoleTitle } from '@contests/types/auth';
 import { Field, InputType, OmitType, PartialType } from '@nestjs/graphql';
 import { IsString } from 'class-validator';
 import { UpdateStudentDto } from './updateStudent.dto';

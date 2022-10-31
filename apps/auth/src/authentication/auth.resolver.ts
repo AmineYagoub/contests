@@ -1,4 +1,4 @@
-import { EmailDto, SigningDto, SignUpDto } from '@contests/dto';
+import { EmailDto, SigningDto, SignUpDto } from '@contests/dto/auth';
 import { isPublic, NonceInterceptor } from '@contests/utils';
 import { UseInterceptors } from '@nestjs/common';
 import {

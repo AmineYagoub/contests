@@ -7,7 +7,7 @@ import {
   USER_CHANGE_PASSWORD,
   USER_CREATED_EVENT,
   UserMutatedEvent,
-} from '@contests/types';
+} from '@contests/types/auth';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OnEvent } from '@nestjs/event-emitter';

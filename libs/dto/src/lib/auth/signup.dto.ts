@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
-import { RoleTitle } from '@contests/types';
+import { RoleTitle } from '@contests/types/auth';
 import {
   isAcceptAgreement,
   isPasswordMatch,
