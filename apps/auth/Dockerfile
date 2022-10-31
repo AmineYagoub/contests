@@ -7,7 +7,7 @@ RUN npm install
 
 COPY . .
 RUN (cd apps/auth/ && npx prisma generate)
-RUN rm -Rf libs/dto/src/index.ts libs/types/src/lib/index.ts
+RUN rm -Rf libs/dto/src/index.ts libs/types/src/index.ts
 RUN npx nx build auth --generatePackageJson --optimization
 
 
