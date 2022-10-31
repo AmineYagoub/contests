@@ -17,6 +17,7 @@ export const getUsers = async (
       key: el.key,
       email: el.email,
       agreement: el.agreement,
+      emailConfirmed: el.emailConfirmed,
       isActive: el.isActive,
       role: {
         connectOrCreate: {

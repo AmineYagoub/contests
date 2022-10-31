@@ -56,7 +56,7 @@ export const users = [
     email: 'y4@yahoo.com',
     agreement: true,
     role: 'GOLDEN_TEACHER',
-    emailConfirmed: true,
+    emailConfirmed: false,
     isActive: false,
     profile: {
       firstName: 'جمال',
@@ -73,7 +73,7 @@ export const users = [
     email: 'y5@yahoo.com',
     agreement: true,
     role: 'TEACHER',
-    emailConfirmed: true,
+    emailConfirmed: false,
     isActive: false,
     profile: {
       firstName: 'عمر',
@@ -107,7 +107,7 @@ export const users = [
     email: 'y7@yahoo.com',
     agreement: true,
     role: 'TEACHER',
-    emailConfirmed: true,
+    emailConfirmed: false,
     isActive: false,
     profile: {
       firstName: 'محمد',
@@ -192,7 +192,7 @@ export const users = [
     email: 'y12@yahoo.com',
     agreement: true,
     role: 'STUDENT',
-    emailConfirmed: true,
+    emailConfirmed: false,
     isActive: true,
     profile: {
       firstName: 'هيبه',
@@ -698,7 +698,7 @@ export const users = [
     email: 'y35@yahoo.com',
     agreement: true,
     role: 'STUDENT_TEACHER',
-    emailConfirmed: true,
+    emailConfirmed: false,
     isActive: true,
     profile: {
       firstName: 'حسين',
@@ -720,7 +720,7 @@ export const users = [
     email: 'y36@yahoo.com',
     agreement: true,
     role: 'STUDENT_TEACHER',
-    emailConfirmed: true,
+    emailConfirmed: false,
     isActive: true,
     profile: {
       firstName: 'ماهر',
@@ -742,7 +742,7 @@ export const users = [
     email: 'y37@yahoo.com',
     agreement: true,
     role: 'STUDENT_TEACHER',
-    emailConfirmed: true,
+    emailConfirmed: false,
     isActive: true,
     profile: {
       firstName: 'حسين',
@@ -764,7 +764,7 @@ export const users = [
     email: 'y38@yahoo.com',
     agreement: true,
     role: 'STUDENT_TEACHER',
-    emailConfirmed: true,
+    emailConfirmed: false,
     isActive: true,
     profile: {
       firstName: 'أجود',
@@ -786,7 +786,7 @@ export const users = [
     email: 'y39@yahoo.com',
     agreement: true,
     role: 'STUDENT_TEACHER',
-    emailConfirmed: true,
+    emailConfirmed: false,
     isActive: true,
     profile: {
       firstName: 'ماهر',
