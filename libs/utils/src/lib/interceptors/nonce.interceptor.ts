@@ -2,12 +2,8 @@ import { serialize } from 'cookie';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import {
-  AUTH_CONFIG_REGISTER_KEY,
-  AuthConfigType,
-  isProd,
-} from '@contests/config';
-import { JWTToken } from '@contests/types';
+import { AUTH_CONFIG_REGISTER_KEY, AuthConfigType } from '@contests/config';
+import { JWTToken } from '@contests/types/auth';
 import {
   CallHandler,
   ExecutionContext,

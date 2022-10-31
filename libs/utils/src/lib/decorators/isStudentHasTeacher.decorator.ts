@@ -6,7 +6,7 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 
-import { RoleTitle } from '@contests/types';
+import { RoleTitle } from '@contests/types/auth';
 
 export function isStudentHasTeacher(
   property: string,

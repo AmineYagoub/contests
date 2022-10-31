@@ -1,6 +1,6 @@
 import { users } from './users';
 import { Prisma } from '@prisma/auth-service';
-import { RoleTitle } from '@contests/types';
+import { RoleTitle } from '@contests/types/auth';
 
 export const getUsers = async (
   hashedPassword: (value: string) => Promise<string>
