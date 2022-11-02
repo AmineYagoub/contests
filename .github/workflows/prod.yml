@@ -185,18 +185,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Build and export to Docker
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: apps/frontend/Dockerfile
-          load: true
-          tags: ${{ env.UI_TEST_TAG }}
-
-      - name: Test UI container
-        run: |
-          docker run --rm ${{ env.UI_TEST_TAG }}
-      - name: Build and push
+      - name: Build and push to Docker
         uses: docker/build-push-action@v3
         with:
           context: .
