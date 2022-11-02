@@ -1,4 +1,4 @@
-FROM node:16-alpine as builder
+FROM node:18-alpine as builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
@@ -8,7 +8,7 @@ RUN npx nx build frontend --optimization
 
 
 # Production image, copy all the files and run next
-FROM node:16-alpine AS runner
+FROM node:18-alpine AS runner
 WORKDIR /app
 
 RUN mkdir uploads
@@ -22,7 +22,7 @@ RUN adduser -S nextjs -u 1001
 
 COPY --from=builder --chown=nextjs:nodejs /app/dist/apps/frontend ./
 RUN rm -f ./package.json
-
+RUN npm init -y && npm pkg set scripts.start="next start"
 USER nextjs
 
 EXPOSE 3000
