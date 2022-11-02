@@ -21,6 +21,7 @@ RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 
 COPY --from=builder --chown=nextjs:nodejs /app/dist/apps/frontend ./
+RUN rm -f ./package.json
 
 USER nextjs
 
