@@ -11,9 +11,11 @@ env:
   AUTH_TEST_TAG: amineyagoub/olympiad-auth:test
   CTS_TEST_TAG: amineyagoub/olympiad-contest:test
   GATEWAY_TEST_TAG: amineyagoub/olympiad-gateway:test
+  UI_TEST_TAG: amineyagoub/olympiad-frontend:test
   AUTH_LATEST_TAG: amineyagoub/olympiad-auth:latest
   CTS_LATEST_TAG: amineyagoub/olympiad-contest:latest
   GATEWAY_LATEST_TAG: amineyagoub/olympiad-gateway:latest
+  UI_LATEST_TAG: amineyagoub/olympiad-frontend:latest
 
 jobs:
   build-and-deploy-auth:
@@ -167,3 +169,37 @@ jobs:
           file: apps/gateway/Dockerfile
           push: true
           tags: ${{ env.GATEWAY_LATEST_TAG }}
+
+  build-and-deploy-frontend:
+    name: Build and Deploy frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and export to Docker
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: apps/frontend/Dockerfile
+          load: true
+          tags: ${{ env.UI_TEST_TAG }}
+
+      - name: Test UI container
+        run: |
+          docker run --rm ${{ env.UI_TEST_TAG }}
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: apps/frontend/Dockerfile
+          push: true
+          tags: ${{ env.UI_LATEST_TAG }}
