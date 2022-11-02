@@ -1,4 +1,4 @@
-import { registerEnumType } from '@nestjs/graphql';
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 
 export enum RoleTitle {
   ADMIN = 'ADMIN',
@@ -28,3 +28,12 @@ registerEnumType(PermissionTitle, {
   name: 'PermissionTitle',
   description: 'System Permissions',
 });
+
+@ObjectType()
+export class UserPhone {
+  @Field({ description: 'user phone' })
+  phone: string;
+
+  @Field({ description: 'phone international code' })
+  phoneCode: string;
+}

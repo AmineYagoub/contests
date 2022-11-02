@@ -1,4 +1,9 @@
-import { UpdateDocumentsDto, UpdateStudentDto } from '@contests/dto/auth';
+import {
+  UpdateDocumentsDto,
+  UpdateStudentDto,
+  UpdateTeacherDto,
+} from '@contests/dto/auth';
+import { isPublic } from '@contests/utils';
 import { Args, createUnionType, Mutation, Resolver } from '@nestjs/graphql';
 
 import { User } from '../users/user.model';
@@ -22,12 +27,22 @@ export const Profile = createUnionType({
 export class ProfileResolver {
   constructor(private profileService: ProfileService) {}
 
+  @isPublic()
   @Mutation(() => User)
   async updateStudentProfile(
     @Args('id') id: string,
     @Args('input') data: UpdateStudentDto
   ) {
     return this.profileService.updateStudentProfile({ data, where: { id } });
+  }
+
+  @isPublic()
+  @Mutation(() => User)
+  async updateTeacherProfile(
+    @Args('id') id: string,
+    @Args('input') data: UpdateTeacherDto
+  ) {
+    return this.profileService.updateTeacherProfile({ data, where: { id } });
   }
 
   @Mutation(() => User)

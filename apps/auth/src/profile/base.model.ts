@@ -38,6 +38,11 @@ export abstract class BaseProfile {
   @Field({
     description: 'Identifies the date and time when the object was created.',
   })
+  dateOfBirth: Date;
+
+  @Field({
+    description: 'Identifies the date and time when the object was created.',
+  })
   created: Date;
 
   @Field({

@@ -11,7 +11,6 @@ import { Prisma } from '@prisma/auth-service';
 
 import { PrismaService } from '../app/prisma.service';
 import { PasswordService } from '../authentication/password.service';
-import { User } from './user.model';
 
 @Injectable()
 export class UserService {
@@ -19,9 +18,9 @@ export class UserService {
     private prisma: PrismaService,
     private readonly passwordService: PasswordService
   ) {
-    this.prisma.user.deleteMany().then(() => {
+    /* this.prisma.user.deleteMany().then(() => {
       this.seedUsers();
-    });
+    }); */
   }
 
   /**
@@ -34,7 +33,7 @@ export class UserService {
       const { teachers, students } = await getUsers(
         this.passwordService.hashPassword
       );
-      const res: User[] = [];
+      const res = [];
       for (const user of teachers) {
         res.push(
           await this.prisma.user.create({
@@ -91,7 +90,7 @@ export class UserService {
    * @param name string
    * @returns
    */
-  async findTeacher(name?: string): Promise<User[]> {
+  async findTeacher(name?: string) {
     try {
       return this.prisma.user.findMany({
         take: name ? 100 : 15,

@@ -54,7 +54,7 @@ const TeacherMembership = () => {
               <CheckOutlined /> <span>الإشراف على الطلبة</span>
             </li>
             <li>
-              <CheckOutlined /> <span>إرسال رسائل خاصة</span>
+              <CheckOutlined /> <span>إرسال و إستقبال الرسائل</span>
             </li>
           </StyledList>
         </Card.Grid>
@@ -70,16 +70,16 @@ const TeacherMembership = () => {
           </StyledButton>
           <StyledList>
             <li>
-              <CheckOutlined /> <span>العضوية الذهبية</span>
+              <CheckOutlined /> <span>الإشراف على الطلبة</span>
+            </li>
+            <li>
+              <CheckOutlined /> <span>إرسال و إستقبال الرسائل</span>
             </li>
             <li>
               <CheckOutlined /> <span>العضوية الذهبية</span>
             </li>
             <li>
-              <CheckOutlined /> <span>العضوية الذهبية</span>
-            </li>
-            <li>
-              <CheckOutlined /> <span>العضوية الذهبية</span>
+              <CheckOutlined /> <span>10 مسابقة / شهر</span>
             </li>
           </StyledList>
         </Card.Grid>
@@ -93,6 +93,20 @@ const TeacherMembership = () => {
           <StyledButton type="primary" block shape="round">
             إشترك
           </StyledButton>
+          <StyledList>
+            <li>
+              <CheckOutlined /> <span>الإشراف على الطلبة</span>
+            </li>
+            <li>
+              <CheckOutlined /> <span>إرسال و إستقبال الرسائل</span>
+            </li>
+            <li>
+              <CheckOutlined /> <span>العضوية الذهبية</span>
+            </li>
+            <li>
+              <CheckOutlined /> <span>30 مسابقة / شهر</span>
+            </li>
+          </StyledList>
         </Card.Grid>
         <Badge.Ribbon text="الأكثر طلبا" color="green">
           <Card.Grid style={{ ...gridStyle, width: '105%', height: '100%' }}>
@@ -105,6 +119,20 @@ const TeacherMembership = () => {
             <StyledButton type="primary" block shape="round">
               إشترك
             </StyledButton>
+            <StyledList>
+              <li>
+                <CheckOutlined /> <span>الإشراف على الطلبة</span>
+              </li>
+              <li>
+                <CheckOutlined /> <span>إرسال و إستقبال الرسائل</span>
+              </li>
+              <li>
+                <CheckOutlined /> <span>العضوية الذهبية</span>
+              </li>
+              <li>
+                <CheckOutlined /> <span>90 مسابقة / شهر</span>
+              </li>
+            </StyledList>
           </Card.Grid>
         </Badge.Ribbon>
       </Card>

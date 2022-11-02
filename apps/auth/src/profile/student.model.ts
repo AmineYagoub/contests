@@ -31,9 +31,4 @@ export class Student extends BaseProfile {
     nullable: true,
   })
   letterImage?: string;
-
-  @Field({
-    description: 'Identifies the date and time when the object was created.',
-  })
-  dateOfBirth: Date;
 }

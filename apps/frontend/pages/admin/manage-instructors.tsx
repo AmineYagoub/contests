@@ -18,7 +18,7 @@ import { EyeOutlined } from '@ant-design/icons';
 import { useSnapshot } from 'valtio';
 import { UsersState } from '@/valtio/user.state';
 import styled from '@emotion/styled';
-import ViewStudentProfile from '@/components/admin/users/ViewStudentProfile';
+import ViewTeacherProfile from '@/components/admin/users/ViewTeacherProfile';
 import { useState } from 'react';
 import DeleteUser from '@/components/admin/users/DeleteUser';
 import { TableBtn } from './dashboard';
@@ -230,7 +230,7 @@ const ManageInstructors = () => {
         pagination={methods.handlePagination}
         style={{ minHeight: 500 }}
       />
-      <ViewStudentProfile
+      <ViewTeacherProfile
         profileKey={profileKey}
         onClose={onClose}
         visible={visible}

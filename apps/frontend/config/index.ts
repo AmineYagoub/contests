@@ -8,6 +8,9 @@ export interface MinioConfig {
 export interface UploadConfig {
   documentsUrl: (id: string) => string;
   deleteDocumentsUrl: (id: string, name: string) => string;
+  uploadAllowedExt: string[];
+  uploadAllowedMimeType: string[];
+  uploadMaxSize: number;
 }
 
 export interface AppConfig {
@@ -40,5 +43,8 @@ export const config: AppConfig = {
     documentsUrl: (id) => `/api/documents/upload/?id=${id}`,
     deleteDocumentsUrl: (id, name) =>
       `/api/documents/delete/?id=${id}&name=${name}`,
+    uploadAllowedExt: ['png', 'jpj', 'jpeg', 'webp'],
+    uploadAllowedMimeType: ['image/jpeg', 'image/png', 'image/webp'],
+    uploadMaxSize: 5,
   },
 };

@@ -7,6 +7,7 @@ import {
 import { Logger } from '@/utils/app';
 import { config } from '@/config/index';
 import { LoadingType } from '@/components/profile/user/DocumentCard';
+import { AuthActions } from '@/valtio/auth.state';
 
 type DocumentProps = {
   url: string;
@@ -53,6 +54,7 @@ export const useUploadDocuments = (user: User) => {
           id: user.id,
         },
       });
+      AuthActions.setUserAvatar(res.message);
       try {
         await UpdateStudentDocumentsMutation({
           variables: {

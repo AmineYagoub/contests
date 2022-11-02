@@ -16,6 +16,11 @@ query FindUser($key: Int!) {
         country
         firstName
         lastName
+        phone {
+          phone
+          phoneCode
+        }
+        dateOfBirth
         personalImage
       }
       ... on Student {

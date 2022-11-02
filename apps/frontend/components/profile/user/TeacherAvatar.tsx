@@ -1,17 +1,24 @@
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { message, Modal, Upload } from 'antd';
-import ImgCrop from 'antd-img-crop';
-import type { UploadChangeParam } from 'antd/es/upload';
-import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
-import { useState } from 'react';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Image, message, notification, Upload } from 'antd';
+import type { RcFile } from 'antd/es/upload/interface';
 
-const getBase64 = (file: RcFile): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
-  });
+import { config } from '@/config/index';
+import dynamic from 'next/dynamic';
+import { useUploadDocuments } from '@/hooks/profile/document.hook';
+import { User } from '@/graphql/graphql';
+
+const ImgCrop = dynamic(
+  () => import('antd-img-crop').then((mod) => mod.default),
+  {
+    ssr: false,
+  }
+);
+
+const { uploadAllowedMimeType, documentsUrl, uploadMaxSize } = config.upload;
+
+const UPLOAD_FIELD_NAME = 'personalImage';
+
+const bytes = uploadMaxSize * 1024 * 1024;
 
 const beforeUpload = (file: RcFile) => {
   const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -24,71 +31,60 @@ const beforeUpload = (file: RcFile) => {
   }
   return isJpgOrPng && isLt2M;
 };
+const beforeCrop = (
+  file: File,
+  fileList: File[]
+): boolean | Promise<boolean> => {
+  const { type, name, size } = file;
+  if (size > bytes) {
+    notification.error({
+      message: `تجاوز الحجم المسموح`,
+      description: `صورتك الشخصية يجب أن لا يتعدى حجمها (${uploadMaxSize}MB) `,
+    });
+    return false;
+  }
+  if (!uploadAllowedMimeType.includes(type)) {
+    notification.error({
+      message: `إمتداد غير مسموح`,
+      description: `إمتداد الملف ${name} غير مسموح به.`,
+    });
+    return false;
+  }
+  return true;
+};
 
-const TeacherAvatar = () => {
-  const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string>(null);
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState<string>(null);
+const TeacherAvatar = ({ user }: { user: User }) => {
+  const { onUploadChange, docsList, loading } = useUploadDocuments(user);
 
-  const handleCancel = () => setPreviewOpen(false);
-
-  const handlePreview = async (file: UploadFile) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj as RcFile);
-    }
-
-    setPreviewImage(file.url || (file.preview as string));
-    setPreviewOpen(true);
-  };
-
-  const handleChange: UploadProps['onChange'] = async (
-    info: UploadChangeParam<UploadFile>
-  ) => {
-    if (info.file.status === 'uploading') {
-      setLoading(true);
-      return;
-    }
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      const url = await getBase64(info.file.originFileObj as RcFile);
-      setLoading(false);
-      setImageUrl(url);
-    }
-  };
-  const uploadButton = (
+  const uploadInProgress = (
     <div>
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>رفع</div>
+      <LoadingOutlined />
+      <div style={{ marginTop: 8 }}>جاري رفع الصورة ...</div>
     </div>
   );
   return (
-    <>
-      <ImgCrop rotate>
-        <Upload
-          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-          listType="picture-card"
-          showUploadList={false}
-          onPreview={handlePreview}
-          onChange={handleChange}
-          beforeUpload={beforeUpload}
-        >
-          {imageUrl ? (
-            <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
-          ) : (
-            uploadButton
-          )}
-        </Upload>
-      </ImgCrop>
-      <Modal
-        open={previewOpen}
-        title="الصورة الشخصية"
-        footer={null}
-        onCancel={handleCancel}
+    <ImgCrop rotate modalTitle="ضبط الصورة الشخصية" beforeCrop={beforeCrop}>
+      <Upload
+        name={UPLOAD_FIELD_NAME}
+        accept={uploadAllowedMimeType.join()}
+        listType="picture-card"
+        showUploadList={false}
+        beforeUpload={beforeUpload}
+        action={documentsUrl(user.id)}
+        onChange={(info) => onUploadChange(info, UPLOAD_FIELD_NAME)}
       >
-        <img alt="example" style={{ width: '100%' }} src={previewImage} />
-      </Modal>
-    </>
+        {loading[UPLOAD_FIELD_NAME] ? (
+          uploadInProgress
+        ) : (
+          <Image
+            src={docsList?.personalImage.url}
+            alt="avatar"
+            className="avatar-uploader"
+            preview={false}
+          />
+        )}
+      </Upload>
+    </ImgCrop>
   );
 };
 

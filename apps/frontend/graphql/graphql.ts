@@ -206,6 +206,7 @@ export type Mutation = {
   updateStudentDocuments: User;
   updateStudentProfile: User;
   updateTag: Tag;
+  updateTeacherProfile: User;
   updateUser: User;
 };
 
@@ -313,6 +314,12 @@ export type MutationUpdateStudentProfileArgs = {
 export type MutationUpdateTagArgs = {
   id: Scalars['String'];
   title: Scalars['String'];
+};
+
+
+export type MutationUpdateTeacherProfileArgs = {
+  id: Scalars['String'];
+  input: UpdateTeacherDto;
 };
 
 
@@ -617,6 +624,8 @@ export type Teacher = {
   country?: Maybe<Scalars['String']>;
   /** Identifies the date and time when the object was created. */
   created: Scalars['DateTime'];
+  /** Identifies the date and time when the object was created. */
+  dateOfBirth: Scalars['DateTime'];
   /** Identifies the first name of the user. */
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
@@ -626,6 +635,8 @@ export type Teacher = {
   lastName?: Maybe<Scalars['String']>;
   /** Identifies the avatar of the user. */
   personalImage?: Maybe<Scalars['String']>;
+  /** Identifies the phone of the user. */
+  phone?: Maybe<UserPhone>;
   /** Identifies a List of students affiliated with this teacher. */
   students?: Maybe<Array<Student>>;
   /** Identifies the date and time when the object was last updated. */
@@ -686,6 +697,15 @@ export type UpdateStudentDto = {
   teacherId?: InputMaybe<Scalars['String']>;
 };
 
+export type UpdateTeacherDto = {
+  country: Scalars['String'];
+  dateOfBirth: Scalars['DateTime'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  phone: Scalars['String'];
+  phoneCode: Scalars['String'];
+};
+
 export type UpdateUserDto = {
   agreement?: InputMaybe<Scalars['Boolean']>;
   confirmPassword?: InputMaybe<Scalars['String']>;
@@ -733,6 +753,14 @@ export type UserPaginationResponse = {
   __typename?: 'UserPaginationResponse';
   data?: Maybe<Array<User>>;
   total: Scalars['Int'];
+};
+
+export type UserPhone = {
+  __typename?: 'UserPhone';
+  /** user phone */
+  phone: Scalars['String'];
+  /** phone international code */
+  phoneCode: Scalars['String'];
 };
 
 export type WhereContestArgs = {
@@ -942,6 +970,14 @@ export type UpdateStudentProfileMutationVariables = Exact<{
 
 export type UpdateStudentProfileMutation = { __typename?: 'Mutation', updateStudentProfile: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth: any, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } };
 
+export type UpdateTeacherProfileMutationVariables = Exact<{
+  id: Scalars['String'];
+  input: UpdateTeacherDto;
+}>;
+
+
+export type UpdateTeacherProfileMutation = { __typename?: 'Mutation', updateTeacherProfile: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, country?: string | null, personalImage?: string | null, dateOfBirth: any, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null } | null } };
+
 export type FindTeacherQueryVariables = Exact<{
   name?: InputMaybe<Scalars['String']>;
 }>;
@@ -954,12 +990,12 @@ export type FindUserQueryVariables = Exact<{
 }>;
 
 
-export type FindUserQuery = { __typename?: 'Query', findUser: { __typename?: 'User', id: string, key: number, email: string, emailConfirmed: boolean, isActive: boolean, created: any, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth: any, letterImage?: string | null, personalImage?: string | null, birthCertImage?: string | null, teacher?: { __typename?: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | null } };
+export type FindUserQuery = { __typename?: 'Query', findUser: { __typename?: 'User', id: string, key: number, email: string, emailConfirmed: boolean, isActive: boolean, created: any, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth: any, letterImage?: string | null, personalImage?: string | null, birthCertImage?: string | null, teacher?: { __typename?: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth: any, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null } | null } };
 
 export type GetAuthUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth: any, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } };
+export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth: any, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth: any, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null } | null } };
 
 export type PaginateUsersQueryVariables = Exact<{
   params: UserPaginationDto;
@@ -2003,6 +2039,65 @@ export function useUpdateStudentProfileMutation(baseOptions?: Apollo.MutationHoo
 export type UpdateStudentProfileMutationHookResult = ReturnType<typeof useUpdateStudentProfileMutation>;
 export type UpdateStudentProfileMutationResult = Apollo.MutationResult<UpdateStudentProfileMutation>;
 export type UpdateStudentProfileMutationOptions = Apollo.BaseMutationOptions<UpdateStudentProfileMutation, UpdateStudentProfileMutationVariables>;
+export const UpdateTeacherProfileDocument = gql`
+    mutation UpdateTeacherProfile($id: String!, $input: UpdateTeacherDto!) {
+  updateTeacherProfile(id: $id, input: $input) {
+    id
+    key
+    email
+    isActive
+    emailConfirmed
+    role {
+      title
+    }
+    profile {
+      __typename
+      ... on Student {
+        id
+      }
+      ... on Teacher {
+        id
+        firstName
+        lastName
+        country
+        personalImage
+        phone {
+          phone
+          phoneCode
+        }
+        dateOfBirth
+      }
+    }
+  }
+}
+    `;
+export type UpdateTeacherProfileMutationFn = Apollo.MutationFunction<UpdateTeacherProfileMutation, UpdateTeacherProfileMutationVariables>;
+
+/**
+ * __useUpdateTeacherProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateTeacherProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTeacherProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTeacherProfileMutation, { data, loading, error }] = useUpdateTeacherProfileMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateTeacherProfileMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTeacherProfileMutation, UpdateTeacherProfileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTeacherProfileMutation, UpdateTeacherProfileMutationVariables>(UpdateTeacherProfileDocument, options);
+      }
+export type UpdateTeacherProfileMutationHookResult = ReturnType<typeof useUpdateTeacherProfileMutation>;
+export type UpdateTeacherProfileMutationResult = Apollo.MutationResult<UpdateTeacherProfileMutation>;
+export type UpdateTeacherProfileMutationOptions = Apollo.BaseMutationOptions<UpdateTeacherProfileMutation, UpdateTeacherProfileMutationVariables>;
 export const FindTeacherDocument = gql`
     query FindTeacher($name: String) {
   findTeacher(name: $name) {
@@ -2073,6 +2168,11 @@ export const FindUserDocument = gql`
         country
         firstName
         lastName
+        phone {
+          phone
+          phoneCode
+        }
+        dateOfBirth
         personalImage
       }
       ... on Student {
@@ -2156,8 +2256,15 @@ export const GetAuthUserDocument = gql`
       }
       ... on Teacher {
         id
+        country
         firstName
         lastName
+        dateOfBirth
+        phone {
+          phone
+          phoneCode
+        }
+        personalImage
       }
     }
   }

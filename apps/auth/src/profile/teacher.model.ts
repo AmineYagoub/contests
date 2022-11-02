@@ -1,3 +1,4 @@
+import { UserPhone } from '@contests/types/auth';
 import { Directive, Field, ObjectType } from '@nestjs/graphql';
 
 import { BaseProfile } from './base.model';
@@ -12,11 +13,17 @@ export class Teacher extends BaseProfile {
     defaultValue: [],
   })
   students?: Student[];
+
+  @Field(() => UserPhone, {
+    description: 'Identifies the phone of the user.',
+    nullable: true,
+  })
+  phone?: UserPhone;
 }
 
-/*   
+/*
   @Field({ middleware: [checkRoleMiddleware] })
   @Extensions({ role: Role.ADMIN })
   users: premium teacher users
-  
+
   */

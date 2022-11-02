@@ -9,20 +9,30 @@ import {
   StudentLevel,
   UpdateStudentDto,
   User,
+  useUpdateTeacherProfileMutation,
   useUpdateStudentProfileMutation,
+  RoleTitle,
+  UpdateTeacherDto,
+  Teacher,
 } from '@/graphql/graphql';
 import { Logger } from '@/utils/app';
-import { AuthActions } from '@/valtio/auth.state';
 
 import type { RcFile } from 'antd/es/upload/interface';
 export const useUser = (form: FormInstance<unknown>, user: User) => {
+  const isTeacher = [RoleTitle.GoldenTeacher, RoleTitle.Teacher].includes(
+    user.role.title
+  );
   const [selectedSupervisor, setSelectedSupervisor] = useState<string>(null);
   const [UpdateStudentProfileMutation, { loading }] =
     useUpdateStudentProfileMutation();
 
+  const [UpdateTeacherProfileMutation, { loading: tLoading }] =
+    useUpdateTeacherProfileMutation();
+
   useEffect(() => {
     if (user) {
       const profile = user.profile as Student;
+      const phone = (user.profile as Teacher)?.phone;
       form.setFieldsValue({
         email: user?.email,
         firstName: profile?.firstName,
@@ -32,6 +42,8 @@ export const useUser = (form: FormInstance<unknown>, user: User) => {
         country: profile?.country,
         level: profile?.level === StudentLevel.Student ? null : profile?.level,
         dateOfBirth: moment(profile?.dateOfBirth),
+        phone: phone?.phone,
+        phoneCode: phone?.phoneCode,
       });
 
       if (profile?.teacher) {
@@ -42,31 +54,51 @@ export const useUser = (form: FormInstance<unknown>, user: User) => {
     }
   }, [form, user]);
 
-  const onFinish = async (values: UpdateStudentDto) => {
-    //const { firstName, lastName, level, role, country, dateOfBirth } = values;
-    console.log(values);
+  const onFinish = async (values: UpdateStudentDto | UpdateTeacherDto) => {
+    let res = false;
     try {
-      /*
-      const { data } = await UpdateStudentProfileMutation({
-        variables: {
-          id: user.id,
-          input: {
-            firstName,
-            lastName,
-            level,
-            role,
-            country,
-            teacherId: selectedSupervisor,
-            dateOfBirth,
+      if (isTeacher) {
+        const { firstName, lastName, phone, phoneCode, country, dateOfBirth } =
+          values as UpdateTeacherDto;
+        const { data } = await UpdateTeacherProfileMutation({
+          variables: {
+            id: user.id,
+            input: {
+              firstName,
+              lastName,
+              phone,
+              phoneCode,
+              country,
+              dateOfBirth,
+            },
           },
-        },
-      });
-      if (data?.updateStudentProfile) {
+        });
+        res = !!data?.updateTeacherProfile;
+      } else {
+        const { firstName, lastName, level, role, country, dateOfBirth } =
+          values as UpdateStudentDto;
+        const { data } = await UpdateStudentProfileMutation({
+          variables: {
+            id: user.id,
+            input: {
+              firstName,
+              lastName,
+              level,
+              role,
+              country,
+              teacherId: selectedSupervisor,
+              dateOfBirth,
+            },
+          },
+        });
+        res = !!data?.updateStudentProfile;
+      }
+      if (res) {
         notification.success({
           message: 'تم تحديث بياناتك بنجاح !',
         });
-        AuthActions.setUser(data?.updateStudentProfile as User);
-      } */
+        // AuthActions.setUser(data?.updateStudentProfile as User);
+      }
     } catch (error) {
       notification.error({
         message: 'حدث خطأ, يرجى إعادة تحديث الصفحة و المحاولة من جديد !',
@@ -85,6 +117,7 @@ export const useUser = (form: FormInstance<unknown>, user: User) => {
     selectedSupervisor,
     setSelectedSupervisor,
     loading,
+    tLoading,
   };
 };
 

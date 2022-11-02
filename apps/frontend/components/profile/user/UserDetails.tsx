@@ -8,9 +8,6 @@ import { useUser } from '@/hooks/profile/user.hook';
 import { formLayout } from '@/pages/auth/sign-up';
 import { studentMappedLevels } from '@/utils/mapper';
 import styled from '@emotion/styled';
-import CountryPhoneInput, { ConfigProvider } from 'antd-country-phone-input';
-import en from 'world_countries_lists/data/countries/en/world.json';
-import 'antd-country-phone-input/dist/index.css';
 import TeacherAvatar from './TeacherAvatar';
 
 const StyledForm = styled(Form)({
@@ -37,6 +34,7 @@ const UserDetails = ({ user }: { user: User }) => {
     selectedSupervisor,
     setSelectedSupervisor,
     loading,
+    tLoading,
   } = useUser(form, user);
   return (
     <StyledForm
@@ -49,8 +47,8 @@ const UserDetails = ({ user }: { user: User }) => {
       {...formLayout}
     >
       {isTeacher && (
-        <Form.Item label="الصورة الشخصية" name="personalImage">
-          <TeacherAvatar />
+        <Form.Item label="الصورة الشخصية">
+          <TeacherAvatar user={user} />
         </Form.Item>
       )}
       <Form.Item label="الإسم الكامل" style={{ marginBottom: 0 }} required>
@@ -97,26 +95,23 @@ const UserDetails = ({ user }: { user: User }) => {
       </Form.Item>
 
       {isTeacher && (
-        <ConfigProvider locale={en}>
-          <Form.Item
-            name="phone"
-            label="رقم الهاتف"
+        <Form.Item label="رقم الهاتف">
+          <Input.Group
+            compact
             style={{
-              width: 'calc(50% - 16px)',
-            }}
-            initialValue={{
-              short: 'eg',
+              display: 'inline-block',
+              width: 'calc(50% - 12px)',
+              direction: 'ltr',
             }}
           >
-            <CountryPhoneInput
-              size="small"
-              style={{
-                direction: 'ltr',
-                marginRight: 73,
-              }}
-            />
-          </Form.Item>
-        </ConfigProvider>
+            <Form.Item name="phoneCode" noStyle>
+              <Input style={{ width: '30%' }} placeholder="20+" />
+            </Form.Item>
+            <Form.Item name="phone" noStyle>
+              <Input style={{ width: '70%' }} />
+            </Form.Item>
+          </Input.Group>
+        </Form.Item>
       )}
 
       {!isTeacher && (
@@ -136,7 +131,12 @@ const UserDetails = ({ user }: { user: User }) => {
       )}
 
       <Form.Item wrapperCol={{ ...formLayout.wrapperCol, offset: 5 }}>
-        <Button type="primary" htmlType="submit" block loading={loading}>
+        <Button
+          type="primary"
+          htmlType="submit"
+          block
+          loading={loading || tLoading}
+        >
           تحديث البيانات
         </Button>
       </Form.Item>

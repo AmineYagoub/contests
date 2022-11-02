@@ -44,7 +44,6 @@
     "@nrwl/next": "14.5.4",
     "@prisma/client": "^4.2.0",
     "antd": "^4.22.4",
-    "antd-country-phone-input": "^4.4.0",
     "antd-img-crop": "^4.2.5",
     "apollo-server-express": "^3.10.2",
     "argon2": "^0.29.1",
@@ -75,8 +74,7 @@
     "socket.io-client": "^4.5.1",
     "stylis-plugin-rtl": "^2.1.1",
     "tslib": "^2.4.0",
-    "valtio": "^1.6.4",
-    "world_countries_lists": "^2.6.0"
+    "valtio": "^1.6.4"
   },
   "devDependencies": {
     "@emotion/babel-plugin": "11.10.0",

@@ -28,8 +28,15 @@ query GetAuthUser {
       }
       ... on Teacher {
         id
+        country
         firstName
         lastName
+        dateOfBirth
+        phone {
+          phone
+          phoneCode
+        }
+        personalImage
       }
     }
   }

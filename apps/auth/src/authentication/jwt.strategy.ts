@@ -7,8 +7,6 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 
 import { PrismaService } from '../app/prisma.service';
-import { User } from '../users/user.model';
-
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
@@ -29,7 +27,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(
     request: Request,
     { sub, nonce }: { sub: number; nonce: string }
-  ): Promise<User> {
+  ) {
     const cookies = request.headers['cookie'];
     if (!cookies) {
       throw new UnauthorizedException();

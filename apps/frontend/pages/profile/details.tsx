@@ -4,19 +4,23 @@ import { useSnapshot } from 'valtio';
 import UserDetails from '@/components/profile/user/UserDetails';
 import UserDocuments from '@/components/profile/user/UserDocuments';
 import UserPassword from '@/components/profile/user/UserPassword';
-import { User } from '@/graphql/graphql';
+import { RoleTitle, User } from '@/graphql/graphql';
 import ProfileLayout from '@/layout/ProfileLayout';
 import { AuthState } from '@/valtio/auth.state';
-import { CheckCircleOutlined } from '@ant-design/icons';
+import {
+  ContactsOutlined,
+  KeyOutlined,
+  SafetyCertificateOutlined,
+} from '@ant-design/icons';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
-const ProfileDetails = (props) => {
+const ProfileDetails = () => {
   const user = useSnapshot(AuthState).user as User;
   const tabs = [
     {
       label: (
         <span>
-          <CheckCircleOutlined style={{ color: 'darkcyan' }} />
+          <ContactsOutlined style={{ color: 'darkcyan' }} />
           البيانات الشخصية
         </span>
       ),
@@ -24,16 +28,28 @@ const ProfileDetails = (props) => {
       children: <UserDetails user={user} />,
     },
     {
-      label: 'الوثائق الشخصية',
-      key: '2',
-      children: <UserDocuments user={user} />,
-    },
-    {
-      label: 'تغيير كلمة السر',
+      label: (
+        <span>
+          <KeyOutlined style={{ color: 'darkcyan' }} />
+          تغيير كلمة السر
+        </span>
+      ),
       key: '3',
       children: <UserPassword user={user} />,
     },
   ];
+  if ([RoleTitle.Student, RoleTitle.StudentTeacher].includes(user.role.title)) {
+    tabs.push({
+      label: (
+        <span>
+          <SafetyCertificateOutlined style={{ color: 'darkcyan' }} />
+          الوثائق الشخصية
+        </span>
+      ),
+      key: '2',
+      children: <UserDocuments user={user} />,
+    });
+  }
 
   return <Tabs defaultActiveKey="1" type="card" size="large" items={tabs} />;
 };

@@ -1,6 +1,10 @@
 import { validate as isValidUUID } from 'uuid';
 
-import { UpdateDocumentsDto, UpdateStudentDto } from '@contests/dto/auth';
+import {
+  UpdateDocumentsDto,
+  UpdateStudentDto,
+  UpdateTeacherDto,
+} from '@contests/dto/auth';
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/auth-service';
 
@@ -85,6 +89,44 @@ export class ProfileService {
         console.log('Send Notification to New Teacherzzz');
       }
       return updated;
+    } catch (error) {
+      Logger.error(error);
+    }
+  }
+
+  /**
+   * Update the profile of Teacher
+   *
+   * @param params Prisma.UserUpdateInput The User data.
+   * @returns Promise<User>
+   */
+  async updateTeacherProfile(params: {
+    where: Prisma.UserWhereUniqueInput;
+    data: UpdateTeacherDto;
+  }) {
+    const {
+      data: { phone, phoneCode, ...rest },
+      where,
+    } = params;
+    const user: Prisma.UserUpdateWithoutEmailTokenInput = {
+      profile: {
+        upsert: {
+          create: {
+            ...rest,
+            phone: { phone, phoneCode },
+          },
+          update: {
+            ...rest,
+            phone: { phone, phoneCode },
+          },
+        },
+      },
+    };
+    try {
+      return await this.prisma.user.update({
+        where,
+        data: user,
+      });
     } catch (error) {
       Logger.error(error);
     }

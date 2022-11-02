@@ -19,7 +19,7 @@ export class UpdateStudentDto {
   @Field()
   @IsNotEmpty()
   @IsString()
-  country?: string;
+  country: string;
 
   @Field(() => StudentLevel)
   @IsNotEmpty()

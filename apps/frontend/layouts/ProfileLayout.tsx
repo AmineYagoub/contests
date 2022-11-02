@@ -24,6 +24,9 @@ import styled from '@emotion/styled';
 
 import { Logo, StyledContent, StyledMenu } from './AdminLayout';
 import StyledFooter from './StyledFooter';
+import { useSnapshot } from 'valtio';
+import { AuthState } from '@/valtio/auth.state';
+import { User } from '@/graphql/graphql';
 
 const { Header, Sider } = Layout;
 
@@ -41,6 +44,7 @@ const ProfileLayout: FC<{ children: ReactElement; isTeacher: boolean }> = ({
   // const socket = useReactiveVar(socketVar);
   const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
+  const user = useSnapshot(AuthState).user as User;
 
   /*   useEffect(() => {
     socket.connect();
@@ -141,21 +145,18 @@ const ProfileLayout: FC<{ children: ReactElement; isTeacher: boolean }> = ({
                     type="ghost"
                   />
                 </Badge>
-                <Badge
-                  offset={[5, 30]}
-                  count={<CheckCircleFilled style={{ color: 'aqua' }} />}
-                >
-                  <Avatar
-                    src={
-                      <Image
-                        src="https://joeschmoe.io/api/v1/joe"
-                        width={32}
-                        height={32}
-                        alt="avatar"
-                      />
-                    }
-                  />
-                </Badge>
+
+                <Avatar
+                  src={
+                    <Image
+                      src={user?.profile.personalImage}
+                      width={32}
+                      height={32}
+                      alt="avatar"
+                      objectFit="contain"
+                    />
+                  }
+                />
               </Space>
             </Col>
           </Row>
