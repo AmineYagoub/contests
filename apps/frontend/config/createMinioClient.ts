@@ -5,6 +5,7 @@ import { config } from './';
 let minioClient: Minio.Client;
 
 export function createMinioClient() {
+  console.log(config.minio);
   return new Minio.Client({
     endPoint: config.minio.minioHost,
     port: config.minio.minioPort,
@@ -31,6 +32,7 @@ export const createBucket = (name: string): Promise<string> => {
       if (!exists) {
         minioClient.makeBucket(name, '', (e: Error) => {
           if (e) {
+            console.log(e);
             return reject(e);
           }
           resolve(name);
@@ -47,6 +49,7 @@ export const uploadFile = (bucket: string, file: string, name: string) => {
   return new Promise<boolean>((resolve, reject) => {
     minioClient.fPutObject(bucket, name, file, (e: Error) => {
       if (e) {
+        console.log(e);
         return reject(e);
       }
       resolve(true);
