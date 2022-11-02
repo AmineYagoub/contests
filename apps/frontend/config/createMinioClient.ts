@@ -9,7 +9,7 @@ export function createMinioClient() {
   return new Minio.Client({
     endPoint: config.minio.minioHost,
     port: config.minio.minioPort,
-    useSSL: config.isProduction,
+    useSSL: false,
     accessKey: config.minio.minioKey,
     secretKey: config.minio.minioSecret,
   });
