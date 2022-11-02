@@ -6,7 +6,7 @@ import { NextPageWithLayout } from '@/utils/types';
 import { AuthState } from '@/valtio/auth.state';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
-const ProfileDashboard: NextPageWithLayout = () => {
+const ProfileNotifications: NextPageWithLayout = () => {
   /// const user = useSnapshot(AuthState).user as User;
   return (
     <div>
@@ -14,7 +14,7 @@ const ProfileDashboard: NextPageWithLayout = () => {
     </div>
   );
 };
-ProfileDashboard.getLayout = (page: EmotionJSX.Element) => (
+ProfileNotifications.getLayout = (page: EmotionJSX.Element) => (
   <ProfileLayout isTeacher={true}>{page}</ProfileLayout>
 );
-export default ProfileDashboard;
+export default ProfileNotifications;

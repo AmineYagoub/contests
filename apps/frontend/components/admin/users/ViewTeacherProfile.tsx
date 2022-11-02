@@ -147,10 +147,7 @@ const ViewTeacherProfile = ({
               </Descriptions.Item>
               {/* ------------------------------------ */}
               <Descriptions.Item label="رقم الهاتف">
-                {getMapperLabel<StudentLevel>(
-                  studentMappedLevels,
-                  profile.phone
-                )}
+                {`${profile.phone.phone} (${profile.phone.phoneCode})`}
               </Descriptions.Item>
               <Descriptions.Item label="نوع العضوية">
                 <UserRole user={user as User} />

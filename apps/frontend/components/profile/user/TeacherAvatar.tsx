@@ -3,16 +3,9 @@ import { Image, message, notification, Upload } from 'antd';
 import type { RcFile } from 'antd/es/upload/interface';
 
 import { config } from '@/config/index';
-import dynamic from 'next/dynamic';
 import { useUploadDocuments } from '@/hooks/profile/document.hook';
 import { User } from '@/graphql/graphql';
-
-const ImgCrop = dynamic(
-  () => import('antd-img-crop').then((mod) => mod.default),
-  {
-    ssr: false,
-  }
-);
+import ImgCrop from 'antd-img-crop';
 
 const { uploadAllowedMimeType, documentsUrl, uploadMaxSize } = config.upload;
 

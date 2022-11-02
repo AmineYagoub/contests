@@ -3,7 +3,7 @@ import ProfileLayout from '@/layout/ProfileLayout';
 import { CheckOutlined } from '@ant-design/icons';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
-import { Card, Divider, Space, Badge } from 'antd';
+import { Card, Divider, Space, Badge, Typography } from 'antd';
 
 const gridStyle: React.CSSProperties = {
   width: '25%',
@@ -14,6 +14,8 @@ const gridStyle: React.CSSProperties = {
 const StyledH1 = styled('h1')({
   fontSize: '2rem',
 });
+
+const { Paragraph } = Typography;
 
 const StyledList = styled('ul')({
   listStyle: 'none',
@@ -33,13 +35,18 @@ const TeacherMembership = () => {
   return (
     <>
       <StyledH1>الإشتراك المدفوع</StyledH1>
-      <p>
+      <Paragraph type="secondary">
         إشترك في أحد الخطط المدفوعة لترقية عضويتك و الحصول على مزايا إضافية.
-      </p>
+      </Paragraph>
       <Divider />
 
       <Card bordered={false} style={{ backgroundColor: 'transparent' }}>
-        <Card.Grid style={gridStyle}>
+        <Card.Grid
+          style={{
+            ...gridStyle,
+            boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+          }}
+        >
           <StyledH1>المجاني</StyledH1>
           <h3>الخطة المجانية</h3>
           <Space>

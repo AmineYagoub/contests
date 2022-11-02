@@ -1,6 +1,23 @@
 export const users = [
   {
-    password: 'hashedPassword',
+    password: '12345678',
+    key: 999999,
+    email: 'admin@yahoo.com',
+    agreement: true,
+    role: 'ADMIN',
+    emailConfirmed: true,
+    isActive: true,
+    profile: {
+      firstName: 'أحمد',
+      personalImage:
+        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
+      lastName: 'عمر',
+      dateOfBirth: '1975-10-07T11:43:24.616Z',
+      country: 'مصر',
+    },
+  },
+  {
+    password: '12345678',
     key: 1,
     email: 'y1@yahoo.com',
     agreement: true,
@@ -17,7 +34,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 2,
     email: 'y2@yahoo.com',
     agreement: true,
@@ -34,7 +51,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 3,
     email: 'y3@yahoo.com',
     agreement: true,
@@ -51,7 +68,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 4,
     email: 'y4@yahoo.com',
     agreement: true,
@@ -68,7 +85,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 5,
     email: 'y5@yahoo.com',
     agreement: true,
@@ -85,7 +102,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 6,
     email: 'y6@yahoo.com',
     agreement: true,
@@ -102,7 +119,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 7,
     email: 'y7@yahoo.com',
     agreement: true,
@@ -119,7 +136,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 8,
     email: 'y8@yahoo.com',
     agreement: true,
@@ -136,7 +153,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 9,
     email: 'y9@yahoo.com',
     agreement: true,
@@ -153,7 +170,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 10,
     email: 'y10@yahoo.com',
     agreement: true,
@@ -170,7 +187,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 11,
     email: 'y11@yahoo.com',
     agreement: true,
@@ -187,7 +204,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 12,
     email: 'y12@yahoo.com',
     agreement: true,
@@ -209,7 +226,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 13,
     email: 'y13@yahoo.com',
     agreement: true,
@@ -231,7 +248,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 14,
     email: 'y14@yahoo.com',
     agreement: true,
@@ -253,7 +270,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 15,
     email: 'y15@yahoo.com',
     agreement: true,
@@ -275,7 +292,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 16,
     email: 'y16@yahoo.com',
     agreement: true,
@@ -297,7 +314,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 17,
     email: 'y17@yahoo.com',
     agreement: true,
@@ -319,7 +336,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 18,
     email: 'y18@yahoo.com',
     agreement: true,
@@ -341,7 +358,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 19,
     email: 'y19@yahoo.com',
     agreement: true,
@@ -363,7 +380,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 20,
     email: 'y20@yahoo.com',
     agreement: true,
@@ -385,7 +402,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 21,
     email: 'y21@yahoo.com',
     agreement: true,
@@ -407,7 +424,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 22,
     email: 'y22@yahoo.com',
     agreement: true,
@@ -429,7 +446,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 23,
     email: 'y23@yahoo.com',
     agreement: true,
@@ -451,7 +468,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 24,
     email: 'y24@yahoo.com',
     agreement: true,
@@ -473,7 +490,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 25,
     email: 'y25@yahoo.com',
     agreement: true,
@@ -495,7 +512,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 26,
     email: 'y26@yahoo.com',
     agreement: true,
@@ -517,7 +534,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 27,
     email: 'y27@yahoo.com',
     agreement: true,
@@ -539,7 +556,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 28,
     email: 'y28@yahoo.com',
     agreement: true,
@@ -561,7 +578,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 29,
     email: 'y29@yahoo.com',
     agreement: true,
@@ -583,7 +600,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 30,
     email: 'y30@yahoo.com',
     agreement: true,
@@ -605,7 +622,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 31,
     email: 'y31@yahoo.com',
     agreement: true,
@@ -627,7 +644,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 32,
     email: 'y32@yahoo.com',
     agreement: true,
@@ -649,7 +666,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 33,
     email: 'y33@yahoo.com',
     agreement: true,
@@ -671,7 +688,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 34,
     email: 'y34@yahoo.com',
     agreement: true,
@@ -693,7 +710,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 35,
     email: 'y35@yahoo.com',
     agreement: true,
@@ -715,7 +732,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 36,
     email: 'y36@yahoo.com',
     agreement: true,
@@ -737,7 +754,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 37,
     email: 'y37@yahoo.com',
     agreement: true,
@@ -759,7 +776,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 38,
     email: 'y38@yahoo.com',
     agreement: true,
@@ -781,7 +798,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 39,
     email: 'y39@yahoo.com',
     agreement: true,
@@ -803,7 +820,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 40,
     email: 'y40@yahoo.com',
     agreement: true,
@@ -825,7 +842,7 @@ export const users = [
     },
   },
   {
-    password: 'hashedPassword',
+    password: '12345678',
     key: 41,
     email: 'y41@yahoo.com',
     agreement: true,
