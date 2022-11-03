@@ -74,7 +74,7 @@ export const gatewayGQLConfig = registerAs(GATEWAY_GQL_REGISTER_KEY, () => ({
     csrfPrevention: true,
     plugins: [HttpResponsePlugin, ApolloServerPluginInlineTraceDisabled()],
     formatError(error: any) {
-      console.log(JSON.stringify(error, null, 2));
+      //console.log(JSON.stringify(error, null, 2));
       if (error.extensions?.exception?.cause) {
         return {
           message: error.extensions?.exception.cause.code,

@@ -15,6 +15,7 @@ export const getTitleMeta = (siteTitle: string, pageTitle?: string) =>
 
 export class Logger {
   static log(error: Error | ValidateErrorEntity<unknown>) {
-    console.log(JSON.stringify(error, null, 2));
+    //console.log(JSON.stringify(error, null, 2));
+    console.error(error);
   }
 }
