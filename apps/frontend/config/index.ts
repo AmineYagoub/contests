@@ -1,6 +1,5 @@
 export interface MinioConfig {
   minioHost: string;
-  minioPort: number;
   minioKey: string;
   minioSecret: string;
   minioSSL: boolean;
@@ -31,12 +30,7 @@ export const config: AppConfig = {
   refreshJwtName: 'aoc_jwt_ref',
   nonceName: isProd ? '__Host_Fgp_nonce' : 'fgp_nonce',
   minio: {
-    minioHost: isProd
-      ? process.env.MINIO_PROD_HOST
-      : process.env.MINIO_DEV_HOST,
-    minioPort: Number(
-      isProd ? process.env.MINIO_PROD_PORT : process.env.MINIO_DEV_PORT
-    ),
+    minioHost: process.env.MINIO_HOST,
     minioSSL: process.env.MINIO_USE_SSL === '1',
     minioKey: process.env.MINIO_ROOT_USER,
     minioSecret: process.env.MINIO_ROOT_PASSWORD,

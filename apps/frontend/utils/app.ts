@@ -1,14 +1,9 @@
 import { ValidateErrorEntity } from 'rc-field-form/es/interface';
 import { io, Socket } from 'socket.io-client';
 
-import { config } from '@/config/index';
 import { makeVar, ReactiveVar } from '@apollo/client';
 
-const url = config.isProduction
-  ? process.env.NEXT_PUBLIC_PROD_WS_ENDPOINT
-  : process.env.NEXT_PUBLIC_DEV_WS_ENDPOINT;
-
-export const socket = io(url, {
+export const socket = io(process.env.NEXT_PUBLIC_WS_ENDPOINT, {
   autoConnect: false,
   closeOnBeforeunload: true,
 });

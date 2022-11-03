@@ -18,7 +18,7 @@ const nextConfig = {
       'ui-avatars.com',
       'flagcdn.com',
       'upload.wikimedia.org',
-      'joeschmoe.io',
+      's3.olympiadnahw.com',
       'localhost',
     ],
   },

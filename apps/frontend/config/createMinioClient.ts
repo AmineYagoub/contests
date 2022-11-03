@@ -6,17 +6,13 @@ import { config } from './';
 let minioClient: Minio.Client;
 
 export function createMinioClient() {
-  try {
-    return new Minio.Client({
-      endPoint: config.minio.minioHost,
-      port: config.minio.minioPort,
-      useSSL: config.minio.minioSSL,
-      accessKey: config.minio.minioKey,
-      secretKey: config.minio.minioSecret,
-    });
-  } catch (error) {
-    Logger.log(error);
-  }
+  console.log(config.minio);
+  return new Minio.Client({
+    endPoint: config.minio.minioHost,
+    useSSL: config.minio.minioSSL,
+    accessKey: config.minio.minioKey,
+    secretKey: config.minio.minioSecret,
+  });
 }
 
 export function initializeMinio() {

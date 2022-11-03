@@ -41,9 +41,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 const httpLink = new HttpLink({
-  uri: config.isProduction
-    ? process.env.NEXT_PUBLIC_PROD_GRAPHQL_ENDPOINT
-    : process.env.NEXT_PUBLIC_DEV_GRAPHQL_ENDPOINT,
+  uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
   credentials: 'include', // Additional fetch() options like `credentials` or `headers`
 });
 
