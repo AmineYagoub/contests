@@ -1,3 +1,4 @@
+import { Logger } from '@/utils/app';
 import * as Minio from 'minio';
 
 import { config } from './';
@@ -5,14 +6,17 @@ import { config } from './';
 let minioClient: Minio.Client;
 
 export function createMinioClient() {
-  console.log(config.minio);
-  return new Minio.Client({
-    endPoint: config.minio.minioHost,
-    port: config.minio.minioPort,
-    useSSL: false,
-    accessKey: config.minio.minioKey,
-    secretKey: config.minio.minioSecret,
-  });
+  try {
+    return new Minio.Client({
+      endPoint: config.minio.minioHost,
+      port: config.minio.minioPort,
+      useSSL: config.minio.minioSSL,
+      accessKey: config.minio.minioKey,
+      secretKey: config.minio.minioSecret,
+    });
+  } catch (error) {
+    Logger.log(error);
+  }
 }
 
 export function initializeMinio() {

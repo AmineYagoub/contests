@@ -3,6 +3,7 @@ export interface MinioConfig {
   minioPort: number;
   minioKey: string;
   minioSecret: string;
+  minioSSL: boolean;
 }
 
 export interface UploadConfig {
@@ -36,6 +37,7 @@ export const config: AppConfig = {
     minioPort: Number(
       isProd ? process.env.MINIO_PROD_PORT : process.env.MINIO_DEV_PORT
     ),
+    minioSSL: process.env.MINIO_USE_SSL === '1',
     minioKey: process.env.MINIO_ROOT_USER,
     minioSecret: process.env.MINIO_ROOT_PASSWORD,
   },
