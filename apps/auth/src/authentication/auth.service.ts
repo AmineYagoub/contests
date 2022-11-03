@@ -58,6 +58,7 @@ export class AuthService {
       });
       return true;
     } catch (error) {
+      console.log(error);
       if (error.code === 'P2002') {
         throw new UnprocessableEntityException(error);
       }
@@ -101,10 +102,15 @@ export class AuthService {
         create: {
           level: StudentLevel.Student,
           personalImage: `https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user`,
+          dateOfBirth: new Date(),
         },
       };
       if (teacherId) {
-        user.profile.create.teacher.connect.id = teacherId;
+        user.profile.create.teacher = {
+          connect: {
+            id: teacherId,
+          },
+        };
       }
     }
     return user;

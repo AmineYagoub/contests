@@ -1,4 +1,14 @@
-import { Alert, Avatar, Badge, Button, Col, Layout, Row, Space } from 'antd';
+import {
+  Alert,
+  Avatar,
+  Badge,
+  Button,
+  Col,
+  Layout,
+  Row,
+  Space,
+  Typography,
+} from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -8,9 +18,9 @@ import { withAuth } from '@/components/common/withAuth';
 import theme from '@/config/theme';
 import { socketVar } from '@/utils/app';
 import { AppRoutes } from '@/utils/routes';
+
 import {
   BellOutlined,
-  CheckCircleFilled,
   ContactsOutlined,
   HomeOutlined,
   MailOutlined,
@@ -29,6 +39,7 @@ import { AuthState } from '@/valtio/auth.state';
 import { User } from '@/graphql/graphql';
 
 const { Header, Sider } = Layout;
+const { Text } = Typography;
 
 export const StyledHeader = styled(Header)({
   backgroundColor: `${theme.primaryColor} !important`,
@@ -161,7 +172,7 @@ const ProfileLayout: FC<{ children: ReactElement; isTeacher: boolean }> = ({
             </Col>
           </Row>
         </StyledHeader>
-        {!isTeacher && (
+        {!isTeacher && !user.isActive && (
           <Alert
             style={{ marginBottom: 10 }}
             message="البيانات الشخصية الخاصة بك غير مكتملة"
@@ -173,7 +184,11 @@ const ProfileLayout: FC<{ children: ReactElement; isTeacher: boolean }> = ({
                   إكمال الخطوات التالية:
                 </p>
                 <ul>
-                  <li>تفعيل بريدك الإلكتروني</li>
+                  <li>
+                    <Text delete={user.emailConfirmed}>
+                      تفعيل بريدك الإلكتروني
+                    </Text>
+                  </li>
                   <li>
                     إكمال ملفك الشخصي و تحميل الوثائق المطلوبة في صفحة البيانات
                     الشخصية

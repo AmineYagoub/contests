@@ -33,7 +33,7 @@ export const authConfig = registerAs(AUTH_CONFIG_REGISTER_KEY, () => ({
     smtp: process.env.SMTP_SERVICE || 'gmail',
     user: process.env.SMTP_USER || 'yagoub.2.amine@gmail.com',
     pass: process.env.SMTP_PASSWORD || 'nobqrzcgufazldcy',
-    baseUrl: process.env.BASE_URL || 'http://localhost:8080',
+    baseUrl: process.env.BASE_URL || 'http://localhost:3000',
     templatePath: path.join(
       path.resolve(),
       isProd ? './assets/' : './apps/auth/src/assets/'

@@ -37,8 +37,9 @@ export abstract class BaseProfile {
 
   @Field({
     description: 'Identifies the date and time when the object was created.',
+    nullable: true,
   })
-  dateOfBirth: Date;
+  dateOfBirth?: Date;
 
   @Field({
     description: 'Identifies the date and time when the object was created.',

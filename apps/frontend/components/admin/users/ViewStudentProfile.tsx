@@ -115,7 +115,7 @@ const ViewStudentProfile = ({
       open={visible}
       style={{ position: 'absolute' }}
       bodyStyle={{ paddingBottom: 80 }}
-      width={1080}
+      width={1200}
       destroyOnClose
       extra={
         <Button onClick={onClose} htmlType="reset" type="primary" ghost>
@@ -215,20 +215,28 @@ const ViewStudentProfile = ({
             </StyledDescriptions>
             <StyledDescriptions title={<h2>وثائق الطالب</h2>} layout="vertical">
               <Descriptions.Item label="إثبات الهوية">
-                <Image
-                  src={profile.birthCertImage}
-                  alt="avatar"
-                  width={64}
-                  height={64}
-                />
+                {profile.birthCertImage ? (
+                  <Image
+                    src={profile.birthCertImage}
+                    alt="birthCertImage"
+                    width={64}
+                    height={64}
+                  />
+                ) : (
+                  'غير متوفر'
+                )}
               </Descriptions.Item>
               <Descriptions.Item label="خطاب المدرسة">
-                <Image
-                  src={profile.letterImage}
-                  alt="avatar"
-                  width={64}
-                  height={64}
-                />
+                {profile.letterImage ? (
+                  <Image
+                    src={profile.letterImage}
+                    alt="letterImage"
+                    width={64}
+                    height={64}
+                  />
+                ) : (
+                  'غير متوفر'
+                )}
               </Descriptions.Item>
             </StyledDescriptions>
           </Col>
