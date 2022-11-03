@@ -147,7 +147,7 @@ const ViewTeacherProfile = ({
               </Descriptions.Item>
               {/* ------------------------------------ */}
               <Descriptions.Item label="رقم الهاتف">
-                {`${profile.phone.phone} (${profile.phone.phoneCode})`}
+                {`${profile?.phone?.phone} (${profile?.phone?.phoneCode})`}
               </Descriptions.Item>
               <Descriptions.Item label="نوع العضوية">
                 <UserRole user={user as User} />
