@@ -58,7 +58,6 @@ export class AuthService {
       });
       return true;
     } catch (error) {
-      console.log(error);
       if (error.code === 'P2002') {
         throw new UnprocessableEntityException(error);
       }

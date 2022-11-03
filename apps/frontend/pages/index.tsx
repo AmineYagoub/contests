@@ -29,9 +29,10 @@ const Index: NextPageWithLayout = (props) => {
     <>
       <h1>قريبا ...</h1>
 
-      {d?.getAuthUser?.role.title.includes(RoleTitle.Admin) && (
+      <div>
         <Link href="/admin/dashboard">لوحة تحكم الادارة</Link>
-      )}
+      </div>
+
       {d?.getAuthUser?.role.title.includes(RoleTitle.Teacher) && (
         <Link href="/teacher/dashboard">صفحتي الشخصية</Link>
       )}

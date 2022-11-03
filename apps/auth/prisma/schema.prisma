@@ -68,7 +68,7 @@ model User {
   password              String    @db.Char(255)
   emailConfirmed        Boolean?  @default(false)
   agreement             Boolean
-  isActive              Boolean?  @default(true)
+  isActive              Boolean?  @default(false)
   created               DateTime  @default(now())
   updated               DateTime  @updatedAt
 
