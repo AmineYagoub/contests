@@ -128,9 +128,9 @@ export class AuthService {
         where: { email: String(email) },
         include: { role: true },
       });
-      if (!user.isActive) {
+      /* if (!user.isActive) {
         throw new UnauthorizedException('User Banned');
-      }
+      } */
       if (!user.emailConfirmed) {
         throw new UnauthorizedException(
           `User Email ${user.email} not confirmed`
