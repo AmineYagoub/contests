@@ -5,7 +5,7 @@ import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import {
   useSearchUsers,
   useUpdateUsers,
-} from '@/hooks/admin/manage-students.hook';
+} from '@/hooks/admin/manage-users.hook';
 import { StudentFields, StudentsDataIndex, UserFields } from '@/utils/fields';
 import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
 import {

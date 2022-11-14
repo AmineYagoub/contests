@@ -14,6 +14,9 @@ import { AnswerModule } from '../answers/answer.module';
 import { ContestModule } from '../contests/contest.module';
 import { QuestionModule } from '../questions/question.module';
 import { TagModule } from '../tags/tag.module';
+import { AppResolver } from './app.resolver';
+import { AppService } from './app.service';
+import { PrismaService } from './prisma.service';
 
 @Module({
   imports: [
@@ -23,10 +26,12 @@ import { TagModule } from '../tags/tag.module';
       useFactory: async (config: ContestConfigGQLType) => config,
       inject: [contestGQLConfig.KEY],
     }),
+
     TagModule,
     AnswerModule,
     ContestModule,
     QuestionModule,
   ],
+  providers: [AppResolver, AppService, PrismaService],
 })
 export class AppModule {}

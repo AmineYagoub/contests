@@ -18,7 +18,7 @@ export class UserService {
     private prisma: PrismaService,
     private readonly passwordService: PasswordService
   ) {
-    /* this.prisma.user.deleteMany().then(() => {
+    /*     this.prisma.user.deleteMany().then(() => {
       this.seedUsers();
     }); */
   }

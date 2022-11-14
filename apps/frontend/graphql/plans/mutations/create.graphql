@@ -1,0 +1,5 @@
+mutation CreateSubscriptionPlan($input: CreateSubscriptionPlansDto!) {
+  createSubscriptionPlan (input: $input) {
+    id
+  }
+}

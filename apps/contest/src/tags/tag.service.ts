@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Prisma, Tag } from '@prisma/contest-service';
 
 import { PrismaService } from '../app/prisma.service';
@@ -19,7 +19,7 @@ export class TagService {
         data,
       });
     } catch (error) {
-      console.error(error.message);
+      Logger.error(error.message);
     }
   }
 
@@ -40,7 +40,7 @@ export class TagService {
         where,
       });
     } catch (error) {
-      console.error(error.message);
+      Logger.error(error.message);
     }
   }
 
@@ -56,7 +56,7 @@ export class TagService {
         where,
       });
     } catch (error) {
-      console.error(error.message);
+      Logger.error(error.message);
     }
   }
 
@@ -72,7 +72,7 @@ export class TagService {
         where: input,
       });
     } catch (error) {
-      console.error(error.message);
+      Logger.error(error.message);
     }
   }
 
@@ -92,7 +92,7 @@ export class TagService {
         },
       });
     } catch (error) {
-      console.error(error.message);
+      Logger.error(error.message);
     }
   }
 }

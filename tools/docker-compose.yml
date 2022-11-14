@@ -17,6 +17,22 @@ services:
     networks:
       - db_network
 
+  cts_db:
+    image: percona
+    restart: unless-stopped
+    volumes:
+      - cts-data:/var/lib/mysql
+    # Uncomment to change startup options
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass123
+      MYSQL_DATABASE: cts
+    ports:
+      - 3307:3306
+    networks:
+      - db_network
+
   minio:
     image: bitnami/minio
     volumes:
@@ -47,9 +63,10 @@ services:
     networks:
       - db_network
 
-volumes:
-  api-data: null
-  minio_data: null
-
 networks:
   db_network:
+
+volumes:
+  api-data: null
+  cts-data: null
+  minio_data: null

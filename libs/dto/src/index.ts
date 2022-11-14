@@ -6,3 +6,4 @@ export * from './lib/questions/update.dto';
 export * from './lib/questions/pagination.dto';
 export * from './lib/answers/create.dto';
 export * from './lib/answers/update.dto';
+export * from './lib/app/update.dto';

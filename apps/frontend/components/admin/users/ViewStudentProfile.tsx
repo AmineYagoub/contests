@@ -30,7 +30,7 @@ import {
 import ViewStudentSkeleton from './ViewStudentSkeleton';
 import { MailOutlined, WarningOutlined } from '@ant-design/icons';
 import StyledButton from '@/components/common/StyledButton';
-import { useUpdateUsers } from '@/hooks/admin/manage-students.hook';
+import { useUpdateUsers } from '@/hooks/admin/manage-users.hook';
 import { memo, useEffect, useState } from 'react';
 
 const StyledDescriptions = styled(Descriptions)({

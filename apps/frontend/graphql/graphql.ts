@@ -52,6 +52,31 @@ export type AnswerInput = {
   id: Scalars['String'];
 };
 
+export type App = {
+  __typename?: 'App';
+  /** Identifies the user agreement content. */
+  agreement: Scalars['String'];
+  /** Identifies the iphone app url in AppStore. */
+  appStorUrl: Scalars['String'];
+  /** Identifies the email used to receive messages from contactUs page. */
+  contactEmail: Scalars['String'];
+  /** Identifies the description of App. */
+  description: Scalars['String'];
+  /** Identifies facebook url. */
+  facebookUrl: Scalars['String'];
+  id: Scalars['ID'];
+  /** Identifies instagram url. */
+  instagramUrl: Scalars['String'];
+  /** Identifies the android app url in google play. */
+  playStorUrl: Scalars['String'];
+  /** Identifies telegram url. */
+  telegramUrl: Scalars['String'];
+  /** Identifies the App title. */
+  title: Scalars['String'];
+  /** Identifies twitter url. */
+  twitterUrl: Scalars['String'];
+};
+
 export type Auth = {
   __typename?: 'Auth';
   /** JWT access token */
@@ -176,6 +201,14 @@ export type CreateQuestionDto = {
   type: QuestionType;
 };
 
+export type CreateSubscriptionPlansDto = {
+  allowedContests: Scalars['Int'];
+  options: Array<Scalars['String']>;
+  price: Scalars['Int'];
+  subTitle: Scalars['String'];
+  title: Scalars['String'];
+};
+
 export type EmailDto = {
   email: Scalars['String'];
 };
@@ -190,10 +223,12 @@ export type Mutation = {
   createAnswer: Answer;
   createContest: Contest;
   createQuestion: Question;
+  createSubscriptionPlan: SubscriptionPlan;
   createTag: Tag;
   deleteAnswerById?: Maybe<Answer>;
   deleteContestById?: Maybe<Contest>;
   deleteQuestionById?: Maybe<Question>;
+  deleteSubscriptionPlanById?: Maybe<SubscriptionPlan>;
   deleteTagById?: Maybe<Tag>;
   deleteUserById?: Maybe<User>;
   emailTokenToRecoverPassword: Scalars['Boolean'];
@@ -201,10 +236,12 @@ export type Mutation = {
   signing: Auth;
   signup: Scalars['Boolean'];
   updateAnswer: Answer;
+  updateAppConfig: App;
   updateContest: Contest;
   updateQuestion: Question;
   updateStudentDocuments: User;
   updateStudentProfile: User;
+  updateSubscriptionPlan: SubscriptionPlan;
   updateTag: Tag;
   updateTeacherProfile: User;
   updateUser: User;
@@ -231,6 +268,11 @@ export type MutationCreateQuestionArgs = {
 };
 
 
+export type MutationCreateSubscriptionPlanArgs = {
+  input: CreateSubscriptionPlansDto;
+};
+
+
 export type MutationCreateTagArgs = {
   title: Scalars['String'];
 };
@@ -247,6 +289,11 @@ export type MutationDeleteContestByIdArgs = {
 
 
 export type MutationDeleteQuestionByIdArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteSubscriptionPlanByIdArgs = {
   id: Scalars['String'];
 };
 
@@ -287,6 +334,11 @@ export type MutationUpdateAnswerArgs = {
 };
 
 
+export type MutationUpdateAppConfigArgs = {
+  input: UpdateAppConfigDto;
+};
+
+
 export type MutationUpdateContestArgs = {
   id: Scalars['String'];
   input: UpdateContestDto;
@@ -308,6 +360,12 @@ export type MutationUpdateStudentDocumentsArgs = {
 export type MutationUpdateStudentProfileArgs = {
   id: Scalars['String'];
   input: UpdateStudentDto;
+};
+
+
+export type MutationUpdateSubscriptionPlanArgs = {
+  id: Scalars['String'];
+  input: UpdateSubscriptionPlansDto;
 };
 
 
@@ -374,11 +432,14 @@ export type Profile = Student | Teacher;
 
 export type Query = {
   __typename?: 'Query';
+  findAllSubscriptionPlans: Array<SubscriptionPlan>;
+  findAppConfig: App;
   findEmailToken: ActivationToken;
   findOneAnswerById?: Maybe<Answer>;
   findOneContestById?: Maybe<Contest>;
   findOneQuestionById?: Maybe<Question>;
   findOneTagById?: Maybe<Tag>;
+  findSubscriptionPlan: SubscriptionPlan;
   findTags?: Maybe<Array<Tag>>;
   findTeacher: Array<User>;
   findUser: User;
@@ -411,6 +472,11 @@ export type QueryFindOneQuestionByIdArgs = {
 
 
 export type QueryFindOneTagByIdArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryFindSubscriptionPlanArgs = {
   id: Scalars['String'];
 };
 
@@ -562,7 +628,7 @@ export type Student = {
   /** Identifies the date and time when the object was created. */
   created: Scalars['DateTime'];
   /** Identifies the date and time when the object was created. */
-  dateOfBirth: Scalars['DateTime'];
+  dateOfBirth?: Maybe<Scalars['DateTime']>;
   /** Identifies the first name of the user. */
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
@@ -593,6 +659,25 @@ export enum StudentLevel {
   Student = 'Student',
   Thirteen = 'Thirteen'
 }
+
+export type SubscriptionPlan = {
+  __typename?: 'SubscriptionPlan';
+  /** Identifies the number of allowed contests that can be created in this plan. */
+  allowedContests: Scalars['Int'];
+  /** Identifies the date and time when the object was created. */
+  created: Scalars['DateTime'];
+  id: Scalars['ID'];
+  /** Identifies a list of plan options */
+  options: Array<Scalars['String']>;
+  /** Identifies the unique price of the plan. */
+  price: Scalars['Int'];
+  /** Identifies the unique sub title of the plan. */
+  subTitle?: Maybe<Scalars['String']>;
+  /** Identifies the unique title of the plan. */
+  title: Scalars['String'];
+  /** Identifies the date and time when the object was last updated. */
+  updated: Scalars['DateTime'];
+};
 
 export type Tag = {
   __typename?: 'Tag';
@@ -625,7 +710,7 @@ export type Teacher = {
   /** Identifies the date and time when the object was created. */
   created: Scalars['DateTime'];
   /** Identifies the date and time when the object was created. */
-  dateOfBirth: Scalars['DateTime'];
+  dateOfBirth?: Maybe<Scalars['DateTime']>;
   /** Identifies the first name of the user. */
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
@@ -649,6 +734,29 @@ export type UpdateAnswerDto = {
   answers?: InputMaybe<Array<SelectedAnswerInput>>;
   contest?: InputMaybe<ContestConnectInput>;
   userId?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateAppConfigDto = {
+  /** Identifies the user agreement content. */
+  agreement?: InputMaybe<Scalars['String']>;
+  /** Identifies the iphone app url in AppStore. */
+  appStorUrl?: InputMaybe<Scalars['String']>;
+  /** Identifies the email used to receive messages from contactUs page. */
+  contactEmail?: InputMaybe<Scalars['String']>;
+  /** Identifies the description of App. */
+  description?: InputMaybe<Scalars['String']>;
+  /** Identifies facebook url. */
+  facebookUrl?: InputMaybe<Scalars['String']>;
+  /** Identifies instagram url. */
+  instagramUrl?: InputMaybe<Scalars['String']>;
+  /** Identifies the android app url in google play. */
+  playStorUrl?: InputMaybe<Scalars['String']>;
+  /** Identifies telegram url. */
+  telegramUrl?: InputMaybe<Scalars['String']>;
+  /** Identifies the App title. */
+  title?: InputMaybe<Scalars['String']>;
+  /** Identifies twitter url. */
+  twitterUrl?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateContestDto = {
@@ -695,6 +803,14 @@ export type UpdateStudentDto = {
   level: StudentLevel;
   role: RoleTitle;
   teacherId?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateSubscriptionPlansDto = {
+  allowedContests?: InputMaybe<Scalars['Int']>;
+  options?: InputMaybe<Array<Scalars['String']>>;
+  price?: InputMaybe<Scalars['Int']>;
+  subTitle?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateTeacherDto = {
@@ -817,6 +933,18 @@ export type FindOneAnswerByIdQueryVariables = Exact<{
 
 export type FindOneAnswerByIdQuery = { __typename?: 'Query', findOneAnswerById?: { __typename?: 'Answer', userId: string, annulled: boolean, annulledReason: string, created: any, updated: any, answers: Array<{ __typename?: 'SelectedAnswerObject', questionId: string, questionIndex: number, optionIndex: number }> } | null };
 
+export type UpdateAppConfigMutationVariables = Exact<{
+  input: UpdateAppConfigDto;
+}>;
+
+
+export type UpdateAppConfigMutation = { __typename?: 'Mutation', updateAppConfig: { __typename?: 'App', id: string } };
+
+export type FindAppConfigQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FindAppConfigQuery = { __typename?: 'Query', findAppConfig: { __typename?: 'App', title: string, description: string, contactEmail: string, agreement: string, appStorUrl: string, playStorUrl: string, telegramUrl: string, twitterUrl: string, facebookUrl: string, instagramUrl: string } };
+
 export type ActivateEmailTokenMutationVariables = Exact<{
   input: IdDto;
 }>;
@@ -903,6 +1031,40 @@ export type PaginateContestsQueryVariables = Exact<{
 
 export type PaginateContestsQuery = { __typename?: 'Query', paginateContest?: { __typename?: 'ContestPaginationResponse', total: number, data?: Array<{ __typename?: 'Contest', id: string, type: ContestType, title: string, level: Array<StudentLevel>, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, authorId: number, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, tags?: Array<{ __typename?: 'Tag', title: string }> | null }> | null } | null };
 
+export type CreateSubscriptionPlanMutationVariables = Exact<{
+  input: CreateSubscriptionPlansDto;
+}>;
+
+
+export type CreateSubscriptionPlanMutation = { __typename?: 'Mutation', createSubscriptionPlan: { __typename?: 'SubscriptionPlan', id: string } };
+
+export type DeleteSubscriptionPlanMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteSubscriptionPlanMutation = { __typename?: 'Mutation', deleteSubscriptionPlanById?: { __typename?: 'SubscriptionPlan', id: string } | null };
+
+export type UpdateSubscriptionPlanMutationVariables = Exact<{
+  id: Scalars['String'];
+  input: UpdateSubscriptionPlansDto;
+}>;
+
+
+export type UpdateSubscriptionPlanMutation = { __typename?: 'Mutation', updateSubscriptionPlan: { __typename?: 'SubscriptionPlan', id: string, title: string } };
+
+export type FindAllSubscriptionPlansQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FindAllSubscriptionPlansQuery = { __typename?: 'Query', findAllSubscriptionPlans: Array<{ __typename?: 'SubscriptionPlan', title: string, id: string, subTitle?: string | null, price: number, allowedContests: number, options: Array<string>, created: any, updated: any }> };
+
+export type FindSubscriptionPlanByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type FindSubscriptionPlanByIdQuery = { __typename?: 'Query', findSubscriptionPlan: { __typename?: 'SubscriptionPlan', id: string, title: string, subTitle?: string | null, price: number, allowedContests: number, options: Array<string>, created: any, updated: any } };
+
 export type CreateQuestionMutationVariables = Exact<{
   input: CreateQuestionDto;
 }>;
@@ -960,7 +1122,7 @@ export type UpdateStudentDocumentsMutationVariables = Exact<{
 }>;
 
 
-export type UpdateStudentDocumentsMutation = { __typename?: 'Mutation', updateStudentDocuments: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth: any, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } };
+export type UpdateStudentDocumentsMutation = { __typename?: 'Mutation', updateStudentDocuments: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth?: any | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } };
 
 export type UpdateStudentProfileMutationVariables = Exact<{
   id: Scalars['String'];
@@ -968,7 +1130,7 @@ export type UpdateStudentProfileMutationVariables = Exact<{
 }>;
 
 
-export type UpdateStudentProfileMutation = { __typename?: 'Mutation', updateStudentProfile: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth: any, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } };
+export type UpdateStudentProfileMutation = { __typename?: 'Mutation', updateStudentProfile: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth?: any | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } };
 
 export type UpdateTeacherProfileMutationVariables = Exact<{
   id: Scalars['String'];
@@ -976,7 +1138,7 @@ export type UpdateTeacherProfileMutationVariables = Exact<{
 }>;
 
 
-export type UpdateTeacherProfileMutation = { __typename?: 'Mutation', updateTeacherProfile: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, country?: string | null, personalImage?: string | null, dateOfBirth: any, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null } | null } };
+export type UpdateTeacherProfileMutation = { __typename?: 'Mutation', updateTeacherProfile: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, country?: string | null, personalImage?: string | null, dateOfBirth?: any | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null } | null } };
 
 export type FindTeacherQueryVariables = Exact<{
   name?: InputMaybe<Scalars['String']>;
@@ -990,12 +1152,12 @@ export type FindUserQueryVariables = Exact<{
 }>;
 
 
-export type FindUserQuery = { __typename?: 'Query', findUser: { __typename?: 'User', id: string, key: number, email: string, emailConfirmed: boolean, isActive: boolean, created: any, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth: any, letterImage?: string | null, personalImage?: string | null, birthCertImage?: string | null, teacher?: { __typename?: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth: any, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null } | null } };
+export type FindUserQuery = { __typename?: 'Query', findUser: { __typename?: 'User', id: string, key: number, email: string, emailConfirmed: boolean, isActive: boolean, created: any, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, letterImage?: string | null, personalImage?: string | null, birthCertImage?: string | null, teacher?: { __typename?: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null } | null } };
 
 export type GetAuthUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth: any, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth: any, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null } | null } };
+export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth?: any | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null } | null } };
 
 export type PaginateUsersQueryVariables = Exact<{
   params: UserPaginationDto;
@@ -1120,6 +1282,82 @@ export function useFindOneAnswerByIdLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type FindOneAnswerByIdQueryHookResult = ReturnType<typeof useFindOneAnswerByIdQuery>;
 export type FindOneAnswerByIdLazyQueryHookResult = ReturnType<typeof useFindOneAnswerByIdLazyQuery>;
 export type FindOneAnswerByIdQueryResult = Apollo.QueryResult<FindOneAnswerByIdQuery, FindOneAnswerByIdQueryVariables>;
+export const UpdateAppConfigDocument = gql`
+    mutation UpdateAppConfig($input: UpdateAppConfigDto!) {
+  updateAppConfig(input: $input) {
+    id
+  }
+}
+    `;
+export type UpdateAppConfigMutationFn = Apollo.MutationFunction<UpdateAppConfigMutation, UpdateAppConfigMutationVariables>;
+
+/**
+ * __useUpdateAppConfigMutation__
+ *
+ * To run a mutation, you first call `useUpdateAppConfigMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAppConfigMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAppConfigMutation, { data, loading, error }] = useUpdateAppConfigMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateAppConfigMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAppConfigMutation, UpdateAppConfigMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateAppConfigMutation, UpdateAppConfigMutationVariables>(UpdateAppConfigDocument, options);
+      }
+export type UpdateAppConfigMutationHookResult = ReturnType<typeof useUpdateAppConfigMutation>;
+export type UpdateAppConfigMutationResult = Apollo.MutationResult<UpdateAppConfigMutation>;
+export type UpdateAppConfigMutationOptions = Apollo.BaseMutationOptions<UpdateAppConfigMutation, UpdateAppConfigMutationVariables>;
+export const FindAppConfigDocument = gql`
+    query FindAppConfig {
+  findAppConfig {
+    title
+    description
+    contactEmail
+    agreement
+    appStorUrl
+    playStorUrl
+    telegramUrl
+    twitterUrl
+    facebookUrl
+    instagramUrl
+  }
+}
+    `;
+
+/**
+ * __useFindAppConfigQuery__
+ *
+ * To run a query within a React component, call `useFindAppConfigQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindAppConfigQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindAppConfigQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFindAppConfigQuery(baseOptions?: Apollo.QueryHookOptions<FindAppConfigQuery, FindAppConfigQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindAppConfigQuery, FindAppConfigQueryVariables>(FindAppConfigDocument, options);
+      }
+export function useFindAppConfigLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindAppConfigQuery, FindAppConfigQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindAppConfigQuery, FindAppConfigQueryVariables>(FindAppConfigDocument, options);
+        }
+export type FindAppConfigQueryHookResult = ReturnType<typeof useFindAppConfigQuery>;
+export type FindAppConfigLazyQueryHookResult = ReturnType<typeof useFindAppConfigLazyQuery>;
+export type FindAppConfigQueryResult = Apollo.QueryResult<FindAppConfigQuery, FindAppConfigQueryVariables>;
 export const ActivateEmailTokenDocument = gql`
     mutation ActivateEmailToken($input: IDDto!) {
   activateEmailToken(input: $input) {
@@ -1640,6 +1878,190 @@ export function usePaginateContestsLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type PaginateContestsQueryHookResult = ReturnType<typeof usePaginateContestsQuery>;
 export type PaginateContestsLazyQueryHookResult = ReturnType<typeof usePaginateContestsLazyQuery>;
 export type PaginateContestsQueryResult = Apollo.QueryResult<PaginateContestsQuery, PaginateContestsQueryVariables>;
+export const CreateSubscriptionPlanDocument = gql`
+    mutation CreateSubscriptionPlan($input: CreateSubscriptionPlansDto!) {
+  createSubscriptionPlan(input: $input) {
+    id
+  }
+}
+    `;
+export type CreateSubscriptionPlanMutationFn = Apollo.MutationFunction<CreateSubscriptionPlanMutation, CreateSubscriptionPlanMutationVariables>;
+
+/**
+ * __useCreateSubscriptionPlanMutation__
+ *
+ * To run a mutation, you first call `useCreateSubscriptionPlanMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSubscriptionPlanMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSubscriptionPlanMutation, { data, loading, error }] = useCreateSubscriptionPlanMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateSubscriptionPlanMutation(baseOptions?: Apollo.MutationHookOptions<CreateSubscriptionPlanMutation, CreateSubscriptionPlanMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateSubscriptionPlanMutation, CreateSubscriptionPlanMutationVariables>(CreateSubscriptionPlanDocument, options);
+      }
+export type CreateSubscriptionPlanMutationHookResult = ReturnType<typeof useCreateSubscriptionPlanMutation>;
+export type CreateSubscriptionPlanMutationResult = Apollo.MutationResult<CreateSubscriptionPlanMutation>;
+export type CreateSubscriptionPlanMutationOptions = Apollo.BaseMutationOptions<CreateSubscriptionPlanMutation, CreateSubscriptionPlanMutationVariables>;
+export const DeleteSubscriptionPlanDocument = gql`
+    mutation DeleteSubscriptionPlan($id: String!) {
+  deleteSubscriptionPlanById(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteSubscriptionPlanMutationFn = Apollo.MutationFunction<DeleteSubscriptionPlanMutation, DeleteSubscriptionPlanMutationVariables>;
+
+/**
+ * __useDeleteSubscriptionPlanMutation__
+ *
+ * To run a mutation, you first call `useDeleteSubscriptionPlanMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteSubscriptionPlanMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteSubscriptionPlanMutation, { data, loading, error }] = useDeleteSubscriptionPlanMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteSubscriptionPlanMutation(baseOptions?: Apollo.MutationHookOptions<DeleteSubscriptionPlanMutation, DeleteSubscriptionPlanMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteSubscriptionPlanMutation, DeleteSubscriptionPlanMutationVariables>(DeleteSubscriptionPlanDocument, options);
+      }
+export type DeleteSubscriptionPlanMutationHookResult = ReturnType<typeof useDeleteSubscriptionPlanMutation>;
+export type DeleteSubscriptionPlanMutationResult = Apollo.MutationResult<DeleteSubscriptionPlanMutation>;
+export type DeleteSubscriptionPlanMutationOptions = Apollo.BaseMutationOptions<DeleteSubscriptionPlanMutation, DeleteSubscriptionPlanMutationVariables>;
+export const UpdateSubscriptionPlanDocument = gql`
+    mutation UpdateSubscriptionPlan($id: String!, $input: UpdateSubscriptionPlansDto!) {
+  updateSubscriptionPlan(id: $id, input: $input) {
+    id
+    title
+  }
+}
+    `;
+export type UpdateSubscriptionPlanMutationFn = Apollo.MutationFunction<UpdateSubscriptionPlanMutation, UpdateSubscriptionPlanMutationVariables>;
+
+/**
+ * __useUpdateSubscriptionPlanMutation__
+ *
+ * To run a mutation, you first call `useUpdateSubscriptionPlanMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSubscriptionPlanMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSubscriptionPlanMutation, { data, loading, error }] = useUpdateSubscriptionPlanMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateSubscriptionPlanMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSubscriptionPlanMutation, UpdateSubscriptionPlanMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSubscriptionPlanMutation, UpdateSubscriptionPlanMutationVariables>(UpdateSubscriptionPlanDocument, options);
+      }
+export type UpdateSubscriptionPlanMutationHookResult = ReturnType<typeof useUpdateSubscriptionPlanMutation>;
+export type UpdateSubscriptionPlanMutationResult = Apollo.MutationResult<UpdateSubscriptionPlanMutation>;
+export type UpdateSubscriptionPlanMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionPlanMutation, UpdateSubscriptionPlanMutationVariables>;
+export const FindAllSubscriptionPlansDocument = gql`
+    query FindAllSubscriptionPlans {
+  findAllSubscriptionPlans {
+    title
+    id
+    subTitle
+    price
+    allowedContests
+    options
+    created
+    updated
+  }
+}
+    `;
+
+/**
+ * __useFindAllSubscriptionPlansQuery__
+ *
+ * To run a query within a React component, call `useFindAllSubscriptionPlansQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindAllSubscriptionPlansQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindAllSubscriptionPlansQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFindAllSubscriptionPlansQuery(baseOptions?: Apollo.QueryHookOptions<FindAllSubscriptionPlansQuery, FindAllSubscriptionPlansQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindAllSubscriptionPlansQuery, FindAllSubscriptionPlansQueryVariables>(FindAllSubscriptionPlansDocument, options);
+      }
+export function useFindAllSubscriptionPlansLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindAllSubscriptionPlansQuery, FindAllSubscriptionPlansQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindAllSubscriptionPlansQuery, FindAllSubscriptionPlansQueryVariables>(FindAllSubscriptionPlansDocument, options);
+        }
+export type FindAllSubscriptionPlansQueryHookResult = ReturnType<typeof useFindAllSubscriptionPlansQuery>;
+export type FindAllSubscriptionPlansLazyQueryHookResult = ReturnType<typeof useFindAllSubscriptionPlansLazyQuery>;
+export type FindAllSubscriptionPlansQueryResult = Apollo.QueryResult<FindAllSubscriptionPlansQuery, FindAllSubscriptionPlansQueryVariables>;
+export const FindSubscriptionPlanByIdDocument = gql`
+    query FindSubscriptionPlanById($id: String!) {
+  findSubscriptionPlan(id: $id) {
+    id
+    title
+    subTitle
+    price
+    allowedContests
+    options
+    created
+    updated
+  }
+}
+    `;
+
+/**
+ * __useFindSubscriptionPlanByIdQuery__
+ *
+ * To run a query within a React component, call `useFindSubscriptionPlanByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindSubscriptionPlanByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindSubscriptionPlanByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFindSubscriptionPlanByIdQuery(baseOptions: Apollo.QueryHookOptions<FindSubscriptionPlanByIdQuery, FindSubscriptionPlanByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindSubscriptionPlanByIdQuery, FindSubscriptionPlanByIdQueryVariables>(FindSubscriptionPlanByIdDocument, options);
+      }
+export function useFindSubscriptionPlanByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindSubscriptionPlanByIdQuery, FindSubscriptionPlanByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindSubscriptionPlanByIdQuery, FindSubscriptionPlanByIdQueryVariables>(FindSubscriptionPlanByIdDocument, options);
+        }
+export type FindSubscriptionPlanByIdQueryHookResult = ReturnType<typeof useFindSubscriptionPlanByIdQuery>;
+export type FindSubscriptionPlanByIdLazyQueryHookResult = ReturnType<typeof useFindSubscriptionPlanByIdLazyQuery>;
+export type FindSubscriptionPlanByIdQueryResult = Apollo.QueryResult<FindSubscriptionPlanByIdQuery, FindSubscriptionPlanByIdQueryVariables>;
 export const CreateQuestionDocument = gql`
     mutation CreateQuestion($input: CreateQuestionDto!) {
   createQuestion(input: $input) {

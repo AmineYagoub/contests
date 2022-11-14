@@ -1,0 +1,13 @@
+query FindAllSubscriptionPlans {
+  findAllSubscriptionPlans {
+    title
+    id
+    subTitle
+    price
+    allowedContests
+    options
+    created
+    updated
+
+  }
+}

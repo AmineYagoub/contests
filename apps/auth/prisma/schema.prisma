@@ -32,15 +32,15 @@ model Subscription {
   profile               Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   memberShipId          String    @unique
-  memberShip            MemberShip @relation(fields: [memberShipId], references: [id], onDelete: Cascade)
+  memberShip            SubscriptionPlans @relation(fields: [memberShipId], references: [id], onDelete: Cascade)
 }
 
-model MemberShip {
+model SubscriptionPlans {
   id                    String    @id @default(uuid())
   title                 String    @db.VarChar(100) @unique
-  subTitle              String    @db.VarChar(250)
+  subTitle              String?   @db.VarChar(250) @default("")
   price                 Int       @db.UnsignedSmallInt
-  contestCount          Int       @db.UnsignedSmallInt
+  allowedContests       Int       @db.UnsignedSmallInt
   options               Json      @db.Json
   created               DateTime  @default(now())
   updated               DateTime  @updatedAt
@@ -58,7 +58,7 @@ model Role {
   users                 User[]
   memberShipStatus      Boolean?  @default(false)
   memberShipId          String?
-  memberShip            MemberShip? @relation(fields: [memberShipId], references: [id], onDelete: NoAction)
+  memberShip            SubscriptionPlans? @relation(fields: [memberShipId], references: [id], onDelete: NoAction)
 }
 
 model User {

@@ -6,6 +6,8 @@ export * from './lib/users/updateStudent.dto';
 export * from './lib/users/updateTeacher.dto';
 export * from './lib/users/updateDocuments.dto';
 export * from './lib/users/pagination.dto';
+export * from './lib/plans/create.dto';
+export * from './lib/plans/update.dto';
 
 import { IsEmail, IsUUID } from 'class-validator';
 

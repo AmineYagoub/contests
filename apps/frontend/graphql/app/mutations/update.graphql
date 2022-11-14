@@ -1,0 +1,5 @@
+mutation UpdateAppConfig($input: UpdateAppConfigDto!) {
+  updateAppConfig (input: $input) {
+    id
+  }
+}

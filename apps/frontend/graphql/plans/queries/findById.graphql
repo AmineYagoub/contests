@@ -1,0 +1,12 @@
+query FindSubscriptionPlanById($id: String!) {
+  findSubscriptionPlan (id: $id) {
+    id
+    title
+    subTitle
+    price
+    allowedContests
+    options
+    created
+    updated
+  }
+}

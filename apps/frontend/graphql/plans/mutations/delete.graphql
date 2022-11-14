@@ -1,0 +1,5 @@
+mutation DeleteSubscriptionPlan($id: String!) {
+  deleteSubscriptionPlanById (id: $id) {
+    id
+  }
+}

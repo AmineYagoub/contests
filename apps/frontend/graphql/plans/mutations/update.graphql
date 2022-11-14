@@ -1,0 +1,6 @@
+mutation UpdateSubscriptionPlan($id: String!, $input: UpdateSubscriptionPlansDto!) {
+  updateSubscriptionPlan (id: $id, input: $input) {
+    id
+    title
+  }
+}
