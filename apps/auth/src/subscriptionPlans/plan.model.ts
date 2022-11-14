@@ -27,6 +27,12 @@ export class SubscriptionPlan {
   })
   allowedContests: number;
 
+  @Field(() => Int, {
+    description:
+      'Identifies the number of allowed contests that can be created in this plan.',
+  })
+  period: number;
+
   @Field(() => [String], {
     description: 'Identifies a list of plan options',
   })

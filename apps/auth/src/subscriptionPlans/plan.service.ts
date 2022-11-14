@@ -83,7 +83,11 @@ export class SubscriptionPlanService {
    */
   async findAll() {
     try {
-      return this.prisma.subscriptionPlans.findMany({});
+      return this.prisma.subscriptionPlans.findMany({
+        orderBy: {
+          price: 'asc',
+        },
+      });
     } catch (error) {
       Logger.error(error);
     }

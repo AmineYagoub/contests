@@ -95,15 +95,15 @@ export class AuthService {
           value: emailToken,
         },
       },
-    };
-    if ([RoleTitle.STUDENT, RoleTitle.STUDENT_TEACHER].includes(role)) {
-      user.profile = {
+      profile: {
         create: {
-          level: StudentLevel.Student,
           personalImage: `https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user`,
           dateOfBirth: new Date(),
         },
-      };
+      },
+    };
+    if ([RoleTitle.STUDENT, RoleTitle.STUDENT_TEACHER].includes(role)) {
+      user.profile.create.level = StudentLevel.Student;
       if (teacherId) {
         user.profile.create.teacher = {
           connect: {

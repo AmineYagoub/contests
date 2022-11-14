@@ -1,5 +1,8 @@
+import Loading from '@/components/common/Loading';
 import StyledButton from '@/components/common/StyledButton';
+import { useSubscriptionPlans } from '@/hooks/subscription/plans';
 import ProfileLayout from '@/layout/ProfileLayout';
+import { formatPrice } from '@/utils/app';
 import { CheckOutlined } from '@ant-design/icons';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
@@ -19,11 +22,13 @@ const { Paragraph } = Typography;
 
 const StyledList = styled('ul')({
   listStyle: 'none',
+  padding: '0 5px',
   marginTop: 35,
   fontSize: '1rem',
   textAlign: 'left',
   li: {
     padding: 5,
+    fontSize: 'small',
     ['.anticon-check']: {
       marginRight: 5,
       color: 'green',
@@ -32,116 +37,64 @@ const StyledList = styled('ul')({
 });
 
 const TeacherMembership = () => {
+  const { data } = useSubscriptionPlans();
   return (
     <>
       <StyledH1>الإشتراك المدفوع</StyledH1>
-      <Paragraph type="secondary">
+      <Paragraph type='secondary'>
         إشترك في أحد الخطط المدفوعة لترقية عضويتك و الحصول على مزايا إضافية.
       </Paragraph>
       <Divider />
 
       <Card bordered={false} style={{ backgroundColor: 'transparent' }}>
-        <Card.Grid
-          style={{
-            ...gridStyle,
-            boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
-          }}
-        >
-          <StyledH1>المجاني</StyledH1>
-          <h3>الخطة المجانية</h3>
-          <Space>
-            <StyledH1>$0</StyledH1>
-            <span>/ الشهر</span>
-          </Space>
-          <StyledButton type="primary" ghost block shape="round">
-            الحالية
-          </StyledButton>
-          <StyledList>
-            <li>
-              <CheckOutlined /> <span>الإشراف على الطلبة</span>
-            </li>
-            <li>
-              <CheckOutlined /> <span>إرسال و إستقبال الرسائل</span>
-            </li>
-          </StyledList>
-        </Card.Grid>
-        <Card.Grid style={gridStyle}>
-          <StyledH1>الشهري</StyledH1>
-          <h3>الدفع كل شهر</h3>
-          <Space>
-            <StyledH1>$2.50</StyledH1>
-            <span>/ الشهر</span>
-          </Space>
-          <StyledButton type="primary" block shape="round">
-            إشترك
-          </StyledButton>
-          <StyledList>
-            <li>
-              <CheckOutlined /> <span>الإشراف على الطلبة</span>
-            </li>
-            <li>
-              <CheckOutlined /> <span>إرسال و إستقبال الرسائل</span>
-            </li>
-            <li>
-              <CheckOutlined /> <span>العضوية الذهبية</span>
-            </li>
-            <li>
-              <CheckOutlined /> <span>10 مسابقة / شهر</span>
-            </li>
-          </StyledList>
-        </Card.Grid>
-        <Card.Grid style={gridStyle}>
-          <StyledH1>السنوي</StyledH1>
-          <h3>الدفع كل سنة</h3>
-          <Space>
-            <StyledH1>$25</StyledH1>
-            <span>/ السنة</span>
-          </Space>
-          <StyledButton type="primary" block shape="round">
-            إشترك
-          </StyledButton>
-          <StyledList>
-            <li>
-              <CheckOutlined /> <span>الإشراف على الطلبة</span>
-            </li>
-            <li>
-              <CheckOutlined /> <span>إرسال و إستقبال الرسائل</span>
-            </li>
-            <li>
-              <CheckOutlined /> <span>العضوية الذهبية</span>
-            </li>
-            <li>
-              <CheckOutlined /> <span>30 مسابقة / شهر</span>
-            </li>
-          </StyledList>
-        </Card.Grid>
-        <Badge.Ribbon text="الأكثر طلبا" color="green">
-          <Card.Grid style={{ ...gridStyle, width: '105%', height: '100%' }}>
-            <StyledH1>مدى الحياة</StyledH1>
-            <h3>الدفع مرة واحدة فقط</h3>
-            <Space>
-              <StyledH1>$250</StyledH1>
-              <span>/ مدى الحياة</span>
-            </Space>
-            <StyledButton type="primary" block shape="round">
-              إشترك
-            </StyledButton>
-            <StyledList>
-              <li>
-                <CheckOutlined /> <span>الإشراف على الطلبة</span>
-              </li>
-              <li>
-                <CheckOutlined /> <span>إرسال و إستقبال الرسائل</span>
-              </li>
-              <li>
-                <CheckOutlined /> <span>العضوية الذهبية</span>
-              </li>
-              <li>
-                <CheckOutlined /> <span>90 مسابقة / شهر</span>
-              </li>
-            </StyledList>
-          </Card.Grid>
-        </Badge.Ribbon>
+        {data ? (
+          data.findAllSubscriptionPlans.map((el, i) => (
+            <Card.Grid
+              key={el.id}
+              style={{
+                ...gridStyle,
+                // boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px', CURRENT PLAN
+              }}
+            >
+              {
+                // TODO create popular plan computation
+                i === 2 ? (
+                  <Badge.Ribbon text='الأكثر طلبا' color='green'>
+                    <StyledH1>{el.title}</StyledH1>
+                    <h3>{el.subTitle}</h3>
+                  </Badge.Ribbon>
+                ) : (
+                  <>
+                    <StyledH1>{el.title}</StyledH1>
+                    <h3>{el.subTitle}</h3>
+                  </>
+                )
+              }
+              <Space>
+                <StyledH1>{formatPrice(el.price)}</StyledH1>
+                <span>/ الشهر</span>
+              </Space>
+              <StyledButton type='primary' block shape='round'>
+                إشترك
+              </StyledButton>
+              <StyledList>
+                {el.options.map((opt) => (
+                  <li key={opt}>
+                    <CheckOutlined /> <span>{opt}</span>
+                  </li>
+                ))}
+                <li>
+                  <CheckOutlined />{' '}
+                  <span>{el.allowedContests} مسابقة كل شهر</span>
+                </li>
+              </StyledList>
+            </Card.Grid>
+          ))
+        ) : (
+          <Loading />
+        )}
+
+        {/*  </Badge.Ribbon> */}
       </Card>
     </>
   );

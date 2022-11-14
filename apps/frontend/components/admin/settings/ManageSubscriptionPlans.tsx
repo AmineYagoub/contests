@@ -1,4 +1,4 @@
-import { Space, Table } from 'antd';
+import { Space, Table, Typography } from 'antd';
 import moment from 'moment-timezone';
 import { useState } from 'react';
 import { SubscriptionPlan } from '@/graphql/graphql';
@@ -17,6 +17,8 @@ const StyledSection = styled('section')({
   overflow: 'hidden',
   minHeight: 'calc(100vh - 200px)',
 });
+
+const { Text } = Typography;
 
 const ManageSubscriptionPlans = () => {
   const { refetch, loading, data } = useFindPlans();
@@ -45,10 +47,19 @@ const ManageSubscriptionPlans = () => {
       title: 'السعر',
       key: 'price',
       dataIndex: 'price',
-      render: (price) => `${Number(price / 100).toFixed(2)} $`,
+      render: (price) => (
+        <Text strong type='success'>{`${Number(price / 100).toFixed(
+          2
+        )} $`}</Text>
+      ),
     },
     {
-      title: 'عدد الخيارات',
+      title: 'عدد المسابقات',
+      dataIndex: 'allowedContests',
+      key: 'allowedContests',
+    },
+    {
+      title: 'عدد الصلاحيات',
       dataIndex: 'options',
       key: 'options',
       render: (options) => options?.length,
@@ -74,7 +85,7 @@ const ManageSubscriptionPlans = () => {
       key: 'action',
       filteredValue: null,
       render: (record) => (
-        <Space size="small">
+        <Space size='small'>
           <DeletePlan record={record} onSuccess={() => refetch()} />
           <UpdatePlan record={record} onSuccess={() => refetch()} />
         </Space>
@@ -85,8 +96,8 @@ const ManageSubscriptionPlans = () => {
   return (
     <StyledSection>
       <TableBtn
-        type="primary"
-        size="middle"
+        type='primary'
+        size='middle'
         icon={<PlusOutlined />}
         onClick={showDrawer}
       >
@@ -96,7 +107,7 @@ const ManageSubscriptionPlans = () => {
         columns={columns}
         dataSource={data}
         loading={loading}
-        size="large"
+        size='large'
       />
       <CreatePlan
         visible={visible}

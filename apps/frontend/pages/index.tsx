@@ -5,7 +5,6 @@ import {
   RoleTitle,
   useGetAuthUserQuery,
   usePaginateContestsQuery,
-  User,
 } from '@/graphql/graphql';
 import HomeLayout from '@/layout/HomeLayout';
 import { NextPageWithLayout } from '@/utils/types';
@@ -27,17 +26,17 @@ const Index: NextPageWithLayout = (props) => {
     <Spin />
   ) : (
     <>
-      <h1>قريبا ...</h1>
+      <h1>soon.......</h1>
 
       <div>
-        <Link href="/admin/dashboard">لوحة تحكم الادارة</Link>
+        <Link href='/admin/dashboard'>لوحة تحكم الادارة</Link>
       </div>
 
       {d?.getAuthUser?.role.title.includes(RoleTitle.Teacher) && (
-        <Link href="/teacher/dashboard">صفحتي الشخصية</Link>
+        <Link href='/teacher/dashboard'>صفحتي الشخصية</Link>
       )}
       {d?.getAuthUser?.role.title.includes(RoleTitle.Student) && (
-        <Link href="/profile/dashboard">صفحتي الشخصية</Link>
+        <Link href='/profile/dashboard'>صفحتي الشخصية</Link>
       )}
 
       {data?.paginateContest?.data.map((el) => (
@@ -46,7 +45,7 @@ const Index: NextPageWithLayout = (props) => {
         </div>
       ))}
       {d?.getAuthUser && (
-        <Button onClick={logout} type="link" href={AppRoutes.SignIn}>
+        <Button onClick={logout} type='link' href={AppRoutes.SignIn}>
           تسجيل الخروج
         </Button>
       )}

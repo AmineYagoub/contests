@@ -13,6 +13,11 @@ export const socketVar: ReactiveVar<Socket> = makeVar(socket);
 export const getTitleMeta = (siteTitle: string, pageTitle?: string) =>
   pageTitle ? `${siteTitle} | ${pageTitle}` : `${siteTitle}`;
 
+export const formatPrice = (price: number): string =>
+  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
+    price / 100
+  );
+
 export class Logger {
   static log(error: Error | ValidateErrorEntity<unknown>) {
     //console.log(JSON.stringify(error, null, 2));

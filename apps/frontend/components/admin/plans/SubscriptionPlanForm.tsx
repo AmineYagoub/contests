@@ -1,4 +1,4 @@
-import { Button, Form, Input, InputNumber, Spin } from 'antd';
+import { Button, Form, Input, InputNumber, Spin, Typography } from 'antd';
 import { FormInstance } from 'antd/es/form/Form';
 import { useEffect } from 'react';
 import { useSnapshot } from 'valtio';
@@ -8,9 +8,15 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
 import { SubscriptionPlanState } from '@/valtio/plans.state';
 
+const { Title } = Typography;
+
 const StyledInput = styled(Input)({
   maxWidth: '95%',
   marginRight: '10px !important',
+});
+
+const StyledH4Title = styled(Title)({
+  marginTop: 50,
 });
 
 const SubscriptionPlanForm = ({
@@ -38,13 +44,13 @@ const SubscriptionPlanForm = ({
     <>
       {planSnap.mutationLoading && (
         <Spin
-          size="large"
+          size='large'
           style={{ position: 'absolute', left: '50%', top: '25%' }}
         />
       )}
 
       <Form
-        layout="vertical"
+        layout='vertical'
         hideRequiredMark
         scrollToFirstError
         form={form}
@@ -54,40 +60,41 @@ const SubscriptionPlanForm = ({
         }}
       >
         <Form.Item
-          name="title"
-          label="عنوان الخطة"
+          name='title'
+          label='عنوان الخطة'
           rules={[{ required: true, message: 'يرجى كتابة عنوان الخطة' }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item name="subTitle" label="الوصف">
+        <Form.Item name='subTitle' label='الوصف'>
           <Input />
         </Form.Item>
 
         <Form.Item
-          name="price"
-          label="السعر"
+          name='price'
+          label='السعر'
           rules={[{ required: true, message: 'يرجى كتابة سعر الخطة' }]}
         >
           <InputNumber
             formatter={(value) =>
-              `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+              value ? `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
             }
             parser={(value: string) => value?.replace(/\$\s?|(,*)/g, '')}
           />
         </Form.Item>
 
         <Form.Item
-          name="allowedContests"
-          label="عدد المسابقات المسموح بإنشائها"
+          name='allowedContests'
+          label='عدد المسابقات المسموح بإنشائها'
+          help='أتركه فارغا للسماح بإنشاء عدد لا نهائي من المسابقات.'
           rules={[{ required: true, message: 'يرجى كتابة عدد أكبر من الصفر' }]}
         >
           <InputNumber />
         </Form.Item>
 
-        <h4>صلاحيات الخطة</h4>
+        <StyledH4Title level={4}>صلاحيات الخطة</StyledH4Title>
         <Form.List
-          name="options"
+          name='options'
           rules={[
             {
               validator: async (_, options) => {
@@ -123,12 +130,12 @@ const SubscriptionPlanForm = ({
               ))}
               <Form.Item>
                 <Button
-                  type="dashed"
+                  type='dashed'
                   onClick={() => add()}
                   style={{ width: 'calc(50% - 10px)' }}
                   icon={<PlusOutlined />}
                 >
-                  أضف خيارات الخطة
+                  أضف جديد
                 </Button>
                 <Form.ErrorList errors={errors} />
               </Form.Item>

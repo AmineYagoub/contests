@@ -1,5 +1,6 @@
 import { UserPhone } from '@contests/types/auth';
 import { Directive, Field, ObjectType } from '@nestjs/graphql';
+import { Membership } from '../subscriptionPlans/membership.model';
 
 import { BaseProfile } from './base.model';
 import { Student } from './student.model';
@@ -19,6 +20,12 @@ export class Teacher extends BaseProfile {
     nullable: true,
   })
   phone?: UserPhone;
+
+  @Field(() => Membership, {
+    description: 'Identifies the subscription plan of the user.',
+    nullable: true,
+  })
+  subscription?: Membership;
 }
 
 /*

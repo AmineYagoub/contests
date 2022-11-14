@@ -21,18 +21,28 @@ model Permission {
   role                  Role      @relation(fields: [roleId], references: [id] , onDelete: NoAction)
 }
 
-model Subscription {
-  id                    String    @id @default(uuid())
-  title                 String    @db.VarChar(100) @unique
-  status                String    @db.VarChar(250)
-  created               DateTime  @default(now())
-  updated               DateTime  @updatedAt
+model Membership {
+  id                    String            @id @default(uuid())
+  status                MembershipStatus  @default(UNPAID)
+  startDate             DateTime?
+  endDate               DateTime?
+  renewCount            Int?              @db.UnsignedSmallInt @default(0)
 
-  profileId             String    @unique
-  profile               Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId             String            @unique
+  profile               Profile           @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-  memberShipId          String    @unique
-  memberShip            SubscriptionPlans @relation(fields: [memberShipId], references: [id], onDelete: Cascade)
+  memberShipId          String            @unique
+  memberShipOn          SubscriptionPlans @relation(fields: [memberShipId], references: [id], onDelete: Cascade)
+
+  created               DateTime          @default(now())
+  updated               DateTime          @updatedAt
+}
+
+enum MembershipStatus {
+  ACTIVE
+  CANCELED
+  UNPAID
+  EXPIRED
 }
 
 model SubscriptionPlans {
@@ -40,12 +50,13 @@ model SubscriptionPlans {
   title                 String    @db.VarChar(100) @unique
   subTitle              String?   @db.VarChar(250) @default("")
   price                 Int       @db.UnsignedSmallInt
+  period                Int?      @db.UnsignedSmallInt @default(0)
   allowedContests       Int       @db.UnsignedSmallInt
   options               Json      @db.Json
   created               DateTime  @default(now())
   updated               DateTime  @updatedAt
-  roles                 Role[]
-  subscription          Subscription[]
+
+  memberships           Membership[]
 }
 
 model Role {
@@ -56,9 +67,6 @@ model Role {
   updated               DateTime  @updatedAt
   permissions           Permission[]
   users                 User[]
-  memberShipStatus      Boolean?  @default(false)
-  memberShipId          String?
-  memberShip            SubscriptionPlans? @relation(fields: [memberShipId], references: [id], onDelete: NoAction)
 }
 
 model User {
@@ -100,7 +108,7 @@ model Profile {
   teacher               Profile?   @relation("StudentTeacher", fields: [teacherId], references: [id] , onDelete: SetNull)
   students              Profile[]  @relation("StudentTeacher")
 
-  subscriptions         Subscription[]
+  subscription          Membership?
 
   @@index([firstName( sort: Desc)])
   @@index([level( sort: Desc)])
