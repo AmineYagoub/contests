@@ -2,6 +2,7 @@ import {
   UpdateDocumentsDto,
   UpdateStudentDto,
   UpdateTeacherDto,
+  UpdateTeacherSubscriptionDto,
 } from '@contests/dto/auth';
 import { isPublic } from '@contests/utils';
 import { Args, createUnionType, Mutation, Resolver } from '@nestjs/graphql';
@@ -43,6 +44,18 @@ export class ProfileResolver {
     @Args('input') data: UpdateTeacherDto
   ) {
     return this.profileService.updateTeacherProfile({ data, where: { id } });
+  }
+
+  @isPublic()
+  @Mutation(() => Teacher)
+  async updateTeacherSubscription(
+    @Args('id') id: string,
+    @Args('input') data: UpdateTeacherSubscriptionDto
+  ) {
+    return this.profileService.updateTeacherSubscription({
+      data,
+      where: { id },
+    });
   }
 
   @Mutation(() => User)

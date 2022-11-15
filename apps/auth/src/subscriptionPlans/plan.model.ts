@@ -12,9 +12,8 @@ export class SubscriptionPlan {
 
   @Field({
     description: 'Identifies the unique sub title of the plan.',
-    nullable: true,
   })
-  subTitle?: string;
+  subTitle: string;
 
   @Field(() => Int, {
     description: 'Identifies the unique price of the plan.',

@@ -57,12 +57,27 @@ const ManageSubscriptionPlans = () => {
       title: 'عدد المسابقات',
       dataIndex: 'allowedContests',
       key: 'allowedContests',
+      render: (allowedContests) =>
+        allowedContests === -1 ? (
+          <Text strong type='warning' style={{ fontSize: 'middle' }}>
+            غير محدود
+          </Text>
+        ) : (
+          allowedContests
+        ),
     },
     {
-      title: 'عدد الصلاحيات',
-      dataIndex: 'options',
-      key: 'options',
-      render: (options) => options?.length,
+      title: 'مدة الخطة',
+      dataIndex: 'period',
+      key: 'period',
+      render: (period) =>
+        period === -1 ? (
+          <Text strong type='warning' style={{ fontSize: 'middle' }}>
+            غير محدود
+          </Text>
+        ) : (
+          period
+        ),
     },
     {
       title: 'تاريخ الإنشاء',

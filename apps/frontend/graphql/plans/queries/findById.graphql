@@ -4,6 +4,7 @@ query FindSubscriptionPlanById($id: String!) {
     title
     subTitle
     price
+    period
     allowedContests
     options
     created

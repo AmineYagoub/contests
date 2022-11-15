@@ -1,5 +1,7 @@
+import SubscribeTeacherForm from '@/components/admin/users/SubscribeTeacherForm';
 import Loading from '@/components/common/Loading';
 import StyledButton from '@/components/common/StyledButton';
+import { SubscriptionPlan } from '@/graphql/graphql';
 import { useSubscriptionPlans } from '@/hooks/subscription/plans';
 import ProfileLayout from '@/layout/ProfileLayout';
 import { formatPrice } from '@/utils/app';
@@ -7,6 +9,7 @@ import { CheckOutlined } from '@ant-design/icons';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
 import { Card, Divider, Space, Badge, Typography } from 'antd';
+import { useState } from 'react';
 
 const gridStyle: React.CSSProperties = {
   width: '25%',
@@ -37,7 +40,18 @@ const StyledList = styled('ul')({
 });
 
 const TeacherMembership = () => {
-  const { data } = useSubscriptionPlans();
+  const { data, refetch } = useSubscriptionPlans();
+  const [visible, setVisible] = useState(false);
+  const [plan, setPlan] = useState<SubscriptionPlan>(null);
+
+  const showDrawer = (el: SubscriptionPlan) => {
+    setVisible(true);
+    setPlan(el);
+  };
+  const onClose = () => {
+    setVisible(false);
+    setPlan(null);
+  };
   return (
     <>
       <StyledH1>الإشتراك المدفوع</StyledH1>
@@ -74,7 +88,12 @@ const TeacherMembership = () => {
                 <StyledH1>{formatPrice(el.price)}</StyledH1>
                 <span>/ الشهر</span>
               </Space>
-              <StyledButton type='primary' block shape='round'>
+              <StyledButton
+                type='primary'
+                block
+                shape='round'
+                onClick={() => showDrawer(el)}
+              >
                 إشترك
               </StyledButton>
               <StyledList>
@@ -84,8 +103,12 @@ const TeacherMembership = () => {
                   </li>
                 ))}
                 <li>
-                  <CheckOutlined />{' '}
-                  <span>{el.allowedContests} مسابقة كل شهر</span>
+                  <CheckOutlined />
+                  {el.allowedContests === -1 ? (
+                    <span>إنشاء مسابقات غير محدود</span>
+                  ) : (
+                    <span>{el.allowedContests} مسابقة كل شهر</span>
+                  )}
                 </li>
               </StyledList>
             </Card.Grid>
@@ -93,9 +116,13 @@ const TeacherMembership = () => {
         ) : (
           <Loading />
         )}
-
-        {/*  </Badge.Ribbon> */}
       </Card>
+      <SubscribeTeacherForm
+        visible={visible}
+        plan={plan}
+        onClose={onClose}
+        onSuccess={() => refetch()}
+      />
     </>
   );
 };

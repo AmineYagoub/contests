@@ -5,8 +5,10 @@
   "scripts": {
     "cts:dev": "(cd apps/contest/ && npx prisma migrate dev)",
     "cts:reset": "(cd apps/contest/ && npx prisma migrate reset && npx prisma generate)",
+    "cts:push": "(cd apps/contest/ && npx prisma db push --accept-data-loss)",
     "auth:show": "(cd apps/auth/ && npx prisma studio)",
     "auth:dev": "(cd apps/auth/ && npx prisma migrate dev)",
+    "auth:push": "(cd apps/auth/ && npx prisma db push --accept-data-loss)",
     "auth:reset": "(cd apps/auth/ && npx prisma migrate reset && npx prisma generate)",
     "codegen": "graphql-codegen --config codegen.yml",
     "api": "nx run gateway:serve",

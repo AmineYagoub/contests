@@ -40,6 +40,44 @@ export class SubscriptionPlanService {
   }
 
   /**
+   * Create a MemberShip
+   *
+   * @param data Prisma.MembershipCreateInput The MembershipCreateInput data.
+   * @returns Promise<Membership>
+   */
+  async createMemberShip(data: Prisma.MembershipCreateInput) {
+    console.log(data);
+    try {
+      return this.prisma.membership.create({
+        data,
+      });
+    } catch (error) {
+      Logger.error(error);
+    }
+  }
+
+  /**
+   * Update a MemberShip
+   *
+   * @param params Prisma.MembershipUpdateInput The MembershipUpdateInput data.
+   * @returns Promise<Membership>
+   */
+  async updateMemberShip(params: {
+    where: Prisma.MembershipWhereUniqueInput;
+    data: Prisma.MembershipUpdateInput;
+  }) {
+    try {
+      const { data, where } = params;
+      return this.prisma.membership.update({
+        data,
+        where,
+      });
+    } catch (error) {
+      Logger.error(error);
+    }
+  }
+
+  /**
    * Update a SubscriptionPlans
    *
    * @param params Prisma.SubscriptionPlansUpdateInput The SubscriptionPlans data.

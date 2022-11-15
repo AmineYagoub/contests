@@ -50,8 +50,8 @@ model SubscriptionPlans {
   title                 String    @db.VarChar(100) @unique
   subTitle              String?   @db.VarChar(250) @default("")
   price                 Int       @db.UnsignedSmallInt
-  period                Int?      @db.UnsignedSmallInt @default(0)
-  allowedContests       Int       @db.UnsignedSmallInt
+  period                Int?      @db.SmallInt
+  allowedContests       Int?      @db.SmallInt
   options               Json      @db.Json
   created               DateTime  @default(now())
   updated               DateTime  @updatedAt

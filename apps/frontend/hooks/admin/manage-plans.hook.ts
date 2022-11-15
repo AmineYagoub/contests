@@ -21,8 +21,10 @@ export const useCreateSubscriptionPlan = ({
   onSuccess,
 }: CreatePlanProps) => {
   const [form] = Form.useForm();
-  const [CreateSubscriptionPlanMutation, { loading, error }] =
-    useCreateSubscriptionPlanMutation();
+  const [
+    CreateSubscriptionPlanMutation,
+    { loading, error },
+  ] = useCreateSubscriptionPlanMutation();
   const [
     UpdateSubscriptionPlanMutation,
     { loading: loadingUpdate, error: errorUpdate },
@@ -33,10 +35,12 @@ export const useCreateSubscriptionPlan = ({
       SubscriptionPlanActions.setMutationLoading(true);
       const values = await form.validateFields();
       const price = Number(values.price * 100);
+      const period = values?.period ?? -1;
+      const allowedContests = values?.allowedContests ?? -1;
       const data = record
         ? await UpdateSubscriptionPlanMutation({
             variables: {
-              input: { ...values, price },
+              input: { ...values, price, period, allowedContests },
               id: record.id,
             },
           })

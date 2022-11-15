@@ -4,6 +4,7 @@ import {
   UpdateDocumentsDto,
   UpdateStudentDto,
   UpdateTeacherDto,
+  UpdateTeacherSubscriptionDto,
 } from '@contests/dto/auth';
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/auth-service';
@@ -126,6 +127,54 @@ export class ProfileService {
       return await this.prisma.user.update({
         where,
         data: user,
+      });
+    } catch (error) {
+      Logger.error(error);
+    }
+  }
+
+  /**
+   * Create or update teacher subscription.
+   *
+   * @param params
+   * @returns Promise<Profile>
+   */
+  async updateTeacherSubscription(params: {
+    where: Prisma.ProfileWhereUniqueInput;
+    data: UpdateTeacherSubscriptionDto;
+  }) {
+    const { membershipId, planId, ...rest } = params.data;
+
+    const { where } = params;
+    const user: Prisma.ProfileUpdateInput = {
+      subscription: {
+        connectOrCreate: {
+          create: {
+            ...rest,
+            memberShipOn: {
+              connect: {
+                id: planId,
+              },
+            },
+          },
+          where: {
+            id: membershipId,
+          },
+        },
+      },
+    };
+
+    try {
+      return await this.prisma.profile.update({
+        where,
+        data: user,
+        include: {
+          subscription: {
+            include: {
+              memberShipOn: true,
+            },
+          },
+        },
       });
     } catch (error) {
       Logger.error(error);

@@ -202,8 +202,9 @@ export type CreateQuestionDto = {
 };
 
 export type CreateSubscriptionPlansDto = {
-  allowedContests: Scalars['Int'];
+  allowedContests?: InputMaybe<Scalars['Int']>;
   options: Array<Scalars['String']>;
+  period?: InputMaybe<Scalars['Int']>;
   price: Scalars['Int'];
   subTitle: Scalars['String'];
   title: Scalars['String'];
@@ -216,6 +217,33 @@ export type EmailDto = {
 export type IdDto = {
   id: Scalars['String'];
 };
+
+export type Membership = {
+  __typename?: 'Membership';
+  /** Identifies the date and time when the object was created. */
+  created: Scalars['DateTime'];
+  /** Identifies the end date of the membership. */
+  endDate: Scalars['DateTime'];
+  id: Scalars['ID'];
+  /** Identifies the subscription plan. */
+  memberShipOn: SubscriptionPlan;
+  /** Identifies the number of renew times. */
+  renewCount: Scalars['Int'];
+  /** Identifies the start date of the membership. */
+  startDate: Scalars['DateTime'];
+  /** Identifies the status of the membership. */
+  status: MembershipStatus;
+  /** Identifies the date and time when the object was last updated. */
+  updated: Scalars['DateTime'];
+};
+
+/** Membership Status */
+export enum MembershipStatus {
+  Active = 'ACTIVE',
+  Canceled = 'CANCELED',
+  Expired = 'EXPIRED',
+  Unpaid = 'UNPAID'
+}
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -244,6 +272,7 @@ export type Mutation = {
   updateSubscriptionPlan: SubscriptionPlan;
   updateTag: Tag;
   updateTeacherProfile: User;
+  updateTeacherSubscription: Teacher;
   updateUser: User;
 };
 
@@ -378,6 +407,12 @@ export type MutationUpdateTagArgs = {
 export type MutationUpdateTeacherProfileArgs = {
   id: Scalars['String'];
   input: UpdateTeacherDto;
+};
+
+
+export type MutationUpdateTeacherSubscriptionArgs = {
+  id: Scalars['String'];
+  input: UpdateTeacherSubscriptionDto;
 };
 
 
@@ -669,10 +704,12 @@ export type SubscriptionPlan = {
   id: Scalars['ID'];
   /** Identifies a list of plan options */
   options: Array<Scalars['String']>;
+  /** Identifies the number of allowed contests that can be created in this plan. */
+  period: Scalars['Int'];
   /** Identifies the unique price of the plan. */
   price: Scalars['Int'];
   /** Identifies the unique sub title of the plan. */
-  subTitle?: Maybe<Scalars['String']>;
+  subTitle: Scalars['String'];
   /** Identifies the unique title of the plan. */
   title: Scalars['String'];
   /** Identifies the date and time when the object was last updated. */
@@ -724,6 +761,8 @@ export type Teacher = {
   phone?: Maybe<UserPhone>;
   /** Identifies a List of students affiliated with this teacher. */
   students?: Maybe<Array<Student>>;
+  /** Identifies the subscription plan of the user. */
+  subscription?: Maybe<Membership>;
   /** Identifies the date and time when the object was last updated. */
   updated: Scalars['DateTime'];
 };
@@ -808,6 +847,7 @@ export type UpdateStudentDto = {
 export type UpdateSubscriptionPlansDto = {
   allowedContests?: InputMaybe<Scalars['Int']>;
   options?: InputMaybe<Array<Scalars['String']>>;
+  period?: InputMaybe<Scalars['Int']>;
   price?: InputMaybe<Scalars['Int']>;
   subTitle?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
@@ -820,6 +860,15 @@ export type UpdateTeacherDto = {
   lastName: Scalars['String'];
   phone: Scalars['String'];
   phoneCode: Scalars['String'];
+};
+
+export type UpdateTeacherSubscriptionDto = {
+  endDate?: InputMaybe<Scalars['DateTime']>;
+  membershipId: Scalars['String'];
+  planId: Scalars['String'];
+  renewCount?: InputMaybe<Scalars['Int']>;
+  startDate?: InputMaybe<Scalars['DateTime']>;
+  status: MembershipStatus;
 };
 
 export type UpdateUserDto = {
@@ -1056,14 +1105,14 @@ export type UpdateSubscriptionPlanMutation = { __typename?: 'Mutation', updateSu
 export type FindAllSubscriptionPlansQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FindAllSubscriptionPlansQuery = { __typename?: 'Query', findAllSubscriptionPlans: Array<{ __typename?: 'SubscriptionPlan', title: string, id: string, subTitle?: string | null, price: number, allowedContests: number, options: Array<string>, created: any, updated: any }> };
+export type FindAllSubscriptionPlansQuery = { __typename?: 'Query', findAllSubscriptionPlans: Array<{ __typename?: 'SubscriptionPlan', id: string, title: string, subTitle: string, price: number, period: number, allowedContests: number, options: Array<string>, created: any, updated: any }> };
 
 export type FindSubscriptionPlanByIdQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type FindSubscriptionPlanByIdQuery = { __typename?: 'Query', findSubscriptionPlan: { __typename?: 'SubscriptionPlan', id: string, title: string, subTitle?: string | null, price: number, allowedContests: number, options: Array<string>, created: any, updated: any } };
+export type FindSubscriptionPlanByIdQuery = { __typename?: 'Query', findSubscriptionPlan: { __typename?: 'SubscriptionPlan', id: string, title: string, subTitle: string, price: number, period: number, allowedContests: number, options: Array<string>, created: any, updated: any } };
 
 export type CreateQuestionMutationVariables = Exact<{
   input: CreateQuestionDto;
@@ -1157,7 +1206,7 @@ export type FindUserQuery = { __typename?: 'Query', findUser: { __typename?: 'Us
 export type GetAuthUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth?: any | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null } | null } };
+export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth?: any | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, startDate: any, endDate: any, renewCount: number, created: any, updated: any, memberShipOn: { __typename?: 'SubscriptionPlan', title: string, allowedContests: number, period: number } } | null } | null } };
 
 export type PaginateUsersQueryVariables = Exact<{
   params: UserPaginationDto;
@@ -1982,10 +2031,11 @@ export type UpdateSubscriptionPlanMutationOptions = Apollo.BaseMutationOptions<U
 export const FindAllSubscriptionPlansDocument = gql`
     query FindAllSubscriptionPlans {
   findAllSubscriptionPlans {
-    title
     id
+    title
     subTitle
     price
+    period
     allowedContests
     options
     created
@@ -2027,6 +2077,7 @@ export const FindSubscriptionPlanByIdDocument = gql`
     title
     subTitle
     price
+    period
     allowedContests
     options
     created
@@ -2685,6 +2736,20 @@ export const GetAuthUserDocument = gql`
         phone {
           phone
           phoneCode
+        }
+        subscription {
+          id
+          status
+          startDate
+          endDate
+          renewCount
+          memberShipOn {
+            title
+            allowedContests
+            period
+          }
+          created
+          updated
         }
         personalImage
       }

@@ -4,7 +4,10 @@ query FindAllSubscriptionPlans {
     title
     subTitle
     price
+    period
     allowedContests
     options
+    created
+    updated
   }
 }

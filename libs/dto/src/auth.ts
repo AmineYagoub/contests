@@ -5,6 +5,7 @@ export * from './lib/users/update.dto';
 export * from './lib/users/updateStudent.dto';
 export * from './lib/users/updateTeacher.dto';
 export * from './lib/users/updateDocuments.dto';
+export * from './lib/users/updateTeacherSubscription.dto';
 export * from './lib/users/pagination.dto';
 export * from './lib/plans/create.dto';
 export * from './lib/plans/update.dto';
