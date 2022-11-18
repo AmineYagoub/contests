@@ -10,7 +10,6 @@ import {
   Tag,
 } from 'antd';
 import {
-  StudentLevel,
   Teacher,
   useFindUserQuery,
   User,
@@ -20,7 +19,6 @@ import styled from '@emotion/styled';
 import {
   getMapperLabel,
   rolesMappedTypes,
-  studentMappedLevels,
 } from '@/utils/mapper';
 import ViewStudentSkeleton from './ViewStudentSkeleton';
 import { MailOutlined, WarningOutlined } from '@ant-design/icons';

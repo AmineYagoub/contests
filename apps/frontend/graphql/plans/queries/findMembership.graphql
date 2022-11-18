@@ -1,0 +1,18 @@
+query FindMembershipByProfileId($id: String!) {
+  findMembershipByProfileId (id: $id) {
+    id
+    status
+    endDate
+    startDate
+    renewCount
+    created
+    updated
+    memberShipOn {
+      title
+      subTitle
+      price
+      period
+      allowedContests
+    }
+  }
+}

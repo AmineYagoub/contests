@@ -1,8 +1,7 @@
 import { Alert, Button, Drawer, Typography } from 'antd';
-import { SaveOutlined, WhatsAppOutlined } from '@ant-design/icons';
-
-import { useCreateSubscriptionPlan } from '@/hooks/admin/manage-plans.hook';
+import { SendOutlined, WhatsAppOutlined } from '@ant-design/icons';
 import { SubscriptionPlan } from '@/graphql/graphql';
+import { useSubscriptionPlans } from '@/hooks/subscription/plans';
 
 const { Title, Paragraph } = Typography;
 
@@ -10,17 +9,12 @@ const SubscribeTeacherForm = ({
   visible,
   plan,
   onClose,
-  onSuccess,
 }: {
   visible: boolean;
   plan: SubscriptionPlan;
   onClose: () => void;
-  onSuccess: () => void;
 }) => {
-  const { onFinish, loading, error } = useCreateSubscriptionPlan({
-    onClose,
-    onSuccess,
-  });
+  const { submitSubscription, submitWait, error } = useSubscriptionPlans();
   return (
     <Drawer
       title='ترقية العضوية'
@@ -32,30 +26,35 @@ const SubscribeTeacherForm = ({
       destroyOnClose
       extra={
         <Button onClick={onClose} htmlType='reset' type='primary' ghost>
-          تراجع
+          إغلاق
         </Button>
       }
     >
       <Title level={1}>الإشتراك في الخطة ({plan?.title})</Title>
       <Paragraph>
         بعد تأكيد إشتراكك في العضوية المدفوعة و الحصول على وسام
-        <b>(المعلم الذهبي )</b> ستظهر لك وسائل الدفع المتاحة على المنصة
+        <b> (المعلم الذهبي )</b> ستظهر لك وسائل الدفع المتاحة على المنصة
       </Paragraph>
       <Title level={4}>ملاحظة مهمة جدا</Title>
-      <Paragraph>
+      <Paragraph mark>
         بعد إتمام عملية الدفع أرسل صورة من رسالة التحويل مرفوقة بإسم عضويتك على
         المنصة على رقم الواتس آب التالي
       </Paragraph>
-      <Button type='link' href='tel:00201096263877' icon={<WhatsAppOutlined />}>
+      <Button
+        type='link'
+        href='tel:00201096263877'
+        icon={<WhatsAppOutlined />}
+        size='large'
+      >
         00201096263877
       </Button>
       <Button
-        onClick={onFinish}
+        onClick={() => submitSubscription(plan)}
         type='primary'
-        icon={<SaveOutlined />}
+        icon={<SendOutlined />}
         htmlType='submit'
         form='create-question'
-        loading={loading}
+        loading={submitWait}
         size='large'
         block
         style={{

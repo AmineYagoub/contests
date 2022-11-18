@@ -18,9 +18,9 @@ export class UserService {
     private prisma: PrismaService,
     private readonly passwordService: PasswordService
   ) {
-    this.prisma.user.deleteMany().then(() => {
+    /*  this.prisma.user.deleteMany().then(() => {
       this.seedUsers();
-    });
+    }); */
   }
 
   /**
@@ -76,7 +76,12 @@ export class UserService {
         where: input,
         include: {
           role: true,
-          profile: { include: { teacher: true } },
+          profile: {
+            include: {
+              teacher: true,
+              subscription: { include: { memberShipOn: true } },
+            },
+          },
         },
       });
     } catch (error) {

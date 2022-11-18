@@ -1,7 +1,8 @@
 import SubscribeTeacherForm from '@/components/admin/users/SubscribeTeacherForm';
+import SubscriptionDetails from '@/components/admin/users/SubscriptionDetails';
 import Loading from '@/components/common/Loading';
 import StyledButton from '@/components/common/StyledButton';
-import { SubscriptionPlan } from '@/graphql/graphql';
+import { Membership, SubscriptionPlan } from '@/graphql/graphql';
 import { useSubscriptionPlans } from '@/hooks/subscription/plans';
 import ProfileLayout from '@/layout/ProfileLayout';
 import { formatPrice } from '@/utils/app';
@@ -17,11 +18,7 @@ const gridStyle: React.CSSProperties = {
   boxShadow: 'none',
 };
 
-const StyledH1 = styled('h1')({
-  fontSize: '2rem',
-});
-
-const { Paragraph } = Typography;
+const { Paragraph, Title, Text } = Typography;
 
 const StyledList = styled('ul')({
   listStyle: 'none',
@@ -39,22 +36,45 @@ const StyledList = styled('ul')({
   },
 });
 
+const getPriceByLabel = (period: number) =>
+  period === 30 ? '/ الشهر' : period > 30 && period < 400 ? '/ السنة' : '';
+
 const TeacherMembership = () => {
-  const { data, refetch } = useSubscriptionPlans();
-  const [visible, setVisible] = useState(false);
+  const { data, membership, personalImage } = useSubscriptionPlans();
+
+  console.log(membership);
+
+  const [subscriptionDetailsVisible, setSubscriptionDetailsVisible] = useState(
+    false
+  );
+  const [subscriptionFormVisible, setSubscriptionFormVisible] = useState(false);
   const [plan, setPlan] = useState<SubscriptionPlan>(null);
 
-  const showDrawer = (el: SubscriptionPlan) => {
-    setVisible(true);
+  const showSubscriptionForm = (el: SubscriptionPlan) => {
+    setSubscriptionFormVisible(true);
     setPlan(el);
   };
-  const onClose = () => {
-    setVisible(false);
+  const showSubscriptionDetails = () => {
+    setSubscriptionDetailsVisible(true);
+  };
+  const closeSubscriptionDetails = () => {
+    setSubscriptionDetailsVisible(false);
+  };
+
+  const closeSubscriptionForm = () => {
+    setSubscriptionFormVisible(false);
     setPlan(null);
   };
+
+  const isFreePlan = (el: SubscriptionPlan) =>
+    membership === null && el.price === 0;
+
+  const isCurrentPlan = (el: SubscriptionPlan) =>
+    isFreePlan(el) || el.title === membership?.memberShipOn.title;
+
   return (
     <>
-      <StyledH1>الإشتراك المدفوع</StyledH1>
+      <Title level={3}>الإشتراك المدفوع</Title>
       <Paragraph type='secondary'>
         إشترك في أحد الخطط المدفوعة لترقية عضويتك و الحصول على مزايا إضافية.
       </Paragraph>
@@ -62,53 +82,75 @@ const TeacherMembership = () => {
 
       <Card bordered={false} style={{ backgroundColor: 'transparent' }}>
         {data ? (
-          data.findAllSubscriptionPlans.map((el, i) => (
+          data.findAllSubscriptionPlans.map((el: SubscriptionPlan, i) => (
             <Card.Grid
               key={el.id}
               style={{
                 ...gridStyle,
-                // boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px', CURRENT PLAN
+                opacity: isCurrentPlan(el) || !membership ? 1 : 0.5,
+                boxShadow: isCurrentPlan(el)
+                  ? 'rgba(0, 0, 0, 0.35) 0px 5px 15px'
+                  : 'none',
               }}
             >
               {
                 // TODO create popular plan computation
                 i === 2 ? (
                   <Badge.Ribbon text='الأكثر طلبا' color='green'>
-                    <StyledH1>{el.title}</StyledH1>
-                    <h3>{el.subTitle}</h3>
+                    <Title level={2}>{el.title}</Title>
+                    <Title level={5} mark={isCurrentPlan(el)}>
+                      الخطة الحالية
+                    </Title>
                   </Badge.Ribbon>
                 ) : (
                   <>
-                    <StyledH1>{el.title}</StyledH1>
-                    <h3>{el.subTitle}</h3>
+                    <Title level={2} italic>
+                      {el.title}
+                    </Title>
+                    <Title level={5} mark={isCurrentPlan(el)}>
+                      الخطة الحالية
+                    </Title>
                   </>
                 )
               }
-              <Space>
-                <StyledH1>{formatPrice(el.price)}</StyledH1>
-                <span>/ الشهر</span>
+              <Space align='baseline'>
+                <Title level={2} type='success'>
+                  {formatPrice(el.price)}
+                </Title>
+                <Text>{getPriceByLabel(el.period)}</Text>
               </Space>
               <StyledButton
                 type='primary'
                 block
                 shape='round'
-                onClick={() => showDrawer(el)}
+                onClick={() =>
+                  isCurrentPlan(el)
+                    ? showSubscriptionDetails()
+                    : showSubscriptionForm(el)
+                }
+                disabled={
+                  isFreePlan(el)
+                    ? true
+                    : !membership
+                    ? false
+                    : !isCurrentPlan(el)
+                }
               >
-                إشترك
+                {isCurrentPlan(el) ? 'حالة الإشتراك' : 'إشترك'}
               </StyledButton>
               <StyledList>
                 {el.options.map((opt) => (
                   <li key={opt}>
-                    <CheckOutlined /> <span>{opt}</span>
+                    <CheckOutlined /> <Text>{opt}</Text>
                   </li>
                 ))}
                 <li>
                   <CheckOutlined />
-                  {el.allowedContests === -1 ? (
-                    <span>إنشاء مسابقات غير محدود</span>
-                  ) : (
-                    <span>{el.allowedContests} مسابقة كل شهر</span>
-                  )}
+                  <Text>
+                    {el.allowedContests === -1
+                      ? ' إنشاء مسابقات غير محدود'
+                      : `${el.allowedContests} مسابقة كل شهر`}
+                  </Text>
                 </li>
               </StyledList>
             </Card.Grid>
@@ -118,10 +160,15 @@ const TeacherMembership = () => {
         )}
       </Card>
       <SubscribeTeacherForm
-        visible={visible}
+        visible={subscriptionFormVisible}
         plan={plan}
-        onClose={onClose}
-        onSuccess={() => refetch()}
+        onClose={closeSubscriptionForm}
+      />
+      <SubscriptionDetails
+        visible={subscriptionDetailsVisible}
+        onClose={closeSubscriptionDetails}
+        membership={membership as Membership}
+        personalImage={personalImage}
       />
     </>
   );

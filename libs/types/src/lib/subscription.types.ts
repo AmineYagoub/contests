@@ -1,10 +1,10 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum MembershipStatus {
-  ACTIVE,
-  CANCELED,
-  UNPAID,
-  EXPIRED,
+  ACTIVE = 'ACTIVE',
+  CANCELED = 'CANCELED',
+  UNPAID = 'UNPAID',
+  EXPIRED = 'EXPIRED',
 }
 
 registerEnumType(MembershipStatus, {

@@ -1,4 +1,5 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Membership } from './membership.model';
 
 @ObjectType()
 export class SubscriptionPlan {
@@ -25,6 +26,12 @@ export class SubscriptionPlan {
       'Identifies the number of allowed contests that can be created in this plan.',
   })
   allowedContests: number;
+
+  @Field(() => [Membership], {
+    description:
+      'Identifies the number of allowed contests that can be created in this plan.',
+  })
+  memberships: Membership[];
 
   @Field(() => Int, {
     description:

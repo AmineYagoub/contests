@@ -11,6 +11,7 @@ import {
   Resolver,
   ResolveReference,
 } from '@nestjs/graphql';
+import { Membership } from './membership.model';
 
 import { SubscriptionPlan } from './plan.model';
 import { SubscriptionPlanService } from './plan.service';
@@ -23,6 +24,12 @@ export class SubscriptionPlanResolver {
   @Query(() => SubscriptionPlan)
   findSubscriptionPlan(@Args('id') id: string) {
     return this.planService.findUnique({ id });
+  }
+
+  @isPublic()
+  @Query(() => Membership, { nullable: true })
+  findMembershipByProfileId(@Args('id') id: string) {
+    return this.planService.findMembershipByProfileId(id);
   }
 
   @isPublic()

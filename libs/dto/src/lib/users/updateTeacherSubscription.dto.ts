@@ -1,6 +1,6 @@
 import {
-  IsBoolean,
   IsDate,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -18,10 +18,10 @@ export class UpdateTeacherSubscriptionDto {
   @IsUUID()
   planId: string;
 
-  @Field()
-  @IsNotEmpty()
-  @IsUUID()
-  membershipId: string;
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  membershipId?: string;
 
   @Field({ nullable: true })
   @IsOptional()
@@ -35,8 +35,8 @@ export class UpdateTeacherSubscriptionDto {
 
   @Field(() => MembershipStatus)
   @IsNotEmpty()
-  @IsString()
-  status: PrismaMembershipStatus;
+  @IsEnum(MembershipStatus)
+  membershipStatus: PrismaMembershipStatus;
 
   @Field(() => Int, { nullable: true })
   @IsOptional()

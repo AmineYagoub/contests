@@ -24,6 +24,25 @@ export class SubscriptionPlanService {
   }
 
   /**
+   * Find a Membership by Teacher profile id.
+   *
+   * @param id string Teacher profile id.
+   * @returns Promise<Membership | null>
+   */
+  async findMembershipByProfileId(id: string) {
+    try {
+      return await this.prisma.membership.findFirstOrThrow({
+        where: {
+          profileId: id,
+        },
+        include: { memberShipOn: true },
+      });
+    } catch (error) {
+      Logger.error(error);
+    }
+  }
+
+  /**
    * Create a SubscriptionPlans
    *
    * @param data Prisma.SubscriptionPlansCreateInput The SubscriptionPlans data.

@@ -36,20 +36,6 @@ query GetAuthUser {
           phone
           phoneCode
         }
-        subscription {
-          id
-          status
-          startDate
-          endDate
-          renewCount
-          memberShipOn {
-            title
-            allowedContests
-            period
-          }
-          created
-          updated
-        }
         personalImage
       }
     }

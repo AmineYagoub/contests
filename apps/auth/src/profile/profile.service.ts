@@ -143,7 +143,7 @@ export class ProfileService {
     where: Prisma.ProfileWhereUniqueInput;
     data: UpdateTeacherSubscriptionDto;
   }) {
-    const { membershipId, planId, ...rest } = params.data;
+    const { membershipId, planId, membershipStatus, ...rest } = params.data;
 
     const { where } = params;
     const user: Prisma.ProfileUpdateInput = {
@@ -151,6 +151,7 @@ export class ProfileService {
         connectOrCreate: {
           create: {
             ...rest,
+            status: membershipStatus,
             memberShipOn: {
               connect: {
                 id: planId,
@@ -159,6 +160,7 @@ export class ProfileService {
           },
           where: {
             id: membershipId,
+            profileId: where.id,
           },
         },
       },

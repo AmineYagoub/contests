@@ -1,6 +1,7 @@
 import {
   ContestStatus,
   ContestType,
+  MembershipStatus,
   QuestionType,
   RoleTitle,
   StudentLevel,
@@ -84,6 +85,25 @@ export const questionMappedTypes: Mapper<QuestionType>[] = [
   {
     text: 'صعب',
     value: QuestionType?.Hard,
+  },
+];
+
+export const membershipStatusMappedTypes: Mapper<MembershipStatus>[] = [
+  {
+    text: 'في إنتظار الدفع',
+    value: MembershipStatus?.Unpaid,
+  },
+  {
+    text: 'مفعل',
+    value: MembershipStatus?.Active,
+  },
+  {
+    text: 'ملغي',
+    value: MembershipStatus.Canceled,
+  },
+  {
+    text: 'إنتهى',
+    value: MembershipStatus?.Expired,
   },
 ];
 

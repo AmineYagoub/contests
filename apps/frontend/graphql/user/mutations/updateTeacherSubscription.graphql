@@ -1,0 +1,21 @@
+mutation UpdateTeacherSubscription($id: String!, $input: UpdateTeacherSubscriptionDto!) {
+  updateTeacherSubscription(id: $id, input: $input) {
+    id
+    firstName
+    lastName
+    country
+    personalImage
+    subscription {
+      id
+      status
+      endDate
+      startDate
+      created
+      memberShipOn {
+        id
+        title
+        price
+      }
+    }
+  }
+}

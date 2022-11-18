@@ -14,13 +14,15 @@ export class Membership {
 
   @Field({
     description: 'Identifies the start date of the membership.',
+    nullable: true,
   })
-  startDate: Date;
+  startDate?: Date;
 
   @Field({
     description: 'Identifies the end date of the membership.',
+    nullable: true,
   })
-  endDate: Date;
+  endDate?: Date;
 
   @Field(() => Int, {
     description: 'Identifies the number of renew times.',
