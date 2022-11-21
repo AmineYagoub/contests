@@ -6,6 +6,7 @@
     "cts:dev": "(cd apps/contest/ && npx prisma migrate dev)",
     "cts:reset": "(cd apps/contest/ && npx prisma migrate reset && npx prisma generate)",
     "cts:push": "(cd apps/contest/ && npx prisma db push --accept-data-loss)",
+    "cts:show": "(cd apps/contest/ && npx prisma studio)",
     "auth:show": "(cd apps/auth/ && npx prisma studio)",
     "auth:dev": "(cd apps/auth/ && npx prisma migrate dev)",
     "auth:push": "(cd apps/auth/ && npx prisma db push --accept-data-loss)",

@@ -1,6 +1,7 @@
 import {
   Membership,
   MembershipStatus,
+  RoleTitle,
   SubscriptionPlan,
 } from '@/graphql/graphql';
 import styled from '@emotion/styled';
@@ -11,6 +12,8 @@ import { formatPrice } from '@/utils/app';
 import DeleteSubscription from './DeleteSubscription';
 import { useSnapshot } from 'valtio';
 import { SubscriptionPlanState } from '@/valtio/plans.state';
+import { AuthState } from '@/valtio/auth.state';
+import { useState } from 'react';
 
 const { Item } = List;
 
@@ -28,27 +31,36 @@ const StyledItem = styled(Item)({
 const MembershipData = ({
   title,
   membershipPrams,
+  profileId,
 }: {
   title: string;
   membershipPrams?: Membership;
+  profileId?: string;
 }) => {
   const subscriptionSnap = useSnapshot(SubscriptionPlanState);
-  const membership = subscriptionSnap.membershipData || membershipPrams;
+  const user = useSnapshot(AuthState).user;
+  const [membership, setMembership] = useState<Membership>(
+    (subscriptionSnap.membershipData as Membership) || membershipPrams
+  );
+
   return (
     <List header={<h2>{title}</h2>}>
       {membership ? (
         <>
           <StyledItem>
             <Typography.Text strong>نوع العضوية</Typography.Text>
-            <Tag color='green'>العضوية الذهبية</Tag>
+            <Tag color="green">العضوية الذهبية</Tag>
           </StyledItem>
 
           <StyledItem>
             <Typography.Text strong>خطة الإشتراك</Typography.Text>
             <span>{membership.memberShipOn.title}</span>
-            {membership.status !== MembershipStatus.Active && (
+            {(user?.role.title === RoleTitle.Admin ||
+              membership.status !== MembershipStatus.Active) && (
               <DeleteSubscription
                 plan={membership.memberShipOn as SubscriptionPlan}
+                profileId={profileId}
+                onSuccess={() => setMembership(null)}
               />
             )}
           </StyledItem>
@@ -67,7 +79,7 @@ const MembershipData = ({
           <StyledItem>
             <Typography.Text strong>المبلغ المستحق</Typography.Text>
 
-            <Typography.Text strong type='success'>
+            <Typography.Text strong type="success">
               {formatPrice(
                 membership.status === MembershipStatus.Active
                   ? 0
@@ -81,7 +93,7 @@ const MembershipData = ({
             {membership.startDate ? (
               <span>{moment(membership.startDate).fromNow()}</span>
             ) : (
-              <Tag color='gold'>
+              <Tag color="gold">
                 {getMapperLabel(membershipStatusMappedTypes, membership.status)}
               </Tag>
             )}
@@ -91,7 +103,7 @@ const MembershipData = ({
             {membership.endDate ? (
               <span>{moment(membership.endDate).fromNow()}</span>
             ) : (
-              <Tag color='gold'>
+              <Tag color="gold">
                 {getMapperLabel(membershipStatusMappedTypes, membership.status)}
               </Tag>
             )}
@@ -100,7 +112,7 @@ const MembershipData = ({
       ) : (
         <StyledItem>
           <Typography.Text strong>نوع العضوية</Typography.Text>
-          <Tag color='blue'>العضوية المجانية</Tag>
+          <Tag color="blue">العضوية المجانية</Tag>
         </StyledItem>
       )}
     </List>

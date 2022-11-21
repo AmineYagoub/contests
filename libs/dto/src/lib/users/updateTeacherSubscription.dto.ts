@@ -5,7 +5,6 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
-  IsString,
   IsUUID,
 } from 'class-validator';
 import { Field, InputType, Int } from '@nestjs/graphql';
@@ -18,11 +17,6 @@ export class UpdateTeacherSubscriptionDto {
   @IsNotEmpty()
   @IsUUID()
   planId: string;
-
-  @Field({ nullable: true })
-  @IsOptional()
-  @IsString()
-  membershipId?: string;
 
   @Field({ nullable: true })
   @IsOptional()

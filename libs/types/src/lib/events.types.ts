@@ -15,6 +15,5 @@ export type TeacherRoleMutationEvent = {
   role: RoleTitle;
   planId: string;
   profileId: string;
-  membershipId: string;
   membershipPeriod: number;
 };

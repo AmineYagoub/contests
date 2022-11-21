@@ -164,10 +164,9 @@ export class ProfileService {
   async onAdminUpdateUserRole(payload: TeacherRoleMutationEvent) {
     if ([RoleTitle.GOLDEN_TEACHER, RoleTitle.TEACHER].includes(payload.role)) {
       const isGold = RoleTitle.GOLDEN_TEACHER === payload.role;
-      const { membershipId, planId, profileId, membershipPeriod } = payload;
+      const { planId, profileId, membershipPeriod } = payload;
       const where: Prisma.ProfileWhereUniqueInput = { id: profileId };
       const data = {
-        membershipId,
         planId,
         membershipStatus: isGold
           ? MembershipStatus.ACTIVE
@@ -190,14 +189,7 @@ export class ProfileService {
     where: Prisma.ProfileWhereUniqueInput;
     data: UpdateTeacherSubscriptionDto;
   }) {
-    console.log(params);
-    const {
-      membershipId,
-      planId,
-      membershipStatus,
-      disconnect,
-      ...rest
-    } = params.data;
+    const { planId, membershipStatus, disconnect, ...rest } = params.data;
     const { where } = params;
 
     const user: Prisma.ProfileUpdateInput = {

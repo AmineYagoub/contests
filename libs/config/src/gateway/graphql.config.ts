@@ -64,8 +64,8 @@ class CookieDataSource extends RemoteGraphQLDataSource {
 export const gatewayGQLConfig = registerAs(GATEWAY_GQL_REGISTER_KEY, () => ({
   server: {
     cors: {
-      origin: process.env.GATEWAY_CORS_ORIGIN || 'https://olympiadnahw.com',
-      // origin: process.env.GATEWAY_CORS_ORIGIN || 'http://localhost:3000',
+      // origin: process.env.GATEWAY_CORS_ORIGIN || 'https://olympiadnahw.com',
+      origin: process.env.GATEWAY_CORS_ORIGIN || 'http://localhost:3000',
       credentials: true,
     },
     context: ({ req, res }) => ({ req, res }),
@@ -90,7 +90,9 @@ export const gatewayGQLConfig = registerAs(GATEWAY_GQL_REGISTER_KEY, () => ({
         };
       }
       if (error.extensions) {
-        const messages = (error as GatewayGraphQLError).extensions?.exception.response.validationErrors.map(
+        const messages = (
+          error as GatewayGraphQLError
+        ).extensions?.exception.response.validationErrors.map(
           (el) => el.constraints
         );
 

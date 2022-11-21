@@ -9,28 +9,20 @@ import {
   Switch,
   Tag,
 } from 'antd';
-import { Teacher, useFindUserQuery, User } from '@/graphql/graphql';
+import { Teacher, useFindUserQuery } from '@/graphql/graphql';
 import moment from 'moment-timezone';
 import styled from '@emotion/styled';
-import { getMapperLabel, rolesMappedTypes } from '@/utils/mapper';
 import ViewStudentSkeleton from './ViewStudentSkeleton';
 import { MailOutlined, WarningOutlined } from '@ant-design/icons';
 import StyledButton from '@/components/common/StyledButton';
 import { useUpdateUsers } from '@/hooks/admin/manage-users.hook';
-import { memo } from 'react';
 import MembershipData from './MembershipData';
-import { SubscriptionPlanActions } from '@/valtio/plans.state';
 
 const StyledDescriptions = styled(Descriptions)({
   table: {
     minHeight: '180px !important',
     boxShadow: 'unset !important',
   },
-});
-
-const UserRole = memo<{ user: User }>(function UserRole({ user }) {
-  const role = getMapperLabel(rolesMappedTypes, user.role.title);
-  return <span>{role}</span>;
 });
 
 const ViewTeacherProfile = ({
@@ -52,8 +44,8 @@ const ViewTeacherProfile = ({
 
   return (
     <Drawer
-      title='البيانات الشخصية للمعلم'
-      placement='left'
+      title="البيانات الشخصية للمعلم"
+      placement="left"
       closable={false}
       onClose={onClose}
       open={visible}
@@ -62,7 +54,7 @@ const ViewTeacherProfile = ({
       width={1080}
       destroyOnClose
       extra={
-        <Button onClick={onClose} htmlType='reset' type='primary' ghost>
+        <Button onClick={onClose} htmlType="reset" type="primary" ghost>
           إغلاق
         </Button>
       }
@@ -70,7 +62,7 @@ const ViewTeacherProfile = ({
       {loading || !profile ? (
         <ViewStudentSkeleton />
       ) : (
-        <Row justify='space-between'>
+        <Row justify="space-between">
           <Col
             span={6}
             style={{
@@ -81,7 +73,7 @@ const ViewTeacherProfile = ({
           >
             <Image
               src={profile.personalImage}
-              alt='avatar'
+              alt="avatar"
               width={200}
               height={200}
             />
@@ -91,24 +83,24 @@ const ViewTeacherProfile = ({
                 display: 'flex',
                 justifyContent: 'center',
               }}
-              align='center'
+              align="center"
             >
               <StyledButton
                 icon={<MailOutlined />}
-                type='primary'
-                size='middle'
-                shape='round'
+                type="primary"
+                size="middle"
+                shape="round"
               >
                 أرسل رسالة
               </StyledButton>
               <StyledButton
                 icon={<WarningOutlined />}
-                type='primary'
+                type="primary"
                 ghost
-                size='middle'
+                size="middle"
                 danger
-                color='danger'
-                shape='round'
+                color="danger"
+                shape="round"
               >
                 أرسل تنبيه
               </StyledButton>
@@ -116,38 +108,38 @@ const ViewTeacherProfile = ({
           </Col>
           <Col span={17}>
             <StyledDescriptions title={<h2>بيانات المعلم</h2>}>
-              <Descriptions.Item label='الإسم الكامل'>
+              <Descriptions.Item label="الإسم الكامل">
                 {`${profile.firstName} ${profile.lastName}`}
               </Descriptions.Item>
-              <Descriptions.Item label='تاريخ الميلاد'>
+              <Descriptions.Item label="تاريخ الميلاد">
                 {moment(String(profile.dateOfBirth)).calendar()}
               </Descriptions.Item>
-              <Descriptions.Item label='البلد'>
+              <Descriptions.Item label="البلد">
                 {profile.country}
               </Descriptions.Item>
               {/* ------------------------------------ */}
-              <Descriptions.Item label='البريد الإلكتروني'>
+              <Descriptions.Item label="البريد الإلكتروني">
                 {user.email}
               </Descriptions.Item>
-              <Descriptions.Item label='تاريخ التسجيل'>
+              <Descriptions.Item label="تاريخ التسجيل">
                 {moment(user.created).fromNow()}
               </Descriptions.Item>
-              <Descriptions.Item label='تفعيل البريد الإلكتروني'>
+              <Descriptions.Item label="تفعيل البريد الإلكتروني">
                 <Tag color={user.emailConfirmed ? 'green' : 'red'}>
                   {user.emailConfirmed ? 'مفعل' : 'غير مفعل'}
                 </Tag>
               </Descriptions.Item>
               {/* ------------------------------------ */}
-              <Descriptions.Item label='رقم الهاتف'>
+              <Descriptions.Item label="رقم الهاتف">
                 {profile.phone
                   ? `${profile.phone.phone} (${profile.phone.phoneCode})`
                   : 'غير متوفر'}
               </Descriptions.Item>
 
-              <Descriptions.Item label='حالة العضوية'>
+              <Descriptions.Item label="حالة العضوية">
                 <Switch
-                  checkedChildren='نشط'
-                  unCheckedChildren='غير نشط'
+                  checkedChildren="نشط"
+                  unCheckedChildren="غير نشط"
                   defaultChecked={user.isActive}
                   onChange={(value) => onUserStateChange(value, user.id)}
                   loading={l}
@@ -155,8 +147,9 @@ const ViewTeacherProfile = ({
               </Descriptions.Item>
             </StyledDescriptions>
             <MembershipData
-              title='الإشتراك في المنصة'
+              title="الإشتراك في المنصة"
               membershipPrams={profile.subscription}
+              profileId={profile.id}
             />
           </Col>
         </Row>

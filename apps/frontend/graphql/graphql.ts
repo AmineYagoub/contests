@@ -873,7 +873,6 @@ export type UpdateTeacherDto = {
 export type UpdateTeacherSubscriptionDto = {
   disconnect?: InputMaybe<Scalars['Boolean']>;
   endDate?: InputMaybe<Scalars['DateTime']>;
-  membershipId?: InputMaybe<Scalars['String']>;
   membershipStatus: MembershipStatus;
   planId: Scalars['String'];
   renewCount?: InputMaybe<Scalars['Int']>;

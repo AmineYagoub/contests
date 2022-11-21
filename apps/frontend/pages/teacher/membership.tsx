@@ -43,14 +43,8 @@ const getPriceByLabel = (period: number) =>
 const TeacherMembership = () => {
   const subscriptionSnap = useSnapshot(SubscriptionPlanState);
   const membership = subscriptionSnap.membershipData;
-  const {
-    data,
-    error,
-    methods,
-    selectedPlan,
-    personalImage,
-    submitWait,
-  } = useSubscriptionPlans();
+  const { data, error, methods, selectedPlan, personalImage, submitWait } =
+    useSubscriptionPlans();
 
   const isFreePlan = (el: SubscriptionPlan) =>
     membership === null && el.price === 0;
@@ -61,13 +55,13 @@ const TeacherMembership = () => {
   return (
     <>
       <Title level={3}>الإشتراك المدفوع</Title>
-      <Paragraph type='secondary'>
+      <Paragraph type="secondary">
         إشترك في أحد الخطط المدفوعة لترقية عضويتك و الحصول على مزايا إضافية.
       </Paragraph>
       <Divider />
 
       <Card bordered={false} style={{ backgroundColor: 'transparent' }}>
-        {!subscriptionSnap.queryLoading || data ? (
+        {data ? (
           data?.map((el: SubscriptionPlan, i) => (
             <Card.Grid
               key={el.id}
@@ -82,14 +76,14 @@ const TeacherMembership = () => {
               {
                 // TODO create popular plan computation
                 i === 2 ? (
-                  <Badge.Ribbon text='الأكثر طلبا' color='green'>
+                  <Badge.Ribbon text="الأكثر طلبا" color="green">
                     <Title level={2} style={{ marginBottom: 0 }}>
                       {el.title}
                     </Title>
                     <Title
                       level={5}
                       mark={isCurrentPlan(el)}
-                      type='secondary'
+                      type="secondary"
                       style={{ marginTop: 0 }}
                     >
                       {isCurrentPlan(el) ? 'الخطة الحالية' : el.subTitle}
@@ -103,7 +97,7 @@ const TeacherMembership = () => {
                     <Title
                       level={5}
                       mark={isCurrentPlan(el)}
-                      type='secondary'
+                      type="secondary"
                       style={{ marginTop: 0 }}
                     >
                       {isCurrentPlan(el) ? 'الخطة الحالية' : el.subTitle}
@@ -111,16 +105,16 @@ const TeacherMembership = () => {
                   </>
                 )
               }
-              <Space align='baseline'>
-                <Title level={2} type='success'>
+              <Space align="baseline">
+                <Title level={2} type="success">
                   {formatPrice(el.price)}
                 </Title>
                 <Text>{getPriceByLabel(el.period)}</Text>
               </Space>
               <StyledButton
-                type='primary'
+                type="primary"
                 block
-                shape='round'
+                shape="round"
                 onClick={() =>
                   isCurrentPlan(el)
                     ? methods.openMemberShipStatus()

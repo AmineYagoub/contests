@@ -38,7 +38,7 @@ export const useSubscriptionPlans = () => {
   };
 
   const { data, loading } = useFindAllSubscriptionPlansQuery({
-    skip: !!profile,
+    skip: !profile,
   });
 
   const {
@@ -49,7 +49,7 @@ export const useSubscriptionPlans = () => {
     variables: {
       id: profile?.id,
     },
-    skip: !!profile,
+    skip: !profile,
   });
 
   useEffect(() => {
@@ -63,22 +63,22 @@ export const useSubscriptionPlans = () => {
   }, [membershipData]);
 
   const refetchData = () => {
-    SubscriptionPlanActions.setQueryLoading(true);
-    refetchMembership()
-      .then(({ data }) => {
-        SubscriptionPlanActions.setMembershipPlan(
-          data?.findMembershipByProfileId as Membership
-        );
-      })
-      .finally(() => {
-        SubscriptionPlanActions.setQueryLoading(false);
-      });
+    if (profile) {
+      SubscriptionPlanActions.setQueryLoading(true);
+      refetchMembership()
+        .then(({ data }) => {
+          SubscriptionPlanActions.setMembershipPlan(
+            data?.findMembershipByProfileId as Membership
+          );
+        })
+        .finally(() => {
+          SubscriptionPlanActions.setQueryLoading(false);
+        });
+    }
   };
 
-  const [
-    UpdateTeacherSubscriptionMutation,
-    { loading: submitWait, error },
-  ] = useUpdateTeacherSubscriptionMutation();
+  const [UpdateTeacherSubscriptionMutation, { loading: submitWait, error }] =
+    useUpdateTeacherSubscriptionMutation();
 
   const closeAllAndRefetch = async () => {
     closeMemberShipStatus();
@@ -87,12 +87,13 @@ export const useSubscriptionPlans = () => {
 
   const submitSubscription = async (
     plan: SubscriptionPlan,
-    disconnect = false
+    disconnect = false,
+    profileId?: string
   ) => {
     try {
       const { data } = await UpdateTeacherSubscriptionMutation({
         variables: {
-          id: profile.id,
+          id: profile?.id || profileId,
           input: {
             planId: plan.id,
             membershipStatus: MembershipStatus.Unpaid,
