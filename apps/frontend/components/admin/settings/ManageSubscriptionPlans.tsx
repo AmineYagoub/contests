@@ -48,7 +48,7 @@ const ManageSubscriptionPlans = () => {
       key: 'price',
       dataIndex: 'price',
       render: (price) => (
-        <Text strong type='success'>{`${Number(price / 100).toFixed(
+        <Text strong type="success">{`${Number(price / 100).toFixed(
           2
         )} $`}</Text>
       ),
@@ -59,7 +59,7 @@ const ManageSubscriptionPlans = () => {
       key: 'allowedContests',
       render: (allowedContests) =>
         allowedContests === -1 ? (
-          <Text strong type='warning' style={{ fontSize: 'middle' }}>
+          <Text strong type="warning" style={{ fontSize: 'middle' }}>
             غير محدود
           </Text>
         ) : (
@@ -72,7 +72,7 @@ const ManageSubscriptionPlans = () => {
       key: 'period',
       render: (period) =>
         period === -1 ? (
-          <Text strong type='warning' style={{ fontSize: 'middle' }}>
+          <Text strong type="warning" style={{ fontSize: 'middle' }}>
             غير محدود
           </Text>
         ) : (
@@ -100,7 +100,7 @@ const ManageSubscriptionPlans = () => {
       key: 'action',
       filteredValue: null,
       render: (record) => (
-        <Space size='small'>
+        <Space size="small">
           <DeletePlan record={record} onSuccess={() => refetch()} />
           <UpdatePlan record={record} onSuccess={() => refetch()} />
         </Space>
@@ -111,8 +111,8 @@ const ManageSubscriptionPlans = () => {
   return (
     <StyledSection>
       <TableBtn
-        type='primary'
-        size='middle'
+        type="primary"
+        size="middle"
         icon={<PlusOutlined />}
         onClick={showDrawer}
       >
@@ -122,7 +122,7 @@ const ManageSubscriptionPlans = () => {
         columns={columns}
         dataSource={data}
         loading={loading}
-        size='large'
+        size="large"
       />
       <CreatePlan
         visible={visible}

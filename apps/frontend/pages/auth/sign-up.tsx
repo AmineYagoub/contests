@@ -55,16 +55,16 @@ const SignUpPage: NextPageWithLayout = () => {
       ) : (
         <StyledForm
           form={form}
-          name='signUp'
+          name="signUp"
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
-          autoComplete='off'
-          size='large'
+          autoComplete="off"
+          size="large"
           onValuesChange={(field) => clearErrors(field, form)}
           {...formLayout}
         >
-          <Form.Item label='البريد الإلكتروني' name='email' rules={emailRules}>
-            <Input type='email' />
+          <Form.Item label="البريد الإلكتروني" name="email" rules={emailRules}>
+            <Input type="email" />
           </Form.Item>
 
           <SelectRole
@@ -74,31 +74,31 @@ const SignUpPage: NextPageWithLayout = () => {
           />
 
           <Form.Item
-            label='كلمة السر'
+            label="كلمة السر"
             style={{ marginBottom: 0 }}
             rules={[{ required: true, message: '' }]}
           >
             <Form.Item
               style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}
-              name='password'
+              name="password"
               rules={passwordRules}
             >
-              <Input.Password placeholder='كلمة السر' />
+              <Input.Password placeholder="كلمة السر" />
             </Form.Item>
             <Space>-</Space>
             <Form.Item
               style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}
-              name='confirmPassword'
+              name="confirmPassword"
               dependencies={['password']}
               rules={confirmPasswordRules}
             >
-              <Input.Password placeholder='تأكيد كلمة السر' />
+              <Input.Password placeholder="تأكيد كلمة السر" />
             </Form.Item>
           </Form.Item>
 
           <Form.Item
-            name='agreement'
-            valuePropName='checked'
+            name="agreement"
+            valuePropName="checked"
             wrapperCol={{ ...formLayout.wrapperCol, offset: 5 }}
             rules={[
               {
@@ -113,14 +113,14 @@ const SignUpPage: NextPageWithLayout = () => {
           >
             <Checkbox>
               أوافق على
-              <Link href='/terms'>
-                <Button type='link'>إتفاقية الإستخدام</Button>
+              <Link href="/terms">
+                <Button type="link">إتفاقية الإستخدام</Button>
               </Link>
             </Checkbox>
           </Form.Item>
 
           <Form.Item wrapperCol={{ ...formLayout.wrapperCol, offset: 5 }}>
-            <Button type='primary' htmlType='submit' block loading={loading}>
+            <Button type="primary" htmlType="submit" block loading={loading}>
               تسجيل حساب جديد
             </Button>
           </Form.Item>
@@ -130,7 +130,7 @@ const SignUpPage: NextPageWithLayout = () => {
           >
             <Divider>لديك حساب؟</Divider>
             <Link href={AppRoutes.SignIn}>
-              <Button type='primary' ghost block>
+              <Button type="primary" ghost block>
                 تسجيل الدخول
               </Button>
             </Link>

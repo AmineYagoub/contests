@@ -28,15 +28,15 @@ const SubscribeTeacherForm = ({
   const subscriptionSnap = useSnapshot(SubscriptionPlanState);
   return (
     <Drawer
-      title='ترقية العضوية'
-      placement='left'
+      title="ترقية العضوية"
+      placement="left"
       closable={false}
       onClose={onClose}
       open={subscriptionSnap.subscriptionForm}
       width={720}
       destroyOnClose
       extra={
-        <Button onClick={onClose} htmlType='reset' type='primary' ghost>
+        <Button onClick={onClose} htmlType="reset" type="primary" ghost>
           إغلاق
         </Button>
       }
@@ -52,21 +52,21 @@ const SubscribeTeacherForm = ({
         المنصة على رقم الواتس آب التالي
       </Paragraph>
       <Button
-        type='link'
-        href='tel:00201096263877'
+        type="link"
+        href="tel:00201096263877"
         icon={<WhatsAppOutlined />}
-        size='large'
+        size="large"
       >
         00201096263877
       </Button>
       <Button
         onClick={() => submitSubscription(plan)}
-        type='primary'
+        type="primary"
         icon={<SendOutlined />}
-        htmlType='submit'
-        form='create-question'
+        htmlType="submit"
+        form="create-question"
         loading={submitWait}
-        size='large'
+        size="large"
         block
         style={{
           maxWidth: 400,
@@ -78,11 +78,11 @@ const SubscribeTeacherForm = ({
       </Button>
       {error && (
         <Alert
-          message='خطأ'
-          description='حدث خطأ أثناء عملية ترقية العضوية ، يرجى المحاولة مرة أخرى'
+          message="خطأ"
+          description="حدث خطأ أثناء عملية ترقية العضوية ، يرجى المحاولة مرة أخرى"
           banner
           closable
-          type='error'
+          type="error"
           showIcon
         />
       )}

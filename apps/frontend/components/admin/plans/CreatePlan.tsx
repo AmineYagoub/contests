@@ -19,8 +19,8 @@ const CreatePlan = ({
   });
   return (
     <Drawer
-      title='إنشاء خطة جديدة'
-      placement='left'
+      title="إنشاء خطة جديدة"
+      placement="left"
       closable={false}
       onClose={onClose}
       open={visible}
@@ -28,15 +28,15 @@ const CreatePlan = ({
       destroyOnClose
       extra={
         <Space>
-          <Button onClick={onClose} htmlType='reset'>
+          <Button onClick={onClose} htmlType="reset">
             تراجع
           </Button>
           <Button
             onClick={onFinish}
-            type='primary'
+            type="primary"
             icon={<SaveOutlined />}
-            htmlType='submit'
-            form='create-question'
+            htmlType="submit"
+            form="create-question"
             loading={loading}
           >
             حفظ
@@ -47,11 +47,11 @@ const CreatePlan = ({
       <SubscriptionPlanForm form={form} />
       {error && (
         <Alert
-          message='خطأ'
-          description='حدث خطأ أثناء عملية حفظ الخطة ، يرجى المحاولة مرة أخرى'
+          message="خطأ"
+          description="حدث خطأ أثناء عملية حفظ الخطة ، يرجى المحاولة مرة أخرى"
           banner
           closable
-          type='error'
+          type="error"
           showIcon
         />
       )}

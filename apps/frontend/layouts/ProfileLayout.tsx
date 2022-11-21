@@ -123,7 +123,7 @@ const ProfileLayout: FC<{ children: ReactElement; isTeacher: boolean }> = ({
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <Logo />
         <StyledMenu
-          mode='inline'
+          mode="inline"
           defaultSelectedKeys={[router.pathname]}
           selectedKeys={[router.pathname]}
           items={menuList}
@@ -131,7 +131,7 @@ const ProfileLayout: FC<{ children: ReactElement; isTeacher: boolean }> = ({
       </Sider>
       <Layout>
         <StyledHeader>
-          <Row justify='space-between'>
+          <Row justify="space-between">
             <Col span={2}>
               {createElement(
                 !collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
@@ -146,14 +146,14 @@ const ProfileLayout: FC<{ children: ReactElement; isTeacher: boolean }> = ({
               <Space size={8}>
                 <Button
                   icon={<MailOutlined style={{ color: theme.infoColor }} />}
-                  shape='circle'
-                  type='ghost'
+                  shape="circle"
+                  type="ghost"
                 />
                 <Badge dot>
                   <Button
                     icon={<BellOutlined style={{ color: theme.infoColor }} />}
-                    shape='circle'
-                    type='ghost'
+                    shape="circle"
+                    type="ghost"
                   />
                 </Badge>
 
@@ -163,7 +163,7 @@ const ProfileLayout: FC<{ children: ReactElement; isTeacher: boolean }> = ({
                       src={user?.profile.personalImage}
                       width={32}
                       height={32}
-                      alt='avatar'
+                      alt="avatar"
                     />
                   }
                 />
@@ -174,7 +174,7 @@ const ProfileLayout: FC<{ children: ReactElement; isTeacher: boolean }> = ({
         {!isTeacher && !user.isActive && (
           <Alert
             style={{ marginBottom: 10 }}
-            message='البيانات الشخصية الخاصة بك غير مكتملة'
+            message="البيانات الشخصية الخاصة بك غير مكتملة"
             showIcon
             description={
               <>
@@ -195,7 +195,7 @@ const ProfileLayout: FC<{ children: ReactElement; isTeacher: boolean }> = ({
                 </ul>
               </>
             }
-            type='warning'
+            type="warning"
             action={
               <Link href={AppRoutes.StudentProfile}>صفحة البيانات الشخصية</Link>
             }

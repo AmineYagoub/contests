@@ -44,7 +44,11 @@ const ManageInstructors = () => {
   const userSnap = useSnapshot(UsersState);
   const [visible, setVisible] = useState(false);
   const [profileKey, setProfileKey] = useState<number>(null);
-  const { onTeacherRoleChange, onUserStateChange, loading: l } = useUpdateUsers();
+  const {
+    onTeacherRoleChange,
+    onUserStateChange,
+    loading: l,
+  } = useUpdateUsers();
 
   const showDrawer = (key: number) => {
     setVisible(true);

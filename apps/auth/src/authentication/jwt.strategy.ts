@@ -41,6 +41,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
     // TODO looking up the userId in a list of revoked tokens,
-    return this.userService.findUnique({ key: sub })
+    return this.userService.findUnique({ key: sub });
   }
 }

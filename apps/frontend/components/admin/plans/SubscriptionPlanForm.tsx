@@ -55,13 +55,13 @@ const SubscriptionPlanForm = ({
     <>
       {planSnap.mutationLoading && (
         <Spin
-          size='large'
+          size="large"
           style={{ position: 'absolute', left: '50%', top: '25%' }}
         />
       )}
 
       <Form
-        layout='vertical'
+        layout="vertical"
         scrollToFirstError
         form={form}
         name={`${record} ? update-plan : create-plan`}
@@ -70,16 +70,16 @@ const SubscriptionPlanForm = ({
         }}
       >
         <Form.Item
-          name='title'
-          label='عنوان الخطة'
+          name="title"
+          label="عنوان الخطة"
           rules={[{ required: true, message: 'يرجى كتابة عنوان الخطة' }]}
           required
         >
           <Input />
         </Form.Item>
         <Form.Item
-          name='subTitle'
-          label='الوصف'
+          name="subTitle"
+          label="الوصف"
           rules={[{ required: true, message: 'يرجى كتابة وصف الخطة' }]}
           required
         >
@@ -89,8 +89,8 @@ const SubscriptionPlanForm = ({
         <Row>
           <Col span={6}>
             <Form.Item
-              name='price'
-              label='السعر'
+              name="price"
+              label="السعر"
               rules={[{ required: true, message: 'يرجى كتابة سعر الخطة' }]}
               required
             >
@@ -106,18 +106,18 @@ const SubscriptionPlanForm = ({
           </Col>
           <Col span={8}>
             <Form.Item
-              name='period'
-              label='المدة الزمنية بالأيام'
-              help='أتركه فارغا للخطة الغير منتهية.'
+              name="period"
+              label="المدة الزمنية بالأيام"
+              help="أتركه فارغا للخطة الغير منتهية."
             >
               <InputNumber />
             </Form.Item>
           </Col>
           <Col>
             <Form.Item
-              name='allowedContests'
-              label='عدد المسابقات المسموح بإنشائها كل شهر'
-              help='أتركه فارغا للسماح بإنشاء عدد لا نهائي من المسابقات.'
+              name="allowedContests"
+              label="عدد المسابقات المسموح بإنشائها كل شهر"
+              help="أتركه فارغا للسماح بإنشاء عدد لا نهائي من المسابقات."
             >
               <InputNumber />
             </Form.Item>
@@ -126,7 +126,7 @@ const SubscriptionPlanForm = ({
 
         <StyledH4Title level={4}>صلاحيات الخطة</StyledH4Title>
         <Form.List
-          name='options'
+          name="options"
           rules={[
             {
               validator: async (_, options) => {
@@ -162,7 +162,7 @@ const SubscriptionPlanForm = ({
               ))}
               <Form.Item>
                 <Button
-                  type='dashed'
+                  type="dashed"
                   onClick={() => add()}
                   style={{ width: 'calc(50% - 10px)' }}
                   icon={<PlusOutlined />}

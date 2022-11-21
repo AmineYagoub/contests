@@ -4,7 +4,7 @@ const { Panel } = Collapse;
 const PaymentDetails = () => {
   return (
     <Collapse>
-      <Panel header='وسائل الدفع من داخل مصر (الجنيه المصري)' key='1'>
+      <Panel header="وسائل الدفع من داخل مصر (الجنيه المصري)" key="1">
         <ol>
           <li>
             <b>فودافون كاش:</b> تحويل المبلغ المطلوب على المحفضة رقم{' '}
@@ -23,7 +23,7 @@ const PaymentDetails = () => {
           </li>
         </ol>
       </Panel>
-      <Panel header='وسائل الدفع من خارج مصر (الدولار الأمريكي)' key='2'>
+      <Panel header="وسائل الدفع من خارج مصر (الدولار الأمريكي)" key="2">
         <ol>
           <li>
             <b>بايبل (Paypal):</b> تحويل المبلغ المطلوب على المحفضة{' '}

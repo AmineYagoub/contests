@@ -15,12 +15,12 @@ const MembershipDetails = ({
   const membership = subscriptionSnap.membershipData;
   return (
     <Drawer
-      title='إشتراك العضوية الذهبية'
-      placement='left'
+      title="إشتراك العضوية الذهبية"
+      placement="left"
       width={600}
       destroyOnClose
       extra={
-        <Button onClick={onClose} htmlType='reset' type='primary' ghost>
+        <Button onClick={onClose} htmlType="reset" type="primary" ghost>
           إغلاق
         </Button>
       }
@@ -29,7 +29,7 @@ const MembershipDetails = ({
       open={subscriptionSnap.membershipDetails}
     >
       {membership && (
-        <Row justify='space-between'>
+        <Row justify="space-between">
           <Col
             span={8}
             style={{
@@ -38,10 +38,10 @@ const MembershipDetails = ({
               alignItems: 'center',
             }}
           >
-            <Image src={personalImage} alt='avatar' width={150} height={150} />
+            <Image src={personalImage} alt="avatar" width={150} height={150} />
           </Col>
           <Col span={14}>
-            <MembershipData title='حالة إشتراكي'  />
+            <MembershipData title="حالة إشتراكي" />
           </Col>
         </Row>
       )}

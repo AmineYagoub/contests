@@ -21,10 +21,8 @@ export const useCreateSubscriptionPlan = ({
   onSuccess,
 }: CreatePlanProps) => {
   const [form] = Form.useForm();
-  const [
-    CreateSubscriptionPlanMutation,
-    { loading, error },
-  ] = useCreateSubscriptionPlanMutation();
+  const [CreateSubscriptionPlanMutation, { loading, error }] =
+    useCreateSubscriptionPlanMutation();
   const [
     UpdateSubscriptionPlanMutation,
     { loading: loadingUpdate, error: errorUpdate },
