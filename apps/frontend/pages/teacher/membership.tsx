@@ -1,5 +1,5 @@
 import SubscribeTeacherForm from '@/components/admin/users/SubscribeTeacherForm';
-import SubscriptionDetails from '@/components/admin/users/SubscriptionDetails';
+import MembershipDetails from '@/components/admin/users/MembershipDetails';
 import Loading from '@/components/common/Loading';
 import StyledButton from '@/components/common/StyledButton';
 import { Membership, SubscriptionPlan } from '@/graphql/graphql';
@@ -10,7 +10,8 @@ import { CheckOutlined } from '@ant-design/icons';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
 import { Card, Divider, Space, Badge, Typography } from 'antd';
-import { useState } from 'react';
+import { useSnapshot } from 'valtio';
+import { SubscriptionPlanState } from '@/valtio/plans.state';
 
 const gridStyle: React.CSSProperties = {
   width: '25%',
@@ -40,31 +41,16 @@ const getPriceByLabel = (period: number) =>
   period === 30 ? '/ الشهر' : period > 30 && period < 400 ? '/ السنة' : '';
 
 const TeacherMembership = () => {
-  const { data, membership, personalImage } = useSubscriptionPlans();
-
-  console.log(membership);
-
-  const [subscriptionDetailsVisible, setSubscriptionDetailsVisible] = useState(
-    false
-  );
-  const [subscriptionFormVisible, setSubscriptionFormVisible] = useState(false);
-  const [plan, setPlan] = useState<SubscriptionPlan>(null);
-
-  const showSubscriptionForm = (el: SubscriptionPlan) => {
-    setSubscriptionFormVisible(true);
-    setPlan(el);
-  };
-  const showSubscriptionDetails = () => {
-    setSubscriptionDetailsVisible(true);
-  };
-  const closeSubscriptionDetails = () => {
-    setSubscriptionDetailsVisible(false);
-  };
-
-  const closeSubscriptionForm = () => {
-    setSubscriptionFormVisible(false);
-    setPlan(null);
-  };
+  const subscriptionSnap = useSnapshot(SubscriptionPlanState);
+  const membership = subscriptionSnap.membershipData;
+  const {
+    data,
+    error,
+    methods,
+    selectedPlan,
+    personalImage,
+    submitWait,
+  } = useSubscriptionPlans();
 
   const isFreePlan = (el: SubscriptionPlan) =>
     membership === null && el.price === 0;
@@ -81,8 +67,8 @@ const TeacherMembership = () => {
       <Divider />
 
       <Card bordered={false} style={{ backgroundColor: 'transparent' }}>
-        {data ? (
-          data.findAllSubscriptionPlans.map((el: SubscriptionPlan, i) => (
+        {!subscriptionSnap.queryLoading || data ? (
+          data?.map((el: SubscriptionPlan, i) => (
             <Card.Grid
               key={el.id}
               style={{
@@ -97,18 +83,30 @@ const TeacherMembership = () => {
                 // TODO create popular plan computation
                 i === 2 ? (
                   <Badge.Ribbon text='الأكثر طلبا' color='green'>
-                    <Title level={2}>{el.title}</Title>
-                    <Title level={5} mark={isCurrentPlan(el)}>
-                      الخطة الحالية
+                    <Title level={2} style={{ marginBottom: 0 }}>
+                      {el.title}
+                    </Title>
+                    <Title
+                      level={5}
+                      mark={isCurrentPlan(el)}
+                      type='secondary'
+                      style={{ marginTop: 0 }}
+                    >
+                      {isCurrentPlan(el) ? 'الخطة الحالية' : el.subTitle}
                     </Title>
                   </Badge.Ribbon>
                 ) : (
                   <>
-                    <Title level={2} italic>
+                    <Title level={2} italic style={{ marginBottom: 0 }}>
                       {el.title}
                     </Title>
-                    <Title level={5} mark={isCurrentPlan(el)}>
-                      الخطة الحالية
+                    <Title
+                      level={5}
+                      mark={isCurrentPlan(el)}
+                      type='secondary'
+                      style={{ marginTop: 0 }}
+                    >
+                      {isCurrentPlan(el) ? 'الخطة الحالية' : el.subTitle}
                     </Title>
                   </>
                 )
@@ -125,8 +123,8 @@ const TeacherMembership = () => {
                 shape='round'
                 onClick={() =>
                   isCurrentPlan(el)
-                    ? showSubscriptionDetails()
-                    : showSubscriptionForm(el)
+                    ? methods.openMemberShipStatus()
+                    : methods.openSubscriptionForm(el)
                 }
                 disabled={
                   isFreePlan(el)
@@ -160,14 +158,16 @@ const TeacherMembership = () => {
         )}
       </Card>
       <SubscribeTeacherForm
-        visible={subscriptionFormVisible}
-        plan={plan}
-        onClose={closeSubscriptionForm}
+        onClose={methods.closeSubscriptionForm}
+        plan={selectedPlan}
+        error={error}
+        onCloseMemberShip={methods.closeMemberShipStatus}
+        submitSubscription={methods.submitSubscription}
+        submitWait={submitWait}
+        personalImage={personalImage}
       />
-      <SubscriptionDetails
-        visible={subscriptionDetailsVisible}
-        onClose={closeSubscriptionDetails}
-        membership={membership as Membership}
+      <MembershipDetails
+        onClose={methods.closeMemberShipStatus}
         personalImage={personalImage}
       />
     </>

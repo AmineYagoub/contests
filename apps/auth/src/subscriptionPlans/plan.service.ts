@@ -31,7 +31,7 @@ export class SubscriptionPlanService {
    */
   async findMembershipByProfileId(id: string) {
     try {
-      return await this.prisma.membership.findFirstOrThrow({
+      return await this.prisma.membership.findFirst({
         where: {
           profileId: id,
         },

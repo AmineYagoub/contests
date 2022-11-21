@@ -5,12 +5,11 @@ import { AUTH_CONFIG_REGISTER_KEY, AuthConfigType } from '@contests/config';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-
-import { PrismaService } from '../app/prisma.service';
+import { UserService } from '../users/user.service';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly userService: UserService,
     private readonly configService: ConfigService
   ) {
     super({
@@ -42,17 +41,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
     // TODO looking up the userId in a list of revoked tokens,
-    return this.prisma.user.findUniqueOrThrow({
-      where: { key: sub },
-      include: {
-        role: true,
-        profile: {
-          include: {
-            teacher: true,
-            subscription: true,
-          },
-        },
-      },
-    });
+    return this.userService.findUnique({ key: sub })
   }
 }

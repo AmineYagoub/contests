@@ -20,6 +20,19 @@ query FindUser($key: Int!) {
           phone
           phoneCode
         }
+        subscription{
+          id
+          status
+          startDate
+          endDate
+          created
+          renewCount
+          memberShipOn {
+            id
+            title
+            price
+          }
+        }
         dateOfBirth
         personalImage
       }

@@ -871,6 +871,7 @@ export type UpdateTeacherDto = {
 };
 
 export type UpdateTeacherSubscriptionDto = {
+  disconnect?: InputMaybe<Scalars['Boolean']>;
   endDate?: InputMaybe<Scalars['DateTime']>;
   membershipId?: InputMaybe<Scalars['String']>;
   membershipStatus: MembershipStatus;
@@ -1120,7 +1121,7 @@ export type FindMembershipByProfileIdQueryVariables = Exact<{
 }>;
 
 
-export type FindMembershipByProfileIdQuery = { __typename?: 'Query', findMembershipByProfileId?: { __typename?: 'Membership', id: string, status: MembershipStatus, endDate?: any | null, startDate?: any | null, renewCount: number, created: any, updated: any, memberShipOn: { __typename?: 'SubscriptionPlan', title: string, subTitle: string, price: number, period: number, allowedContests: number } } | null };
+export type FindMembershipByProfileIdQuery = { __typename?: 'Query', findMembershipByProfileId?: { __typename?: 'Membership', id: string, status: MembershipStatus, endDate?: any | null, startDate?: any | null, renewCount: number, created: any, updated: any, memberShipOn: { __typename?: 'SubscriptionPlan', id: string, title: string, subTitle: string, price: number, period: number, allowedContests: number } } | null };
 
 export type CreateQuestionMutationVariables = Exact<{
   input: CreateQuestionDto;
@@ -1217,7 +1218,7 @@ export type FindUserQueryVariables = Exact<{
 }>;
 
 
-export type FindUserQuery = { __typename?: 'Query', findUser: { __typename?: 'User', id: string, key: number, email: string, emailConfirmed: boolean, isActive: boolean, created: any, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, letterImage?: string | null, personalImage?: string | null, birthCertImage?: string | null, teacher?: { __typename?: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null } | null } };
+export type FindUserQuery = { __typename?: 'Query', findUser: { __typename?: 'User', id: string, key: number, email: string, emailConfirmed: boolean, isActive: boolean, created: any, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, letterImage?: string | null, personalImage?: string | null, birthCertImage?: string | null, teacher?: { __typename?: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, startDate?: any | null, endDate?: any | null, created: any, renewCount: number, memberShipOn: { __typename?: 'SubscriptionPlan', id: string, title: string, price: number } } | null } | null } };
 
 export type GetAuthUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2097,6 +2098,7 @@ export const FindMembershipByProfileIdDocument = gql`
     created
     updated
     memberShipOn {
+      id
       title
       subTitle
       price
@@ -2715,6 +2717,19 @@ export const FindUserDocument = gql`
         phone {
           phone
           phoneCode
+        }
+        subscription {
+          id
+          status
+          startDate
+          endDate
+          created
+          renewCount
+          memberShipOn {
+            id
+            title
+            price
+          }
         }
         dateOfBirth
         personalImage

@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsDate,
   IsEnum,
   IsNotEmpty,
@@ -42,4 +43,9 @@ export class UpdateTeacherSubscriptionDto {
   @IsOptional()
   @IsNumber()
   renewCount?: number;
+
+  @Field(() => Boolean, { nullable: true, defaultValue: false })
+  @IsOptional()
+  @IsBoolean()
+  disconnect?: boolean;
 }

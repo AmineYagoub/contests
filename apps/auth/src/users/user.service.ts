@@ -1,5 +1,5 @@
 import { UpdateUserDto } from '@contests/dto/auth';
-import { RoleTitle } from '@contests/types/auth';
+import { RoleTitle, USER_ROLE_UPDATED_EVENT } from '@contests/types/auth';
 import { getUsers } from '@contests/utils';
 import {
   Injectable,
@@ -7,6 +7,7 @@ import {
   UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma } from '@prisma/auth-service';
 
 import { PrismaService } from '../app/prisma.service';
@@ -16,7 +17,8 @@ import { PasswordService } from '../authentication/password.service';
 export class UserService {
   constructor(
     private prisma: PrismaService,
-    private readonly passwordService: PasswordService
+    private passwordService: PasswordService,
+    private eventEmitter: EventEmitter2
   ) {
     /*  this.prisma.user.deleteMany().then(() => {
       this.seedUsers();
@@ -171,10 +173,25 @@ export class UserService {
         },
       };
     }
-    return this.prisma.user.update({
+    const result = await this.prisma.user.update({
       data: payload,
       where,
+      include: {
+        profile: {
+          include: { subscription: { include: { memberShipOn: true } } },
+        },
+      },
     });
+
+    // TODO Notify also teacher if student choose it as instructor
+    this.eventEmitter.emit(USER_ROLE_UPDATED_EVENT, {
+      role,
+      profileId: result.profile.id,
+      membershipId: result.profile.subscription?.id,
+      planId: result.profile.subscription?.memberShipOn.id,
+      membershipPeriod: result.profile.subscription?.memberShipOn.period,
+    });
+    return result;
   }
 
   /**

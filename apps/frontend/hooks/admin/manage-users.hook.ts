@@ -207,7 +207,7 @@ export const useUpdateUsers = () => {
     }
   };
 
-  const onUserRoleChange = (value: boolean, id: string) => {
+  const onTeacherRoleChange = (value: boolean, id: string) => {
     try {
       const role = value ? RoleTitle.GoldenTeacher : RoleTitle.Teacher;
       UpdateUserMutation({
@@ -224,5 +224,5 @@ export const useUpdateUsers = () => {
     }
   };
 
-  return { loading, onUserStateChange, onUserRoleChange };
+  return { loading, onUserStateChange, onTeacherRoleChange };
 };

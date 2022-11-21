@@ -10,6 +10,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/auth-service';
 
 import { PrismaService } from '../app/prisma.service';
+import { OnEvent } from '@nestjs/event-emitter';
+import {
+  MembershipStatus,
+  RoleTitle,
+  TeacherRoleMutationEvent,
+  USER_ROLE_UPDATED_EVENT,
+} from '@contests/types/auth';
 
 @Injectable()
 export class ProfileService {
@@ -143,27 +150,83 @@ export class ProfileService {
     where: Prisma.ProfileWhereUniqueInput;
     data: UpdateTeacherSubscriptionDto;
   }) {
-    const { membershipId, planId, membershipStatus, ...rest } = params.data;
+    return this.updateSubscription(params);
+  }
 
+  /**
+   * Update Teacher subscription when Admin change his role.
+   *
+   * @param payload: TeacherRoleMutationEvent
+   *
+   * @returns  Promise<Profile>
+   */
+  @OnEvent(USER_ROLE_UPDATED_EVENT)
+  async onAdminUpdateUserRole(payload: TeacherRoleMutationEvent) {
+    if ([RoleTitle.GOLDEN_TEACHER, RoleTitle.TEACHER].includes(payload.role)) {
+      const isGold = RoleTitle.GOLDEN_TEACHER === payload.role;
+      const { membershipId, planId, profileId, membershipPeriod } = payload;
+      const where: Prisma.ProfileWhereUniqueInput = { id: profileId };
+      const data = {
+        membershipId,
+        planId,
+        membershipStatus: isGold
+          ? MembershipStatus.ACTIVE
+          : MembershipStatus.CANCELED,
+        startDate: isGold ? new Date() : null,
+        endDate: isGold
+          ? new Date(Date.now() + membershipPeriod * 24 * 60 * 60 * 1000)
+          : null,
+      };
+      return this.updateSubscription({ where, data });
+    }
+  }
+
+  /**
+   *
+   * @param params
+   * @returns
+   */
+  private async updateSubscription(params: {
+    where: Prisma.ProfileWhereUniqueInput;
+    data: UpdateTeacherSubscriptionDto;
+  }) {
+    console.log(params);
+    const {
+      membershipId,
+      planId,
+      membershipStatus,
+      disconnect,
+      ...rest
+    } = params.data;
     const { where } = params;
+
     const user: Prisma.ProfileUpdateInput = {
-      subscription: {
-        connectOrCreate: {
-          create: {
-            ...rest,
-            status: membershipStatus,
-            memberShipOn: {
-              connect: {
-                id: planId,
+      subscription: disconnect
+        ? {
+            delete: true,
+          }
+        : {
+            upsert: {
+              create: {
+                ...rest,
+                status: membershipStatus,
+                memberShipOn: {
+                  connect: {
+                    id: planId,
+                  },
+                },
+              },
+              update: {
+                ...rest,
+                status: membershipStatus,
+                memberShipOn: {
+                  connect: {
+                    id: planId,
+                  },
+                },
               },
             },
           },
-          where: {
-            id: membershipId,
-            profileId: where.id,
-          },
-        },
-      },
     };
 
     try {

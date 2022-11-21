@@ -44,7 +44,7 @@ const ManageInstructors = () => {
   const userSnap = useSnapshot(UsersState);
   const [visible, setVisible] = useState(false);
   const [profileKey, setProfileKey] = useState<number>(null);
-  const { onUserRoleChange, onUserStateChange, loading: l } = useUpdateUsers();
+  const { onTeacherRoleChange, onUserStateChange, loading: l } = useUpdateUsers();
 
   const showDrawer = (key: number) => {
     setVisible(true);
@@ -164,7 +164,7 @@ const ManageInstructors = () => {
             checkedChildren="معلم ذهبي"
             defaultChecked={record.role.title === RoleTitle.GoldenTeacher}
             checked={record.role.title === RoleTitle.GoldenTeacher}
-            onChange={(value) => onUserRoleChange(value, record.id)}
+            onChange={(value) => onTeacherRoleChange(value, record.id)}
             loading={l}
           />
         );

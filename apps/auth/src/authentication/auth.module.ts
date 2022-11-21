@@ -33,6 +33,7 @@ import { PasswordService } from './password.service';
     PasswordService,
     NonceService,
     PrismaService,
+    UserService,
   ],
 })
 export class AuthModule {}

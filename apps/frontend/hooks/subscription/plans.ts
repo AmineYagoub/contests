@@ -1,64 +1,131 @@
 import {
   Teacher,
+  Membership,
+  MembershipStatus,
   SubscriptionPlan,
   useFindAllSubscriptionPlansQuery,
   useUpdateTeacherSubscriptionMutation,
-  MembershipStatus,
   useFindMembershipByProfileIdQuery,
 } from '@/graphql/graphql';
 import { Logger } from '@/utils/app';
 import { AuthState } from '@/valtio/auth.state';
-import { useState } from 'react';
+import { SubscriptionPlanActions } from '@/valtio/plans.state';
+import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 
 export const useSubscriptionPlans = () => {
-  const [showPaymentDetails, setShowPaymentDetails] = useState(false);
-  const profile = useSnapshot(AuthState).user.profile as Teacher;
-  const { data, loading } = useFindAllSubscriptionPlansQuery();
+  const profile = useSnapshot(AuthState).user?.profile as Teacher;
+  const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan>(null);
+
+  const openSubscriptionForm = (el: SubscriptionPlan) => {
+    SubscriptionPlanActions.setSubscriptionFormOpen(true);
+    setSelectedPlan(el);
+  };
+
+  const closeSubscriptionForm = () => {
+    SubscriptionPlanActions.setSubscriptionFormOpen(false);
+    setSelectedPlan(null);
+  };
+
+  const openMemberShipStatus = () => {
+    SubscriptionPlanActions.setMembershipDetailsOpen(true);
+  };
+
+  const closeMemberShipStatus = () => {
+    SubscriptionPlanActions.setMembershipDetailsOpen(false);
+    SubscriptionPlanActions.setSubscriptionFormOpen(false);
+    setSelectedPlan(null);
+  };
+
+  const { data, loading } = useFindAllSubscriptionPlansQuery({
+    skip: !!profile,
+  });
+
   const {
     data: membershipData,
     loading: membershipLoad,
+    refetch: refetchMembership,
   } = useFindMembershipByProfileIdQuery({
     variables: {
-      id: profile.id,
+      id: profile?.id,
     },
+    skip: !!profile,
   });
+
+  useEffect(() => {
+    SubscriptionPlanActions.setQueryLoading(true);
+    if (membershipData?.findMembershipByProfileId) {
+      SubscriptionPlanActions.setQueryLoading(false);
+      SubscriptionPlanActions.setMembershipPlan(
+        membershipData?.findMembershipByProfileId as Membership
+      );
+    }
+  }, [membershipData]);
+
+  const refetchData = () => {
+    SubscriptionPlanActions.setQueryLoading(true);
+    refetchMembership()
+      .then(({ data }) => {
+        SubscriptionPlanActions.setMembershipPlan(
+          data?.findMembershipByProfileId as Membership
+        );
+      })
+      .finally(() => {
+        SubscriptionPlanActions.setQueryLoading(false);
+      });
+  };
 
   const [
     UpdateTeacherSubscriptionMutation,
     { loading: submitWait, error },
   ] = useUpdateTeacherSubscriptionMutation();
 
-  const openPaymentDetails = () => {
-    setShowPaymentDetails(true);
+  const closeAllAndRefetch = async () => {
+    closeMemberShipStatus();
+    refetchData();
   };
 
-  const submitSubscription = async (plan: SubscriptionPlan) => {
+  const submitSubscription = async (
+    plan: SubscriptionPlan,
+    disconnect = false
+  ) => {
     try {
-      const data = await UpdateTeacherSubscriptionMutation({
+      const { data } = await UpdateTeacherSubscriptionMutation({
         variables: {
           id: profile.id,
           input: {
             planId: plan.id,
             membershipStatus: MembershipStatus.Unpaid,
+            disconnect,
           },
         },
       });
-      console.log(data);
+      if (data?.updateTeacherSubscription) {
+        SubscriptionPlanActions.setMembershipPlan(
+          data?.updateTeacherSubscription.subscription as Membership
+        );
+        disconnect ? closeAllAndRefetch() : openMemberShipStatus();
+      }
     } catch (error) {
       Logger.log(error);
     }
   };
 
-  return {
-    data,
+  const methods = {
     submitSubscription,
-    loading: loading || membershipLoad,
-    submitWait,
+    closeMemberShipStatus,
+    openMemberShipStatus,
+    openSubscriptionForm,
+    closeSubscriptionForm,
+  };
+
+  return {
     error,
-    showPaymentDetails,
-    openPaymentDetails,
-    membership: membershipData?.findMembershipByProfileId,
-    personalImage: profile.personalImage,
+    data: data?.findAllSubscriptionPlans,
+    methods,
+    submitWait,
+    selectedPlan,
+    loading: loading || membershipLoad,
+    personalImage: profile?.personalImage,
   };
 };

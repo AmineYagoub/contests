@@ -1,27 +1,38 @@
 import { Alert, Button, Drawer, Typography } from 'antd';
 import { SendOutlined, WhatsAppOutlined } from '@ant-design/icons';
 import { SubscriptionPlan } from '@/graphql/graphql';
-import { useSubscriptionPlans } from '@/hooks/subscription/plans';
+import MembershipDetails from './MembershipDetails';
+import { useSnapshot } from 'valtio';
+import { SubscriptionPlanState } from '@/valtio/plans.state';
+import { ApolloError } from '@apollo/client';
 
 const { Title, Paragraph } = Typography;
 
 const SubscribeTeacherForm = ({
-  visible,
+  error,
   plan,
   onClose,
+  onCloseMemberShip,
+  submitSubscription,
+  submitWait,
+  personalImage,
 }: {
-  visible: boolean;
   plan: SubscriptionPlan;
   onClose: () => void;
+  onCloseMemberShip: () => void;
+  error: ApolloError;
+  submitSubscription: (e: SubscriptionPlan) => void;
+  submitWait: boolean;
+  personalImage: string;
 }) => {
-  const { submitSubscription, submitWait, error } = useSubscriptionPlans();
+  const subscriptionSnap = useSnapshot(SubscriptionPlanState);
   return (
     <Drawer
       title='ترقية العضوية'
       placement='left'
       closable={false}
       onClose={onClose}
-      open={visible}
+      open={subscriptionSnap.subscriptionForm}
       width={720}
       destroyOnClose
       extra={
@@ -75,6 +86,11 @@ const SubscribeTeacherForm = ({
           showIcon
         />
       )}
+
+      <MembershipDetails
+        onClose={onCloseMemberShip}
+        personalImage={personalImage}
+      />
     </Drawer>
   );
 };

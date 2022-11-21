@@ -8,6 +8,7 @@ query FindMembershipByProfileId($id: String!) {
     created
     updated
     memberShipOn {
+      id
       title
       subTitle
       price
