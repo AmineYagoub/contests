@@ -1,9 +1,9 @@
 import { Tabs } from 'antd';
 import { useSnapshot } from 'valtio';
 
-import UserDetails from '@/components/profile/user/UserDetails';
-import UserDocuments from '@/components/profile/user/UserDocuments';
-import UserPassword from '@/components/profile/user/UserPassword';
+import UserDetails from '@/components/profile/common/UserDetails';
+import UserDocuments from '@/components/profile/student/documents/UserDocuments';
+import UserPassword from '@/components/profile/common/UserPassword';
 import { RoleTitle, User } from '@/graphql/graphql';
 import ProfileLayout from '@/layout/ProfileLayout';
 import { AuthState } from '@/valtio/auth.state';

@@ -1,4 +1,5 @@
 import { Logger } from '@/utils/app';
+import { UsersActions } from '@/valtio/user.state';
 import { Form, Select } from 'antd';
 import Image from 'next/image';
 import { FocusEvent, useEffect, useState } from 'react';
@@ -6,8 +7,10 @@ import { FocusEvent, useEffect, useState } from 'react';
 const { Option } = Select;
 
 type CountriesType = {
-  name: string;
-  flag: string;
+  label: string;
+  code: string;
+  flag?: string;
+  phone?: string;
 };
 
 const SelectCountry = ({ name, label, multiple = false }) => {
@@ -18,15 +21,23 @@ const SelectCountry = ({ name, label, multiple = false }) => {
     if (countries.length === 0) {
       fetch(process.env.NEXT_PUBLIC_COUNTRIES_ENDPOINT)
         .then((res) => res.json())
-        .then((data) => {
-          const c = data.map((country) => ({
-            name: country.name.common,
-            flag: country.flags.png,
+        .then(({ data }) => {
+          const c = data.map((country: CountriesType) => ({
+            label: country.label,
+            flag: country.flag,
+          }));
+
+          const phones = data.map((country: CountriesType) => ({
+            phone: country.phone,
+            flag: country.flag,
           }));
           setCountries(c);
           setCountriesStor(c);
+          UsersActions.setPhoneCodes(phones);
         })
         .catch((e) => Logger.log(e));
+    } else {
+      setCountries(countriesStor);
     }
   };
 
@@ -40,7 +51,7 @@ const SelectCountry = ({ name, label, multiple = false }) => {
     if (newValue) {
       setCountries(
         countriesStor?.filter((country) =>
-          country.name.toLowerCase().match(newValue.toLowerCase())
+          country.label.toLowerCase().match(newValue.toLowerCase())
         )
       );
     } else {
@@ -72,16 +83,16 @@ const SelectCountry = ({ name, label, multiple = false }) => {
         notFoundContent={null}
       >
         {countries?.map((country) => (
-          <Option key={country.name} value={country.name}>
+          <Option key={country.label} value={country.label}>
             <Image
               loading="lazy"
               width="20"
               height="12"
               src={country.flag}
-              alt={country.name}
+              alt={country.label}
             />
             <b style={{ margin: '0 5px', display: 'inline-block' }}>
-              {country.name}
+              {country.label}
             </b>
           </Option>
         ))}

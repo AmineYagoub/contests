@@ -6,8 +6,8 @@ import {
 } from '@/graphql/graphql';
 import { Logger } from '@/utils/app';
 import { config } from '@/config/index';
-import { LoadingType } from '@/components/profile/user/DocumentCard';
 import { AuthActions } from '@/valtio/auth.state';
+import { LoadingType } from '@/components/profile/student/documents/DocumentCard';
 
 type DocumentProps = {
   url: string;

@@ -16,6 +16,13 @@ import theme from '@/config/theme';
 import { LoadingOutlined } from '@ant-design/icons';
 import { ApolloProvider } from '@apollo/client';
 import { CacheProvider, EmotionCache } from '@emotion/react';
+import {
+  App,
+  FindAppConfigDocument,
+  FindAppConfigQuery,
+  FindAppConfigQueryVariables,
+} from '@/graphql/graphql';
+import { appDataVar } from '@/utils/app';
 
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 Spin.setDefaultIndicator(<Spin indicator={antIcon} />);
@@ -46,6 +53,16 @@ export default function CustomApp(props: MyAppProps) {
   }, []);
 
   const apolloClient = useApollo(pageProps);
+
+  (async () => {
+    const { data } = await apolloClient.query<
+      FindAppConfigQuery,
+      FindAppConfigQueryVariables
+    >({
+      query: FindAppConfigDocument,
+    });
+    appDataVar(data?.findAppConfig as App);
+  })();
 
   return (
     <CacheProvider value={emotionCache}>

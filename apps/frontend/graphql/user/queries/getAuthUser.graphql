@@ -37,6 +37,19 @@ query GetAuthUser {
           phoneCode
         }
         personalImage
+        subscription {
+          id
+          status
+          startDate
+          endDate
+          created
+          renewCount
+          memberShipOn {
+            id
+            title
+            price
+          }
+        }
       }
     }
   }

@@ -1,9 +1,5 @@
 import { config } from '@/config/index';
-import {
-  CloudUploadOutlined,
-  DeleteOutlined,
-  FileSyncOutlined,
-} from '@ant-design/icons';
+import { CloudUploadOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Button, List, Popconfirm, Space, Tooltip, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import type { UploadChangeParam, UploadFile } from 'antd/es/upload/interface';
@@ -87,7 +83,7 @@ const Updater: FC<DocumentUpdaterProps> = ({
           <Tooltip title="تحديث">
             <Button
               shape="circle"
-              icon={<FileSyncOutlined />}
+              icon={<CloudUploadOutlined />}
               loading={loading[name]}
             />
           </Tooltip>

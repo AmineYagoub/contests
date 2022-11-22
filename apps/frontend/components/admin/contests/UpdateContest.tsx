@@ -45,7 +45,7 @@ const UpdateContest = ({
         placement="left"
         closable={false}
         onClose={onClose}
-        visible={visible}
+        open={visible}
         width={720}
         destroyOnClose
         extra={

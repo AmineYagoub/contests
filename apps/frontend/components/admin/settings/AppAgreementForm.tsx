@@ -1,29 +1,38 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { Form, Button, notification } from 'antd';
+import { Jodit } from 'jodit';
+import Head from 'next/head';
+import { useUpdateAppConfigMutation } from '@/graphql/graphql';
+import { useReactiveVar } from '@apollo/client';
+import { appDataVar } from '@/utils/app';
 
-import SunEditor from 'suneditor-react';
-import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
-
-const AppAgreementForm = ({ agreement }: { agreement: string }) => {
+const AppAgreementForm = () => {
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [editorState, setEditorState] = useState<string>();
+  const siteData = useReactiveVar(appDataVar);
+  const [content, setContent] = useState<string>('');
+  const [UpdateAppConfigMutation, { loading }] = useUpdateAppConfigMutation();
+
+  useEffect(() => {
+    const editor = Jodit?.make('#editor', {
+      height: 650,
+    });
+    editor.value = siteData?.agreement;
+    editor.e.on('change', () => setContent(editor.value));
+    return () => {
+      editor.destruct();
+    };
+  }, []);
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
   };
 
-  const handleEditorState = (v: string) => {
-    setEditorState(v);
-  };
-
   const onFinish = async () => {
     try {
-      /* setLoading(true);
-      const res = await UpdateAgreementMutation({
+      const res = await UpdateAppConfigMutation({
         variables: {
           input: {
-            agreement: editorState,
+            agreement: content,
           },
         },
       });
@@ -32,20 +41,24 @@ const AppAgreementForm = ({ agreement }: { agreement: string }) => {
           message: `تم الحفظ بنجاح`,
           description: `تم تحديث إتفاقية الإستخدام بنجاح`,
         });
-      } */
+      }
     } catch (error) {
       console.error(error);
       notification.error({
         message: `حدث خطأ`,
         description: `حدث خطأ غير متوقع يرجى إعادة المحاولة`,
       });
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
     <>
+      <Head>
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/jodit@3.23.2/build/jodit.es2018.min.css"
+        />
+      </Head>
       <h2 style={{ padding: '1em' }}>تعديل محتوى إتفاقية الإستخدام</h2>
       <Form
         wrapperCol={{ span: 18 }}
@@ -57,40 +70,7 @@ const AppAgreementForm = ({ agreement }: { agreement: string }) => {
         onSubmitCapture={onSubmit}
       >
         <Form.Item label="المحتوى" required name="agreement">
-          <SunEditor
-            onChange={handleEditorState}
-            autoFocus
-            height="500px"
-            setOptions={{
-              buttonList: [
-                ['undo', 'redo'],
-                ['preview', 'print'],
-                ['fullScreen', 'showBlocks', 'codeView'],
-                ['paragraphStyle', 'blockquote'],
-                ['fontColor', 'hiliteColor', 'textStyle'],
-                ['removeFormat'],
-                ['outdent', 'indent'],
-                ['align', 'horizontalRule', 'list', 'lineHeight'],
-                ['bold', 'underline', 'italic'],
-                ['font', 'fontSize', 'formatBlock'],
-              ],
-              // plugins: [font] set plugins, all plugins are set by default
-              rtl: true,
-              formats: [
-                'p',
-                'div',
-                'blockquote',
-                'pre',
-                'h1',
-                'h2',
-                'h3',
-                'h4',
-                'h5',
-                'h6',
-                // "blockquote": range format, "pre": free format, "Other tags": replace format
-              ],
-            }}
-          />
+          <textarea id="editor" name="editor"></textarea>
         </Form.Item>
 
         <Button

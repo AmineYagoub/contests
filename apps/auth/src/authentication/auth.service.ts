@@ -97,7 +97,7 @@ export class AuthService {
       },
       profile: {
         create: {
-          personalImage: `https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user`,
+          personalImage: '/icons/user-avatar.svg',
           dateOfBirth: new Date(),
         },
       },

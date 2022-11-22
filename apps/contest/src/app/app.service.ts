@@ -6,12 +6,14 @@ import { PrismaService } from '../app/prisma.service';
 @Injectable()
 export class AppService {
   constructor(private prisma: PrismaService) {
-    prisma.appConfig.findFirst().then((res) => {
+    this.find().then((res) => {
+      console.log(res);
       if (!res) {
-        prisma.appConfig.create({
-          data: {
-            agreement: 'سياسة الإستخدام',
-          },
+        this.create({
+          title: 'منصة ألمبياد النحو العربي',
+          agreement: 'سياسة الإستخدام',
+          description: 'وصف مختصر للموقع',
+          contactEmail: 'admin@olympiadnahw.com',
         });
       }
     });
@@ -57,7 +59,7 @@ export class AppService {
    */
   async find() {
     try {
-      return this.prisma.appConfig.findFirst();
+      return this.prisma.appConfig.findUnique({ where: { id: '1' } });
     } catch (error) {
       Logger.error(error.message);
     }

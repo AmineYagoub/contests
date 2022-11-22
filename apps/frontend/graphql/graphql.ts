@@ -1222,7 +1222,7 @@ export type FindUserQuery = { __typename?: 'Query', findUser: { __typename?: 'Us
 export type GetAuthUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth?: any | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null } | null } };
+export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth?: any | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, startDate?: any | null, endDate?: any | null, created: any, renewCount: number, memberShipOn: { __typename?: 'SubscriptionPlan', id: string, title: string, price: number } } | null } | null } };
 
 export type PaginateUsersQueryVariables = Exact<{
   params: UserPaginationDto;
@@ -2823,6 +2823,19 @@ export const GetAuthUserDocument = gql`
           phoneCode
         }
         personalImage
+        subscription {
+          id
+          status
+          startDate
+          endDate
+          created
+          renewCount
+          memberShipOn {
+            id
+            title
+            price
+          }
+        }
       }
     }
   }

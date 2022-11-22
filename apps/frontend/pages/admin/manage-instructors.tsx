@@ -18,7 +18,7 @@ import { EyeOutlined } from '@ant-design/icons';
 import { useSnapshot } from 'valtio';
 import { UsersState } from '@/valtio/user.state';
 import styled from '@emotion/styled';
-import ViewTeacherProfile from '@/components/admin/users/ViewTeacherProfile';
+import ViewTeacherProfile from '@/components/admin/users/teachers/ViewTeacherProfile';
 import { useState } from 'react';
 import DeleteUser from '@/components/admin/users/DeleteUser';
 import { TableBtn } from './dashboard';
@@ -223,23 +223,25 @@ const ManageInstructors = () => {
   ];
 
   return (
-    <StyledSection>
-      <TableBtn onClick={methods.clearAllFilters}>إعادة الضبط</TableBtn>
-      <Table
-        columns={columns}
-        dataSource={userSnap.users}
-        loading={userSnap.queryLoading}
-        size="large"
-        onChange={methods.handleTableChange}
-        pagination={methods.handlePagination}
-        style={{ minHeight: 500 }}
-      />
+    <>
+      <StyledSection>
+        <TableBtn onClick={methods.clearAllFilters}>إعادة الضبط</TableBtn>
+        <Table
+          columns={columns}
+          dataSource={userSnap.users}
+          loading={userSnap.queryLoading}
+          size="large"
+          onChange={methods.handleTableChange}
+          pagination={methods.handlePagination}
+          style={{ minHeight: 500 }}
+        />
+      </StyledSection>
       <ViewTeacherProfile
         profileKey={profileKey}
         onClose={onClose}
         visible={visible}
       />
-    </StyledSection>
+    </>
   );
 };
 

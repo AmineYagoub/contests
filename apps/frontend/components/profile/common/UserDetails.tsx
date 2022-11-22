@@ -8,7 +8,8 @@ import { useUser } from '@/hooks/profile/user.hook';
 import { formLayout } from '@/pages/auth/sign-up';
 import { studentMappedLevels } from '@/utils/mapper';
 import styled from '@emotion/styled';
-import TeacherAvatar from './TeacherAvatar';
+import TeacherAvatar from '../teacher/TeacherAvatar';
+import SelectPhone from '@/components/common/SelectPhone';
 
 const StyledForm = styled(Form)({
   maxWidth: 680,
@@ -81,39 +82,6 @@ const UserDetails = ({ user }: { user: User }) => {
       )}
 
       <SelectCountry name="country" label="الجنسية" />
-
-      <Form.Item
-        name="dateOfBirth"
-        label="تاريخ الميلاد"
-        rules={[{ required: true, message: 'يرجى كتابة تاريخ ميلادك' }]}
-      >
-        <DatePicker
-          style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}
-          showToday
-          allowClear
-        />
-      </Form.Item>
-
-      {isTeacher && (
-        <Form.Item label="رقم الهاتف">
-          <Input.Group
-            compact
-            style={{
-              display: 'inline-block',
-              width: 'calc(50% - 12px)',
-              direction: 'ltr',
-            }}
-          >
-            <Form.Item name="phoneCode" noStyle>
-              <Input style={{ width: '30%' }} placeholder="20+" />
-            </Form.Item>
-            <Form.Item name="phone" noStyle>
-              <Input style={{ width: '70%' }} />
-            </Form.Item>
-          </Input.Group>
-        </Form.Item>
-      )}
-
       {!isTeacher && (
         <Form.Item
           name="level"
@@ -125,8 +93,37 @@ const UserDetails = ({ user }: { user: User }) => {
             showArrow
             options={studentMappedLevels}
             fieldNames={{ label: 'text' }}
-            style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}
           />
+        </Form.Item>
+      )}
+
+      <Form.Item
+        name="dateOfBirth"
+        label="تاريخ الميلاد"
+        rules={[{ required: true, message: 'يرجى كتابة تاريخ ميلادك' }]}
+      >
+        <DatePicker
+          style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}
+          showToday
+          allowClear
+          dateRender={(current) => {
+            const style: React.CSSProperties = {};
+            if (current.date() === 1) {
+              style.border = '1px solid #1890ff';
+              style.borderRadius = '50%';
+            }
+            return (
+              <div className="ant-picker-cell-inner" style={style}>
+                {current.date()}
+              </div>
+            );
+          }}
+        />
+      </Form.Item>
+
+      {isTeacher && (
+        <Form.Item label="رقم الهاتف" required>
+          <SelectPhone />
         </Form.Item>
       )}
 

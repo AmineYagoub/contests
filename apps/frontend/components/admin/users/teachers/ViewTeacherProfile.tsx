@@ -1,37 +1,23 @@
 import {
-  Avatar,
   Button,
-  Card,
   Col,
   Descriptions,
   Drawer,
   Image,
-  Popover,
   Row,
-  Skeleton,
   Space,
   Switch,
   Tag,
 } from 'antd';
-import {
-  RoleTitle,
-  Student,
-  StudentLevel,
-  useFindUserQuery,
-  User,
-} from '@/graphql/graphql';
+import { Teacher, useFindUserQuery } from '@/graphql/graphql';
 import moment from 'moment-timezone';
 import styled from '@emotion/styled';
-import {
-  getMapperLabel,
-  rolesMappedTypes,
-  studentMappedLevels,
-} from '@/utils/mapper';
-import ViewStudentSkeleton from './ViewStudentSkeleton';
+import ViewUserSkeleton from '../ViewUserSkeleton';
 import { MailOutlined, WarningOutlined } from '@ant-design/icons';
 import StyledButton from '@/components/common/StyledButton';
 import { useUpdateUsers } from '@/hooks/admin/manage-users.hook';
-import { memo, useEffect, useState } from 'react';
+import MembershipData from './MembershipData';
+import ViewTeacherStudents from './ViewTeacherStudents';
 
 const StyledDescriptions = styled(Descriptions)({
   table: {
@@ -40,55 +26,7 @@ const StyledDescriptions = styled(Descriptions)({
   },
 });
 
-const UserRole = memo<{ user: User }>(function UserRole({ user }) {
-  const role = getMapperLabel(rolesMappedTypes, user.role.title);
-  const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState(false);
-
-  const handleOpenChange = (newOpen: boolean) => {
-    setOpen(newOpen);
-  };
-  useEffect(() => {
-    let t: NodeJS.Timeout;
-    if (open) {
-      t = setTimeout(() => {
-        setLoading(false);
-      }, 500);
-    }
-    return () => {
-      clearTimeout(t);
-    };
-  }, [open]);
-  if (user.role.title === RoleTitle.StudentTeacher) {
-    const teacher = (user.profile as Student).teacher;
-    return (
-      <Popover
-        content={
-          <Card style={{ width: 300, maxHeight: 150 }}>
-            <Skeleton loading={loading} avatar active>
-              <Card.Meta
-                avatar={<Avatar src={teacher?.personalImage} />}
-                title={`${teacher?.firstName} ${teacher?.lastName}`}
-                description={teacher.country}
-              />
-            </Skeleton>
-          </Card>
-        }
-        trigger="click"
-        open={open}
-        onOpenChange={handleOpenChange}
-        style={{ width: 300, maxHeight: 150 }}
-      >
-        <Button type="link" style={{ height: 'unset', padding: 'unset' }}>
-          {role}
-        </Button>
-      </Popover>
-    );
-  }
-  return <span>{role}</span>;
-});
-
-const ViewStudentProfile = ({
+const ViewTeacherProfile = ({
   profileKey,
   visible,
   onClose,
@@ -102,21 +40,17 @@ const ViewStudentProfile = ({
     skip: !visible,
   });
   const user = data?.findUser;
-  const profile = user?.profile as Student;
-
+  const profile = user?.profile as Teacher;
   const { onUserStateChange, loading: l } = useUpdateUsers();
 
   return (
     <Drawer
-      title="البيانات الشخصية للطالب"
+      title="الصفحة الشخصية للمعلم"
       placement="left"
       closable={false}
       onClose={onClose}
       open={visible}
-      style={{ position: 'absolute' }}
-      bodyStyle={{ paddingBottom: 80 }}
-      width={1200}
-      destroyOnClose
+      width={1080}
       extra={
         <Button onClick={onClose} htmlType="reset" type="primary" ghost>
           إغلاق
@@ -124,7 +58,7 @@ const ViewStudentProfile = ({
       }
     >
       {loading || !profile ? (
-        <ViewStudentSkeleton />
+        <ViewUserSkeleton />
       ) : (
         <Row justify="space-between">
           <Col
@@ -171,7 +105,7 @@ const ViewStudentProfile = ({
             </Space>
           </Col>
           <Col span={17}>
-            <StyledDescriptions title={<h2>بيانات الطالب</h2>}>
+            <StyledDescriptions title={<h2>بيانات المعلم</h2>}>
               <Descriptions.Item label="الإسم الكامل">
                 {`${profile.firstName} ${profile.lastName}`}
               </Descriptions.Item>
@@ -194,15 +128,12 @@ const ViewStudentProfile = ({
                 </Tag>
               </Descriptions.Item>
               {/* ------------------------------------ */}
-              <Descriptions.Item label="مستوى الطالب">
-                {getMapperLabel<StudentLevel>(
-                  studentMappedLevels,
-                  profile.level
-                )}
+              <Descriptions.Item label="رقم الهاتف">
+                {profile.phone
+                  ? `${profile.phone.phone} (${profile.phone.phoneCode})`
+                  : 'غير متوفر'}
               </Descriptions.Item>
-              <Descriptions.Item label="نوع العضوية">
-                <UserRole user={user as User} />
-              </Descriptions.Item>
+
               <Descriptions.Item label="حالة العضوية">
                 <Switch
                   checkedChildren="نشط"
@@ -213,32 +144,12 @@ const ViewStudentProfile = ({
                 />
               </Descriptions.Item>
             </StyledDescriptions>
-            <StyledDescriptions title={<h2>وثائق الطالب</h2>} layout="vertical">
-              <Descriptions.Item label="إثبات الهوية">
-                {profile.birthCertImage ? (
-                  <Image
-                    src={profile.birthCertImage}
-                    alt="birthCertImage"
-                    width={64}
-                    height={64}
-                  />
-                ) : (
-                  'غير متوفر'
-                )}
-              </Descriptions.Item>
-              <Descriptions.Item label="خطاب المدرسة">
-                {profile.letterImage ? (
-                  <Image
-                    src={profile.letterImage}
-                    alt="letterImage"
-                    width={64}
-                    height={64}
-                  />
-                ) : (
-                  'غير متوفر'
-                )}
-              </Descriptions.Item>
-            </StyledDescriptions>
+            <MembershipData
+              title="الإشتراك في المنصة"
+              membershipPrams={profile.subscription}
+              profileId={profile.id}
+            />
+            <ViewTeacherStudents />
           </Col>
         </Row>
       )}
@@ -246,4 +157,4 @@ const ViewStudentProfile = ({
   );
 };
 
-export default ViewStudentProfile;
+export default ViewTeacherProfile;

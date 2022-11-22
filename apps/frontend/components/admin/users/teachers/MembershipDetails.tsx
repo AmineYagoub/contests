@@ -1,8 +1,9 @@
-import { Button, Col, Drawer, Image, Row } from 'antd';
+import { Button, Col, Drawer, Row } from 'antd';
 import PaymentDetails from './PaymentDetails';
 import MembershipData from './MembershipData';
 import { useSnapshot } from 'valtio';
 import { SubscriptionPlanState } from '@/valtio/plans.state';
+import Image from 'next/image';
 
 const MembershipDetails = ({
   onClose,

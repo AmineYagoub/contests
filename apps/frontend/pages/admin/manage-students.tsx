@@ -18,12 +18,13 @@ import { EyeOutlined } from '@ant-design/icons';
 import { useSnapshot } from 'valtio';
 import { UsersState } from '@/valtio/user.state';
 import {
+  getLevelsLabel,
   getMapperLabel,
   rolesMappedTypes,
   studentMappedLevels,
 } from '@/utils/mapper';
 import styled from '@emotion/styled';
-import ViewStudentProfile from '@/components/admin/users/ViewStudentProfile';
+import ViewStudentProfile from '@/components/admin/users/students/ViewStudentProfile';
 import { useState } from 'react';
 import DeleteUser from '@/components/admin/users/DeleteUser';
 import { TableBtn } from './dashboard';
@@ -125,7 +126,7 @@ const ManageStudents = () => {
       render: (record: User) => {
         return (
           <Tag color="blue">
-            {getMapperLabel<StudentLevel>(
+            {getLevelsLabel<StudentLevel>(
               studentMappedLevels,
               (record.profile as Student).level
             )}

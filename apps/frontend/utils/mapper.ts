@@ -8,8 +8,9 @@ import {
 } from '@/graphql/graphql';
 
 export type Mapper<T> = {
-  text: string;
   value: T;
+  text: string;
+  label?: string;
 };
 
 export const contestMappedStatus: Mapper<ContestStatus>[] = [
@@ -29,31 +30,38 @@ export const contestMappedStatus: Mapper<ContestStatus>[] = [
 
 export const studentMappedLevels: Mapper<StudentLevel>[] = [
   {
-    text: '13',
+    text: 'المستوى 13 سنة (مَن أنهى الصف السادس الابتدائي )',
+    label: 'المستوى 13 سنة',
     value: StudentLevel?.Thirteen,
   },
   {
-    text: '14',
+    text: 'المستوى 14 سنة (مَن أنهى الصف الأول الإعدادي )',
+    label: 'المستوى 14 سنة',
     value: StudentLevel?.Fourteen,
   },
   {
-    text: '15',
+    text: 'المستوى 15 سنة (مَن أنهى الصف الثاني الإعدادي )',
+    label: 'المستوى 15 سنة',
     value: StudentLevel?.Fifteen,
   },
   {
-    text: '16',
+    text: 'المستوى 16 سنة (مَن أنهى الصف الثالث الإعدادي )',
+    label: 'المستوى 16 سنة',
     value: StudentLevel?.Sixteen,
   },
   {
-    text: '17',
+    text: 'المستوى 17 سنة (مَن أنهى الصف الأول الثانوي )',
+    label: 'المستوى 17 سنة',
     value: StudentLevel?.Seventeen,
   },
   {
-    text: '18',
+    text: 'المستوى 18 سنة (مَن أنهى الصف الثاني الثانوي )',
+    label: 'المستوى 18 سنة',
     value: StudentLevel?.Eighteen,
   },
   {
-    text: '19',
+    text: 'المستوى 19 سنة (مَن يدرس في الصف الثالث الثانوي )',
+    label: 'المستوى 19 سنة',
     value: StudentLevel?.Nineteen,
   },
 ];
@@ -139,3 +147,7 @@ export const getMapperLabel = <T>(mapper: Mapper<T>[], val: T) =>
 
 export const getLevelsValues = (text: string) =>
   studentMappedLevels.find((m) => m.text === text)?.value;
+
+// Used for short student level description
+export const getLevelsLabel = <T>(mapper: Mapper<T>[], val: T) =>
+  mapper.find((m) => m.value === val)?.label;

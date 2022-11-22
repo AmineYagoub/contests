@@ -17,6 +17,7 @@ export const AuthActions = {
   setUser: (user: User) => {
     AuthState.user = user;
   },
+
   setUserAvatar: (url: string) => {
     if (AuthState.user) {
       AuthState.user.profile.personalImage = url;

@@ -14,11 +14,13 @@ import { useEffect } from 'react';
 
 import SelectCountry from '@/components/common/SelectCountry';
 import SelectTags from '@/components/common/SelectTags';
-import { Contest } from '@/graphql/graphql';
+import { Contest, RoleTitle } from '@/graphql/graphql';
 import { ContestFields } from '@/utils/fields';
 import { contestMappedTypes, studentMappedLevels } from '@/utils/mapper';
 
 import type { RangePickerProps } from 'antd/es/date-picker';
+import { useSnapshot } from 'valtio';
+import { AuthState } from '@/valtio/auth.state';
 
 /**
  * Can not select days before today and today.
@@ -59,6 +61,8 @@ const ContestForm = ({
     return () => form.resetFields();
   }, [form, record]);
 
+  const user = useSnapshot(AuthState).user;
+
   return (
     <Form
       layout="vertical"
@@ -81,17 +85,13 @@ const ContestForm = ({
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item
-            name={ContestFields.level}
-            label="المستوى المستهدف"
-            rules={[{ required: true, message: 'يرجى تحديد مستوى المسابقة' }]}
-          >
+          <Form.Item name={ContestFields.level} label="المستوى المستهدف">
             <Select
+              disabled={user?.role.title !== RoleTitle.Admin}
               mode="tags"
               allowClear
               showArrow
               options={studentMappedLevels}
-              fieldNames={{ label: 'text' }}
             />
           </Form.Item>
         </Col>
@@ -123,7 +123,7 @@ const ContestForm = ({
                 },
               ]}
             >
-              <InputNumber />
+              <InputNumber placeholder="عدد الأسئلة" />
             </Form.Item>
             <Form.Item
               name={ContestFields.mediumQuestionCount}
@@ -135,7 +135,7 @@ const ContestForm = ({
                 },
               ]}
             >
-              <InputNumber style={{ width: 105 }} />
+              <InputNumber style={{ width: 105 }} placeholder="عدد الأسئلة" />
             </Form.Item>
             <Form.Item
               name={ContestFields.hardQuestionCount}
@@ -147,7 +147,7 @@ const ContestForm = ({
                 },
               ]}
             >
-              <InputNumber />
+              <InputNumber placeholder="عدد الأسئلة" />
             </Form.Item>
           </Space>
         </Col>
@@ -191,6 +191,7 @@ const ContestForm = ({
           <SelectCountry
             name={ContestFields.countries}
             label="الدول المشاركة"
+            multiple
           />
         </Col>
         <Col span={12}>

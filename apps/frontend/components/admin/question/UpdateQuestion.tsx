@@ -42,7 +42,7 @@ const UpdateQuestion = ({
         placement="left"
         closable={false}
         onClose={onClose}
-        visible={visible}
+        open={visible}
         width={720}
         extra={
           <Space>

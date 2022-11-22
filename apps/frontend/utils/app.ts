@@ -2,6 +2,7 @@ import { ValidateErrorEntity } from 'rc-field-form/es/interface';
 import { io, Socket } from 'socket.io-client';
 
 import { makeVar, ReactiveVar } from '@apollo/client';
+import { App } from '@/graphql/graphql';
 
 export const socket = io(process.env.NEXT_PUBLIC_WS_ENDPOINT, {
   autoConnect: false,
@@ -9,6 +10,9 @@ export const socket = io(process.env.NEXT_PUBLIC_WS_ENDPOINT, {
 });
 
 export const socketVar: ReactiveVar<Socket> = makeVar(socket);
+export const appDataVar: ReactiveVar<App> = makeVar({
+  title: 'جاري التحميل',
+} as App);
 
 export const getTitleMeta = (siteTitle: string, pageTitle?: string) =>
   pageTitle ? `${siteTitle} | ${pageTitle}` : `${siteTitle}`;

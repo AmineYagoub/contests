@@ -9,8 +9,7 @@ export const users = [
     isActive: true,
     profile: {
       firstName: 'أحمد',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
+      personalImage: '/icons/user-avatar.svg',
       lastName: 'عمر',
       dateOfBirth: '1975-10-07T11:43:24.616Z',
       country: 'مصر',
@@ -26,8 +25,7 @@ export const users = [
     isActive: true,
     profile: {
       firstName: 'أحمد',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
+      personalImage: '/icons/user-avatar.svg',
       lastName: 'عمر',
       dateOfBirth: '1975-10-07T11:43:24.616Z',
       country: 'مصر',
@@ -38,13 +36,12 @@ export const users = [
     key: 2,
     email: 'y2@yahoo.com',
     agreement: true,
-    role: 'GOLDEN_TEACHER',
+    role: 'TEACHER',
     emailConfirmed: true,
     isActive: true,
     profile: {
       firstName: 'جمال',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
+      personalImage: '/icons/user-avatar.svg',
       lastName: 'مصطفى',
       dateOfBirth: '1982-10-07T11:43:24.616Z',
       country: 'مصر',
@@ -57,11 +54,10 @@ export const users = [
     agreement: true,
     role: 'TEACHER',
     emailConfirmed: true,
-    isActive: false,
+    isActive: true,
     profile: {
       firstName: 'جمال',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
+      personalImage: '/icons/user-avatar.svg',
       lastName: 'مديوني',
       dateOfBirth: '1981-10-07T11:43:24.616Z',
       country: 'مصر',
@@ -72,13 +68,12 @@ export const users = [
     key: 4,
     email: 'y4@yahoo.com',
     agreement: true,
-    role: 'GOLDEN_TEACHER',
-    emailConfirmed: false,
-    isActive: false,
+    role: 'TEACHER',
+    emailConfirmed: true,
+    isActive: true,
     profile: {
       firstName: 'جمال',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
+      personalImage: '/icons/user-avatar.svg',
       lastName: 'الفاروق',
       dateOfBirth: '1981-10-07T11:43:24.616Z',
       country: 'الجزائر',
@@ -90,12 +85,11 @@ export const users = [
     email: 'y5@yahoo.com',
     agreement: true,
     role: 'TEACHER',
-    emailConfirmed: false,
-    isActive: false,
+    emailConfirmed: true,
+    isActive: true,
     profile: {
       firstName: 'عمر',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
+      personalImage: '/icons/user-avatar.svg',
       lastName: 'الفاروق',
       dateOfBirth: '1981-10-07T11:43:24.616Z',
       country: 'العراق',
@@ -108,11 +102,10 @@ export const users = [
     agreement: true,
     role: 'TEACHER',
     emailConfirmed: true,
-    isActive: false,
+    isActive: true,
     profile: {
       firstName: 'كمال',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
+      personalImage: '/icons/user-avatar.svg',
       lastName: 'عبد الباقي',
       dateOfBirth: '1985-10-07T11:43:24.616Z',
       country: 'مصر',
@@ -124,12 +117,11 @@ export const users = [
     email: 'y7@yahoo.com',
     agreement: true,
     role: 'TEACHER',
-    emailConfirmed: false,
-    isActive: false,
+    emailConfirmed: true,
+    isActive: true,
     profile: {
       firstName: 'محمد',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
+      personalImage: '/icons/user-avatar.svg',
       lastName: 'فيصل',
       dateOfBirth: '1985-10-07T11:43:24.616Z',
       country: 'مصر',
@@ -140,13 +132,12 @@ export const users = [
     key: 8,
     email: 'y8@yahoo.com',
     agreement: true,
-    role: 'GOLDEN_TEACHER',
+    role: 'TEACHER',
     emailConfirmed: true,
-    isActive: false,
+    isActive: true,
     profile: {
       firstName: 'محمد',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
+      personalImage: '/icons/user-avatar.svg',
       lastName: 'مصطفى',
       dateOfBirth: '1985-10-07T11:43:24.616Z',
       country: 'مصر',
@@ -162,8 +153,7 @@ export const users = [
     isActive: true,
     profile: {
       firstName: 'تركي',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
+      personalImage: '/icons/user-avatar.svg',
       lastName: 'محمود',
       dateOfBirth: '1980-10-07T11:43:24.616Z',
       country: 'مصر',
@@ -179,8 +169,7 @@ export const users = [
     isActive: true,
     profile: {
       firstName: 'عبد الحميد',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
+      personalImage: '/icons/user-avatar.svg',
       lastName: 'المنشاوي',
       dateOfBirth: '1980-10-07T11:43:24.616Z',
       country: 'الأردن',
@@ -196,8 +185,7 @@ export const users = [
     isActive: true,
     profile: {
       firstName: 'وهيبة',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
+      personalImage: '/icons/user-avatar.svg',
       lastName: 'مصطفى',
       dateOfBirth: '1980-10-07T11:43:24.616Z',
       country: 'مصر',
@@ -209,7 +197,7 @@ export const users = [
     email: 'y12@yahoo.com',
     agreement: true,
     role: 'STUDENT',
-    emailConfirmed: false,
+    emailConfirmed: true,
     isActive: true,
     profile: {
       firstName: 'هيبه',
@@ -217,12 +205,9 @@ export const users = [
       country: 'مصر',
       level: 'Fifteen',
       dateOfBirth: '2012-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -239,12 +224,9 @@ export const users = [
       country: 'مصر',
       level: 'Fifteen',
       dateOfBirth: '2012-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -261,12 +243,9 @@ export const users = [
       country: 'مصر',
       level: 'Fifteen',
       dateOfBirth: '2012-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -283,12 +262,9 @@ export const users = [
       country: 'مصر',
       level: 'Fifteen',
       dateOfBirth: '2012-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -305,12 +281,9 @@ export const users = [
       country: 'مصر',
       level: 'Fifteen',
       dateOfBirth: '2012-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -327,12 +300,9 @@ export const users = [
       country: 'مصر',
       level: 'Fifteen',
       dateOfBirth: '2012-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -349,12 +319,9 @@ export const users = [
       country: 'مصر',
       level: 'Fifteen',
       dateOfBirth: '2010-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -363,7 +330,7 @@ export const users = [
     email: 'y19@yahoo.com',
     agreement: true,
     role: 'STUDENT',
-    emailConfirmed: false,
+    emailConfirmed: true,
     isActive: true,
     profile: {
       firstName: 'ماهر',
@@ -371,12 +338,9 @@ export const users = [
       country: 'مصر',
       level: 'Fifteen',
       dateOfBirth: '2010-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -385,7 +349,7 @@ export const users = [
     email: 'y20@yahoo.com',
     agreement: true,
     role: 'STUDENT',
-    emailConfirmed: false,
+    emailConfirmed: true,
     isActive: true,
     profile: {
       firstName: 'مدحت',
@@ -393,12 +357,9 @@ export const users = [
       country: 'مصر',
       level: 'Sixteen',
       dateOfBirth: '2010-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -407,7 +368,7 @@ export const users = [
     email: 'y21@yahoo.com',
     agreement: true,
     role: 'STUDENT',
-    emailConfirmed: false,
+    emailConfirmed: true,
     isActive: true,
     profile: {
       firstName: 'ماهر',
@@ -415,12 +376,9 @@ export const users = [
       country: 'مصر',
       level: 'Sixteen',
       dateOfBirth: '2010-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -429,7 +387,7 @@ export const users = [
     email: 'y22@yahoo.com',
     agreement: true,
     role: 'STUDENT',
-    emailConfirmed: false,
+    emailConfirmed: true,
     isActive: true,
     profile: {
       firstName: 'مسعد',
@@ -437,12 +395,9 @@ export const users = [
       country: 'مصر',
       level: 'Sixteen',
       dateOfBirth: '2009-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -451,7 +406,7 @@ export const users = [
     email: 'y23@yahoo.com',
     agreement: true,
     role: 'STUDENT',
-    emailConfirmed: false,
+    emailConfirmed: true,
     isActive: true,
     profile: {
       firstName: 'ماهر',
@@ -459,12 +414,9 @@ export const users = [
       country: 'الكويت',
       level: 'Sixteen',
       dateOfBirth: '2009-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -473,7 +425,7 @@ export const users = [
     email: 'y24@yahoo.com',
     agreement: true,
     role: 'STUDENT',
-    emailConfirmed: false,
+    emailConfirmed: true,
     isActive: true,
     profile: {
       firstName: 'ماهر',
@@ -481,12 +433,9 @@ export const users = [
       country: 'الكويت',
       level: 'Sixteen',
       dateOfBirth: '2009-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -503,12 +452,9 @@ export const users = [
       country: 'الكويت',
       level: 'Sixteen',
       dateOfBirth: '2009-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -525,12 +471,9 @@ export const users = [
       country: 'الكويت',
       level: 'Sixteen',
       dateOfBirth: '2009-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -540,19 +483,16 @@ export const users = [
     agreement: true,
     role: 'STUDENT',
     emailConfirmed: true,
-    isActive: false,
+    isActive: true,
     profile: {
       firstName: 'راكان',
       lastName: 'مصطفى',
       country: 'الكويت',
       level: 'Sixteen',
       dateOfBirth: '2009-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -562,19 +502,16 @@ export const users = [
     agreement: true,
     role: 'STUDENT_TEACHER',
     emailConfirmed: true,
-    isActive: false,
+    isActive: true,
     profile: {
       firstName: 'جعفر',
       lastName: 'مصطفى',
       country: 'الكويت',
       level: 'Sixteen',
       dateOfBirth: '2009-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -584,19 +521,16 @@ export const users = [
     agreement: true,
     role: 'STUDENT_TEACHER',
     emailConfirmed: true,
-    isActive: false,
+    isActive: true,
     profile: {
       firstName: 'ماهر',
       lastName: 'جعفر',
       country: 'الكويت',
       level: 'Eighteen',
       dateOfBirth: '2009-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -606,19 +540,16 @@ export const users = [
     agreement: true,
     role: 'STUDENT_TEACHER',
     emailConfirmed: true,
-    isActive: false,
+    isActive: true,
     profile: {
       firstName: 'ماهر',
       lastName: 'زبير',
       country: 'الكويت',
       level: 'Eighteen',
       dateOfBirth: '2009-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -628,19 +559,16 @@ export const users = [
     agreement: true,
     role: 'STUDENT_TEACHER',
     emailConfirmed: true,
-    isActive: false,
+    isActive: true,
     profile: {
       firstName: 'زبير',
       lastName: 'مصطفى',
       country: 'مصر',
       level: 'Seventeen',
       dateOfBirth: '2008-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -650,19 +578,16 @@ export const users = [
     agreement: true,
     role: 'STUDENT_TEACHER',
     emailConfirmed: true,
-    isActive: false,
+    isActive: true,
     profile: {
       firstName: 'ماهر',
       lastName: 'رضوان',
       country: 'مصر',
       level: 'Seventeen',
       dateOfBirth: '2008-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -672,19 +597,16 @@ export const users = [
     agreement: true,
     role: 'STUDENT_TEACHER',
     emailConfirmed: true,
-    isActive: false,
+    isActive: true,
     profile: {
       firstName: 'رضوان',
       lastName: 'مصطفى',
       country: 'العراق',
       level: 'Seventeen',
       dateOfBirth: '2008-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -694,19 +616,16 @@ export const users = [
     agreement: true,
     role: 'STUDENT_TEACHER',
     emailConfirmed: true,
-    isActive: false,
+    isActive: true,
     profile: {
       firstName: 'حسين',
       lastName: 'مصطفى',
       country: 'العراق',
       level: 'Seventeen',
       dateOfBirth: '2008-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -715,7 +634,7 @@ export const users = [
     email: 'y35@yahoo.com',
     agreement: true,
     role: 'STUDENT_TEACHER',
-    emailConfirmed: false,
+    emailConfirmed: true,
     isActive: true,
     profile: {
       firstName: 'حسين',
@@ -723,12 +642,9 @@ export const users = [
       country: 'العراق',
       level: 'Seventeen',
       dateOfBirth: '2008-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -737,7 +653,7 @@ export const users = [
     email: 'y36@yahoo.com',
     agreement: true,
     role: 'STUDENT_TEACHER',
-    emailConfirmed: false,
+    emailConfirmed: true,
     isActive: true,
     profile: {
       firstName: 'ماهر',
@@ -745,12 +661,9 @@ export const users = [
       country: 'العراق',
       level: 'Eighteen',
       dateOfBirth: '2008-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -759,7 +672,7 @@ export const users = [
     email: 'y37@yahoo.com',
     agreement: true,
     role: 'STUDENT_TEACHER',
-    emailConfirmed: false,
+    emailConfirmed: true,
     isActive: true,
     profile: {
       firstName: 'حسين',
@@ -767,12 +680,9 @@ export const users = [
       country: 'مصر',
       level: 'Eighteen',
       dateOfBirth: '2008-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -781,7 +691,7 @@ export const users = [
     email: 'y38@yahoo.com',
     agreement: true,
     role: 'STUDENT_TEACHER',
-    emailConfirmed: false,
+    emailConfirmed: true,
     isActive: true,
     profile: {
       firstName: 'أجود',
@@ -789,12 +699,9 @@ export const users = [
       country: 'الجزائر',
       level: 'Eighteen',
       dateOfBirth: '2008-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -803,7 +710,7 @@ export const users = [
     email: 'y39@yahoo.com',
     agreement: true,
     role: 'STUDENT_TEACHER',
-    emailConfirmed: false,
+    emailConfirmed: true,
     isActive: true,
     profile: {
       firstName: 'ماهر',
@@ -811,12 +718,9 @@ export const users = [
       country: 'الجزائر',
       level: 'Eighteen',
       dateOfBirth: '2008-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -833,12 +737,9 @@ export const users = [
       country: 'الجزائر',
       level: 'Eighteen',
       dateOfBirth: '2008-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
   {
@@ -855,12 +756,9 @@ export const users = [
       country: 'الجزائر',
       level: 'Eighteen',
       dateOfBirth: '2007-10-07T11:43:24.616Z',
-      personalImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=user',
-      birthCertImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=bcer',
-      letterImage:
-        'https://ui-avatars.com/api/?background=FFFFAA&color=114d8b&name=lter',
+      personalImage: '/icons/user-avatar.svg',
+      birthCertImage: '/icons/empty-doc.svg',
+      letterImage: '/icons/empty-doc.svg',
     },
   },
 ];

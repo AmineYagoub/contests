@@ -25,12 +25,8 @@ const CreateContest = ({
       placement="right"
       closable={false}
       onClose={onClose}
-      visible={visible}
-      getContainer={false}
-      style={{ position: 'absolute' }}
-      bodyStyle={{ paddingBottom: 80 }}
+      open={visible}
       width={720}
-      destroyOnClose
       extra={
         <Space>
           <Button onClick={onClose} htmlType="reset">

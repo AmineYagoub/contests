@@ -7,7 +7,7 @@ const StyledParagraph = styled(Skeleton)({
   },
 });
 
-const ViewStudentSkeleton = () => {
+const ViewUserSkeleton = () => {
   return (
     <Row>
       <Col
@@ -43,4 +43,4 @@ const ViewStudentSkeleton = () => {
   );
 };
 
-export default ViewStudentSkeleton;
+export default ViewUserSkeleton;

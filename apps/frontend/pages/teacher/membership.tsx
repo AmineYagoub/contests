@@ -1,8 +1,8 @@
-import SubscribeTeacherForm from '@/components/admin/users/SubscribeTeacherForm';
-import MembershipDetails from '@/components/admin/users/MembershipDetails';
+import SubscribeTeacherForm from '@/components/admin/users/teachers/SubscribeTeacherForm';
+import MembershipDetails from '@/components/admin/users/teachers/MembershipDetails';
 import Loading from '@/components/common/Loading';
 import StyledButton from '@/components/common/StyledButton';
-import { Membership, SubscriptionPlan } from '@/graphql/graphql';
+import { SubscriptionPlan } from '@/graphql/graphql';
 import { useSubscriptionPlans } from '@/hooks/subscription/plans';
 import ProfileLayout from '@/layout/ProfileLayout';
 import { formatPrice } from '@/utils/app';

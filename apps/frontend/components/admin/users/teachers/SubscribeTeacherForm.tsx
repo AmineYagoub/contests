@@ -1,5 +1,5 @@
 import { Alert, Button, Drawer, Typography } from 'antd';
-import { SendOutlined, WhatsAppOutlined } from '@ant-design/icons';
+import { CheckCircleFilled, WhatsAppOutlined } from '@ant-design/icons';
 import { SubscriptionPlan } from '@/graphql/graphql';
 import MembershipDetails from './MembershipDetails';
 import { useSnapshot } from 'valtio';
@@ -62,7 +62,7 @@ const SubscribeTeacherForm = ({
       <Button
         onClick={() => submitSubscription(plan)}
         type="primary"
-        icon={<SendOutlined />}
+        icon={<CheckCircleFilled />}
         htmlType="submit"
         form="create-question"
         loading={submitWait}

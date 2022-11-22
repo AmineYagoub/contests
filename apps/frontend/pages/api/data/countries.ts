@@ -253,7 +253,12 @@ const countries: readonly CountryType[] = [
   { code: 'ZW', label: 'زيمبابوي', phone: '263' },
 ];
 
+const response = countries.map((el) => ({
+  flag: `https://flagcdn.com/${el.code.toLowerCase()}.svg`,
+  ...el,
+}));
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  return res.status(200).json({ status: 'ok', data: countries });
+  return res.status(200).json({ status: 'ok', data: response });
 };
 export default handler;

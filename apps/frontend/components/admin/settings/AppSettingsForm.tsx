@@ -1,41 +1,44 @@
-import React, { FormEvent, useState, useEffect } from 'react';
+import { FormEvent, useEffect } from 'react';
 import { Form, Input, Button, notification } from 'antd';
+import { appDataVar, Logger } from '@/utils/app';
+import { App, useUpdateAppConfigMutation } from '@/graphql/graphql';
+import { useReactiveVar } from '@apollo/client';
 
 const AppSettingsForm = () => {
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+  const siteData = useReactiveVar(appDataVar);
+  const [UpdateAppConfigMutation, { loading }] = useUpdateAppConfigMutation();
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
   };
 
   useEffect(() => {
-    form.setFieldsValue({});
-  }, []);
+    if (siteData) {
+      form.setFieldsValue(siteData);
+    }
+  }, [siteData, form]);
 
   const onFinish = async (inputs) => {
     try {
-      /* setLoading(true);
-      const { data } = await UpdateAppDataMutation({
+      const { data } = await UpdateAppConfigMutation({
         variables: {
           input: inputs,
         },
       });
-      appDataVar(data?.updateAppData);
+      appDataVar(data?.updateAppConfig as App);
       if (data) {
         notification.success({
           message: `تم الحفظ بنجاح`,
           description: `تم تحديث الإعدادات العامة للموقع بنجاح`,
         });
-      } */
+      }
     } catch (error) {
-      console.error(error);
+      Logger.log(error);
       notification.error({
         message: `حدث خطأ`,
         description: `حدث خطأ غير متوقع يرجى إعادة المحاولة`,
       });
-    } finally {
-      setLoading(false);
     }
   };
   return (
@@ -53,11 +56,11 @@ const AppSettingsForm = () => {
         onSubmitCapture={onSubmit}
       >
         <Form.Item label="إسم الموقع" name="title" required>
-          <Input allowClear />
+          <Input />
         </Form.Item>
 
         <Form.Item label="وصف الموقع" required name="description">
-          <Input.TextArea allowClear />
+          <Input.TextArea />
         </Form.Item>
 
         <h2 style={{ padding: '1em', textDecoration: 'underline' }}>
@@ -68,35 +71,32 @@ const AppSettingsForm = () => {
           name="contactEmail"
           required
         >
-          <Input allowClear type="email" />
+          <Input type="email" />
         </Form.Item>
 
         <Form.Item label="رابط صفحة الموقع على تويتر" name="twitterUrl">
-          <Input allowClear placeholder="https://twitter.com/username" />
+          <Input placeholder="https://twitter.com/username" />
         </Form.Item>
 
         <Form.Item label="رابط صفحة الموقع على أنستغرام" name="instagramUrl">
-          <Input allowClear placeholder="https://instagram.com/username" />
+          <Input placeholder="https://instagram.com/username" />
         </Form.Item>
 
         <Form.Item label="رابط صفحة الموقع على تلغرام" name="telegramUrl">
-          <Input allowClear placeholder="https://t.me/username" />
+          <Input placeholder="https://t.me/username" />
         </Form.Item>
         <Form.Item label="رابط صفحة الموقع على فايسبوك" name="facebookUrl">
-          <Input
-            allowClear
-            placeholder="https://www.facebook.com/add/username"
-          />
+          <Input placeholder="https://www.facebook.com/add/username" />
         </Form.Item>
 
         <h2 style={{ padding: '1em', textDecoration: 'underline' }}>
           تطبيقات الهاتف
         </h2>
         <Form.Item label="رابط تطبيق الموقع على غوغل بلاي" name="playStorUrl">
-          <Input allowClear placeholder="https://play.google.com/xxx" />
+          <Input placeholder="https://play.google.com/xxx" />
         </Form.Item>
         <Form.Item label="رابط تطبيق الموقع على آب ستور" name="appStorUrl">
-          <Input allowClear placeholder="https://apps.apple.com/xxx" />
+          <Input placeholder="https://apps.apple.com/xxx" />
         </Form.Item>
 
         <Button

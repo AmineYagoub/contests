@@ -3,8 +3,14 @@ import { proxy } from 'valtio';
 import { User } from '@/graphql/graphql';
 import { cloneDeep } from '@apollo/client/utilities';
 
+export type PhoneType = {
+  phone: string;
+  flag: string;
+};
+
 interface UsersStorage {
   user: User;
+  phoneCodes: PhoneType[];
   users: User[];
   queryLoading: boolean;
   mutationLoading: boolean;
@@ -13,6 +19,7 @@ interface UsersStorage {
 const init: UsersStorage = {
   user: null,
   users: [],
+  phoneCodes: [],
   mutationLoading: false,
   queryLoading: false,
 };
@@ -25,6 +32,9 @@ export const UsersActions = {
   },
   setUsersData: (users: User[]) => {
     UsersState.users = users;
+  },
+  setPhoneCodes: (data: PhoneType[]) => {
+    UsersState.phoneCodes = data;
   },
   setQueryLoading: (loading: boolean) => {
     UsersState.queryLoading = loading;

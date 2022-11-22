@@ -43,7 +43,7 @@ const ManageSettings = () => {
     {
       label: 'إتفاقية الإستخدام',
       key: AppTabs.AGREEMENT,
-      children: <AppAgreementForm agreement="" />,
+      children: <AppAgreementForm />,
     },
     {
       label: 'خطط الإشتراك',
