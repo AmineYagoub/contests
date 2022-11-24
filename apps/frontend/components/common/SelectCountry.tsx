@@ -19,7 +19,7 @@ const SelectCountry = ({ name, label, multiple = false }) => {
 
   const handleFetchCountries = (e: FocusEvent<HTMLElement, Element> | null) => {
     if (countries.length === 0) {
-      fetch(process.env.NEXT_PUBLIC_COUNTRIES_ENDPOINT)
+      fetch('/api/data/countries')
         .then((res) => res.json())
         .then(({ data }) => {
           const c = data.map((country: CountriesType) => ({
