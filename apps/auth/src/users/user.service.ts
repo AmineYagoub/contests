@@ -23,6 +23,11 @@ export class UserService {
     /*  this.prisma.user.deleteMany().then(() => {
       this.seedUsers();
     }); */
+    /* this.prisma.user.findFirst().then((user) => {
+      if (!user) {
+        this.seedUsers();
+      }
+    }); */
   }
 
   /**

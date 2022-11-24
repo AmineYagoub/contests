@@ -22,7 +22,9 @@ RUN adduser -S nextjs -u 1001
 
 COPY --from=builder --chown=nextjs:nodejs /app/dist/apps/frontend ./
 RUN rm -f ./package.json
-RUN npm init -y && npm pkg set scripts.start="next start" && npm i @ant-design/icons @apollo/client @emotion/react @emotion/server @emotion/styled @nrwl/next@14 antd antd-img-crop core-js deepmerge echarts echarts-for-react formidable framer-motion jszip minio moment-timezone multiparty next@12 next-transpile-modules react react-dom socket.io-client stylis-plugin-rtl valtio
+COPY --chown=nextjs:nodejs apps/frontend/package.json ./package.json
+RUN npm install
+
 USER nextjs
 
 EXPOSE 3000

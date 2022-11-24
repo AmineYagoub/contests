@@ -2,8 +2,8 @@ import { Col, Row } from 'antd';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import dynamic from 'next/dynamic';
 
-import AnswersResult from '@/components/profile/result/AnswersResult';
-import TotalResultDetails from '@/components/profile/result/TotalResultDetails';
+import AnswersResult from '@/components/profile/student/result/AnswersResult';
+import TotalResultDetails from '@/components/profile/student/result/TotalResultDetails';
 import { initializeApollo } from '@/config/createGraphQLClient';
 import {
   FindByIdForReviewDocument,
@@ -16,7 +16,7 @@ import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 const PerformanceGauge = dynamic(
-  () => import('@/components/profile/result/PerformanceGauge'),
+  () => import('@/components/profile/student/result/PerformanceGauge'),
   {
     ssr: false,
   }

@@ -7,7 +7,6 @@ import { PrismaService } from '../app/prisma.service';
 export class AppService {
   constructor(private prisma: PrismaService) {
     this.find().then((res) => {
-      console.log(res);
       if (!res) {
         this.create({
           title: 'منصة ألمبياد النحو العربي',

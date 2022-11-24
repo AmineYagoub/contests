@@ -15,6 +15,9 @@ const AppAgreementForm = () => {
   useEffect(() => {
     const editor = Jodit?.make('#editor', {
       height: 650,
+      showCharsCounter: false,
+      showWordsCounter: false,
+      showXPathInStatusbar: false,
     });
     editor.value = siteData?.agreement;
     editor.e.on('change', () => setContent(editor.value));
