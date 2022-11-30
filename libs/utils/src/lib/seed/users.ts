@@ -22,7 +22,7 @@ export const users = [
     key: 1,
     email: 'y1@yahoo.com',
     agreement: true,
-    role: RoleTitle.GOLDEN_TEACHER,
+    role: RoleTitle.TEACHER,
     emailConfirmed: true,
     isActive: true,
     profile: {

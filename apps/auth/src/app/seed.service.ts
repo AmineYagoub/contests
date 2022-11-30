@@ -53,30 +53,30 @@ export class SeedService {
   }
 
   /**
-   * Seed User roles to
+   * Seed User roles
    */
   private async seedRoles() {
     for (const [, val] of Object.entries(RoleTitle)) {
-      await this.prisma.role.upsert({
-        create: {
+      await this.prisma.role.create({
+        data: {
           title: val,
           permissions: {
-            createMany: {
-              skipDuplicates: true,
-              data: this.buildPermission(val),
-            },
+            connect: this.buildPermission(val),
           },
         },
-        update: {
+      });
+    }
+  }
+
+  /**
+   * Seed User Permission
+   */
+  private async seedPermissions() {
+    for (const [, val] of Object.entries(PermissionTitle)) {
+      await this.prisma.permission.create({
+        data: {
           title: val,
-          permissions: {
-            createMany: {
-              skipDuplicates: true,
-              data: this.buildPermission(val),
-            },
-          },
         },
-        where: { title: val },
       });
     }
   }
@@ -86,9 +86,24 @@ export class SeedService {
    * @param role RoleTitle
    * @returns
    */
-  private buildPermission(role: RoleTitle) {
+  private buildPermission(role: string) {
     let permission = [];
     switch (role) {
+      case RoleTitle.GOLDEN_TEACHER:
+        permission = [
+          PermissionTitle.ACCESS_TEACHER_DASHBOARD,
+          PermissionTitle.CREATE_CONTEST,
+        ];
+        break;
+      case RoleTitle.TEACHER:
+        permission = [PermissionTitle.ACCESS_TEACHER_DASHBOARD];
+        break;
+      case RoleTitle.STUDENT:
+        permission = [PermissionTitle.ACCESS_STUDENT_DASHBOARD];
+        break;
+      case RoleTitle.STUDENT_TEACHER:
+        permission = [PermissionTitle.ACCESS_STUDENT_DASHBOARD];
+        break;
       case RoleTitle.ADMIN:
         permission = [
           PermissionTitle.ACCESS_DASHBOARD,
@@ -101,27 +116,15 @@ export class SeedService {
           PermissionTitle.VIEW_ROLES_PERMISSIONS,
         ];
         break;
-      case RoleTitle.GOLDEN_TEACHER:
-        permission = [
-          PermissionTitle.ACCESS_TEACHER_DASHBOARD,
-          PermissionTitle.CREATE_CONTEST,
-        ];
-        break;
-      case RoleTitle.TEACHER:
-        permission = [PermissionTitle.ACCESS_TEACHER_DASHBOARD];
-        break;
-      case RoleTitle.STUDENT:
-      case RoleTitle.STUDENT_TEACHER:
-        permission = [PermissionTitle.ACCESS_STUDENT_DASHBOARD];
-        break;
     }
-    return permission.map((el) => ({ title: el }));
+    return permission?.map((el) => ({ title: el }));
   }
 
   async seed() {
     await this.prisma.permission.deleteMany();
     await this.prisma.user.deleteMany();
     await this.prisma.role.deleteMany();
+    await this.seedPermissions();
     await this.seedRoles();
     await this.seedUsers();
   }

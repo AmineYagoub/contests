@@ -17,8 +17,17 @@ model Permission {
   description           String?   @db.VarChar(250) @default("")
   created               DateTime  @default(now())
   updated               DateTime  @updatedAt
-  roleId                String
-  role                  Role      @relation(fields: [roleId], references: [id] , onDelete: NoAction)
+  roles                 Role[]
+}
+
+model Role {
+  id                    String    @id @default(uuid())
+  title                 String    @db.VarChar(100) @unique
+  description           String?   @db.VarChar(250) @default("")
+  created               DateTime  @default(now())
+  updated               DateTime  @updatedAt
+  permissions           Permission[]
+  users                 User[]
 }
 
 model Membership {
@@ -57,16 +66,6 @@ model SubscriptionPlans {
   updated               DateTime  @updatedAt
 
   memberships           Membership[]
-}
-
-model Role {
-  id                    String    @id @default(uuid())
-  title                 String    @db.VarChar(100) @unique
-  description           String?   @db.VarChar(250) @default("")
-  created               DateTime  @default(now())
-  updated               DateTime  @updatedAt
-  permissions           Permission[]
-  users                 User[]
 }
 
 model User {
