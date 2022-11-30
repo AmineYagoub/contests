@@ -7,3 +7,5 @@ export * from './lib/questions/pagination.dto';
 export * from './lib/answers/create.dto';
 export * from './lib/answers/update.dto';
 export * from './lib/app/update.dto';
+export * from './lib/messages/create.dto';
+export * from './lib/messages/update.dto';

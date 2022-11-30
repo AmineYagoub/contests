@@ -6,6 +6,7 @@ import {
   IsObject,
   IsOptional,
   IsString,
+  IsUUID,
   Min,
 } from 'class-validator';
 
@@ -53,10 +54,10 @@ export class CreateContestDto {
   @IsObject()
   tags?: Prisma.TagCreateNestedManyWithoutContestsInput;
 
-  @Field(() => Int)
+  @Field()
   @IsNotEmpty()
-  @IsNumber()
-  authorId: number;
+  @IsUUID()
+  authorId: string;
 
   @Field(() => Boolean, { defaultValue: true, nullable: true })
   @IsOptional()

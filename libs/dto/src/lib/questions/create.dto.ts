@@ -4,6 +4,7 @@ import {
   IsObject,
   IsOptional,
   IsString,
+  IsUUID,
 } from 'class-validator';
 
 import { QuestionType } from '@contests/types';
@@ -67,10 +68,10 @@ export class CreateQuestionDto {
   @IsObject()
   tags?: Prisma.TagCreateNestedManyWithoutQuestionsInput;
 
-  @Field(() => Int)
+  @Field()
   @IsNotEmpty()
-  @IsNumber()
-  authorId: number;
+  @IsUUID()
+  authorId: string;
 
   @Field(() => Boolean, { defaultValue: true, nullable: true })
   @IsOptional()

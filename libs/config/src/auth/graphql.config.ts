@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { ConfigType, registerAs } from '@nestjs/config';
-
+import { ApolloServerPluginInlineTraceDisabled } from 'apollo-server-core';
 import { isProd } from '../';
 
 export const AUTH_GQL_REGISTER_KEY = 'authGQLConfig';
@@ -10,7 +10,8 @@ export const authGQLConfig = registerAs(AUTH_GQL_REGISTER_KEY, () => ({
   cors: false,
   graphiql: !isProd,
   federationMetadata: true,
-  debug: false,
+  debug: !isProd,
+  plugins: [ApolloServerPluginInlineTraceDisabled()],
   context: ({ req, res }) => ({ req, res }),
 }));
 

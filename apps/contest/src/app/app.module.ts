@@ -12,6 +12,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { AnswerModule } from '../answers/answer.module';
 
 import { ContestModule } from '../contests/contest.module';
+import { MessageModule } from '../messages/message.module';
 import { QuestionModule } from '../questions/question.module';
 import { TagModule } from '../tags/tag.module';
 import { AppResolver } from './app.resolver';
@@ -31,6 +32,7 @@ import { PrismaService } from './prisma.service';
     AnswerModule,
     ContestModule,
     QuestionModule,
+    MessageModule,
   ],
   providers: [AppResolver, AppService, PrismaService],
 })

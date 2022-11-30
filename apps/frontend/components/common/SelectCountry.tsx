@@ -1,7 +1,7 @@
+import Image from 'next/image';
+import { Form, Select } from 'antd';
 import { Logger } from '@/utils/app';
 import { UsersActions } from '@/valtio/user.state';
-import { Form, Select } from 'antd';
-import Image from 'next/image';
 import { FocusEvent, useEffect, useState } from 'react';
 
 const { Option } = Select;

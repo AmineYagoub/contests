@@ -6,12 +6,12 @@ export abstract class BaseModel {
   id: string;
 
   @Field(() => Boolean, {
-    description: 'Identifies if the Question is published or not.',
+    description: 'Identifies if the entity is published or not.',
   })
   published: boolean;
 
   @Field(() => Int, {
-    description: 'Identifies the author of the Question.',
+    description: 'Identifies the author of the entity.',
   })
   authorId: number;
 

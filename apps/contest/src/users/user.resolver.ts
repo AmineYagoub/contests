@@ -1,12 +1,11 @@
 import { Int, Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { MessageService } from '../messages/message.service';
 
 import { User } from './user.entity';
 
 @Resolver(() => User)
 export class UsersResolvers {
-  constructor() {
-    console.log();
-  }
+  constructor(private readonly messageService: MessageService) {}
 
   /**
    * Count all unread messages
@@ -16,17 +15,6 @@ export class UsersResolvers {
    */
   @ResolveField(() => Int)
   public countUnreadMessages(@Parent() user: User) {
-    return 0;
-  }
-
-  /**
-   * Count all unread notifications
-   *
-   * @param user User
-   * @returns Promise<number>
-   */
-  @ResolveField(() => Int)
-  public countUnreadNotifications(@Parent() user: User) {
-    return 0;
+    return this.messageService.countUnreadMessages(user.id);
   }
 }
