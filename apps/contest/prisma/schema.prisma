@@ -26,6 +26,28 @@ model AppConfig {
   appStorUrl        String?   @db.VarChar(255) @default("")
 }
 
+enum MessageType {
+  ANNOUNCE
+  MESSAGE
+  REPORT
+  ALERT
+  INFO
+}
+
+model Message {
+  id                String      @id @default(uuid())
+  content           String      @db.TinyText
+  sendToAll         Boolean?    @default(false)
+  published         Boolean?    @default(true)
+  authorId          String      @db.VarChar(255)
+  recipientId       String?     @db.VarChar(255) @default("")
+  viewed            Boolean?    @default(false)
+  viewers           Json        @db.Json
+  type              MessageType
+  created           DateTime    @default(now())
+  updated           DateTime    @updatedAt
+}
+
 
 model Tag {
   id                String    @id @default(uuid())
@@ -51,7 +73,7 @@ model Contest {
   participants          Json?     @db.Json
   countries             Json?     @db.Json
   published             Boolean?  @default(true)
-  authorId              Int       @db.UnsignedInt
+  authorId              String    @db.VarChar(255)
   created               DateTime  @default(now())
   updated               DateTime  @updatedAt
   tags                  Tag[]
@@ -76,7 +98,7 @@ model Question {
   usedCount         Int?      @db.UnsignedInt @default(0)
   options           Json      @db.Json
   published         Boolean?  @default(true)
-  authorId          Int       @db.UnsignedInt
+  authorId          String    @db.VarChar(255)
   created           DateTime  @default(now())
   updated           DateTime  @updatedAt
   contests          Contest[]
