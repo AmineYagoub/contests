@@ -1,10 +1,12 @@
+import { RoleTitle } from '@contests/types/auth';
+
 export const users = [
   {
     password: '12345678',
     key: 999999,
     email: 'admin@yahoo.com',
     agreement: true,
-    role: 'ADMIN',
+    role: RoleTitle.ADMIN,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -20,7 +22,7 @@ export const users = [
     key: 1,
     email: 'y1@yahoo.com',
     agreement: true,
-    role: 'TEACHER',
+    role: RoleTitle.GOLDEN_TEACHER,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -36,7 +38,7 @@ export const users = [
     key: 2,
     email: 'y2@yahoo.com',
     agreement: true,
-    role: 'TEACHER',
+    role: RoleTitle.TEACHER,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -52,7 +54,7 @@ export const users = [
     key: 3,
     email: 'y3@yahoo.com',
     agreement: true,
-    role: 'TEACHER',
+    role: RoleTitle.TEACHER,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -68,7 +70,7 @@ export const users = [
     key: 4,
     email: 'y4@yahoo.com',
     agreement: true,
-    role: 'TEACHER',
+    role: RoleTitle.TEACHER,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -84,7 +86,7 @@ export const users = [
     key: 5,
     email: 'y5@yahoo.com',
     agreement: true,
-    role: 'TEACHER',
+    role: RoleTitle.TEACHER,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -100,7 +102,7 @@ export const users = [
     key: 6,
     email: 'y6@yahoo.com',
     agreement: true,
-    role: 'TEACHER',
+    role: RoleTitle.TEACHER,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -116,7 +118,7 @@ export const users = [
     key: 7,
     email: 'y7@yahoo.com',
     agreement: true,
-    role: 'TEACHER',
+    role: RoleTitle.TEACHER,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -132,7 +134,7 @@ export const users = [
     key: 8,
     email: 'y8@yahoo.com',
     agreement: true,
-    role: 'TEACHER',
+    role: RoleTitle.TEACHER,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -148,7 +150,7 @@ export const users = [
     key: 9,
     email: 'y9@yahoo.com',
     agreement: true,
-    role: 'TEACHER',
+    role: RoleTitle.TEACHER,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -164,7 +166,7 @@ export const users = [
     key: 10,
     email: 'y10@yahoo.com',
     agreement: true,
-    role: 'TEACHER',
+    role: RoleTitle.TEACHER,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -180,7 +182,7 @@ export const users = [
     key: 11,
     email: 'y11@yahoo.com',
     agreement: true,
-    role: 'TEACHER',
+    role: RoleTitle.TEACHER,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -196,7 +198,7 @@ export const users = [
     key: 12,
     email: 'y12@yahoo.com',
     agreement: true,
-    role: 'STUDENT',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -215,7 +217,7 @@ export const users = [
     key: 13,
     email: 'y13@yahoo.com',
     agreement: true,
-    role: 'STUDENT',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -234,7 +236,7 @@ export const users = [
     key: 14,
     email: 'y14@yahoo.com',
     agreement: true,
-    role: 'STUDENT',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -253,7 +255,7 @@ export const users = [
     key: 15,
     email: 'y15@yahoo.com',
     agreement: true,
-    role: 'STUDENT',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -272,7 +274,7 @@ export const users = [
     key: 16,
     email: 'y16@yahoo.com',
     agreement: true,
-    role: 'STUDENT',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -291,7 +293,7 @@ export const users = [
     key: 17,
     email: 'y17@yahoo.com',
     agreement: true,
-    role: 'STUDENT',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -310,7 +312,7 @@ export const users = [
     key: 18,
     email: 'y18@yahoo.com',
     agreement: true,
-    role: 'STUDENT',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -329,7 +331,7 @@ export const users = [
     key: 19,
     email: 'y19@yahoo.com',
     agreement: true,
-    role: 'STUDENT',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -348,7 +350,7 @@ export const users = [
     key: 20,
     email: 'y20@yahoo.com',
     agreement: true,
-    role: 'STUDENT',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -367,7 +369,7 @@ export const users = [
     key: 21,
     email: 'y21@yahoo.com',
     agreement: true,
-    role: 'STUDENT',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -386,7 +388,7 @@ export const users = [
     key: 22,
     email: 'y22@yahoo.com',
     agreement: true,
-    role: 'STUDENT',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -405,7 +407,7 @@ export const users = [
     key: 23,
     email: 'y23@yahoo.com',
     agreement: true,
-    role: 'STUDENT',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -424,7 +426,7 @@ export const users = [
     key: 24,
     email: 'y24@yahoo.com',
     agreement: true,
-    role: 'STUDENT',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -443,7 +445,7 @@ export const users = [
     key: 25,
     email: 'y25@yahoo.com',
     agreement: true,
-    role: 'STUDENT',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -462,7 +464,7 @@ export const users = [
     key: 26,
     email: 'y26@yahoo.com',
     agreement: true,
-    role: 'STUDENT',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -481,7 +483,7 @@ export const users = [
     key: 27,
     email: 'y27@yahoo.com',
     agreement: true,
-    role: 'STUDENT',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -500,7 +502,7 @@ export const users = [
     key: 28,
     email: 'y28@yahoo.com',
     agreement: true,
-    role: 'STUDENT_TEACHER',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -519,7 +521,7 @@ export const users = [
     key: 29,
     email: 'y29@yahoo.com',
     agreement: true,
-    role: 'STUDENT_TEACHER',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -538,7 +540,7 @@ export const users = [
     key: 30,
     email: 'y30@yahoo.com',
     agreement: true,
-    role: 'STUDENT_TEACHER',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -557,7 +559,7 @@ export const users = [
     key: 31,
     email: 'y31@yahoo.com',
     agreement: true,
-    role: 'STUDENT_TEACHER',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -576,7 +578,7 @@ export const users = [
     key: 32,
     email: 'y32@yahoo.com',
     agreement: true,
-    role: 'STUDENT_TEACHER',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -595,7 +597,7 @@ export const users = [
     key: 33,
     email: 'y33@yahoo.com',
     agreement: true,
-    role: 'STUDENT_TEACHER',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -614,7 +616,7 @@ export const users = [
     key: 34,
     email: 'y34@yahoo.com',
     agreement: true,
-    role: 'STUDENT_TEACHER',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -633,7 +635,7 @@ export const users = [
     key: 35,
     email: 'y35@yahoo.com',
     agreement: true,
-    role: 'STUDENT_TEACHER',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -652,7 +654,7 @@ export const users = [
     key: 36,
     email: 'y36@yahoo.com',
     agreement: true,
-    role: 'STUDENT_TEACHER',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -671,7 +673,7 @@ export const users = [
     key: 37,
     email: 'y37@yahoo.com',
     agreement: true,
-    role: 'STUDENT_TEACHER',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -690,7 +692,7 @@ export const users = [
     key: 38,
     email: 'y38@yahoo.com',
     agreement: true,
-    role: 'STUDENT_TEACHER',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -709,7 +711,7 @@ export const users = [
     key: 39,
     email: 'y39@yahoo.com',
     agreement: true,
-    role: 'STUDENT_TEACHER',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -728,7 +730,7 @@ export const users = [
     key: 40,
     email: 'y40@yahoo.com',
     agreement: true,
-    role: 'STUDENT_TEACHER',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {
@@ -747,7 +749,7 @@ export const users = [
     key: 41,
     email: 'y41@yahoo.com',
     agreement: true,
-    role: 'STUDENT_TEACHER',
+    role: RoleTitle.STUDENT,
     emailConfirmed: true,
     isActive: true,
     profile: {

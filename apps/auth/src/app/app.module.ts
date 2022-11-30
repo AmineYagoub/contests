@@ -14,6 +14,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import { AuthModule } from '../authentication/auth.module';
+import { RoleModule } from '../authorizations/role.module';
 import { ActivationTokenModule } from '../email/activationToken.module';
 import { ProfileModule } from '../profile/profile.module';
 import { SubscriptionPlanModule } from '../subscriptionPlans/plan.module';
@@ -30,6 +31,7 @@ import { UserModule } from '../users/user.module';
     }),
     AuthModule,
     UserModule,
+    RoleModule,
     ProfileModule,
     SubscriptionPlanModule,
     ActivationTokenModule,

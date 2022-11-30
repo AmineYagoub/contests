@@ -1,13 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../app/prisma.service';
 import { Prisma } from '@prisma/auth-service';
-import { RoleTitle } from '@contests/types/auth';
 
 @Injectable()
 export class RoleService {
-  constructor(private prisma: PrismaService) {
-    this.seedRoles();
-  }
+  constructor(private prisma: PrismaService) {}
 
   /**
    * Find a Role by its unique key.
@@ -68,9 +65,5 @@ export class RoleService {
     } catch (error) {
       Logger.error(error);
     }
-  }
-
-  private seedRoles() {
-    console.log(RoleTitle);
   }
 }

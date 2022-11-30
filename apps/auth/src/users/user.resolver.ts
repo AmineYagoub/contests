@@ -11,6 +11,7 @@ import {
   Resolver,
   ResolveReference,
 } from '@nestjs/graphql';
+import { SeedService } from '../app/seed.service';
 
 import { User } from './user.model';
 import { UserService } from './user.service';
@@ -32,7 +33,16 @@ class UserPaginationResponse extends Paginate(User) {}
 
 @Resolver(() => User)
 export class UserResolver {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private seedService: SeedService
+  ) {}
+
+  @isPublic()
+  @Mutation(() => Boolean, { nullable: true })
+  async seedData() {
+    return this.seedService.seed();
+  }
 
   @isPublic()
   @Query(() => [User])

@@ -1,6 +1,5 @@
 import { UpdateUserDto } from '@contests/dto/auth';
 import { RoleTitle, USER_ROLE_UPDATED_EVENT } from '@contests/types/auth';
-import { getUsers } from '@contests/utils';
 import {
   Injectable,
   Logger,
@@ -19,57 +18,7 @@ export class UserService {
     private prisma: PrismaService,
     private passwordService: PasswordService,
     private eventEmitter: EventEmitter2
-  ) {
-    /*  this.prisma.user.deleteMany().then(() => {
-      this.seedUsers();
-    }); */
-    this.prisma.user.findFirst().then((user) => {
-      if (!user) {
-        this.seedUsers();
-      }
-    });
-  }
-
-  /**
-   * Seed dummy data.
-   *
-   * @returns
-   */
-  private async seedUsers() {
-    try {
-      const { teachers, students } = await getUsers(
-        this.passwordService.hashPassword
-      );
-      const res = [];
-      for (const user of teachers) {
-        res.push(
-          await this.prisma.user.create({
-            data: user,
-            include: { profile: true },
-          })
-        );
-      }
-      let i = 0;
-      for (const user of students) {
-        if (
-          user.role.connectOrCreate.where.title === RoleTitle.STUDENT_TEACHER
-        ) {
-          user.profile.create.teacher = {
-            connect: {
-              id: res[i].profile.id,
-            },
-          };
-        }
-        i++;
-        res.push(await this.prisma.user.create({ data: user }));
-        if (i > 5) {
-          i = 0;
-        }
-      }
-    } catch (error) {
-      Logger.log(error);
-    }
-  }
+  ) {}
 
   /**
    * Find a User by its unique key.

@@ -81,7 +81,7 @@ model User {
   updated               DateTime  @updatedAt
 
   roleId                String
-  role                  Role      @relation(fields: [roleId], references: [id])
+  role                  Role      @relation(fields: [roleId], references: [id], onDelete: NoAction)
   emailToken            EmailToken?
   profile               Profile?
 
