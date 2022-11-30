@@ -5,7 +5,7 @@ on:
       - main
   push:
     branches:
-      - dev
+      - main
 
 env:
   AUTH_TEST_TAG: amineyagoub/olympiad-auth:test
