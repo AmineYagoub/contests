@@ -13,7 +13,6 @@ query PaginateQuestions($params: QuestionPaginationDto!) {
       }
       created
       updated
-      authorId
       usedCount
     }
   }

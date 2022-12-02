@@ -39,7 +39,6 @@ query FindByIdForReview($id: String!, $answerId: String) {
     created
     updated
     status
-    authorId
     startTime
     participants
     easyQuestionCount

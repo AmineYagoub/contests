@@ -8,7 +8,6 @@ mutation UpdateContest($id: String!, $input: UpdateContestDto!) {
     created
     updated
     status
-    authorId
     startTime
     easyQuestionCount
     mediumQuestionCount

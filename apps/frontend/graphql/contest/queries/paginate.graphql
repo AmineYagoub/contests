@@ -15,7 +15,6 @@ query PaginateContests($params: ContestPaginationDto!) {
       created
       updated
       status
-      authorId
       startTime
       participants
       easyQuestionCount

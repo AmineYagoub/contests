@@ -19,7 +19,6 @@ query FindByIdForExam($id: String!) {
     created
     updated
     status
-    authorId
     startTime
     participants
     easyQuestionCount

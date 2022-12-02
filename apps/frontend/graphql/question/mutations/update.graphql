@@ -4,7 +4,6 @@ mutation UpdateQuestion($id: String!, $input: UpdateQuestionDto!) {
     type
     title
     options
-    authorId
     usedCount
     published
     created
