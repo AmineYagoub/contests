@@ -110,7 +110,9 @@ input[type='tel'] {
 }
 
 .ant-form-item-label
-  > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+  > label.ant-form-item-required:not(
+    .ant-form-item-required-mark-optional
+  )::before {
   position: absolute;
   left: -15px;
 }
