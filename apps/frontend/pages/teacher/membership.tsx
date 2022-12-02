@@ -2,7 +2,7 @@ import SubscribeTeacherForm from '@/components/admin/users/teachers/SubscribeTea
 import MembershipDetails from '@/components/admin/users/teachers/MembershipDetails';
 import Loading from '@/components/common/Loading';
 import StyledButton from '@/components/common/StyledButton';
-import { SubscriptionPlan } from '@/graphql/graphql';
+import { PermissionTitle, SubscriptionPlan } from '@/graphql/graphql';
 import { useSubscriptionPlans } from '@/hooks/subscription/plans';
 import ProfileLayout from '@/layout/ProfileLayout';
 import { formatPrice } from '@/utils/app';
@@ -12,6 +12,7 @@ import styled from '@emotion/styled';
 import { Card, Divider, Space, Badge, Typography } from 'antd';
 import { useSnapshot } from 'valtio';
 import { SubscriptionPlanState } from '@/valtio/plans.state';
+import { withAuth } from '@/components/common/withAuth';
 
 const gridStyle: React.CSSProperties = {
   width: '25%',
@@ -172,4 +173,6 @@ TeacherMembership.getLayout = (page: EmotionJSX.Element) => (
   <ProfileLayout isTeacher={true}>{page}</ProfileLayout>
 );
 
-export default TeacherMembership;
+export default withAuth(TeacherMembership, [
+  PermissionTitle.AccessTeacherDashboard,
+]);

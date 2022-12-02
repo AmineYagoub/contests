@@ -1,3 +1,4 @@
+import { withAuth } from '@/components/common/withAuth';
 import ProfileLayout from '@/layout/ProfileLayout';
 import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
@@ -8,4 +9,4 @@ const ProfileDashboard: NextPageWithLayout = () => {
 ProfileDashboard.getLayout = (page: EmotionJSX.Element) => (
   <ProfileLayout isTeacher={false}>{page}</ProfileLayout>
 );
-export default ProfileDashboard;
+export default withAuth(ProfileDashboard);

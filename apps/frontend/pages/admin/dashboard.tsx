@@ -10,7 +10,7 @@ import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
 
-const StyledCard = styled(Card)({
+export const StyledCard = styled(Card)({
   display: 'flex',
   alignItems: 'center',
   backgroundColor: '#f8f8f8 !important',
