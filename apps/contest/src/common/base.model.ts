@@ -1,4 +1,5 @@
-import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { User } from '../users/user.entity';
 
 @ObjectType({ isAbstract: true })
 export abstract class BaseModel {
@@ -10,10 +11,10 @@ export abstract class BaseModel {
   })
   published: boolean;
 
-  @Field(() => Int, {
+  @Field(() => User, {
     description: 'Identifies the author of the entity.',
   })
-  authorId: number;
+  authorId: string;
 
   @Field({
     description: 'Identifies the date and time when the object was created.',

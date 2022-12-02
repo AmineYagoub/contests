@@ -14,13 +14,20 @@ import { OnEvent } from '@nestjs/event-emitter';
 import {
   MembershipStatus,
   RoleTitle,
+  STUDENT_ADD_TEACHER_EVENT,
   TeacherRoleMutationEvent,
+  TEACHER_ACCEPT_STUDENT_EVENT,
   USER_ROLE_UPDATED_EVENT,
 } from '@contests/types/auth';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import Redis from 'ioredis';
 
 @Injectable()
 export class ProfileService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @InjectRedis() private readonly redis: Redis
+  ) {}
 
   /**
    * Find a Profile by its unique key.
@@ -66,22 +73,10 @@ export class ProfileService {
       profile: {
         update: {
           ...rest,
-          teacher: teacherId
-            ? {
-                connect: {
-                  id: teacherId,
-                },
-              }
-            : {
-                disconnect: true,
-              },
         },
       },
     };
     try {
-      if (teacherId && !isValidUUID(teacherId)) {
-        delete user.profile.update.teacher;
-      }
       const updated = await this.prisma.user.update({
         where,
         data: user,
@@ -93,9 +88,65 @@ export class ProfileService {
         },
       });
       if (isValidUUID(teacherId)) {
-        // TODO Send Notification to New Teacher
-        console.log('Send Notification to New Teacherzzz');
+        this.redis.publish(
+          STUDENT_ADD_TEACHER_EVENT,
+          JSON.stringify({
+            teacherId,
+            userId: updated.id,
+            name: `${updated.profile.firstName} ${updated.profile.lastName}`,
+          })
+        );
       }
+      return updated;
+    } catch (error) {
+      Logger.error(error);
+    }
+  }
+
+  /**
+   * Update the profile of student to connect it to chosen teacher
+   *
+   * @param params Prisma.UserUpdateInput The User data.
+   * @returns Promise<User>
+   */
+  async connectStudentToTeacher(params: {
+    where: Prisma.UserWhereUniqueInput;
+    studentId: string;
+    connect: boolean;
+  }) {
+    const { studentId, where, connect } = params;
+    const user: Prisma.UserUpdateWithoutEmailTokenInput = {
+      profile: {
+        update: {
+          students: connect
+            ? {
+                connect: {
+                  userId: studentId,
+                },
+              }
+            : {
+                disconnect: {
+                  userId: studentId,
+                },
+              },
+        },
+      },
+    };
+    try {
+      const updated = await this.prisma.user.update({
+        where,
+        data: user,
+        include: { profile: true },
+      });
+      this.redis.publish(
+        TEACHER_ACCEPT_STUDENT_EVENT,
+        JSON.stringify({
+          connect,
+          studentId,
+          teacherId: updated.id,
+          name: `${updated.profile.firstName} ${updated.profile.lastName}`,
+        })
+      );
       return updated;
     } catch (error) {
       Logger.error(error);

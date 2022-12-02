@@ -22,6 +22,15 @@ export const formatPrice = (price: number): string =>
     price / 100
   );
 
+export const deleteAllCookies = () => {
+  const cookies = document.cookie.split(';');
+  cookies.forEach(function (c) {
+    document.cookie = c
+      .replace(/^ +/, '')
+      .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
+  });
+};
+
 export class Logger {
   static log(error: Error | ValidateErrorEntity<unknown>) {
     //console.log(JSON.stringify(error, null, 2));

@@ -41,6 +41,11 @@ export const authConfig = registerAs(AUTH_CONFIG_REGISTER_KEY, () => ({
     from: process.env.MAIL_FROM || 'yagoub.2.amine@gmail.com',
     siteName: process.env.MAIL_SITE_NAME || 'منصة أولمبياد النحو العربي',
   },
+  redis: {
+    host: process.env.REDIS_HOST || 'localhost',
+    port: Number(process.env.REDIS_PORT) || 6379,
+    password: process.env.REDIS_PASSWORD || 'eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81',
+  },
 }));
 
 export type AuthConfigType = ConfigType<typeof authConfig>;

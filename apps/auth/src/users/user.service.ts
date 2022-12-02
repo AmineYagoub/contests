@@ -31,7 +31,7 @@ export class UserService {
       return await this.prisma.user.findUniqueOrThrow({
         where: input,
         include: {
-          role: true,
+          role: { include: { permissions: true } },
           profile: {
             include: {
               teacher: true,

@@ -1,0 +1,59 @@
+query PaginateMessages($params: MessagePaginationDto!) {
+  paginateMessages(params: $params) {
+    total
+    data {
+      id
+      type
+      content
+      created
+      updated
+      authorId {
+        id
+      }
+      recipientId {
+        id
+      }
+    }
+  }
+}
+
+query PaginateNotifications($params: MessagePaginationDto!) {
+  paginateNotifications(params: $params) {
+    total
+    data {
+      id
+      type
+      content
+      created
+      updated
+      authorId {
+        id
+        profile {
+          __typename
+          ... on Teacher {
+            id
+            country
+            firstName
+            lastName
+            dateOfBirth
+            personalImage
+          }
+          ... on Student {
+            id
+            level
+            country
+            created
+            firstName
+            lastName
+            personalImage
+          }
+        }
+      }
+      recipientId {
+        id
+      }
+    }
+  }
+}
+
+

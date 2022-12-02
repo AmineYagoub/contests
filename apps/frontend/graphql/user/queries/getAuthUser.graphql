@@ -7,6 +7,9 @@ query GetAuthUser {
     emailConfirmed
     role {
       title
+      permissions {
+        title
+      }
     }
     profile {
       __typename

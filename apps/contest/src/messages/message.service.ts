@@ -3,10 +3,36 @@ import { Logger, Injectable } from '@nestjs/common';
 import { PrismaService } from '../app/prisma.service';
 import { CreateMessageDto, UpdateMessageDto } from '@contests/dto';
 import { Prisma } from '@prisma/contest-service';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import Redis from 'ioredis';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
+import {
+  MessageType,
+  StudentUpdateTeacher,
+  STUDENT_ADD_TEACHER_EVENT,
+} from '@contests/types';
 
 @Injectable()
 export class MessageService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private eventEmitter: EventEmitter2,
+    @InjectRedis() private readonly client: Redis
+  ) {
+    this.client.subscribe(STUDENT_ADD_TEACHER_EVENT, (err, count) => {
+      if (err) {
+        Logger.error('Failed to subscribe: %s', err.message);
+      } else {
+        Logger.log(
+          `Subscribed successfully! to ${count} channels.`,
+          'RedisModule'
+        );
+      }
+    });
+    this.client.on('message', (channel: string, message: string) => {
+      this.eventEmitter.emit(channel, JSON.parse(message));
+    });
+  }
 
   /**
    * Find last user messages to show in MessageDropdown.
@@ -109,6 +135,102 @@ export class MessageService {
       return result;
     } catch (err) {
       Logger.error(err);
+    }
+  }
+
+  /**
+   * Paginate all messages
+   *
+   * @param params Prisma.MessagePaginationInput The pagination input.
+   * @returns Promise<Prisma.Message[]>
+   */
+  private async paginate(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.MessageWhereUniqueInput;
+    where?: Prisma.MessageWhereInput;
+  }) {
+    const { skip, take, cursor, where } = params;
+    const data = await this.prisma.$transaction([
+      this.prisma.message.count({ where }),
+      this.prisma.message.findMany({
+        skip,
+        take,
+        cursor,
+        where,
+        orderBy: { created: 'desc' },
+      }),
+    ]);
+    return {
+      total: data[0],
+      data: data[1],
+    };
+  }
+
+  /**
+   * Paginate messages
+   *
+   * @param params Prisma.MessagePaginationInput The pagination input.
+   * @returns Promise<Prisma.Message[]>
+   */
+  async paginateMessages(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.MessageWhereUniqueInput;
+    where?: Prisma.MessageWhereInput;
+  }) {
+    params.where = {
+      ...params.where,
+      type: {
+        equals: MessageType.MESSAGE,
+      },
+    };
+    return this.paginate(params);
+  }
+
+  /**
+   * Paginate Notifications
+   *
+   * @param params Prisma.MessagePaginationInput The pagination input.
+   * @returns Promise<Prisma.Message[]>
+   */
+  async paginateNotifications(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.MessageWhereUniqueInput;
+    where?: Prisma.MessageWhereInput;
+  }) {
+    params.where = {
+      ...params.where,
+      type: {
+        not: MessageType.MESSAGE,
+      },
+    };
+    return this.paginate(params);
+  }
+
+  /**
+   * Send Notification to teacher.
+   *
+   * @param payload: StudentUpdateTeacher
+   *
+   * @returns Promise<Message>
+   */
+  @OnEvent(STUDENT_ADD_TEACHER_EVENT)
+  async sendNotificationToTeacher(payload: StudentUpdateTeacher) {
+    try {
+      return this.prisma.message.create({
+        data: {
+          recipientId: payload.teacherId,
+          authorId: payload.userId,
+          sendToAll: false,
+          type: MessageType.INFO,
+          viewers: [],
+          content: `إختارك الطالب ${payload.name} لتكون مشرفا عليه`,
+        },
+      });
+    } catch (error) {
+      Logger.log(error);
     }
   }
 }

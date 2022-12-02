@@ -1,4 +1,8 @@
-import { CreateMessageDto, UpdateMessageDto } from '@contests/dto';
+import {
+  CreateMessageDto,
+  MessagePaginationDto,
+  UpdateMessageDto,
+} from '@contests/dto';
 import { BatchPayloadResult } from '@contests/types';
 import {
   Resolver,
@@ -8,6 +12,7 @@ import {
   ResolveField,
   Parent,
 } from '@nestjs/graphql';
+import { MessagePaginationResponse } from '../common/pagination.response';
 import { User } from '../users/user.entity';
 import { Message } from './message.model';
 import { MessageService } from './message.service';
@@ -36,6 +41,16 @@ export class MessageResolver {
     return this.messageService.findLastMessages(id);
   }
 
+  @Query(() => MessagePaginationResponse, { nullable: true })
+  async paginateMessages(@Args('params') params: MessagePaginationDto) {
+    return this.messageService.paginateMessages(params);
+  }
+
+  @Query(() => MessagePaginationResponse, { nullable: true })
+  async paginateNotifications(@Args('params') params: MessagePaginationDto) {
+    return this.messageService.paginateNotifications(params);
+  }
+
   @ResolveField(() => User)
   authorId(@Parent() message: Message) {
     return { __typename: 'User', id: message.authorId };
@@ -43,6 +58,6 @@ export class MessageResolver {
 
   @ResolveField(() => User)
   recipientId(@Parent() message: Message) {
-    return { __typename: 'User', id: message?.recipientId };
+    return { __typename: 'User', id: message.recipientId };
   }
 }

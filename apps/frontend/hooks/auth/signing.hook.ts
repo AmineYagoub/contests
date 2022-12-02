@@ -4,11 +4,17 @@ import { useRouter } from 'next/router';
 import { ValidateErrorEntity } from 'rc-field-form/es/interface';
 
 import { config } from '@/config/index';
-import { useSigningMutation } from '@/graphql/graphql';
+import {
+  RoleTitle,
+  useGetAuthUserLazyQuery,
+  User,
+  useSigningMutation,
+} from '@/graphql/graphql';
 import { Logger } from '@/utils/app';
 import { AppRoutes } from '@/utils/routes';
 
 import type { SigningInput } from '@/utils/types';
+import { AuthActions } from '@/valtio/auth.state';
 
 const clearErrors = (field: SigningInput, form: FormInstance<unknown>) => {
   if (field.email || field.password) {
@@ -27,6 +33,7 @@ const clearErrors = (field: SigningInput, form: FormInstance<unknown>) => {
 
 export const useSigning = (form: FormInstance<unknown>) => {
   const [SigningMutation, { loading }] = useSigningMutation();
+  const [GetAuthUserQuery] = useGetAuthUserLazyQuery();
   const router = useRouter();
 
   const onFinish = async (values: SigningInput) => {
@@ -40,11 +47,20 @@ export const useSigning = (form: FormInstance<unknown>) => {
         const { accessToken, refreshToken } = data.signing;
         localStorage.setItem(config.jwtName, accessToken);
         localStorage.setItem(config.refreshJwtName, refreshToken);
+        const {
+          data: { getAuthUser },
+        } = await GetAuthUserQuery();
+        AuthActions.setUser(getAuthUser as User);
+        const path =
+          getAuthUser.role.title === RoleTitle.Admin
+            ? AppRoutes.AdminManageDashboard
+            : [RoleTitle.GoldenTeacher, RoleTitle.Teacher].includes(
+                getAuthUser.role.title
+              )
+            ? AppRoutes.TeacherDashboard
+            : AppRoutes.StudentDashboard;
         router.push({
-          pathname: AppRoutes.StudentDashboard,
-          query: {
-            from: 'login',
-          },
+          pathname: path,
         });
       }
     } catch (error) {

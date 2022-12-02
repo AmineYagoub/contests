@@ -1,29 +1,37 @@
 import { notification, Spin } from 'antd';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { config } from '@/config/index';
 import {
   PermissionTitle,
-  RoleTitle,
   useGetAuthUserLazyQuery,
   User,
 } from '@/graphql/graphql';
 import AuthLayout from '@/layout/HomeLayout';
-import { Logger } from '@/utils/app';
+import { deleteAllCookies, Logger } from '@/utils/app';
 import { AppRoutes } from '@/utils/routes';
-import { AuthActions } from '@/valtio/auth.state';
+import { AuthActions, AuthState } from '@/valtio/auth.state';
+import { useSnapshot } from 'valtio';
+import { NextPageWithLayout } from '@/utils/types';
 
 export function withAuth<P>(
-  WrappedComponent: React.ComponentType<P>,
+  WrappedComponent: NextPageWithLayout,
   permissions?: PermissionTitle[]
 ) {
   const ComponentWithPermissions = (props: P) => {
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(true);
     const [GetAuthUserQuery] = useGetAuthUserLazyQuery();
+    const user = useSnapshot(AuthState).user as User;
 
     useEffect(() => {
+      const logout = () => {
+        localStorage.clear();
+        deleteAllCookies();
+        AuthActions.setUser(null);
+        router.push(AppRoutes.SignIn);
+      };
       const jwt = localStorage.getItem(config.jwtName);
       if (!jwt) {
         notification.error({
@@ -33,43 +41,47 @@ export function withAuth<P>(
         router.push(AppRoutes.SignIn);
         return;
       }
-      GetAuthUserQuery()
-        .then(({ data }) => {
-          if (!data?.getAuthUser) {
-            router.push(AppRoutes.SignIn);
-            return;
-          }
-          const user = data.getAuthUser as User;
-          AuthActions.setUser(user);
-          if (router.query?.from === 'login') {
-            const path =
-              user.role.title === RoleTitle.Admin
-                ? AppRoutes.AdminManageDashboard
-                : [RoleTitle.GoldenTeacher, RoleTitle.Teacher].includes(
-                    user.role.title
-                  )
-                ? AppRoutes.TeacherDashboard
-                : AppRoutes.StudentDashboard;
-            router.push({
-              pathname: path,
-            });
-          }
-        })
-        .catch((error) => {
-          router.push(AppRoutes.SignIn);
-          Logger.log(error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }, [GetAuthUserQuery, router]);
 
+      if (!user) {
+        GetAuthUserQuery()
+          .then(({ data }) => {
+            if (!data?.getAuthUser) {
+              logout();
+              return;
+            }
+            const u = data.getAuthUser as User;
+            AuthActions.setUser(u);
+          })
+          .catch((error) => {
+            logout();
+            Logger.log(error);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      } else {
+        if (
+          permissions &&
+          !user.role.permissions.some((el) => permissions.includes(el.title))
+        ) {
+          notification.warning({
+            message: 'لا يمكنك الوصول لهذه الصفحة!',
+            description: 'لا تمتلك الصلاحيات الكافية للوصول لهذه الصفحة.',
+          });
+          router.push('/');
+          return;
+        }
+        setLoading(false);
+      }
+    }, [GetAuthUserQuery, router, user]);
+
+    const getLayout = WrappedComponent.getLayout;
     return loading ? (
       <AuthLayout>
         <Spin style={{ display: 'block', margin: '5em auto' }} size="large" />
       </AuthLayout>
     ) : (
-      <WrappedComponent {...props} />
+      getLayout(<WrappedComponent {...props} />)
     );
   };
   return ComponentWithPermissions;

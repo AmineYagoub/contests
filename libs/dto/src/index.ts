@@ -9,3 +9,4 @@ export * from './lib/answers/update.dto';
 export * from './lib/app/update.dto';
 export * from './lib/messages/create.dto';
 export * from './lib/messages/update.dto';
+export * from './lib/messages/pagination.dto';

@@ -58,6 +58,20 @@ export class ProfileResolver {
     });
   }
 
+  @isPublic()
+  @Mutation(() => Teacher)
+  async connectStudentToTeacher(
+    @Args('id') id: string,
+    @Args('studentId') studentId: string,
+    @Args('connect', { type: () => Boolean }) connect: boolean
+  ) {
+    return this.profileService.connectStudentToTeacher({
+      studentId,
+      connect,
+      where: { id },
+    });
+  }
+
   @Mutation(() => User)
   async updateStudentDocuments(
     @Args('id') id: string,
