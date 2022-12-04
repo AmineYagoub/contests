@@ -71,7 +71,7 @@ export default function CustomApp(props: MyAppProps) {
       </Head>
       <ApolloProvider client={apolloClient}>
         <ConfigProvider locale={ar} direction="rtl">
-          {getLayout(<Component {...pageProps} />)}
+          <Component {...pageProps} />
         </ConfigProvider>
       </ApolloProvider>
     </CacheProvider>

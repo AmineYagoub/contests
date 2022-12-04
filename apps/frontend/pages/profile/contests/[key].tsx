@@ -6,9 +6,14 @@ import { useEffect } from 'react';
 import ContestLoadingHeader from '@/components/contest/ContestLoadingHeader';
 import ContestPageHeader from '@/components/contest/ContestPageHeader';
 import ContestStarter from '@/components/contest/ContestStarter';
-import { Contest, useFindByIdForExamLazyQuery } from '@/graphql/graphql';
+import {
+  Contest,
+  PermissionTitle,
+  useFindByIdForExamLazyQuery,
+} from '@/graphql/graphql';
 import { ContestActions } from '@/valtio/contest.state';
 import styled from '@emotion/styled';
+import { withAuth } from '@/components/common/withAuth';
 
 const { Content } = Layout;
 const StyledContent = styled(Content)({
@@ -80,5 +85,6 @@ const StartContestPage: NextPage = () => {
     </StyledLayout>
   );
 };
-
-export default StartContestPage;
+export default withAuth(StartContestPage, [
+  PermissionTitle.AccessStudentDashboard,
+]);

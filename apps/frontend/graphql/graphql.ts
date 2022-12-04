@@ -300,7 +300,8 @@ export enum MessageType {
   Announce = 'ANNOUNCE',
   Info = 'INFO',
   Message = 'MESSAGE',
-  Report = 'REPORT'
+  Report = 'REPORT',
+  Request = 'REQUEST'
 }
 
 export type Mutation = {
@@ -969,6 +970,7 @@ export type UpdateStudentDto = {
   lastName: Scalars['String'];
   level: StudentLevel;
   role: RoleTitle;
+  /** if student already connected with one teacher we should get teacher ID otherwise the validation fail */
   teacherId?: InputMaybe<Scalars['String']>;
 };
 
@@ -1092,6 +1094,8 @@ export type WhereUserArgs = {
   lastName?: InputMaybe<Scalars['String']>;
   level?: InputMaybe<StudentLevel>;
   role: Array<RoleTitle>;
+  /** if student already connected with one teacher we should get teacher ID otherwise the validation fail */
+  teacherId?: InputMaybe<Scalars['String']>;
 };
 
 export type CreateAnswerMutationVariables = Exact<{
@@ -1240,7 +1244,7 @@ export type PaginateNotificationsQueryVariables = Exact<{
 }>;
 
 
-export type PaginateNotificationsQuery = { __typename?: 'Query', paginateNotifications?: { __typename?: 'MessagePaginationResponse', total: number, data?: Array<{ __typename?: 'Message', id: string, type: MessageType, content: string, created: any, updated: any, authorId: { __typename?: 'User', id: string, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, created: any, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null } | null }, recipientId?: { __typename?: 'User', id: string } | null }> | null } | null };
+export type PaginateNotificationsQuery = { __typename?: 'Query', paginateNotifications?: { __typename?: 'MessagePaginationResponse', total: number, data?: Array<{ __typename?: 'Message', id: string, type: MessageType, content: string, created: any, updated: any, authorId: { __typename?: 'User', id: string, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, created: any, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | { __typename: 'Teacher', id: string, country?: string | null, created: any, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null } | null }, recipientId?: { __typename?: 'User', id: string } | null }> | null } | null };
 
 export type CreateSubscriptionPlanMutationVariables = Exact<{
   input: CreateSubscriptionPlansDto;
@@ -2223,11 +2227,15 @@ export const PaginateNotificationsDocument = gql`
       updated
       authorId {
         id
+        role {
+          title
+        }
         profile {
           __typename
           ... on Teacher {
             id
             country
+            created
             firstName
             lastName
             dateOfBirth

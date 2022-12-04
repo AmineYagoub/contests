@@ -38,6 +38,8 @@ export class UpdateStudentDto {
 
   @Field({
     nullable: true,
+    description:
+      'if student already connected with one teacher we should get teacher ID otherwise the validation fail',
   })
   @isStudentHasTeacher('role', {
     message: 'teacherId_invalid',

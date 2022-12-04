@@ -3,36 +3,11 @@ import { Logger, Injectable } from '@nestjs/common';
 import { PrismaService } from '../app/prisma.service';
 import { CreateMessageDto, UpdateMessageDto } from '@contests/dto';
 import { Prisma } from '@prisma/contest-service';
-import { InjectRedis } from '@liaoliaots/nestjs-redis';
-import Redis from 'ioredis';
-import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
-import {
-  MessageType,
-  StudentUpdateTeacher,
-  STUDENT_ADD_TEACHER_EVENT,
-} from '@contests/types';
+import { MessageType } from '@contests/types';
 
 @Injectable()
 export class MessageService {
-  constructor(
-    private prisma: PrismaService,
-    private eventEmitter: EventEmitter2,
-    @InjectRedis() private readonly client: Redis
-  ) {
-    this.client.subscribe(STUDENT_ADD_TEACHER_EVENT, (err, count) => {
-      if (err) {
-        Logger.error('Failed to subscribe: %s', err.message);
-      } else {
-        Logger.log(
-          `Subscribed successfully! to ${count} channels.`,
-          'RedisModule'
-        );
-      }
-    });
-    this.client.on('message', (channel: string, message: string) => {
-      this.eventEmitter.emit(channel, JSON.parse(message));
-    });
-  }
+  constructor(private prisma: PrismaService) {}
 
   /**
    * Find last user messages to show in MessageDropdown.
@@ -207,30 +182,5 @@ export class MessageService {
       },
     };
     return this.paginate(params);
-  }
-
-  /**
-   * Send Notification to teacher.
-   *
-   * @param payload: StudentUpdateTeacher
-   *
-   * @returns Promise<Message>
-   */
-  @OnEvent(STUDENT_ADD_TEACHER_EVENT)
-  async sendNotificationToTeacher(payload: StudentUpdateTeacher) {
-    try {
-      return this.prisma.message.create({
-        data: {
-          recipientId: payload.teacherId,
-          authorId: payload.userId,
-          sendToAll: false,
-          type: MessageType.INFO,
-          viewers: [],
-          content: `إختارك الطالب ${payload.name} لتكون مشرفا عليه`,
-        },
-      });
-    } catch (error) {
-      Logger.log(error);
-    }
   }
 }

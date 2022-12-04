@@ -46,7 +46,7 @@ const TeacherContests: NextPageWithLayout = () => {
   return <Tabs defaultActiveKey="1" type="card" size="large" items={tabs} />;
 };
 TeacherContests.getLayout = (page: EmotionJSX.Element) => (
-  <ProfileLayout isTeacher={true}>{page}</ProfileLayout>
+  <ProfileLayout>{page}</ProfileLayout>
 );
 export default withAuth(TeacherContests, [
   PermissionTitle.AccessTeacherDashboard,

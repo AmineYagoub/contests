@@ -21,6 +21,7 @@ import {
   BellOutlined,
   ContactsOutlined,
   HomeOutlined,
+  LogoutOutlined,
   MailOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -33,7 +34,7 @@ import { Logo, StyledContent, StyledMenu } from './AdminLayout';
 import StyledFooter from './StyledFooter';
 import { useSnapshot } from 'valtio';
 import { AuthState } from '@/valtio/auth.state';
-import { User } from '@/graphql/graphql';
+import { RoleTitle, User } from '@/graphql/graphql';
 
 const { Header, Sider } = Layout;
 const { Text } = Typography;
@@ -45,14 +46,14 @@ export const StyledHeader = styled(Header)({
     'rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px',
 });
 
-const ProfileLayout: FC<{ children: ReactElement; isTeacher: boolean }> = ({
-  children,
-  isTeacher,
-}) => {
+const ProfileLayout: FC<{ children: ReactElement }> = ({ children }) => {
   // const socket = useReactiveVar(socketVar);
   const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
   const user = useSnapshot(AuthState).user as User;
+  const isTeacher = [RoleTitle.GoldenTeacher, RoleTitle.Teacher].includes(
+    user.role.title
+  );
 
   /*   useEffect(() => {
     socket.connect();
@@ -114,6 +115,13 @@ const ProfileLayout: FC<{ children: ReactElement; isTeacher: boolean }> = ({
       label: <Link href={AppRoutes.TeacherMembership}>ترقية العضوية</Link>,
     });
   }
+
+  menuList.push({
+    key: AppRoutes.SignOut,
+    icon: <LogoutOutlined style={{ fontSize: 18 }} />,
+
+    label: <Link href={AppRoutes.SignOut}>تسجيل الخروج</Link>,
+  });
 
   return (
     <Layout>

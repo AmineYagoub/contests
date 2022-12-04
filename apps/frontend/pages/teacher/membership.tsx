@@ -170,7 +170,7 @@ const TeacherMembership = () => {
 };
 
 TeacherMembership.getLayout = (page: EmotionJSX.Element) => (
-  <ProfileLayout isTeacher={true}>{page}</ProfileLayout>
+  <ProfileLayout>{page}</ProfileLayout>
 );
 
 export default withAuth(TeacherMembership, [

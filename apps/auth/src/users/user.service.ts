@@ -209,6 +209,11 @@ export class UserService {
     let filter: Prisma.ProfileWhereInput & Prisma.UserWhereInput = {};
     if (where) {
       for (const [key, value] of Object.entries(where)) {
+        if (key === 'teacherId') {
+          filter.profile = {
+            teacherId: String(value),
+          };
+        }
         if (['firstName', 'lastName', 'country', 'level'].includes(key)) {
           filter.profile = {
             ...filter.profile,
@@ -217,6 +222,7 @@ export class UserService {
             },
           };
         }
+
         if (['emailConfirmed', 'isActive'].includes(key)) {
           filter = {
             ...filter,

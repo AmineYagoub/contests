@@ -9,11 +9,13 @@ import {
   FindByIdForReviewDocument,
   FindByIdForReviewQuery,
   FindByIdForReviewQueryVariables,
+  PermissionTitle,
 } from '@/graphql/graphql';
 import { useGenerateResult } from '@/hooks/contests/result.hook';
 import ProfileLayout from '@/layout/ProfileLayout';
 import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import { withAuth } from '@/components/common/withAuth';
 
 const PerformanceGauge = dynamic(
   () => import('@/components/profile/student/result/PerformanceGauge'),
@@ -40,9 +42,11 @@ const ContestResultPage: NextPageWithLayout = ({
   );
 };
 ContestResultPage.getLayout = (page: EmotionJSX.Element) => (
-  <ProfileLayout isTeacher={false}>{page}</ProfileLayout>
+  <ProfileLayout>{page}</ProfileLayout>
 );
-export default ContestResultPage;
+export default withAuth(ContestResultPage, [
+  PermissionTitle.AccessStudentDashboard,
+]);
 
 export const getServerSideProps: GetServerSideProps = async ({
   query,

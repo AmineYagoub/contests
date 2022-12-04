@@ -25,8 +25,8 @@ export type StudentUpdateTeacher = {
   userId: string;
 };
 
-export const TEACHER_ACCEPT_STUDENT_EVENT = 'teacher.accept.student';
-export type TeacherAcceptStudent = {
+export const TEACHER_CONNECT_STUDENT_EVENT = 'teacher.connect.student';
+export type TeacherConnectStudent = {
   name: string;
   teacherId: string;
   studentId: string;

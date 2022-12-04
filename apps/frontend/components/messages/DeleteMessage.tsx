@@ -1,8 +1,8 @@
 import { Button, Popconfirm } from 'antd';
 
-import { useDeleteMessageMutation } from '@/graphql/graphql';
-import { DeleteOutlined } from '@ant-design/icons';
 import { Logger } from '@/utils/app';
+import { DeleteOutlined } from '@ant-design/icons';
+import { useDeleteMessageMutation } from '@/graphql/graphql';
 
 const DeleteMessage = ({
   id,

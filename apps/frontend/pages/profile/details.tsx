@@ -4,7 +4,7 @@ import { useSnapshot } from 'valtio';
 import UserDetails from '@/components/profile/common/UserDetails';
 import UserDocuments from '@/components/profile/student/documents/UserDocuments';
 import UserPassword from '@/components/profile/common/UserPassword';
-import { RoleTitle, User } from '@/graphql/graphql';
+import { PermissionTitle, RoleTitle, User } from '@/graphql/graphql';
 import ProfileLayout from '@/layout/ProfileLayout';
 import { AuthState } from '@/valtio/auth.state';
 import {
@@ -13,6 +13,7 @@ import {
   SafetyCertificateOutlined,
 } from '@ant-design/icons';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import { withAuth } from '@/components/common/withAuth';
 
 const ProfileDetails = () => {
   const user = useSnapshot(AuthState).user as User;
@@ -54,7 +55,9 @@ const ProfileDetails = () => {
   return <Tabs defaultActiveKey="1" type="card" size="large" items={tabs} />;
 };
 ProfileDetails.getLayout = (page: EmotionJSX.Element) => (
-  <ProfileLayout isTeacher={false}>{page}</ProfileLayout>
+  <ProfileLayout>{page}</ProfileLayout>
 );
 
-export default ProfileDetails;
+export default withAuth(ProfileDetails, [
+  PermissionTitle.AccessStudentDashboard,
+]);

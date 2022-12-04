@@ -1,0 +1,20 @@
+query PaginateMessages($params: MessagePaginationDto!) {
+  paginateMessages(params: $params) {
+    total
+    data {
+      id
+      type
+      content
+      created
+      updated
+      authorId {
+        id
+      }
+      recipientId {
+        id
+      }
+    }
+  }
+}
+
+

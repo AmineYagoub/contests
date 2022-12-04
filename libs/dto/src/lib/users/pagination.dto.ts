@@ -5,7 +5,7 @@ import { UpdateStudentDto } from './updateStudent.dto';
 
 @InputType()
 export class WhereUserArgs extends PartialType(
-  OmitType(UpdateStudentDto, ['dateOfBirth', 'teacherId', 'role'] as const)
+  OmitType(UpdateStudentDto, ['dateOfBirth', 'role'] as const)
 ) {
   @Field(() => Boolean, { nullable: true })
   isActive?: boolean;

@@ -24,7 +24,10 @@ import { TableProps } from 'antd/es/table';
 import { getLevelsValues } from '@/utils/mapper';
 import { Logger } from '@/utils/app';
 
-export const useSearchUsers = (role: 'student' | 'teacher') => {
+export const useSearchUsers = (
+  role: 'student' | 'teacher',
+  teacherId?: string
+) => {
   const roles =
     role === 'student'
       ? [RoleTitle.Student, RoleTitle.StudentTeacher]
@@ -39,6 +42,7 @@ export const useSearchUsers = (role: 'student' | 'teacher') => {
 
   const [where, setWhere] = useState<WhereUserArgs>({
     role: roles,
+    teacherId,
   });
   const [orderBy, setOrderBy] = useState<OrderUserArgs>({});
   const [filteredInfo, setFilteredInfo] = useState<

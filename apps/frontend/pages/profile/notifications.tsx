@@ -1,16 +1,19 @@
+import { withAuth } from '@/components/common/withAuth';
+import NotificationList from '@/components/profile/common/NotificationList';
+import { PermissionTitle } from '@/graphql/graphql';
 import ProfileLayout from '@/layout/ProfileLayout';
 import { NextPageWithLayout } from '@/utils/types';
+import { AuthState } from '@/valtio/auth.state';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import { useSnapshot } from 'valtio';
 
 const ProfileNotifications: NextPageWithLayout = () => {
-  /// const user = useSnapshot(AuthState).user as User;
-  return (
-    <div>
-      <h1>قريبا ...</h1>
-    </div>
-  );
+  const user = useSnapshot(AuthState).user;
+  return <NotificationList id={user.id} />;
 };
 ProfileNotifications.getLayout = (page: EmotionJSX.Element) => (
-  <ProfileLayout isTeacher={true}>{page}</ProfileLayout>
+  <ProfileLayout>{page}</ProfileLayout>
 );
-export default ProfileNotifications;
+export default withAuth(ProfileNotifications, [
+  PermissionTitle.AccessStudentDashboard,
+]);

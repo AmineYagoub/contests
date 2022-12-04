@@ -16,7 +16,7 @@ import {
   RoleTitle,
   STUDENT_ADD_TEACHER_EVENT,
   TeacherRoleMutationEvent,
-  TEACHER_ACCEPT_STUDENT_EVENT,
+  TEACHER_CONNECT_STUDENT_EVENT,
   USER_ROLE_UPDATED_EVENT,
 } from '@contests/types/auth';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
@@ -71,9 +71,7 @@ export class ProfileService {
         },
       },
       profile: {
-        update: {
-          ...rest,
-        },
+        update: rest,
       },
     };
     try {
@@ -115,38 +113,40 @@ export class ProfileService {
     connect: boolean;
   }) {
     const { studentId, where, connect } = params;
-    const user: Prisma.UserUpdateWithoutEmailTokenInput = {
-      profile: {
-        update: {
-          students: connect
-            ? {
-                connect: {
-                  userId: studentId,
-                },
-              }
-            : {
-                disconnect: {
-                  userId: studentId,
-                },
-              },
-        },
-      },
+    const user: Prisma.ProfileUpdateWithoutTeacherInput = {
+      students: connect
+        ? {
+            connect: {
+              userId: studentId,
+            },
+          }
+        : {
+            disconnect: {
+              userId: studentId,
+            },
+          },
     };
     try {
-      const updated = await this.prisma.user.update({
+      const updated = await this.prisma.profile.update({
         where,
         data: user,
-        include: { profile: true },
       });
       this.redis.publish(
-        TEACHER_ACCEPT_STUDENT_EVENT,
+        TEACHER_CONNECT_STUDENT_EVENT,
         JSON.stringify({
           connect,
           studentId,
-          teacherId: updated.id,
-          name: `${updated.profile.firstName} ${updated.profile.lastName}`,
+          teacherId: updated.userId,
+          name: `${updated.firstName} ${updated.lastName}`,
         })
       );
+      // Change student role
+      if (!connect) {
+        await this.prisma.user.update({
+          where: { id: studentId },
+          data: { role: { connect: { title: RoleTitle.STUDENT } } },
+        });
+      }
       return updated;
     } catch (error) {
       Logger.error(error);

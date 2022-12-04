@@ -2,6 +2,7 @@ import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 
 export enum MessageType {
   ANNOUNCE = 'ANNOUNCE',
+  REQUEST = 'REQUEST',
   MESSAGE = 'MESSAGE',
   REPORT = 'REPORT',
   ALERT = 'ALERT',
