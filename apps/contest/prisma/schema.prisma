@@ -28,6 +28,7 @@ model AppConfig {
 
 enum MessageType {
   ANNOUNCE
+  REQUEST
   MESSAGE
   REPORT
   ALERT
