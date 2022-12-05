@@ -111,7 +111,7 @@ export type Contest = {
   hardQuestionCount: Scalars['Int'];
   id: Scalars['ID'];
   /** Identifies a list of levels that can be join this Contest. */
-  level: Array<StudentLevel>;
+  level?: Maybe<Array<StudentLevel>>;
   /** Identifies the max number of Participants in the Contest. */
   maxParticipants?: Maybe<Scalars['Int']>;
   /** Identifies how many medium questions in the Contest. */
@@ -126,10 +126,10 @@ export type Contest = {
   startTime: Scalars['DateTime'];
   /** Identifies the status of the Contest. */
   status: ContestStatus;
-  /** Identifies a list of tags that belongs to this contest. */
-  tags?: Maybe<Array<Tag>>;
   /** Identifies the title of the Contest. */
   title: Scalars['String'];
+  /** Identifies a list of topics that belongs to this contest. */
+  topics?: Maybe<Array<Topic>>;
   /** Identifies the Type of this Contest. */
   type: ContestType;
   /** Identifies the date and time when the object was last updated. */
@@ -183,15 +183,15 @@ export type CreateContestDto = {
   duration?: InputMaybe<Scalars['Int']>;
   easyQuestionCount: Scalars['Int'];
   hardQuestionCount: Scalars['Int'];
-  level: Array<StudentLevel>;
+  level?: InputMaybe<Array<StudentLevel>>;
   maxParticipants?: InputMaybe<Scalars['Int']>;
   mediumQuestionCount: Scalars['Int'];
-  participants?: InputMaybe<Array<Scalars['Int']>>;
+  participants?: InputMaybe<Array<Scalars['String']>>;
   published?: InputMaybe<Scalars['Boolean']>;
   startTime: Scalars['DateTime'];
   status: ContestStatus;
-  tags: TagConnectInput;
   title: Scalars['String'];
+  topics: TopicConnectInput;
   type: ContestType;
 };
 
@@ -209,8 +209,8 @@ export type CreateQuestionDto = {
   lesson: Scalars['String'];
   options: Array<Scalars['String']>;
   published?: InputMaybe<Scalars['Boolean']>;
-  tags: TagConnectInput;
   title: Scalars['String'];
+  topics: TopicConnectInput;
   type: QuestionType;
 };
 
@@ -313,16 +313,16 @@ export type Mutation = {
   createMessage: Message;
   createQuestion: Question;
   createSubscriptionPlan: SubscriptionPlan;
-  createTag: Tag;
   deleteAnswerById?: Maybe<Answer>;
   deleteContestById?: Maybe<Contest>;
   deleteMessage: Message;
   deleteQuestionById?: Maybe<Question>;
   deleteSubscriptionPlanById?: Maybe<SubscriptionPlan>;
-  deleteTagById?: Maybe<Tag>;
+  deleteTopicById?: Maybe<Topic>;
   deleteUserById?: Maybe<User>;
   emailTokenToRecoverPassword: Scalars['Boolean'];
   resendEmailActivationCode: Scalars['Boolean'];
+  seedCtsData?: Maybe<Scalars['Boolean']>;
   seedData?: Maybe<Scalars['Boolean']>;
   signing: Auth;
   signup: Scalars['Boolean'];
@@ -334,9 +334,9 @@ export type Mutation = {
   updateStudentDocuments: User;
   updateStudentProfile: User;
   updateSubscriptionPlan: SubscriptionPlan;
-  updateTag: Tag;
   updateTeacherProfile: User;
   updateTeacherSubscription: Teacher;
+  updateTopic: Topic;
   updateUser: User;
 };
 
@@ -378,11 +378,6 @@ export type MutationCreateSubscriptionPlanArgs = {
 };
 
 
-export type MutationCreateTagArgs = {
-  title: Scalars['String'];
-};
-
-
 export type MutationDeleteAnswerByIdArgs = {
   id: Scalars['String'];
 };
@@ -408,7 +403,7 @@ export type MutationDeleteSubscriptionPlanByIdArgs = {
 };
 
 
-export type MutationDeleteTagByIdArgs = {
+export type MutationDeleteTopicByIdArgs = {
   id: Scalars['String'];
 };
 
@@ -484,12 +479,6 @@ export type MutationUpdateSubscriptionPlanArgs = {
 };
 
 
-export type MutationUpdateTagArgs = {
-  id: Scalars['String'];
-  title: Scalars['String'];
-};
-
-
 export type MutationUpdateTeacherProfileArgs = {
   id: Scalars['String'];
   input: UpdateTeacherDto;
@@ -499,6 +488,12 @@ export type MutationUpdateTeacherProfileArgs = {
 export type MutationUpdateTeacherSubscriptionArgs = {
   id: Scalars['String'];
   input: UpdateTeacherSubscriptionDto;
+};
+
+
+export type MutationUpdateTopicArgs = {
+  id: Scalars['String'];
+  title: Scalars['String'];
 };
 
 
@@ -569,10 +564,11 @@ export type Query = {
   findOneAnswerById?: Maybe<Answer>;
   findOneContestById?: Maybe<Contest>;
   findOneQuestionById?: Maybe<Question>;
-  findOneTagById?: Maybe<Tag>;
+  findOneTopicById?: Maybe<Topic>;
+  findStudents: Array<User>;
   findSubscriptionPlan: SubscriptionPlan;
-  findTags?: Maybe<Array<Tag>>;
   findTeacher: Array<User>;
+  findTopics?: Maybe<Array<Topic>>;
   findUser: User;
   getAuthUser: User;
   paginateContest?: Maybe<ContestPaginationResponse>;
@@ -614,8 +610,14 @@ export type QueryFindOneQuestionByIdArgs = {
 };
 
 
-export type QueryFindOneTagByIdArgs = {
+export type QueryFindOneTopicByIdArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryFindStudentsArgs = {
+  name?: InputMaybe<Scalars['String']>;
+  teacherId?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -624,13 +626,14 @@ export type QueryFindSubscriptionPlanArgs = {
 };
 
 
-export type QueryFindTagsArgs = {
-  title: Scalars['String'];
+export type QueryFindTeacherArgs = {
+  name?: InputMaybe<Scalars['String']>;
 };
 
 
-export type QueryFindTeacherArgs = {
-  name?: InputMaybe<Scalars['String']>;
+export type QueryFindTopicsArgs = {
+  level?: InputMaybe<Array<StudentLevel>>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -678,10 +681,10 @@ export type Question = {
   options: Array<Scalars['String']>;
   /** Identifies if the entity is published or not. */
   published: Scalars['Boolean'];
-  /** Identifies a list of tags that belongs to this Question. */
-  tags?: Maybe<Array<Tag>>;
   /** Identifies the title of the Question. */
   title: Scalars['String'];
+  /** Identifies a list of topics that belongs to this Question. */
+  topics?: Maybe<Array<Topic>>;
   /** Identifies the Type of this Question. */
   type: QuestionType;
   /** Identifies the date and time when the object was last updated. */
@@ -836,30 +839,6 @@ export type SubscriptionPlan = {
   updated: Scalars['DateTime'];
 };
 
-export type Tag = {
-  __typename?: 'Tag';
-  /** Identifies the date and time when the object was created. */
-  created: Scalars['DateTime'];
-  id: Scalars['ID'];
-  /** Identifies the title of the Tag. */
-  title: Scalars['String'];
-  /** Identifies the date and time when the object was last updated. */
-  updated: Scalars['DateTime'];
-};
-
-export type TagConnectInput = {
-  connectOrCreate: Array<TagCreateInput>;
-};
-
-export type TagCreateInput = {
-  create: TagInput;
-  where: TagInput;
-};
-
-export type TagInput = {
-  title: Scalars['String'];
-};
-
 export type Teacher = {
   __typename?: 'Teacher';
   /** Identifies the country of the user. */
@@ -885,6 +864,27 @@ export type Teacher = {
   subscription?: Maybe<Membership>;
   /** Identifies the date and time when the object was last updated. */
   updated: Scalars['DateTime'];
+};
+
+export type Topic = {
+  __typename?: 'Topic';
+  /** Identifies the date and time when the object was created. */
+  created: Scalars['DateTime'];
+  id: Scalars['ID'];
+  /** Identifies the level of the Topic. */
+  level: Array<StudentLevel>;
+  /** Identifies the title of the Topic. */
+  title: Scalars['String'];
+  /** Identifies the date and time when the object was last updated. */
+  updated: Scalars['DateTime'];
+};
+
+export type TopicConnectInput = {
+  connect: Array<TopicInput>;
+};
+
+export type TopicInput = {
+  title: Scalars['String'];
 };
 
 export type UpdateAnswerDto = {
@@ -927,12 +927,12 @@ export type UpdateContestDto = {
   level?: InputMaybe<Array<StudentLevel>>;
   maxParticipants?: InputMaybe<Scalars['Int']>;
   mediumQuestionCount?: InputMaybe<Scalars['Int']>;
-  participants?: InputMaybe<Array<Scalars['Int']>>;
+  participants?: InputMaybe<Array<Scalars['String']>>;
   published?: InputMaybe<Scalars['Boolean']>;
   startTime?: InputMaybe<Scalars['DateTime']>;
   status?: InputMaybe<ContestStatus>;
-  tags?: InputMaybe<TagConnectInput>;
   title?: InputMaybe<Scalars['String']>;
+  topics?: InputMaybe<TopicConnectInput>;
   type?: InputMaybe<ContestType>;
 };
 
@@ -957,8 +957,8 @@ export type UpdateQuestionDto = {
   lesson?: InputMaybe<Scalars['String']>;
   options?: InputMaybe<Array<Scalars['String']>>;
   published?: InputMaybe<Scalars['Boolean']>;
-  tags?: InputMaybe<TagConnectInput>;
   title?: InputMaybe<Scalars['String']>;
+  topics?: InputMaybe<TopicConnectInput>;
   type?: InputMaybe<QuestionType>;
   usedCount?: InputMaybe<Scalars['Int']>;
 };
@@ -1061,7 +1061,7 @@ export type WhereContestArgs = {
   countries?: InputMaybe<Array<Scalars['String']>>;
   created?: InputMaybe<Array<Scalars['String']>>;
   level?: InputMaybe<Array<StudentLevel>>;
-  participants?: InputMaybe<Array<Scalars['Int']>>;
+  participants?: InputMaybe<Array<Scalars['String']>>;
   startTime?: InputMaybe<Array<Scalars['String']>>;
   status?: InputMaybe<ContestStatus>;
   tags?: InputMaybe<Scalars['String']>;
@@ -1179,7 +1179,7 @@ export type CreateContestMutationVariables = Exact<{
 }>;
 
 
-export type CreateContestMutation = { __typename?: 'Mutation', createContest: { __typename?: 'Contest', id: string, title: string, level: Array<StudentLevel>, status: ContestStatus, startTime: any, published: boolean, created: any, updated: any } };
+export type CreateContestMutation = { __typename?: 'Mutation', createContest: { __typename?: 'Contest', id: string, title: string, level?: Array<StudentLevel> | null, status: ContestStatus, startTime: any, published: boolean, created: any, updated: any } };
 
 export type DeleteContestMutationVariables = Exact<{
   id: Scalars['String'];
@@ -1194,14 +1194,14 @@ export type UpdateContestMutationVariables = Exact<{
 }>;
 
 
-export type UpdateContestMutation = { __typename?: 'Mutation', updateContest: { __typename?: 'Contest', id: string, title: string, duration: number, published: boolean, level: Array<StudentLevel>, created: any, updated: any, status: ContestStatus, startTime: any, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, participants?: Array<string> | null } };
+export type UpdateContestMutation = { __typename?: 'Mutation', updateContest: { __typename?: 'Contest', id: string, title: string, duration: number, published: boolean, level?: Array<StudentLevel> | null, created: any, updated: any, status: ContestStatus, startTime: any, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, participants?: Array<string> | null } };
 
 export type FindByIdForExamQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type FindByIdForExamQuery = { __typename?: 'Query', findOneContestById?: { __typename?: 'Contest', id: string, type: ContestType, title: string, level: Array<StudentLevel>, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, tags?: Array<{ __typename?: 'Tag', title: string }> | null, questions?: Array<{ __typename?: 'Question', id: string, title: string, options: Array<string>, type: QuestionType }> | null } | null };
+export type FindByIdForExamQuery = { __typename?: 'Query', findOneContestById?: { __typename?: 'Contest', id: string, type: ContestType, title: string, level?: Array<StudentLevel> | null, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null, questions?: Array<{ __typename?: 'Question', id: string, title: string, options: Array<string>, type: QuestionType }> | null } | null };
 
 export type FindByIdForReviewQueryVariables = Exact<{
   id: Scalars['String'];
@@ -1209,14 +1209,14 @@ export type FindByIdForReviewQueryVariables = Exact<{
 }>;
 
 
-export type FindByIdForReviewQuery = { __typename?: 'Query', findOneContestById?: { __typename?: 'Contest', id: string, type: ContestType, title: string, level: Array<StudentLevel>, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, tags?: Array<{ __typename?: 'Tag', title: string }> | null, questions?: Array<{ __typename?: 'Question', id: string, title: string, options: Array<string>, type: QuestionType, correctAnswer?: string | null, usedCount?: number | null, lesson: string, tags?: Array<{ __typename?: 'Tag', title: string }> | null }> | null, answers: Array<{ __typename?: 'Answer', id: string, contestId: string, userId: string, annulled: boolean, annulledReason: string, created: any, updated: any, answers: Array<{ __typename?: 'SelectedAnswerObject', questionId: string, option: string, options: Array<string> }> }> } | null };
+export type FindByIdForReviewQuery = { __typename?: 'Query', findOneContestById?: { __typename?: 'Contest', id: string, type: ContestType, title: string, level?: Array<StudentLevel> | null, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null, questions?: Array<{ __typename?: 'Question', id: string, title: string, options: Array<string>, type: QuestionType, correctAnswer?: string | null, usedCount?: number | null, lesson: string, topics?: Array<{ __typename?: 'Topic', title: string }> | null }> | null, answers: Array<{ __typename?: 'Answer', id: string, contestId: string, userId: string, annulled: boolean, annulledReason: string, created: any, updated: any, answers: Array<{ __typename?: 'SelectedAnswerObject', questionId: string, option: string, options: Array<string> }> }> } | null };
 
 export type PaginateContestsQueryVariables = Exact<{
   params: ContestPaginationDto;
 }>;
 
 
-export type PaginateContestsQuery = { __typename?: 'Query', paginateContest?: { __typename?: 'ContestPaginationResponse', total: number, data?: Array<{ __typename?: 'Contest', id: string, type: ContestType, title: string, level: Array<StudentLevel>, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, tags?: Array<{ __typename?: 'Tag', title: string }> | null }> | null } | null };
+export type PaginateContestsQuery = { __typename?: 'Query', paginateContest?: { __typename?: 'ContestPaginationResponse', total: number, data?: Array<{ __typename?: 'Contest', id: string, type: ContestType, title: string, level?: Array<StudentLevel> | null, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null }> | null } | null };
 
 export type DeleteMessageMutationVariables = Exact<{
   id: Scalars['String'];
@@ -1224,13 +1224,6 @@ export type DeleteMessageMutationVariables = Exact<{
 
 
 export type DeleteMessageMutation = { __typename?: 'Mutation', deleteMessage: { __typename?: 'Message', id: string } };
-
-export type FindTagsQueryVariables = Exact<{
-  title: Scalars['String'];
-}>;
-
-
-export type FindTagsQuery = { __typename?: 'Query', findTags?: Array<{ __typename?: 'Tag', title: string }> | null };
 
 export type PaginateMessagesQueryVariables = Exact<{
   params: MessagePaginationDto;
@@ -1307,7 +1300,15 @@ export type PaginateQuestionsQueryVariables = Exact<{
 }>;
 
 
-export type PaginateQuestionsQuery = { __typename?: 'Query', paginateQuestions?: { __typename?: 'QuestionPaginationResponse', total: number, data?: Array<{ __typename?: 'Question', id: string, title: string, type: QuestionType, options: Array<string>, lesson: string, correctAnswer?: string | null, created: any, updated: any, usedCount?: number | null, tags?: Array<{ __typename?: 'Tag', title: string }> | null }> | null } | null };
+export type PaginateQuestionsQuery = { __typename?: 'Query', paginateQuestions?: { __typename?: 'QuestionPaginationResponse', total: number, data?: Array<{ __typename?: 'Question', id: string, title: string, type: QuestionType, options: Array<string>, lesson: string, correctAnswer?: string | null, created: any, updated: any, usedCount?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null }> | null } | null };
+
+export type FindTopicsQueryVariables = Exact<{
+  title?: InputMaybe<Scalars['String']>;
+  level?: InputMaybe<Array<StudentLevel> | StudentLevel>;
+}>;
+
+
+export type FindTopicsQuery = { __typename?: 'Query', findTopics?: Array<{ __typename?: 'Topic', id: string, title: string, level: Array<StudentLevel> }> | null };
 
 export type ConnectStudentToTeacherMutationVariables = Exact<{
   id: Scalars['String'];
@@ -1364,6 +1365,14 @@ export type UpdateTeacherSubscriptionMutationVariables = Exact<{
 
 
 export type UpdateTeacherSubscriptionMutation = { __typename?: 'Mutation', updateTeacherSubscription: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, country?: string | null, personalImage?: string | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, endDate?: any | null, startDate?: any | null, created: any, memberShipOn: { __typename?: 'SubscriptionPlan', id: string, title: string, price: number } } | null } };
+
+export type FindStudentsQueryVariables = Exact<{
+  name?: InputMaybe<Scalars['String']>;
+  teacherId?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type FindStudentsQuery = { __typename?: 'Query', findStudents: Array<{ __typename?: 'User', id: string, isActive: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null } | { __typename: 'Teacher' } | null }> };
 
 export type FindTeacherQueryVariables = Exact<{
   name?: InputMaybe<Scalars['String']>;
@@ -1909,7 +1918,7 @@ export const FindByIdForExamDocument = gql`
   findOneContestById(id: $id) {
     id
     type
-    tags {
+    topics {
       title
     }
     questions {
@@ -1968,7 +1977,7 @@ export const FindByIdForReviewDocument = gql`
   findOneContestById(id: $id, answerId: $answerId) {
     id
     type
-    tags {
+    topics {
       title
     }
     questions {
@@ -1976,7 +1985,7 @@ export const FindByIdForReviewDocument = gql`
       title
       options
       type
-      tags {
+      topics {
         title
       }
       correctAnswer
@@ -2050,7 +2059,7 @@ export const PaginateContestsDocument = gql`
     data {
       id
       type
-      tags {
+      topics {
         title
       }
       title
@@ -2132,41 +2141,6 @@ export function useDeleteMessageMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteMessageMutationHookResult = ReturnType<typeof useDeleteMessageMutation>;
 export type DeleteMessageMutationResult = Apollo.MutationResult<DeleteMessageMutation>;
 export type DeleteMessageMutationOptions = Apollo.BaseMutationOptions<DeleteMessageMutation, DeleteMessageMutationVariables>;
-export const FindTagsDocument = gql`
-    query FindTags($title: String!) {
-  findTags(title: $title) {
-    title
-  }
-}
-    `;
-
-/**
- * __useFindTagsQuery__
- *
- * To run a query within a React component, call `useFindTagsQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFindTagsQuery({
- *   variables: {
- *      title: // value for 'title'
- *   },
- * });
- */
-export function useFindTagsQuery(baseOptions: Apollo.QueryHookOptions<FindTagsQuery, FindTagsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<FindTagsQuery, FindTagsQueryVariables>(FindTagsDocument, options);
-      }
-export function useFindTagsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindTagsQuery, FindTagsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<FindTagsQuery, FindTagsQueryVariables>(FindTagsDocument, options);
-        }
-export type FindTagsQueryHookResult = ReturnType<typeof useFindTagsQuery>;
-export type FindTagsLazyQueryHookResult = ReturnType<typeof useFindTagsLazyQuery>;
-export type FindTagsQueryResult = Apollo.QueryResult<FindTagsQuery, FindTagsQueryVariables>;
 export const PaginateMessagesDocument = gql`
     query PaginateMessages($params: MessagePaginationDto!) {
   paginateMessages(params: $params) {
@@ -2604,7 +2578,7 @@ export const PaginateQuestionsDocument = gql`
       options
       lesson
       correctAnswer
-      tags {
+      topics {
         title
       }
       created
@@ -2642,6 +2616,44 @@ export function usePaginateQuestionsLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type PaginateQuestionsQueryHookResult = ReturnType<typeof usePaginateQuestionsQuery>;
 export type PaginateQuestionsLazyQueryHookResult = ReturnType<typeof usePaginateQuestionsLazyQuery>;
 export type PaginateQuestionsQueryResult = Apollo.QueryResult<PaginateQuestionsQuery, PaginateQuestionsQueryVariables>;
+export const FindTopicsDocument = gql`
+    query FindTopics($title: String, $level: [StudentLevel!]) {
+  findTopics(title: $title, level: $level) {
+    id
+    title
+    level
+  }
+}
+    `;
+
+/**
+ * __useFindTopicsQuery__
+ *
+ * To run a query within a React component, call `useFindTopicsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindTopicsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindTopicsQuery({
+ *   variables: {
+ *      title: // value for 'title'
+ *      level: // value for 'level'
+ *   },
+ * });
+ */
+export function useFindTopicsQuery(baseOptions?: Apollo.QueryHookOptions<FindTopicsQuery, FindTopicsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindTopicsQuery, FindTopicsQueryVariables>(FindTopicsDocument, options);
+      }
+export function useFindTopicsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindTopicsQuery, FindTopicsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindTopicsQuery, FindTopicsQueryVariables>(FindTopicsDocument, options);
+        }
+export type FindTopicsQueryHookResult = ReturnType<typeof useFindTopicsQuery>;
+export type FindTopicsLazyQueryHookResult = ReturnType<typeof useFindTopicsLazyQuery>;
+export type FindTopicsQueryResult = Apollo.QueryResult<FindTopicsQuery, FindTopicsQueryVariables>;
 export const ConnectStudentToTeacherDocument = gql`
     mutation ConnectStudentToTeacher($id: String!, $studentId: String!, $connect: Boolean!) {
   connectStudentToTeacher(id: $id, studentId: $studentId, connect: $connect) {
@@ -2984,6 +2996,54 @@ export function useUpdateTeacherSubscriptionMutation(baseOptions?: Apollo.Mutati
 export type UpdateTeacherSubscriptionMutationHookResult = ReturnType<typeof useUpdateTeacherSubscriptionMutation>;
 export type UpdateTeacherSubscriptionMutationResult = Apollo.MutationResult<UpdateTeacherSubscriptionMutation>;
 export type UpdateTeacherSubscriptionMutationOptions = Apollo.BaseMutationOptions<UpdateTeacherSubscriptionMutation, UpdateTeacherSubscriptionMutationVariables>;
+export const FindStudentsDocument = gql`
+    query FindStudents($name: String, $teacherId: String) {
+  findStudents(name: $name, teacherId: $teacherId) {
+    id
+    isActive
+    role {
+      title
+    }
+    profile {
+      __typename
+      ... on Student {
+        id
+        firstName
+        lastName
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindStudentsQuery__
+ *
+ * To run a query within a React component, call `useFindStudentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindStudentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindStudentsQuery({
+ *   variables: {
+ *      name: // value for 'name'
+ *      teacherId: // value for 'teacherId'
+ *   },
+ * });
+ */
+export function useFindStudentsQuery(baseOptions?: Apollo.QueryHookOptions<FindStudentsQuery, FindStudentsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindStudentsQuery, FindStudentsQueryVariables>(FindStudentsDocument, options);
+      }
+export function useFindStudentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindStudentsQuery, FindStudentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindStudentsQuery, FindStudentsQueryVariables>(FindStudentsDocument, options);
+        }
+export type FindStudentsQueryHookResult = ReturnType<typeof useFindStudentsQuery>;
+export type FindStudentsLazyQueryHookResult = ReturnType<typeof useFindStudentsLazyQuery>;
+export type FindStudentsQueryResult = Apollo.QueryResult<FindStudentsQuery, FindStudentsQueryVariables>;
 export const FindTeacherDocument = gql`
     query FindTeacher($name: String) {
   findTeacher(name: $name) {

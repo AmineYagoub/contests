@@ -74,6 +74,7 @@ const SelectCountry = ({ name, label, multiple = false }) => {
         mode={multiple ? 'multiple' : null}
         allowClear
         showArrow
+        maxTagCount={2}
         filterOption={false}
         showSearch
         value={countries}

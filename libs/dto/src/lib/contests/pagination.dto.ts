@@ -14,7 +14,7 @@ export class WhereContestArgs extends PartialType(
     'mediumQuestionCount',
     'hardQuestionCount',
     'startTime',
-    'tags',
+    'topics',
   ] as const)
 ) {
   @Field(() => [String], { nullable: true })

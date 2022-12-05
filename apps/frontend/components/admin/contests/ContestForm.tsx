@@ -13,7 +13,7 @@ import moment from 'moment';
 import { useEffect } from 'react';
 
 import SelectCountry from '@/components/common/SelectCountry';
-import SelectTags from '@/components/common/SelectTags';
+import SelectTopics from '@/components/common/SelectTopics';
 import { Contest, RoleTitle } from '@/graphql/graphql';
 import { ContestFields } from '@/utils/fields';
 import { contestMappedTypes, studentMappedLevels } from '@/utils/mapper';
@@ -21,6 +21,7 @@ import { contestMappedTypes, studentMappedLevels } from '@/utils/mapper';
 import type { RangePickerProps } from 'antd/es/date-picker';
 import { useSnapshot } from 'valtio';
 import { AuthState } from '@/valtio/auth.state';
+import SelectContestParticipants from './SelectContestParticipants';
 
 /**
  * Can not select days before today and today.
@@ -52,7 +53,7 @@ const ContestForm = ({
         countries: record.countries,
         startTime: moment(record.startTime),
         maxParticipants: record.maxParticipants,
-        tags: record.tags.map((tag) => ({
+        topics: record.topics.map((tag) => ({
           value: tag.title,
           label: tag.title,
         })),
@@ -62,6 +63,8 @@ const ContestForm = ({
   }, [form, record]);
 
   const user = useSnapshot(AuthState).user;
+  const getTeacherId =
+    user?.role.title === RoleTitle.GoldenTeacher ? user?.profile.id : null;
 
   return (
     <Form
@@ -185,7 +188,7 @@ const ContestForm = ({
           </Form.Item>
         </Col>
       </Row>
-      <SelectTags />
+      <SelectTopics />
       <Row gutter={16}>
         <Col span={12}>
           <SelectCountry
@@ -204,13 +207,8 @@ const ContestForm = ({
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item
-        name={ContestFields.participants}
-        label="الطلاب المستهدفين"
-        help="لن تظهر المسابقة إلا للطبة المحددين في هذا الحقل"
-      >
-        <Select allowClear showArrow fieldNames={{ label: 'text' }} />
-      </Form.Item>
+
+      <SelectContestParticipants teacherId={getTeacherId} />
     </Form>
   );
 };

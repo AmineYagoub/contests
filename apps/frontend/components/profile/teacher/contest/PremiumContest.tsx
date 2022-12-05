@@ -1,12 +1,15 @@
 import { Contest } from '@/graphql/graphql';
 import { useSearchContests } from '@/hooks/admin/manage-contests.hook';
 
-import type { ColumnsType, ColumnType } from 'antd/es/table';
-import ContestsTable, { TeacherContestsType } from '../../common/ContestsTable';
-import { SorterResult } from 'antd/es/table/interface';
 import { Space } from 'antd';
+import { SorterResult } from 'antd/es/table/interface';
+import type { ColumnsType, ColumnType } from 'antd/es/table';
 import DeleteContest from '@/components/admin/contests/DeleteContest';
 import UpdateContest from '@/components/admin/contests/UpdateContest';
+import ContestsTable, {
+  TeacherContestsType,
+} from '@/components/profile/common/ContestsTable';
+
 const PremiumContest = ({ isPremium = true }: TeacherContestsType) => {
   const { methods, data, loading, filteredInfo, sortedInfo } =
     useSearchContests();

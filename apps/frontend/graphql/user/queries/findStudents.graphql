@@ -1,0 +1,17 @@
+query FindStudents($name: String, $teacherId: String) {
+  findStudents(name: $name, teacherId: $teacherId) {
+    id
+    isActive
+    role {
+      title
+    }
+    profile {
+      __typename
+      ... on Student {
+        id
+        firstName
+        lastName
+      }
+    }
+  }
+}

@@ -3,7 +3,7 @@ import { FormInstance } from 'antd/es/form/Form';
 import { useEffect } from 'react';
 import { useSnapshot } from 'valtio';
 
-import SelectTags from '@/components/common/SelectTags';
+import SelectTags from '@/components/common/SelectTopics';
 import { Question } from '@/graphql/graphql';
 import { QuestionFields } from '@/utils/fields';
 import { questionMappedTypes } from '@/utils/mapper';

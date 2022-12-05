@@ -1,7 +1,6 @@
 import {
-  MessageType,
-  Student,
   Teacher,
+  MessageType,
   usePaginateNotificationsQuery,
 } from '@/graphql/graphql';
 import { List, Empty, Comment, Divider, Space } from 'antd';
@@ -50,7 +49,7 @@ const NotificationList = ({ id }: { id?: string }) => {
                 author={
                   <ViewUserPopover
                     profile={item.authorId.profile as Teacher}
-                    role={item.authorId.role.title}
+                    role={item.authorId.role?.title}
                   />
                 }
                 avatar={item.authorId.profile.personalImage}

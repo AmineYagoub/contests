@@ -8,32 +8,23 @@ import {
 } from 'class-validator';
 
 import { QuestionType } from '@contests/types';
-import { Field, InputType, Int } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 import { Prisma } from '@prisma/contest-service';
 
-type TagTitle = {
+type TopicTitle = {
   title: string;
 };
 
 @InputType()
-class TagInput {
+class TopicInput {
   @Field()
   title: string;
 }
 
 @InputType()
-class TagCreateInput {
-  @Field(() => TagInput)
-  create: TagTitle;
-
-  @Field(() => TagInput)
-  where: TagTitle;
-}
-
-@InputType()
-export class TagConnectInput {
-  @Field(() => [TagCreateInput])
-  connectOrCreate: { create: TagTitle; where: TagTitle }[];
+export class TopicConnectInput {
+  @Field(() => [TopicInput])
+  connect: TopicTitle[];
 }
 
 @InputType()
@@ -63,10 +54,10 @@ export class CreateQuestionDto {
   @IsString({ each: true })
   options: string[];
 
-  @Field(() => TagConnectInput)
+  @Field(() => TopicConnectInput)
   @IsOptional()
   @IsObject()
-  tags?: Prisma.TagCreateNestedManyWithoutQuestionsInput;
+  topics?: Prisma.TopicCreateNestedManyWithoutQuestionsInput;
 
   @Field()
   @IsNotEmpty()

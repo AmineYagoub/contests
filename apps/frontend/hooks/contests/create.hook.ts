@@ -1,5 +1,5 @@
 import { Form } from 'antd';
-import { TagValue } from '@/components/common/SelectTags';
+import { TagValue } from '@/components/common/SelectTopics';
 import {
   Contest,
   ContestStatus,
@@ -7,6 +7,9 @@ import {
   useUpdateContestMutation,
 } from '@/graphql/graphql';
 import { ContestActions } from '@/valtio/contest.state';
+import { useSnapshot } from 'valtio';
+import { AuthState } from '@/valtio/auth.state';
+import { Logger } from '@/utils/app';
 
 export interface CreateContestsProps {
   visible?: boolean;
@@ -21,6 +24,7 @@ export const useCreateContests = ({
   onSuccess,
 }: CreateContestsProps) => {
   const [form] = Form.useForm();
+  const user = useSnapshot(AuthState).user;
   const [CreateContestMutation, { loading, error }] =
     useCreateContestMutation();
   const [
@@ -35,14 +39,11 @@ export const useCreateContests = ({
       const payload = {
         ...values,
         status: ContestStatus.NotStarted,
-        authorId: 1,
-        tags: {
-          connectOrCreate: values.tags?.map((tag: TagValue) => {
-            return {
-              where: { title: tag.value },
-              create: { title: tag.value },
-            };
-          }),
+        authorId: user.id,
+        topics: {
+          connect: values.topics?.map((tag: TagValue) => ({
+            title: tag.label,
+          })),
         },
       };
 
@@ -64,7 +65,7 @@ export const useCreateContests = ({
         onSuccess();
       }
     } catch (error) {
-      console.log(error);
+      Logger.log(error);
     } finally {
       ContestActions.setMutationLoading(false);
     }

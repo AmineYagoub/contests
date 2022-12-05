@@ -8,7 +8,7 @@ query PaginateQuestions($params: QuestionPaginationDto!) {
       options
       lesson
       correctAnswer
-      tags {
+      topics {
         title
       }
       created

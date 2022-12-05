@@ -1,5 +1,4 @@
 import {
-  IsArray,
   IsDate,
   IsNotEmpty,
   IsNumber,
@@ -14,7 +13,7 @@ import { ContestStatus, ContestType, StudentLevel } from '@contests/types';
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { Prisma } from '@prisma/contest-service';
 
-import { TagConnectInput } from '../questions/create.dto';
+import { TopicConnectInput } from '../questions/create.dto';
 
 @InputType()
 export class CreateContestDto {
@@ -29,10 +28,10 @@ export class CreateContestDto {
   @Min(0)
   duration?: number;
 
-  @Field(() => [StudentLevel])
-  @IsNotEmpty()
+  @Field(() => [StudentLevel], { nullable: true })
+  @IsOptional()
   @IsString({ each: true })
-  level: StudentLevel[];
+  level?: StudentLevel[];
 
   @Field(() => ContestType)
   @IsNotEmpty()
@@ -49,10 +48,10 @@ export class CreateContestDto {
   @IsDate()
   startTime: Date;
 
-  @Field(() => TagConnectInput)
+  @Field(() => TopicConnectInput)
   @IsOptional()
   @IsObject()
-  tags?: Prisma.TagCreateNestedManyWithoutContestsInput;
+  topics?: Prisma.TopicCreateNestedManyWithoutContestsInput;
 
   @Field()
   @IsNotEmpty()
@@ -69,14 +68,14 @@ export class CreateContestDto {
   @IsNumber()
   maxParticipants?: number;
 
-  @Field(() => [Int], { defaultValue: [], nullable: true })
+  @Field(() => [String], { defaultValue: [], nullable: true })
   @IsOptional()
-  @IsArray()
-  participants?: number[];
+  @IsString({ each: true })
+  participants?: string[];
 
   @Field(() => [String], { defaultValue: [], nullable: true })
   @IsOptional()
-  @IsArray()
+  @IsString({ each: true })
   countries?: string[];
 
   @Field(() => Int)

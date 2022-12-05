@@ -31,6 +31,6 @@ export type PaginateContestParams = {
   orderBy?: Prisma.ContestOrderByWithRelationInput;
   include?: {
     questions?: boolean;
-    tags?: boolean;
+    topics?: boolean;
   };
 };

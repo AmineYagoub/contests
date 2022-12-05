@@ -11,3 +11,4 @@ export * from './lib/decorators/isPublic.decorator';
 export * from './lib/interceptors/nonce.interceptor';
 export * from './lib/guards/auth.guard';
 export * from './lib/seed/seed';
+export * from './lib/seed/topics';

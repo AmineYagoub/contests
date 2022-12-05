@@ -2,7 +2,7 @@ query FindByIdForReview($id: String!, $answerId: String) {
   findOneContestById(id: $id, answerId: $answerId) {
     id
     type
-    tags {
+    topics {
       title
     }
     questions {
@@ -10,7 +10,7 @@ query FindByIdForReview($id: String!, $answerId: String) {
       title
       options
       type
-      tags {
+      topics {
         title
       }
       correctAnswer

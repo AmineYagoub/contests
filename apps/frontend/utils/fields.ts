@@ -14,7 +14,7 @@ export const ContestFields: { [P in ContestsDataIndex]: P } = {
   startTime: 'startTime',
   created: 'created',
   authorId: 'authorId',
-  tags: 'tags',
+  topics: 'topics',
   maxParticipants: 'maxParticipants',
   published: 'published',
   participants: 'participants',
@@ -39,7 +39,7 @@ export const QuestionFields: { [P in QuestionsDataIndex]: P } = {
   updated: 'updated',
   correctAnswer: 'correctAnswer',
   lesson: 'lesson',
-  tags: 'tags',
+  topics: 'topics',
   __typename: '__typename',
 };
 
@@ -74,6 +74,5 @@ export const UserFields: { [P in UsersDataIndex]: P } = {
   agreement: 'agreement',
   emailConfirmed: 'emailConfirmed',
   countUnreadMessages: 'countUnreadMessages',
-  countUnreadNotifications: 'countUnreadNotifications',
   __typename: '__typename',
 };

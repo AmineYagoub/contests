@@ -2,7 +2,7 @@ import { Form, Select, Spin } from 'antd';
 import debounce from 'lodash/debounce';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 
-import { useFindTagsLazyQuery } from '@/graphql/graphql';
+import { useFindTopicsLazyQuery } from '@/graphql/graphql';
 import { QuestionFields } from '@/utils/fields';
 
 import type { SelectProps } from 'antd/es/select';
@@ -49,9 +49,20 @@ function DebounceSelect<
   }, [fetchOptions, debounceTimeout]);
   return (
     <Form.Item
-      name={QuestionFields.tags}
+      name={QuestionFields.topics}
       label="الموضوعات"
-      rules={[{ required: true, message: 'يرجى تحديد موضوع واحد على الأقل.' }]}
+      rules={[
+        () => ({
+          validator(_, value) {
+            if (value.length >= 5) {
+              return Promise.resolve();
+            }
+            return Promise.reject(
+              new Error('يرجى تحديد 5 مواضيع للمسابقة على الأقل!')
+            );
+          },
+        }),
+      ]}
       required
     >
       <Select
@@ -73,29 +84,30 @@ export interface TagValue {
   value: string;
 }
 
-const SelectTags = () => {
+const SelectTopics = () => {
   const [value, setValue] = useState<TagValue[]>([]);
-  const [FindTagsQuery] = useFindTagsLazyQuery();
+  const [FindTopicsQuery] = useFindTopicsLazyQuery();
   const fetchTags = useCallback(
     async (search: string) => {
-      const { data } = await FindTagsQuery({
+      const { data } = await FindTopicsQuery({
         variables: {
           title: search,
         },
       });
-      return data.findTags.map((tag) => ({
+      return data.findTopics.map((tag) => ({
         label: tag.title,
-        value: tag.title,
+        value: tag.id,
       }));
     },
-    [FindTagsQuery]
+    [FindTopicsQuery]
   );
 
   return (
     <DebounceSelect
-      mode="tags"
+      mode="multiple"
+      maxTagCount={3}
       value={value}
-      placeholder="البحث عن موضوع"
+      placeholder="البحث عن موضوعات"
       fetchOptions={fetchTags}
       onChange={(newValue) => {
         setValue(newValue as TagValue[]);
@@ -105,4 +117,4 @@ const SelectTags = () => {
   );
 };
 
-export default SelectTags;
+export default SelectTopics;

@@ -2,7 +2,7 @@ query FindByIdForExam($id: String!) {
   findOneContestById(id: $id) {
     id
     type
-    tags {
+    topics {
       title
     }
     questions {

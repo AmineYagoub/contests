@@ -4,7 +4,7 @@ query PaginateContests($params: ContestPaginationDto!) {
     data {
       id
       type
-      tags {
+      topics {
         title
       }
       title

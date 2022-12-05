@@ -4,6 +4,7 @@ import { useSnapshot } from 'valtio';
 import {
   MembershipStatus,
   PermissionTitle,
+  RoleTitle,
   Teacher,
   User,
 } from '@/graphql/graphql';
@@ -19,8 +20,9 @@ import { withAuth } from '@/components/common/withAuth';
 const TeacherContests: NextPageWithLayout = () => {
   const user = useSnapshot(AuthState).user as User;
 
-  const isPremium =
-    (user.profile as Teacher).subscription?.status === MembershipStatus.Active;
+  const isPremium = user.role.title === RoleTitle.GoldenTeacher;
+  /*    const isPremium =
+  (user.profile as Teacher).subscription?.status === MembershipStatus.Active; */
 
   const tabs = [
     {

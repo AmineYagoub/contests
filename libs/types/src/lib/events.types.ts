@@ -1,3 +1,4 @@
+import { StudentLevel } from './common.types';
 import { RoleTitle } from './users.types';
 
 export const USER_CREATED_EVENT = 'user.created';
@@ -32,3 +33,14 @@ export type TeacherConnectStudent = {
   studentId: string;
   connect: boolean;
 };
+
+export const CONTEST_CREATED_EVENT = 'contest.created';
+export type ContestCreatedEvent = {
+  contestId: string;
+  contestTitle: string;
+  authorId: string;
+  level?: StudentLevel[];
+  participants?: string[];
+};
+
+export const CONTEST_PARTICIPATING_IDS_EVENT = 'contest.participating.ids';

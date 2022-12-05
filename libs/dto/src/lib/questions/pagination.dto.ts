@@ -5,7 +5,7 @@ import { CreateQuestionDto } from './create.dto';
 
 @InputType()
 export class WhereQuestionArgs extends PartialType(
-  OmitType(CreateQuestionDto, ['authorId', 'published', 'tags'] as const)
+  OmitType(CreateQuestionDto, ['authorId', 'published', 'topics'] as const)
 ) {
   @Field(() => [String], { nullable: true })
   created?: string[];
