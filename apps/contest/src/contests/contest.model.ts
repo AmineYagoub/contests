@@ -4,7 +4,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Answer } from '../answers/answer.model';
 import { BaseModel } from '../common/base.model';
 import { Question } from '../questions/question.model';
-import { Tag } from '../tags/tag.model';
+import { Topic } from '../topics/topic.model';
 
 @ObjectType()
 export class Contest extends BaseModel {
@@ -25,14 +25,15 @@ export class Contest extends BaseModel {
 
   @Field(() => [StudentLevel], {
     description: 'Identifies a list of levels that can be join this Contest.',
-  })
-  level: StudentLevel[];
-
-  @Field(() => [Tag], {
-    description: 'Identifies a list of tags that belongs to this contest.',
     nullable: true,
   })
-  tags: Tag[];
+  level?: StudentLevel[];
+
+  @Field(() => [Topic], {
+    description: 'Identifies a list of topics that belongs to this contest.',
+    nullable: true,
+  })
+  topics: Topic[];
 
   @Field(() => [Answer], {
     description: 'Identifies a list of answers that belongs to this contest.',

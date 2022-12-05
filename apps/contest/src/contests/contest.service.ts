@@ -1,16 +1,22 @@
 import {
+  CONTEST_CREATED_EVENT,
   PaginateContestParams,
   QuestionType,
   SelectedQuestionFields,
 } from '@contests/types';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Contest, Prisma, Question } from '@prisma/contest-service';
+import Redis from 'ioredis';
 
 import { PrismaService } from '../app/prisma.service';
 
 @Injectable()
 export class ContestService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @InjectRedis('publisher') private readonly client: Redis
+  ) {}
 
   /**
    * Create a Contest
@@ -19,11 +25,15 @@ export class ContestService {
    * @returns Promise<Contest>
    */
   async create(data: Prisma.ContestCreateInput): Promise<Contest> {
-    const { tags, easyQuestionCount, mediumQuestionCount, hardQuestionCount } =
-      data;
+    const {
+      topics,
+      easyQuestionCount,
+      mediumQuestionCount,
+      hardQuestionCount,
+    } = data;
 
     const questions = await this.getConnectedQuestions(
-      tags,
+      topics,
       easyQuestionCount,
       mediumQuestionCount,
       hardQuestionCount
@@ -36,15 +46,26 @@ export class ContestService {
           },
         }
       : data;
-    return await this.prisma.contest.create({
+    const created = await this.prisma.contest.create({
       data: results,
     });
+    this.client.publish(
+      CONTEST_CREATED_EVENT,
+      JSON.stringify({
+        contestId: created.id,
+        contestTitle: created.title,
+        authorId: created.authorId,
+        level: data.level,
+        participants: data.participants,
+      })
+    );
+    return created;
   }
 
   /**
    * Get random list of questions.
    *
-   * tags: Prisma.TagCreateNestedManyWithoutContestsInput,
+   * topic: Prisma.TopicCreateNestedManyWithoutContestsInput,
    * easy: number,
    * mid: number,
    * hard: number
@@ -52,19 +73,19 @@ export class ContestService {
    * @returns Promise<SelectedQuestionFields[]>
    */
   private async getConnectedQuestions(
-    tags: Prisma.TagCreateNestedManyWithoutContestsInput,
+    topic: Prisma.TopicCreateNestedManyWithoutContestsInput,
     easy: number,
     mid: number,
     hard: number
   ): Promise<SelectedQuestionFields[]> {
     const topics = (
-      tags.connectOrCreate as Array<{
-        create: { title: string };
+      topic.connect as Array<{
+        title: string;
       }>
-    ).map((el) => el.create.title);
+    ).map((el) => el.title);
     const questions = await this.prisma.question.findMany({
       where: {
-        tags: {
+        topics: {
           every: {
             title: {
               in: topics,
@@ -158,7 +179,7 @@ export class ContestService {
     const contest = await this.prisma.contest.findUnique({
       where: input,
       include: {
-        tags: true,
+        topics: true,
         questions: true,
         answers: {
           where: {
@@ -241,7 +262,7 @@ export class ContestService {
       where,
       orderBy: sort as Prisma.ContestOrderByWithRelationInput,
       include: {
-        tags: true,
+        topics: true,
       },
     };
     if (includeQuestions) {

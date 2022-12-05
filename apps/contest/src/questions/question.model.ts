@@ -2,7 +2,7 @@ import { QuestionType } from '@contests/types';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { BaseModel } from '../common/base.model';
-import { Tag } from '../tags/tag.model';
+import { Topic } from '../topics/topic.model';
 
 @ObjectType()
 export class Question extends BaseModel {
@@ -32,11 +32,11 @@ export class Question extends BaseModel {
   })
   options: string[];
 
-  @Field(() => [Tag], {
-    description: 'Identifies a list of tags that belongs to this Question.',
+  @Field(() => [Topic], {
+    description: 'Identifies a list of topics that belongs to this Question.',
     nullable: true,
   })
-  tags: Tag[];
+  topics: Topic[];
 
   @Field(() => Int, {
     description: 'Identifies how many questions in the Question.',

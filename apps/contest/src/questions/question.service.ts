@@ -91,7 +91,7 @@ export class QuestionService {
         where,
         orderBy: sort,
         include: {
-          tags: true,
+          topics: true,
         },
       }),
     ]);
@@ -136,8 +136,8 @@ export class QuestionService {
           case 'type':
             filter.type = String(value);
             break;
-          case 'tags':
-            filter.tags = {
+          case 'topics':
+            filter.topics = {
               some: {
                 title: {
                   contains: String(value),

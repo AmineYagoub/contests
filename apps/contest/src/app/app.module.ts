@@ -17,7 +17,7 @@ import { RedisModule, RedisModuleOptions } from '@liaoliaots/nestjs-redis';
 import { ContestModule } from '../contests/contest.module';
 import { MessageModule } from '../messages/message.module';
 import { QuestionModule } from '../questions/question.module';
-import { TagModule } from '../tags/tag.module';
+import { TopicModule } from '../topics/topic.module';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { PrismaService } from './prisma.service';
@@ -38,15 +38,23 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
         config: ContestConfigType
       ): Promise<RedisModuleOptions> => {
         return {
-          config: {
-            host: config.redis.host,
-            port: config.redis.port,
-            password: config.redis.password,
-          },
+          config: [
+            {
+              host: config.redis.host,
+              port: config.redis.port,
+              password: config.redis.password,
+            },
+            {
+              namespace: 'publisher',
+              host: config.redis.host,
+              port: config.redis.port,
+              password: config.redis.password,
+            },
+          ],
         };
       },
     }),
-    TagModule,
+    TopicModule,
     AnswerModule,
     ContestModule,
     QuestionModule,

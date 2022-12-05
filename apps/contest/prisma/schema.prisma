@@ -49,12 +49,12 @@ model Message {
   updated           DateTime    @updatedAt
 }
 
-
-model Tag {
-  id                String    @id @default(uuid())
-  title             String    @db.VarChar(255) @unique
-  created           DateTime  @default(now())
-  updated           DateTime  @updatedAt
+model Topic {
+  id                String      @id @default(uuid())
+  title             String      @db.VarChar(255) @unique
+  level             Json        @db.Json
+  created           DateTime    @default(now())
+  updated           DateTime    @updatedAt
   questions         Question[]
   contests          Contest[]
 }
@@ -64,7 +64,7 @@ model Contest {
   type                  String    @db.VarChar(100)
   title                 String    @db.VarChar(255) @unique
   status                String    @db.VarChar(100)
-  level                 Json      @db.Json
+  level                 Json?     @db.Json
   duration              Int?      @db.UnsignedSmallInt @default(40)
   startTime             DateTime  @db.DateTime
   easyQuestionCount     Int       @db.UnsignedInt
@@ -77,7 +77,7 @@ model Contest {
   authorId              String    @db.VarChar(255)
   created               DateTime  @default(now())
   updated               DateTime  @updatedAt
-  tags                  Tag[]
+  topics                Topic[]
   questions             Question[]
   answers               Answer[]
 
@@ -103,7 +103,7 @@ model Question {
   created           DateTime  @default(now())
   updated           DateTime  @updatedAt
   contests          Contest[]
-  tags              Tag[]
+  topics            Topic[]
 
   @@index([type(length: 100, sort: Desc)])
   @@index([usedCount(sort: Desc)])
