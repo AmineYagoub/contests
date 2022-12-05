@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { PrismaService } from '../app/prisma.service';
 import { SeedService } from '../app/seed.service';
 import { PasswordService } from '../authentication/password.service';
+import { UserEvents } from './user.events';
 import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
 
@@ -13,6 +14,7 @@ import { UserService } from './user.service';
     PrismaService,
     PasswordService,
     SeedService,
+    UserEvents,
   ],
   exports: [UserService],
 })

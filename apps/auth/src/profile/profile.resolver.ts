@@ -5,12 +5,20 @@ import {
   UpdateTeacherSubscriptionDto,
 } from '@contests/dto/auth';
 import { isPublic } from '@contests/utils';
-import { Args, createUnionType, Mutation, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  createUnionType,
+  Mutation,
+  Query,
+  Resolver,
+} from '@nestjs/graphql';
 
 import { User } from '../users/user.model';
 import { ProfileService } from './profile.service';
 import { Student } from './student.model';
+import { StudentService } from './student.service';
 import { Teacher } from './teacher.model';
+import { TeacherService } from './teacher.service';
 
 export const Profile = createUnionType({
   name: 'Profile',
@@ -26,7 +34,11 @@ export const Profile = createUnionType({
 
 @Resolver(() => Profile)
 export class ProfileResolver {
-  constructor(private profileService: ProfileService) {}
+  constructor(
+    private profileService: ProfileService,
+    private studentService: StudentService,
+    private teacherService: TeacherService
+  ) {}
 
   @isPublic()
   @Mutation(() => User)
@@ -78,5 +90,18 @@ export class ProfileResolver {
     @Args('input') data: UpdateDocumentsDto
   ) {
     return this.profileService.updateStudentDocuments({ data, where: { id } });
+  }
+
+  @Query(() => [User])
+  findTeacher(@Args('name', { nullable: true }) name?: string) {
+    return this.teacherService.searchTeachers(name);
+  }
+
+  @Query(() => [User])
+  findStudents(
+    @Args('name', { nullable: true }) name?: string,
+    @Args('teacherId', { nullable: true }) teacherId?: string
+  ) {
+    return this.studentService.searchStudents(name, teacherId);
   }
 }

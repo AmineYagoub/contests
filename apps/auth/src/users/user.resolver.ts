@@ -45,12 +45,6 @@ export class UserResolver {
   }
 
   @isPublic()
-  @Query(() => [User])
-  findTeacher(@Args('name', { nullable: true }) name?: string) {
-    return this.userService.findTeacher(name);
-  }
-
-  @isPublic()
   @Query(() => User)
   findUser(@Args('key', { type: () => Int }) key: number) {
     return this.userService.findUnique({ key });

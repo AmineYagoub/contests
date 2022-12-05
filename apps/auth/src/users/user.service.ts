@@ -46,44 +46,6 @@ export class UserService {
   }
 
   /**
-   * Search teachers by name.
-   *
-   * @param name string
-   * @returns
-   */
-  async findTeacher(name?: string) {
-    try {
-      return this.prisma.user.findMany({
-        take: name ? 100 : 15,
-        where: {
-          AND: {
-            isActive: true,
-            role: {
-              title: {
-                in: [RoleTitle.GOLDEN_TEACHER, RoleTitle.TEACHER],
-              },
-            },
-            profile: name
-              ? {
-                  OR: [
-                    { firstName: { contains: name } },
-                    { lastName: { contains: name } },
-                  ],
-                }
-              : {},
-          },
-        },
-        include: {
-          role: true,
-          profile: true,
-        },
-      });
-    } catch (error) {
-      Logger.error(error);
-    }
-  }
-
-  /**
    * Update a User
    *
    * @param params Prisma.UserUpdateInput The User data.
