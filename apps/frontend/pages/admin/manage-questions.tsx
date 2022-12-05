@@ -12,7 +12,12 @@ import {
   SearchDatePickerIcon,
 } from '@/components/admin/tables/SearchDatePicker';
 import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
-import { Question, QuestionType, Tag as TagModel } from '@/graphql/graphql';
+import {
+  PermissionTitle,
+  Question,
+  QuestionType,
+  Tag as TagModel,
+} from '@/graphql/graphql';
 import { useSearchQuestions } from '@/hooks/admin/manage-questions.hook';
 import AdminLayout from '@/layout/AdminLayout';
 import { QuestionFields, QuestionsDataIndex } from '@/utils/fields';
@@ -25,6 +30,7 @@ import styled from '@emotion/styled';
 import { TableBtn } from './dashboard';
 
 import type { ColumnsType, ColumnType } from 'antd/es/table';
+import { withAuth } from '@/components/common/withAuth';
 const StyledSection = styled('section')({
   backgroundColor: '#f8f8f8 !important',
   position: 'relative',
@@ -204,4 +210,5 @@ const ManageQuestions = () => {
 ManageQuestions.getLayout = (page: EmotionJSX.Element) => (
   <AdminLayout>{page}</AdminLayout>
 );
-export default ManageQuestions;
+
+export default withAuth(ManageQuestions, [PermissionTitle.AccessDashboard]);

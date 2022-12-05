@@ -1,5 +1,7 @@
 import AppSettingsForm from '@/components/admin/settings/AppSettingsForm';
 import ManageSubscriptionPlans from '@/components/admin/settings/ManageSubscriptionPlans';
+import { withAuth } from '@/components/common/withAuth';
+import { PermissionTitle } from '@/graphql/graphql';
 import AdminLayout from '@/layout/AdminLayout';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { Spin, Tabs } from 'antd';
@@ -81,4 +83,4 @@ const ManageSettings = () => {
 ManageSettings.getLayout = (page: EmotionJSX.Element) => (
   <AdminLayout>{page}</AdminLayout>
 );
-export default ManageSettings;
+export default withAuth(ManageSettings, [PermissionTitle.AccessDashboard]);

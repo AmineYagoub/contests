@@ -9,6 +9,8 @@ import AdminLayout from '@/layout/AdminLayout';
 import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
+import { withAuth } from '@/components/common/withAuth';
+import { PermissionTitle } from '@/graphql/graphql';
 
 export const StyledCard = styled(Card)({
   display: 'flex',
@@ -127,4 +129,5 @@ const AdminDashboard: NextPageWithLayout = () => {
 AdminDashboard.getLayout = (page: EmotionJSX.Element) => (
   <AdminLayout>{page}</AdminLayout>
 );
-export default AdminDashboard;
+
+export default withAuth(AdminDashboard, [PermissionTitle.AccessDashboard]);

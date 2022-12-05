@@ -1,5 +1,11 @@
 import AdminLayout from '@/layout/AdminLayout';
-import { RoleTitle, Student, StudentLevel, User } from '@/graphql/graphql';
+import {
+  PermissionTitle,
+  RoleTitle,
+  Student,
+  StudentLevel,
+  User,
+} from '@/graphql/graphql';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import {
@@ -28,6 +34,7 @@ import ViewStudentProfile from '@/components/admin/users/students/ViewStudentPro
 import { useState } from 'react';
 import DeleteUser from '@/components/admin/users/DeleteUser';
 import { TableBtn } from './dashboard';
+import { withAuth } from '@/components/common/withAuth';
 
 const StyledSection = styled('section')({
   backgroundColor: '#f8f8f8 !important',
@@ -254,4 +261,4 @@ const ManageStudents = () => {
 ManageStudents.getLayout = (page: EmotionJSX.Element) => (
   <AdminLayout>{page}</AdminLayout>
 );
-export default ManageStudents;
+export default withAuth(ManageStudents, [PermissionTitle.AccessDashboard]);

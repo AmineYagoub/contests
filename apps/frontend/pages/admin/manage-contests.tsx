@@ -10,7 +10,12 @@ import {
   SearchDatePickerIcon,
 } from '@/components/admin/tables/SearchDatePicker';
 import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
-import { Contest, ContestStatus, StudentLevel } from '@/graphql/graphql';
+import {
+  Contest,
+  ContestStatus,
+  PermissionTitle,
+  StudentLevel,
+} from '@/graphql/graphql';
 import {
   ContestsDataIndex,
   useSearchContests,
@@ -29,6 +34,7 @@ import styled from '@emotion/styled';
 import { TableBtn } from './dashboard';
 
 import type { ColumnsType, ColumnType } from 'antd/es/table';
+import { withAuth } from '@/components/common/withAuth';
 const StyledSection = styled('section')({
   backgroundColor: '#f8f8f8 !important',
   position: 'relative',
@@ -233,4 +239,5 @@ const ManageContests = () => {
 ManageContests.getLayout = (page: EmotionJSX.Element) => (
   <AdminLayout>{page}</AdminLayout>
 );
-export default ManageContests;
+
+export default withAuth(ManageContests, [PermissionTitle.AccessDashboard]);

@@ -1,5 +1,5 @@
 import AdminLayout from '@/layout/AdminLayout';
-import { RoleTitle, Student, User } from '@/graphql/graphql';
+import { PermissionTitle, RoleTitle, Student, User } from '@/graphql/graphql';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import {
@@ -22,6 +22,7 @@ import ViewTeacherProfile from '@/components/admin/users/teachers/ViewTeacherPro
 import { useState } from 'react';
 import DeleteUser from '@/components/admin/users/DeleteUser';
 import { TableBtn } from './dashboard';
+import { withAuth } from '@/components/common/withAuth';
 
 const StyledSection = styled('section')({
   backgroundColor: '#f8f8f8 !important',
@@ -248,4 +249,5 @@ const ManageInstructors = () => {
 ManageInstructors.getLayout = (page: EmotionJSX.Element) => (
   <AdminLayout>{page}</AdminLayout>
 );
-export default ManageInstructors;
+
+export default withAuth(ManageInstructors, [PermissionTitle.AccessDashboard]);

@@ -1,3 +1,5 @@
+import { withAuth } from '@/components/common/withAuth';
+import { PermissionTitle } from '@/graphql/graphql';
 import AdminLayout from '@/layout/AdminLayout';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
@@ -12,4 +14,5 @@ const ManageNotifications = () => {
 ManageNotifications.getLayout = (page: EmotionJSX.Element) => (
   <AdminLayout>{page}</AdminLayout>
 );
-export default ManageNotifications;
+
+export default withAuth(ManageNotifications, [PermissionTitle.AccessDashboard]);
