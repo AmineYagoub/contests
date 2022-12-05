@@ -38,11 +38,19 @@ import { UserModule } from '../users/user.module';
         config: AuthConfigType
       ): Promise<RedisModuleOptions> => {
         return {
-          config: {
-            host: config.redis.host,
-            port: config.redis.port,
-            password: config.redis.password,
-          },
+          config: [
+            {
+              host: config.redis.host,
+              port: config.redis.port,
+              password: config.redis.password,
+            },
+            {
+              namespace: 'publisher',
+              host: config.redis.host,
+              port: config.redis.port,
+              password: config.redis.password,
+            },
+          ],
         };
       },
     }),

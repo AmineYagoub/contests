@@ -1,5 +1,5 @@
 import { PermissionTitle, RoleTitle } from '@contests/types/auth';
-import { getUsers } from '@contests/utils';
+import { getUsers, topics } from '@contests/utils';
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../app/prisma.service';
 import { PasswordService } from '../authentication/password.service';
