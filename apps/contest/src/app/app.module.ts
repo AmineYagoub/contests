@@ -26,7 +26,9 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 @Module({
   imports: [
     AppConfigModule,
-    EventEmitterModule.forRoot(),
+    EventEmitterModule.forRoot({
+      wildcard: true,
+    }),
     GraphQLModule.forRootAsync<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
       useFactory: async (config: ContestConfigGQLType) => config,

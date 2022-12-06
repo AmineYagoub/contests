@@ -1,14 +1,14 @@
 import { withAuth } from '@/components/common/withAuth';
-import { PermissionTitle } from '@/graphql/graphql';
+import MessageBox from '@/components/messages/MessageBox';
+import { PermissionTitle, RoleTitle } from '@/graphql/graphql';
 import AdminLayout from '@/layout/AdminLayout';
+import { AuthState } from '@/valtio/auth.state';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import { useSnapshot } from 'valtio';
 
 const ManageMessages = () => {
-  return (
-    <div>
-      <h1>قريبا ...</h1>
-    </div>
-  );
+  const userSnap = useSnapshot(AuthState).user;
+  return <MessageBox role={RoleTitle.Admin} id={userSnap.id} />;
 };
 
 ManageMessages.getLayout = (page: EmotionJSX.Element) => (

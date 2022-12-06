@@ -18,12 +18,14 @@ query PaginateUsers($params: UserPaginationDto!) {
         lastName
         level
         country
+        personalImage
       }
       ... on Teacher {
         id
         firstName
         lastName
         country
+        personalImage
       }
     }
     }

@@ -26,7 +26,9 @@ import { UserModule } from '../users/user.module';
 @Module({
   imports: [
     AppConfigModule,
-    EventEmitterModule.forRoot(),
+    EventEmitterModule.forRoot({
+      wildcard: true,
+    }),
     GraphQLModule.forRootAsync<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
       useFactory: async (config: AuthConfigGQLType) => config,

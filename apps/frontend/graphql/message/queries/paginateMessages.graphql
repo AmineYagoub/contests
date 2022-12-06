@@ -9,6 +9,30 @@ query PaginateMessages($params: MessagePaginationDto!) {
       updated
       authorId {
         id
+        role {
+          title
+        }
+        profile {
+          __typename
+          ... on Teacher {
+            id
+            country
+            created
+            firstName
+            lastName
+            dateOfBirth
+            personalImage
+          }
+          ... on Student {
+            id
+            level
+            country
+            created
+            firstName
+            lastName
+            personalImage
+          }
+        }
       }
       recipientId {
         id

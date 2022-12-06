@@ -34,7 +34,9 @@ export type TeacherConnectStudent = {
   connect: boolean;
 };
 
-export const CONTEST_CREATED_EVENT = 'contest.created';
+export const CONTEST_CREATED_EVENT = 'contest.created.forStudents';
+export const CONTEST_CREATED_FOR_EVENT = 'contest.created.forLevels';
+export const CONTEST_CREATED_WILDCARD = 'contest.created.*';
 export type ContestCreatedEvent = {
   contestId: string;
   contestTitle: string;
@@ -42,5 +44,3 @@ export type ContestCreatedEvent = {
   level?: StudentLevel[];
   participants?: string[];
 };
-
-export const CONTEST_PARTICIPATING_IDS_EVENT = 'contest.participating.ids';

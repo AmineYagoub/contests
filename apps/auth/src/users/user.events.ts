@@ -6,7 +6,7 @@ import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import {
   ContestCreatedEvent,
   CONTEST_CREATED_EVENT,
-  CONTEST_PARTICIPATING_IDS_EVENT,
+  CONTEST_CREATED_FOR_EVENT,
 } from '@contests/types';
 
 @Injectable()
@@ -33,11 +33,11 @@ export class UserEvents {
   }
 
   /**
-   * Send Notification to teacher.
+   * Send participants IDS to message service.
    *
-   * @param payload: StudentUpdateTeacher
+   * @param payload: ContestCreatedEvent
    *
-   * @returns Promise<Message>
+   * @returns Promise<void>
    */
   @OnEvent(CONTEST_CREATED_EVENT)
   async onContestCreatedEvent(payload: ContestCreatedEvent) {
@@ -53,9 +53,10 @@ export class UserEvents {
         },
         select: { id: true },
       });
+      payload.participants = users.map((el) => el.id);
       this.publisher.publish(
-        CONTEST_PARTICIPATING_IDS_EVENT,
-        JSON.stringify(users)
+        CONTEST_CREATED_FOR_EVENT,
+        JSON.stringify(payload)
       );
     }
   }

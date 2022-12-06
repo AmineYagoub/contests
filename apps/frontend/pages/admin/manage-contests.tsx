@@ -24,6 +24,7 @@ import AdminLayout from '@/layout/AdminLayout';
 import { ContestFields } from '@/utils/fields';
 import {
   contestMappedStatus,
+  getLevelsLabel,
   getMapperLabel,
   studentMappedLevels,
 } from '@/utils/mapper';
@@ -142,13 +143,15 @@ const ManageContests = () => {
       onFilter: methods.handleFilter,
       filteredValue: filteredInfo.level || null,
       render: (levels: StudentLevel[]) => {
-        return levels?.map((level) => {
-          return (
-            <Tag color="warning" key={level}>
-              {getMapperLabel<StudentLevel>(studentMappedLevels, level)}
+        return levels ? (
+          levels?.map((level) => (
+            <Tag color="red" key={level}>
+              {getLevelsLabel<StudentLevel>(studentMappedLevels, level)}
             </Tag>
-          );
-        });
+          ))
+        ) : (
+          <Tag color="gold">غير محدد</Tag>
+        );
       },
     },
     {

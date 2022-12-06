@@ -1218,6 +1218,13 @@ export type PaginateContestsQueryVariables = Exact<{
 
 export type PaginateContestsQuery = { __typename?: 'Query', paginateContest?: { __typename?: 'ContestPaginationResponse', total: number, data?: Array<{ __typename?: 'Contest', id: string, type: ContestType, title: string, level?: Array<StudentLevel> | null, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null }> | null } | null };
 
+export type CreateMessageMutationVariables = Exact<{
+  input: CreateMessageDto;
+}>;
+
+
+export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'Message', id: string, content: string, viewed?: boolean | null, type: MessageType, recipientId?: { __typename?: 'User', id: string } | null } };
+
 export type DeleteMessageMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -1230,7 +1237,7 @@ export type PaginateMessagesQueryVariables = Exact<{
 }>;
 
 
-export type PaginateMessagesQuery = { __typename?: 'Query', paginateMessages?: { __typename?: 'MessagePaginationResponse', total: number, data?: Array<{ __typename?: 'Message', id: string, type: MessageType, content: string, created: any, updated: any, authorId: { __typename?: 'User', id: string }, recipientId?: { __typename?: 'User', id: string } | null }> | null } | null };
+export type PaginateMessagesQuery = { __typename?: 'Query', paginateMessages?: { __typename?: 'MessagePaginationResponse', total: number, data?: Array<{ __typename?: 'Message', id: string, type: MessageType, content: string, created: any, updated: any, authorId: { __typename?: 'User', id: string, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, created: any, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | { __typename: 'Teacher', id: string, country?: string | null, created: any, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null } | null }, recipientId?: { __typename?: 'User', id: string } | null }> | null } | null };
 
 export type PaginateNotificationsQueryVariables = Exact<{
   params: MessagePaginationDto;
@@ -1398,7 +1405,7 @@ export type PaginateUsersQueryVariables = Exact<{
 }>;
 
 
-export type PaginateUsersQuery = { __typename?: 'Query', paginateUsers?: { __typename?: 'UserPaginationResponse', total: number, data?: Array<{ __typename?: 'User', id: string, key: number, isActive: boolean, created: any, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, country?: string | null } | null }> | null } | null };
+export type PaginateUsersQuery = { __typename?: 'Query', paginateUsers?: { __typename?: 'UserPaginationResponse', total: number, data?: Array<{ __typename?: 'User', id: string, key: number, isActive: boolean, created: any, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, country?: string | null, personalImage?: string | null } | null }> | null } | null };
 
 
 export const CreateAnswerDocument = gql`
@@ -2108,6 +2115,45 @@ export function usePaginateContestsLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type PaginateContestsQueryHookResult = ReturnType<typeof usePaginateContestsQuery>;
 export type PaginateContestsLazyQueryHookResult = ReturnType<typeof usePaginateContestsLazyQuery>;
 export type PaginateContestsQueryResult = Apollo.QueryResult<PaginateContestsQuery, PaginateContestsQueryVariables>;
+export const CreateMessageDocument = gql`
+    mutation CreateMessage($input: CreateMessageDto!) {
+  createMessage(input: $input) {
+    id
+    content
+    viewed
+    type
+    recipientId {
+      id
+    }
+  }
+}
+    `;
+export type CreateMessageMutationFn = Apollo.MutationFunction<CreateMessageMutation, CreateMessageMutationVariables>;
+
+/**
+ * __useCreateMessageMutation__
+ *
+ * To run a mutation, you first call `useCreateMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMessageMutation, { data, loading, error }] = useCreateMessageMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateMessageMutation(baseOptions?: Apollo.MutationHookOptions<CreateMessageMutation, CreateMessageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateMessageMutation, CreateMessageMutationVariables>(CreateMessageDocument, options);
+      }
+export type CreateMessageMutationHookResult = ReturnType<typeof useCreateMessageMutation>;
+export type CreateMessageMutationResult = Apollo.MutationResult<CreateMessageMutation>;
+export type CreateMessageMutationOptions = Apollo.BaseMutationOptions<CreateMessageMutation, CreateMessageMutationVariables>;
 export const DeleteMessageDocument = gql`
     mutation DeleteMessage($id: String!) {
   deleteMessage(id: $id) {
@@ -2153,6 +2199,30 @@ export const PaginateMessagesDocument = gql`
       updated
       authorId {
         id
+        role {
+          title
+        }
+        profile {
+          __typename
+          ... on Teacher {
+            id
+            country
+            created
+            firstName
+            lastName
+            dateOfBirth
+            personalImage
+          }
+          ... on Student {
+            id
+            level
+            country
+            created
+            firstName
+            lastName
+            personalImage
+          }
+        }
       }
       recipientId {
         id
@@ -3293,12 +3363,14 @@ export const PaginateUsersDocument = gql`
           lastName
           level
           country
+          personalImage
         }
         ... on Teacher {
           id
           firstName
           lastName
           country
+          personalImage
         }
       }
     }

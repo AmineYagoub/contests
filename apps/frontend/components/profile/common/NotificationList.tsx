@@ -5,11 +5,12 @@ import {
 } from '@/graphql/graphql';
 import { List, Empty, Comment, Divider, Space } from 'antd';
 import { BellOutlined } from '@ant-design/icons';
-import DOMPurify from 'isomorphic-dompurify';
+
 import moment from 'moment-timezone';
 import ViewUserPopover from '@/components/messages/ViewUserPopover';
 import DeleteMessage from '@/components/messages/DeleteMessage';
 import AcceptStudent from '@/components/messages/AcceptStudent';
+import HtmlContent from '@/components/common/HtmlContent';
 
 const NotificationList = ({ id }: { id?: string }) => {
   const { data, loading, refetch } = usePaginateNotificationsQuery({
@@ -54,7 +55,7 @@ const NotificationList = ({ id }: { id?: string }) => {
                 }
                 avatar={item.authorId.profile.personalImage}
                 datetime={moment(item.created).calendar()}
-                content={DOMPurify.sanitize(item.content)}
+                content={<HtmlContent html={item.content} />}
               />
               <div
                 style={{

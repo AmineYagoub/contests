@@ -91,7 +91,8 @@ const ContestForm = ({
           <Form.Item name={ContestFields.level} label="المستوى المستهدف">
             <Select
               disabled={user?.role.title !== RoleTitle.Admin}
-              mode="tags"
+              mode="multiple"
+              maxTagCount={2}
               allowClear
               showArrow
               options={studentMappedLevels}

@@ -6,7 +6,8 @@ import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import {
   ContestCreatedEvent,
   CONTEST_CREATED_EVENT,
-  CONTEST_PARTICIPATING_IDS_EVENT,
+  CONTEST_CREATED_FOR_EVENT,
+  CONTEST_CREATED_WILDCARD,
   MessageType,
   StudentUpdateTeacher,
   STUDENT_ADD_TEACHER_EVENT,
@@ -25,7 +26,7 @@ export class MessageEvents {
       STUDENT_ADD_TEACHER_EVENT,
       TEACHER_CONNECT_STUDENT_EVENT,
       CONTEST_CREATED_EVENT,
-      CONTEST_PARTICIPATING_IDS_EVENT,
+      CONTEST_CREATED_FOR_EVENT,
       (err, count) => {
         if (err) {
           Logger.error('Failed to subscribe: %s', err.message);
@@ -68,9 +69,9 @@ export class MessageEvents {
   }
 
   /**
-   * Send Notification to teacher.
+   * Send Notification to student.
    *
-   * @param payload: StudentUpdateTeacher
+   * @param payload: TeacherConnectStudent
    *
    * @returns Promise<Message>
    */
@@ -93,17 +94,17 @@ export class MessageEvents {
   }
 
   /**
-   * Send Notification to teacher.
+   * Send Notification to participants.
    *
-   * @param payload: StudentUpdateTeacher
+   * @param payload: ContestCreatedEvent
    *
    * @returns Promise<Message>
    */
-  @OnEvent(CONTEST_CREATED_EVENT)
+  @OnEvent(CONTEST_CREATED_WILDCARD)
   async onContestCreatedEvent(payload: ContestCreatedEvent) {
     try {
       const data = {
-        content: `تم إختيارك للمشاركة في مسابقة (${payload.contestTitle}), نتمنى لك حظاً موفقا`,
+        content: `تم إختيارك للمشاركة في مسابقة (<a href="/profile/contests/${payload.contestId}">${payload.contestTitle}</a>) نتمنى لك حظاً موفقا`,
         authorId: payload.authorId,
         sendToAll: false,
         type: MessageType.INFO,
@@ -119,22 +120,6 @@ export class MessageEvents {
           });
         }
       }
-    } catch (error) {
-      Logger.log(error);
-    }
-  }
-
-  /**
-   * Send Notification to teacher.
-   *
-   * @param payload: StudentUpdateTeacher
-   *
-   * @returns Promise<Message>
-   */
-  @OnEvent(CONTEST_PARTICIPATING_IDS_EVENT)
-  async onParticipatingIdsComingEvent(payload: { id: string }[]) {
-    try {
-      console.log(payload);
     } catch (error) {
       Logger.log(error);
     }

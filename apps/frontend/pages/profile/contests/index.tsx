@@ -8,8 +8,9 @@ import ProfileLayout from '@/layout/ProfileLayout';
 import { AuthState } from '@/valtio/auth.state';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { withAuth } from '@/components/common/withAuth';
+import { NextPageWithLayout } from '@/utils/types';
 
-const ProfileContests = () => {
+const ProfileContests: NextPageWithLayout = () => {
   const userSnap = useSnapshot(AuthState);
   const tabs = [
     {

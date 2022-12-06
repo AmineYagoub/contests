@@ -1,0 +1,11 @@
+mutation CreateMessage($input: CreateMessageDto!) {
+  createMessage(input: $input) {
+    id
+    content
+    viewed
+    type
+    recipientId {
+      id
+    }
+  }
+}

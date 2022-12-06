@@ -142,7 +142,7 @@ const ContestPageHeader = () => {
     >
       <Row justify="center">
         <StyledCol span={6}>
-          <StyledStatLevels
+          {/* <StyledStatLevels
             title="مستوى المسابقة"
             value=""
             suffix={contestSnap.contest.level.map((el) => (
@@ -150,7 +150,7 @@ const ContestPageHeader = () => {
                 {getMapperLabel(studentMappedLevels, el)}
               </Tag>
             ))}
-          />
+          /> */}
         </StyledCol>
         <StyledCol span={6}>
           {contestSnap.contestStarted ? (
