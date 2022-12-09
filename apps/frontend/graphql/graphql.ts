@@ -576,6 +576,7 @@ export type Query = {
   paginateNotifications?: Maybe<MessagePaginationResponse>;
   paginateQuestions?: Maybe<QuestionPaginationResponse>;
   paginateUsers?: Maybe<UserPaginationResponse>;
+  searchUsers?: Maybe<Array<Profile>>;
 };
 
 
@@ -663,6 +664,11 @@ export type QueryPaginateQuestionsArgs = {
 
 
 export type QueryPaginateUsersArgs = {
+  params: UserPaginationDto;
+};
+
+
+export type QuerySearchUsersArgs = {
   params: UserPaginationDto;
 };
 
@@ -802,6 +808,8 @@ export type Student = {
   teacher?: Maybe<Teacher>;
   /** Identifies the date and time when the object was last updated. */
   updated: Scalars['DateTime'];
+  /** Identifies the user is of the profile. */
+  userId?: Maybe<Scalars['String']>;
 };
 
 /** Student Level */
@@ -864,6 +872,8 @@ export type Teacher = {
   subscription?: Maybe<Membership>;
   /** Identifies the date and time when the object was last updated. */
   updated: Scalars['DateTime'];
+  /** Identifies the user is of the profile. */
+  userId?: Maybe<Scalars['String']>;
 };
 
 export type Topic = {
@@ -1223,7 +1233,7 @@ export type CreateMessageMutationVariables = Exact<{
 }>;
 
 
-export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'Message', id: string, content: string, viewed?: boolean | null, type: MessageType, recipientId?: { __typename?: 'User', id: string } | null } };
+export type CreateMessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'Message', id: string, type: MessageType, content: string, created: any, updated: any, authorId: { __typename?: 'User', id: string, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, created: any, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | { __typename: 'Teacher', id: string, country?: string | null, created: any, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null } | null }, recipientId?: { __typename?: 'User', id: string } | null } };
 
 export type DeleteMessageMutationVariables = Exact<{
   id: Scalars['String'];
@@ -1406,6 +1416,13 @@ export type PaginateUsersQueryVariables = Exact<{
 
 
 export type PaginateUsersQuery = { __typename?: 'Query', paginateUsers?: { __typename?: 'UserPaginationResponse', total: number, data?: Array<{ __typename?: 'User', id: string, key: number, isActive: boolean, created: any, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, country?: string | null, personalImage?: string | null } | null }> | null } | null };
+
+export type SearchUsersQueryVariables = Exact<{
+  params: UserPaginationDto;
+}>;
+
+
+export type SearchUsersQuery = { __typename?: 'Query', searchUsers?: Array<{ __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, userId?: string | null, personalImage?: string | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, userId?: string | null, personalImage?: string | null }> | null };
 
 
 export const CreateAnswerDocument = gql`
@@ -2119,9 +2136,37 @@ export const CreateMessageDocument = gql`
     mutation CreateMessage($input: CreateMessageDto!) {
   createMessage(input: $input) {
     id
-    content
-    viewed
     type
+    content
+    created
+    updated
+    authorId {
+      id
+      role {
+        title
+      }
+      profile {
+        __typename
+        ... on Teacher {
+          id
+          country
+          created
+          firstName
+          lastName
+          dateOfBirth
+          personalImage
+        }
+        ... on Student {
+          id
+          level
+          country
+          created
+          firstName
+          lastName
+          personalImage
+        }
+      }
+    }
     recipientId {
       id
     }
@@ -3405,3 +3450,52 @@ export function usePaginateUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type PaginateUsersQueryHookResult = ReturnType<typeof usePaginateUsersQuery>;
 export type PaginateUsersLazyQueryHookResult = ReturnType<typeof usePaginateUsersLazyQuery>;
 export type PaginateUsersQueryResult = Apollo.QueryResult<PaginateUsersQuery, PaginateUsersQueryVariables>;
+export const SearchUsersDocument = gql`
+    query SearchUsers($params: UserPaginationDto!) {
+  searchUsers(params: $params) {
+    __typename
+    ... on Student {
+      id
+      firstName
+      lastName
+      userId
+      personalImage
+    }
+    ... on Teacher {
+      id
+      firstName
+      lastName
+      userId
+      personalImage
+    }
+  }
+}
+    `;
+
+/**
+ * __useSearchUsersQuery__
+ *
+ * To run a query within a React component, call `useSearchUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchUsersQuery({
+ *   variables: {
+ *      params: // value for 'params'
+ *   },
+ * });
+ */
+export function useSearchUsersQuery(baseOptions: Apollo.QueryHookOptions<SearchUsersQuery, SearchUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchUsersQuery, SearchUsersQueryVariables>(SearchUsersDocument, options);
+      }
+export function useSearchUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchUsersQuery, SearchUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchUsersQuery, SearchUsersQueryVariables>(SearchUsersDocument, options);
+        }
+export type SearchUsersQueryHookResult = ReturnType<typeof useSearchUsersQuery>;
+export type SearchUsersLazyQueryHookResult = ReturnType<typeof useSearchUsersLazyQuery>;
+export type SearchUsersQueryResult = Apollo.QueryResult<SearchUsersQuery, SearchUsersQueryVariables>;

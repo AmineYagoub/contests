@@ -36,6 +36,12 @@ export abstract class BaseProfile {
   personalImage?: string;
 
   @Field({
+    description: 'Identifies the user is of the profile.',
+    nullable: true,
+  })
+  userId?: string;
+
+  @Field({
     description: 'Identifies the date and time when the object was created.',
     nullable: true,
   })

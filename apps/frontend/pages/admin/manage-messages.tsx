@@ -8,7 +8,13 @@ import { useSnapshot } from 'valtio';
 
 const ManageMessages = () => {
   const userSnap = useSnapshot(AuthState).user;
-  return <MessageBox role={RoleTitle.Admin} id={userSnap.id} />;
+  return (
+    <MessageBox
+      role={RoleTitle.Admin}
+      id={userSnap.id}
+      avatar={userSnap.profile.personalImage}
+    />
+  );
 };
 
 ManageMessages.getLayout = (page: EmotionJSX.Element) => (

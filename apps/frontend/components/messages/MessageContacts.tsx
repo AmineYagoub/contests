@@ -1,8 +1,18 @@
-import { Menu, Layout, Avatar, Button } from 'antd';
+import { Menu, Layout, Avatar, Button, Skeleton, Space, Input } from 'antd';
 import type { MenuProps } from 'antd';
 import { User } from '@/graphql/graphql';
+import styled from '@emotion/styled';
+import { getMapperLabel, rolesMappedTypes } from '@/utils/mapper';
+import { alwaysTake } from '@/hooks/messages/contact.hook';
 
 type MenuItem = Required<MenuProps>['items'][number];
+
+const StyledMenu = styled(Menu)({
+  backgroundColor: '#dce0e6 !important',
+  li: {
+    paddingLeft: '25px !important',
+  },
+});
 
 function getContact(
   label: React.ReactNode,
@@ -20,19 +30,50 @@ function getContact(
   } as MenuItem;
 }
 
+const LoadingStat = () => {
+  return (
+    <>
+      {Array(alwaysTake)
+        .fill(null)
+        .map((e, i) => (
+          <Space key={i}>
+            <Skeleton.Avatar active style={{ margin: '10px 0' }} />
+            <Skeleton.Input active size="small" />
+          </Space>
+        ))}
+    </>
+  );
+};
+
 const MessageContacts = ({
   users,
   collapsed,
   loadMoreData,
+  loading,
+  onSelect,
+  selected,
+  onSearch,
+  searchValue,
 }: {
   users: User[];
   collapsed: boolean;
   loadMoreData: () => Promise<void>;
+  loading: boolean;
+  onSelect: ({ key }: { key: string }) => void;
+  selected: string;
+  onSearch: (value: string) => void;
+  searchValue: string;
 }) => {
-  const items: MenuItem[] = users.map((user) => {
+  const items: MenuItem[] = users?.map((user) => {
     const { firstName, lastName, personalImage } = user.profile;
     return getContact(
-      `${firstName} ${lastName}`,
+      <>
+        <b>
+          {firstName} {lastName}
+        </b>
+        <br />
+        <span>{getMapperLabel(rolesMappedTypes, user.role.title)}</span>
+      </>,
       user.id,
       <Avatar src={personalImage} alt="logo" />
     );
@@ -50,33 +91,27 @@ const MessageContacts = ({
         overflow: 'scroll',
       }}
     >
-      <Menu
+      {!collapsed && (
+        <Input.Search
+          placeholder="البحث في قائمة الإتصال"
+          onSearch={onSearch}
+          onInput={(e) => onSearch(e.currentTarget.value)}
+        />
+      )}
+      <StyledMenu
         mode="inline"
-        inlineCollapsed={collapsed}
         items={items}
-        style={{ backgroundColor: '#dce0e6' }}
+        onSelect={onSelect}
+        defaultSelectedKeys={[selected]}
+        defaultOpenKeys={[selected]}
       />
+      {loading && <LoadingStat />}
 
-      {/* <List
-        dataSource={users}
-        itemLayout='horizontal'
-        renderItem={(item) => {
-          const { firstName, lastName, personalImage } = item.profile;
-          console.log(personalImage);
-          return (
-            <List.Item key={item.id}>
-              <Skeleton avatar title={false} loading={false} active>
-                <List.Item.Meta
-                  avatar={<Avatar src={personalImage} />}
-                  title={`${firstName} ${lastName}`}
-                />
-              </Skeleton>
-            </List.Item>
-          );
-        }}
-      /> */}
-
-      <Button onClick={loadMoreData}>تحميل أكثر</Button>
+      {!collapsed && users?.length >= alwaysTake && !searchValue && (
+        <Button onClick={loadMoreData} style={{ marginTop: 10 }}>
+          تحميل أكثر
+        </Button>
+      )}
     </Layout.Sider>
   );
 };

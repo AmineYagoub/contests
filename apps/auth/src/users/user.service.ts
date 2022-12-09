@@ -116,6 +116,40 @@ export class UserService {
    * @param params Prisma.UserPaginationInput The pagination input.
    * @returns Promise<Prisma.User[]>
    */
+  async searchFirstLastName(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.UserWhereUniqueInput;
+    where?: Prisma.ProfileWhereInput & Prisma.UserWhereInput;
+    orderBy?: Prisma.UserOrderByWithRelationInput;
+  }) {
+    const { skip, take, where } = params;
+    const { firstName } = where;
+
+    const searchArray = String(firstName)
+      .toLowerCase()
+      .split(/\s+/g)
+      .map((s: string) => `%${s}%`);
+    const users = await this.prisma.$queryRaw`
+          SELECT *
+          FROM Profile
+          WHERE lower(concat(firstName, lastName))
+          LIKE ${Prisma.join(
+            searchArray,
+            ' AND lower(concat(firstName, lastName)) LIKE '
+          )}
+          LIMIT ${skip}, ${take}
+        `;
+
+    return users;
+  }
+
+  /**
+   * Paginate users
+   *
+   * @param params Prisma.UserPaginationInput The pagination input.
+   * @returns Promise<Prisma.User[]>
+   */
   async paginate(params: {
     skip?: number;
     take?: number;

@@ -1,12 +1,21 @@
 import { withAuth } from '@/components/common/withAuth';
-import { PermissionTitle } from '@/graphql/graphql';
+import { PermissionTitle, RoleTitle } from '@/graphql/graphql';
 import ProfileLayout from '@/layout/ProfileLayout';
 import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import MessageBox from '@/components/messages/MessageBox';
+import { useSnapshot } from 'valtio';
+import { AuthState } from '@/valtio/auth.state';
 
 const TeacherMessages: NextPageWithLayout = () => {
-  return <MessageBox />;
+  const userSnap = useSnapshot(AuthState).user;
+  return (
+    <MessageBox
+      role={RoleTitle.Teacher}
+      id={userSnap.id}
+      avatar={userSnap.profile.personalImage}
+    />
+  );
 };
 TeacherMessages.getLayout = (page: EmotionJSX.Element) => (
   <ProfileLayout>{page}</ProfileLayout>

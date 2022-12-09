@@ -2,7 +2,6 @@ import { proxy } from 'valtio';
 
 import { User } from '@/graphql/graphql';
 import { cloneDeep } from '@apollo/client/utilities';
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 export type MessageContentType = {
   id: string;
@@ -10,7 +9,7 @@ export type MessageContentType = {
   authorId: string;
   avatar: string;
   content: string;
-  datetime: EmotionJSX.Element;
+  datetime: string;
 };
 
 interface MessageStorage {

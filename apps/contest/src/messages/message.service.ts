@@ -154,8 +154,12 @@ export class MessageService {
     cursor?: Prisma.MessageWhereUniqueInput;
     where?: Prisma.MessageWhereInput;
   }) {
+    const { authorId, recipientId } = params.where;
     params.where = {
-      ...params.where,
+      OR: [
+        { authorId, recipientId },
+        { recipientId: authorId, authorId: recipientId },
+      ],
       type: {
         equals: MessageType.MESSAGE,
       },

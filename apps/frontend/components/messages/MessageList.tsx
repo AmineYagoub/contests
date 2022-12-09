@@ -1,11 +1,12 @@
-import { DeleteOutlined } from '@ant-design/icons';
+import { ClockCircleOutlined } from '@ant-design/icons';
 import { useInView } from 'react-intersection-observer';
-import { useRef } from 'react';
-import { Comment, List, Skeleton, Empty, Button } from 'antd';
-import { useDeleteMessageMutation } from '@/graphql/graphql';
-import { Logger } from '@/utils/app';
-import { MessageActions, MessageContentType } from '@/valtio/message.state';
+import { useEffect, useRef } from 'react';
+import { List, Skeleton, Empty, Tooltip, Tag } from 'antd';
+import { MessageContentType } from '@/valtio/message.state';
 import styled from '@emotion/styled';
+import Loading from '../common/Loading';
+import moment from 'moment-timezone';
+import Avatar from 'antd/lib/avatar/avatar';
 
 export const messagesLimit = 10;
 
@@ -15,46 +16,39 @@ const StyledSection = styled('section')({
   paddingLeft: 13,
 });
 
-const StyledComment = styled(Comment)`
-  borderRadius: 35,
-  padding: '0 20px',
-  margin: '10px 0',
-  width: '90%',
-  direction: ${(props) => (props.prefixCls === 'left' ? 'ltr' : 'rtl')},
-  float: ${(props) => (props.prefixCls === 'left' ? 'left' : 'right')},
-  backgroundColor: ${(props) => (props.prefixCls === 'left' ? '#efefef' : '')},
+const { Item } = List;
+
+const StyledListItem = styled(Item)`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch !important;
+  width: 90%;
+  border-radius: 35px;
+  padding: 20px 10px !important;
+  margin: 5px 20px;
+  text-align: justify;
+  direction: ${(props) => (props.dir === 'left' ? 'ltr' : 'rtl')};
+  float: ${(props) => (props.dir === 'left' ? 'left' : 'right')};
+  background-color: ${(props) =>
+    props.dir === 'left' ? '#efefef' : 'lightblue'};
 `;
 
 const MessagesList = ({
   messages,
   hasMore,
   loading,
+  viewRef,
+  id,
 }: {
   messages: MessageContentType[];
   hasMore: boolean;
   loading: boolean;
+  viewRef: (node?: Element) => void;
+  id: string;
 }) => {
-  const [ref, inView] = useInView();
   const [reference] = useInView();
   const scrollArea = useRef();
   const loadMoreArea = useRef();
-
-  const [DeleteMessageMutation] = useDeleteMessageMutation();
-
-  const deleteMessage = async (id: string) => {
-    try {
-      const { data } = await DeleteMessageMutation({
-        variables: {
-          id,
-        },
-      });
-      if (data?.deleteMessage) {
-        MessageActions.deleteMessage(id);
-      }
-    } catch (error) {
-      Logger.log(error);
-    }
-  };
 
   /*   useEffect(() => {
     if (inView && messages?.length > 0 && messages?.length < dataLength) {
@@ -113,18 +107,18 @@ const MessagesList = ({
     });
   }, []); */
 
-  /*   useEffect(() => {
+  useEffect(() => {
     if (scrollArea.current) {
       (scrollArea.current as HTMLDivElement).scrollIntoView({
         behavior: 'smooth',
       });
     }
-  }, [messageAdded]); */
+  }, [messages]);
 
   return (
     <StyledSection ref={loadMoreArea}>
       <div
-        ref={ref}
+        ref={viewRef}
         style={{
           textAlign: 'center',
         }}
@@ -134,40 +128,48 @@ const MessagesList = ({
       {messages?.length > 0 ? (
         <List
           bordered={false}
-          loading={loading}
           itemLayout="horizontal"
           dataSource={messages}
           renderItem={(item) => {
-            const isMe = item.authorId !== 'meId';
-
+            const isMe = item.authorId === id;
             return (
-              <StyledComment
-                prefixCls={isMe ? 'left' : 'right'}
-                actions={[
-                  !isMe && (
-                    <Button
-                      type="link"
-                      icon={<DeleteOutlined style={{ color: '#e400dd' }} />}
-                      onClick={() => deleteMessage(item.id)}
-                    >
-                      حذف
-                    </Button>
-                  ),
-                ]}
-                author={<span ref={reference}>{item.authorName}</span>}
-                avatar={item.avatar}
-                content={
-                  <div
+              <StyledListItem dir={isMe ? 'left' : 'right'} key={item.id}>
+                <Skeleton loading={loading} active avatar>
+                  <Item.Meta
+                    avatar={<Avatar src={item.avatar} />}
+                    title={<span ref={reference}>{item.authorName}</span>}
+                    description={
+                      <Tooltip
+                        title={moment(item.datetime).format('h:mm:ss a')}
+                      >
+                        <Tag
+                          color="green"
+                          icon={
+                            <ClockCircleOutlined style={{ color: 'green' }} />
+                          }
+                          style={{ borderRadius: 35 }}
+                        >
+                          {moment(item.datetime).format('Do MMMM YYYY')}
+                        </Tag>
+                      </Tooltip>
+                    }
+                  />
+                  <b
                     ref={scrollArea}
-                    style={{ direction: 'rtl', whiteSpace: 'pre-wrap' }}
+                    style={{
+                      padding: 15,
+                      whiteSpace: 'pre-wrap',
+                      textAlign: 'right',
+                    }}
                     dangerouslySetInnerHTML={{ __html: item.content }}
-                  ></div>
-                }
-                datetime={item.datetime}
-              />
+                  ></b>
+                </Skeleton>
+              </StyledListItem>
             );
           }}
         />
+      ) : loading ? (
+        <Loading />
       ) : (
         <Empty
           imageStyle={{

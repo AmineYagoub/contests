@@ -12,6 +12,7 @@ import {
   ResolveReference,
 } from '@nestjs/graphql';
 import { SeedService } from '../app/seed.service';
+import { Profile } from '../profile/profile.resolver';
 
 import { User } from './user.model';
 import { UserService } from './user.service';
@@ -61,6 +62,12 @@ export class UserResolver {
   @Query(() => UserPaginationResponse, { nullable: true })
   async paginateUsers(@Args('params') params: UserPaginationDto) {
     return this.userService.paginate(params);
+  }
+
+  @isPublic()
+  @Query(() => [Profile], { nullable: true })
+  async searchUsers(@Args('params') params: UserPaginationDto) {
+    return this.userService.searchFirstLastName(params);
   }
 
   @isPublic()

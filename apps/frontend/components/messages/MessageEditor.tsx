@@ -1,9 +1,6 @@
-import { useState } from 'react';
 import { Comment, Avatar, Form, Button, Input } from 'antd';
-import { Logger } from '@/utils/app';
-import { MessageType, useCreateMessageMutation } from '@/graphql/graphql';
-import { useSnapshot } from 'valtio';
-import { MessageState } from '@/valtio/message.state';
+import { FormInstance } from 'antd/es/form/Form';
+import { SendOutlined } from '@ant-design/icons';
 
 const { TextArea } = Input;
 const isMobileOnly = false;
@@ -39,6 +36,7 @@ const Editor = ({ form, onSubmit, loading, disabled }) => (
         type="primary"
         size="middle"
         disabled={disabled}
+        icon={<SendOutlined />}
       >
         أضف رسالة
       </Button>
@@ -46,45 +44,21 @@ const Editor = ({ form, onSubmit, loading, disabled }) => (
   </Form>
 );
 
-const MessageEditor = ({ id, avatar }: { id: string; avatar: string }) => {
-  const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
-  const [createMessageMutation] = useCreateMessageMutation();
-  const messageSnap = useSnapshot(MessageState);
-  //const socket = useReactiveVar(socketVar);
-
-  const handleSubmit = async () => {
-    const content = form.getFieldValue('content');
-
-    if (content && messageSnap.currentContactId) {
-      try {
-        setLoading(true);
-        const { data } = await createMessageMutation({
-          variables: {
-            input: {
-              content,
-              authorId: id,
-              recipientId: messageSnap.currentContactId,
-              type: MessageType.Message,
-            },
-          },
-        });
-        if (data) {
-          /*           socket.emit("onMessageCreated", {
-            data: data.createMessage,
-            to: currentContact,
-          });
- */
-          form.resetFields();
-        }
-      } catch (error) {
-        Logger.log(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
-  const isEditorDisabled = false;
+const MessageEditor = ({
+  id,
+  avatar,
+  disabled,
+  handleSubmit,
+  loading,
+  form,
+}: {
+  id: string;
+  avatar: string;
+  disabled: boolean;
+  handleSubmit: () => Promise<void>;
+  loading: boolean;
+  form: FormInstance<unknown>;
+}) => {
   return (
     <Comment
       avatar={<Avatar src={avatar} alt="logo" />}
@@ -93,7 +67,7 @@ const MessageEditor = ({ id, avatar }: { id: string; avatar: string }) => {
           onSubmit={handleSubmit}
           loading={loading}
           form={form}
-          disabled={!isEditorDisabled}
+          disabled={disabled}
         />
       }
     />
