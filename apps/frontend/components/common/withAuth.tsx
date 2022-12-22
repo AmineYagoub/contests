@@ -17,7 +17,8 @@ import { NextPageWithLayout } from '@/utils/types';
 
 export function withAuth<P>(
   WrappedComponent: NextPageWithLayout,
-  permissions?: PermissionTitle[]
+  permissions?: PermissionTitle[],
+  isPublic = false
 ) {
   const ComponentWithPermissions = (props: P) => {
     const router = useRouter();
@@ -33,7 +34,7 @@ export function withAuth<P>(
         router.push(AppRoutes.SignIn);
       };
       const jwt = localStorage.getItem(config.jwtName);
-      if (!jwt) {
+      if (!jwt && !isPublic) {
         notification.error({
           message: 'لا يمكنك الوصول لهذه الصفحة!',
           description: 'يرجى تسجيل دخولك لتتمكن من الوصول لخدمات الموقع.',
@@ -42,7 +43,7 @@ export function withAuth<P>(
         return;
       }
 
-      if (!user) {
+      if (jwt && !user) {
         GetAuthUserQuery()
           .then(({ data }) => {
             if (!data?.getAuthUser) {
