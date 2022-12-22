@@ -1,56 +1,84 @@
-import { Button, Spin } from 'antd';
-import Link from 'next/link';
-
-import {
-  RoleTitle,
-  useGetAuthUserQuery,
-  usePaginateContestsQuery,
-} from '@/graphql/graphql';
+import { Col, Row, Space, Typography } from 'antd';
+import theme from '@/config/theme';
 import HomeLayout from '@/layout/HomeLayout';
 import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import { AppRoutes } from '@/utils/routes';
+import StyledButton from '@/components/common/StyledButton';
 
-const logout = () => {
-  localStorage.clear();
+import Image from 'next/image';
+import { withAuth } from '@/components/common/withAuth';
+import styled from '@emotion/styled';
+import HowItWorkSvg from '@/components/home/HowItWorkSvg';
+import HowItWorkSection from '@/components/home/HowItWorkSection';
+import ContestCategoriesSection from '@/components/home/ContestCategoriesSection';
+import TwoWayInstructor from '@/components/home/TwoWayInstructor';
+
+const { Title, Paragraph } = Typography;
+
+const title = {
+  lineHeight: '1.05em',
+  color: 'transparent',
+  background: `linear-gradient(to left, ${theme.primaryColor}, #ef32d9)`,
+  ['-webkit-background-clip']: 'text',
+  ['-webkit-text-fill-color']: 'transparent',
 };
 
+const StyledContainer = styled(Row)({
+  padding: '0 25px',
+  justifyContent: 'center',
+  alignItems: 'center',
+  h1: {
+    fontSize: '4rem !important',
+    ...title,
+  },
+});
+
+const StyledParagraph = styled(Paragraph)({
+  marginTop: 24,
+  fontSize: 20,
+  lineHeight: 1.6,
+  color: '#525466 !important',
+  fontWeight: 400,
+  maxWidth: 700,
+});
+
 const Index: NextPageWithLayout = (props) => {
-  const { data: d, loading: l } = useGetAuthUserQuery();
-  const { data, loading } = usePaginateContestsQuery({
-    variables: {
-      params: { take: 10 },
-    },
-  });
-  return loading || l ? (
-    <Spin />
-  ) : (
+  return (
     <>
-      <h1>soon.......</h1>
-
-      <div>
-        <Link href="/admin/dashboard">لوحة تحكم الادارة</Link>
-      </div>
-
-      {d?.getAuthUser?.role.title.includes(RoleTitle.Teacher) && (
-        <Link href="/teacher/dashboard">صفحتي الشخصية</Link>
-      )}
-      {d?.getAuthUser?.role.title.includes(RoleTitle.Student) && (
-        <Link href="/profile/dashboard">صفحتي الشخصية</Link>
-      )}
-
-      {data?.paginateContest?.data.map((el) => (
-        <div key={el.id}>
-          <Link href={`/profile/contests/${el.id}`}>{el.title}</Link>
-        </div>
-      ))}
-      {d?.getAuthUser && (
-        <Button onClick={logout} type="link" href={AppRoutes.SignIn}>
-          تسجيل الخروج
-        </Button>
-      )}
+      <StyledContainer>
+        <Col span={14}>
+          <Title>مسابقات مجانية لكل طلاب العالم في النحو و اللغة العربية</Title>
+          <StyledParagraph>
+            تقدم منصة ألمبياد النحو العربي العديد من المسابقات والجوائز لجميع
+            الأعمار إبتداءا من الصف السادس الإبتدائي إلى الصف الثالث الثانوي.
+          </StyledParagraph>
+          <Space style={{ marginTop: 20 }}>
+            <StyledButton size="large">سجل كمعلم</StyledButton>
+            <StyledButton
+              size="large"
+              type="primary"
+              shape="round"
+              style={{ width: 200 }}
+            >
+              إنظم إلينا
+            </StyledButton>
+          </Space>
+        </Col>
+        <Col span={10} style={{ position: 'relative', height: 570 }}>
+          <Image
+            src="/img/teamwork.png"
+            alt="Picture of the author"
+            fill
+            style={{ objectFit: 'contain' }}
+          />
+        </Col>
+      </StyledContainer>
+      <ContestCategoriesSection />
+      <HowItWorkSvg />
+      <HowItWorkSection />
+      <TwoWayInstructor />
     </>
   );
 };
 Index.getLayout = (page: EmotionJSX.Element) => <HomeLayout>{page}</HomeLayout>;
-export default Index;
+export default withAuth(Index, null, true);
