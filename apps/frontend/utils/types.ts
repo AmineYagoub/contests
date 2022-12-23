@@ -67,3 +67,13 @@ export type ConstraintsErrors = {
 export type GraphqlResponseError = {
   constraints: ConstraintsErrors[];
 };
+
+export enum MessageRecipients {
+  ALL,
+  TEACHERS,
+  GOLDEN_TEACHERS,
+  FREE_TEACHERS,
+  STUDENTS,
+  STUDENTS_TEACHERS,
+  FREE_STUDENTS,
+}

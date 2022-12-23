@@ -8,12 +8,14 @@ import {
   CONTEST_CREATED_EVENT,
   CONTEST_CREATED_FOR_EVENT,
   CONTEST_CREATED_WILDCARD,
+  MESSAGES_SEND_FOR_EVENT,
   MessageType,
   StudentUpdateTeacher,
   STUDENT_ADD_TEACHER_EVENT,
   TeacherConnectStudent,
   TEACHER_CONNECT_STUDENT_EVENT,
 } from '@contests/types';
+import { SendMessageDto } from '@contests/dto';
 
 @Injectable()
 export class MessageEvents {
@@ -27,6 +29,7 @@ export class MessageEvents {
       TEACHER_CONNECT_STUDENT_EVENT,
       CONTEST_CREATED_EVENT,
       CONTEST_CREATED_FOR_EVENT,
+      MESSAGES_SEND_FOR_EVENT,
       (err, count) => {
         if (err) {
           Logger.error('Failed to subscribe: %s', err.message);
@@ -57,9 +60,8 @@ export class MessageEvents {
         data: {
           recipientId: payload.teacherId,
           authorId: payload.userId,
-          sendToAll: false,
           type: MessageType.REQUEST,
-          viewers: [],
+          recipients: [],
           content: `إختارك الطالب ${payload.name} لتكون مشرفا عليه`,
         },
       });
@@ -82,9 +84,8 @@ export class MessageEvents {
         data: {
           recipientId: payload.studentId,
           authorId: payload.teacherId,
-          sendToAll: false,
           type: MessageType.INFO,
-          viewers: [],
+          recipients: [],
           content: `تم قبول طلبك من طرف المعلم ${payload.name} ليكون مشرفا عليك`,
         },
       });
@@ -106,20 +107,35 @@ export class MessageEvents {
       const data = {
         content: `تم إختيارك للمشاركة في مسابقة (<a href="/profile/contests/${payload.contestId}">${payload.contestTitle}</a>) نتمنى لك حظاً موفقا`,
         authorId: payload.authorId,
-        sendToAll: false,
         type: MessageType.INFO,
-        viewers: [],
+        recipients: [],
       };
       if (payload.participants?.length) {
-        for await (const id of payload.participants) {
-          await this.prisma.message.create({
-            data: {
-              recipientId: id,
-              ...data,
-            },
-          });
-        }
+        await this.prisma.message.create({
+          data: {
+            ...data,
+            recipients: payload.participants,
+          },
+        });
       }
+    } catch (error) {
+      Logger.log(error);
+    }
+  }
+
+  /**
+   * Admin or teacher Send Notification to multiple users.
+   *
+   * @param payload: SendMessageDto
+   *
+   * @returns Promise<Message>
+   */
+  @OnEvent(MESSAGES_SEND_FOR_EVENT)
+  async onNotificationSentEvent(payload: SendMessageDto) {
+    try {
+      await this.prisma.message.create({
+        data: payload,
+      });
     } catch (error) {
       Logger.log(error);
     }

@@ -38,12 +38,11 @@ enum MessageType {
 model Message {
   id                String      @id @default(uuid())
   content           String      @db.TinyText
-  sendToAll         Boolean?    @default(false)
   published         Boolean?    @default(true)
   authorId          String      @db.VarChar(255)
   recipientId       String?     @db.VarChar(255) @default("")
   viewed            Boolean?    @default(false)
-  viewers           Json        @db.Json
+  recipients        Json        @db.Json
   type              MessageType
   created           DateTime    @default(now())
   updated           DateTime    @updatedAt

@@ -11,6 +11,11 @@ const StyledMenu = styled(Menu)({
   backgroundColor: '#dce0e6 !important',
   li: {
     paddingLeft: '25px !important',
+    boxShadow: '0 1px 3px blueviolet',
+    '&.ant-menu-item': {
+      margin: '0 !important',
+      height: 45,
+    },
   },
 });
 
@@ -108,7 +113,14 @@ const MessageContacts = ({
       {loading && <LoadingStat />}
 
       {!collapsed && users?.length >= alwaysTake && !searchValue && (
-        <Button onClick={loadMoreData} style={{ marginTop: 10 }}>
+        <Button
+          onClick={loadMoreData}
+          style={{ marginTop: 20 }}
+          size="small"
+          shape="round"
+          type="primary"
+          ghost
+        >
           تحميل أكثر
         </Button>
       )}

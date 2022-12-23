@@ -13,6 +13,7 @@ import {
   MessageState,
 } from '@/valtio/message.state';
 import { useContactList } from '@/hooks/messages/contact.hook';
+import { LeftCircleFilled, RightCircleFilled } from '@ant-design/icons';
 
 const StyledSection = styled(Card)({
   width: '80vw',
@@ -46,20 +47,20 @@ const MessageBox = ({
   const { loadMoreData, onSearch, searchValue } = useContactList(role, id);
 
   return (
-    <StyledSection
-      bordered={false}
-      bodyStyle={{ padding: 0 }}
-      title={
-        <Button type="primary" onClick={toggleCollapsed}>
-          قائمة الإتصال
-        </Button>
-      }
-    >
+    <StyledSection bordered={false} bodyStyle={{ padding: 0 }}>
+      <Button
+        type="primary"
+        onClick={toggleCollapsed}
+        style={{ marginBottom: 5 }}
+        shape="circle"
+        icon={collapsed ? <LeftCircleFilled /> : <RightCircleFilled />}
+      />
+
       <Layout>
         <MessageContacts
           collapsed={collapsed}
           users={messageSnap.contactList as User[]}
-          loadMoreData={loadMoreData}
+          loadMoreData={() => loadMoreData(false)}
           loading={messageSnap.contactLoading}
           onSelect={({ key }) => MessageActions.setCurrentContact(key)}
           selected={messageSnap.currentContactId}

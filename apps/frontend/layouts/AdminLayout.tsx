@@ -1,7 +1,7 @@
 import { Layout, Menu } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { createElement, useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import TeacherIcon from '@/components/icons/TeacherIcon';
 import { socketVar } from '@/utils/app';
@@ -12,16 +12,16 @@ import {
   EditOutlined,
   IdcardOutlined,
   MailOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   SettingOutlined,
   TrophyOutlined,
 } from '@ant-design/icons';
 import { useReactiveVar } from '@apollo/client';
 import styled from '@emotion/styled';
 
-import { StyledHeader } from './HomeLayout';
 import StyledFooter from './StyledFooter';
+import HeaderIcons from '@/components/common/HeaderIcons';
+import { useSnapshot } from 'valtio';
+import { AuthState } from '@/valtio/auth.state';
 
 const { Content, Sider } = Layout;
 
@@ -43,6 +43,7 @@ export const StyledMenu = styled(Menu)({
 });
 
 const AdminLayout = ({ children }) => {
+  const user = useSnapshot(AuthState).user;
   const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
   const socket = useReactiveVar(socketVar);
@@ -142,12 +143,7 @@ const AdminLayout = ({ children }) => {
         />
       </Sider>
       <Layout>
-        <StyledHeader>
-          {createElement(!collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-            className: 'trigger',
-            onClick: () => setCollapsed(!collapsed),
-          })}
-        </StyledHeader>
+        <HeaderIcons avatar={user.profile.personalImage} />
         <StyledContent>{children}</StyledContent>
         <StyledFooter />
       </Layout>

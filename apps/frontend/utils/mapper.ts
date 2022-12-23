@@ -2,6 +2,7 @@ import {
   ContestStatus,
   ContestType,
   MembershipStatus,
+  MessageType,
   QuestionType,
   RoleTitle,
   StudentLevel,
@@ -16,15 +17,15 @@ export type Mapper<T> = {
 export const contestMappedStatus: Mapper<ContestStatus>[] = [
   {
     text: 'بدأت',
-    value: ContestStatus?.Open,
+    value: ContestStatus.Open,
   },
   {
     text: 'إنتهت',
-    value: ContestStatus?.Closed,
+    value: ContestStatus.Closed,
   },
   {
     text: 'لم تبدأ بعد',
-    value: ContestStatus?.NotStarted,
+    value: ContestStatus.NotStarted,
   },
 ];
 
@@ -32,78 +33,78 @@ export const studentMappedLevels: Mapper<StudentLevel>[] = [
   {
     text: 'المستوى 13 سنة (مَن أنهى الصف السادس الابتدائي )',
     label: 'المستوى 13 سنة',
-    value: StudentLevel?.Thirteen,
+    value: StudentLevel.Thirteen,
   },
   {
     text: 'المستوى 14 سنة (مَن أنهى الصف الأول الإعدادي )',
     label: 'المستوى 14 سنة',
-    value: StudentLevel?.Fourteen,
+    value: StudentLevel.Fourteen,
   },
   {
     text: 'المستوى 15 سنة (مَن أنهى الصف الثاني الإعدادي )',
     label: 'المستوى 15 سنة',
-    value: StudentLevel?.Fifteen,
+    value: StudentLevel.Fifteen,
   },
   {
     text: 'المستوى 16 سنة (مَن أنهى الصف الثالث الإعدادي )',
     label: 'المستوى 16 سنة',
-    value: StudentLevel?.Sixteen,
+    value: StudentLevel.Sixteen,
   },
   {
     text: 'المستوى 17 سنة (مَن أنهى الصف الأول الثانوي )',
     label: 'المستوى 17 سنة',
-    value: StudentLevel?.Seventeen,
+    value: StudentLevel.Seventeen,
   },
   {
     text: 'المستوى 18 سنة (مَن أنهى الصف الثاني الثانوي )',
     label: 'المستوى 18 سنة',
-    value: StudentLevel?.Eighteen,
+    value: StudentLevel.Eighteen,
   },
   {
     text: 'المستوى 19 سنة (مَن يدرس في الصف الثالث الثانوي )',
     label: 'المستوى 19 سنة',
-    value: StudentLevel?.Nineteen,
+    value: StudentLevel.Nineteen,
   },
 ];
 
 export const contestMappedTypes: Mapper<ContestType>[] = [
   {
     text: 'مسابقة جهوية',
-    value: ContestType?.Regional,
+    value: ContestType.Regional,
   },
   {
     text: 'مسابقة مركزية',
-    value: ContestType?.Centralized,
+    value: ContestType.Centralized,
   },
   {
     text: 'مسابقة دولية',
-    value: ContestType?.Worldwide,
+    value: ContestType.Worldwide,
   },
 ];
 
 export const questionMappedTypes: Mapper<QuestionType>[] = [
   {
     text: 'سهل',
-    value: QuestionType?.Easy,
+    value: QuestionType.Easy,
   },
   {
     text: 'متوسط',
-    value: QuestionType?.Medium,
+    value: QuestionType.Medium,
   },
   {
     text: 'صعب',
-    value: QuestionType?.Hard,
+    value: QuestionType.Hard,
   },
 ];
 
 export const membershipStatusMappedTypes: Mapper<MembershipStatus>[] = [
   {
     text: 'في إنتظار الدفع',
-    value: MembershipStatus?.Unpaid,
+    value: MembershipStatus.Unpaid,
   },
   {
     text: 'مفعل',
-    value: MembershipStatus?.Active,
+    value: MembershipStatus.Active,
   },
   {
     text: 'ملغي',
@@ -111,7 +112,7 @@ export const membershipStatusMappedTypes: Mapper<MembershipStatus>[] = [
   },
   {
     text: 'إنتهى',
-    value: MembershipStatus?.Expired,
+    value: MembershipStatus.Expired,
   },
 ];
 
@@ -139,6 +140,21 @@ export const rolesMappedTypes: Mapper<RoleTitle>[] = [
   {
     text: 'طالب مرتبط بمشرف',
     value: RoleTitle.StudentTeacher,
+  },
+];
+
+export const messageMappedTypes: Mapper<MessageType>[] = [
+  {
+    text: 'تنبيه',
+    value: MessageType.Alert,
+  },
+  {
+    text: 'إعلان عام',
+    value: MessageType.Announce,
+  },
+  {
+    text: 'إشعار',
+    value: MessageType.Info,
   },
 ];
 

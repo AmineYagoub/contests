@@ -53,7 +53,9 @@ const Index: NextPageWithLayout = (props) => {
             الأعمار إبتداءا من الصف السادس الإبتدائي إلى الصف الثالث الثانوي.
           </StyledParagraph>
           <Space style={{ marginTop: 20 }}>
-            <StyledButton size="large">سجل كمعلم</StyledButton>
+            <StyledButton size="large" shape="round">
+              سجل كمعلم
+            </StyledButton>
             <StyledButton
               size="large"
               type="primary"

@@ -12,6 +12,7 @@ const StyledCol = styled(Col)({
     'var(--ant-primary-color) 0px 13px 27px -5px, var(--ant-primary-color) 0px 8px 16px -8px !important',
   borderRadius: 5,
   height: 450,
+  minWidth: 620,
   textAlign: 'left',
   padding: 50,
   img: {
@@ -22,7 +23,7 @@ const StyledCol = styled(Col)({
     margin: '20px 0',
   },
   button: {
-    margin: '2em 0',
+    marginTop: '2em',
     width: 200,
   },
 });

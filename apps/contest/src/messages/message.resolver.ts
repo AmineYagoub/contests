@@ -1,6 +1,7 @@
 import {
   CreateMessageDto,
   MessagePaginationDto,
+  SendMessageDto,
   UpdateMessageDto,
 } from '@contests/dto';
 import { BatchPayloadResult } from '@contests/types';
@@ -24,6 +25,11 @@ export class MessageResolver {
   @Mutation(() => Message)
   async createMessage(@Args('input') data: CreateMessageDto) {
     return this.messageService.create(data);
+  }
+
+  @Mutation(() => Message, { nullable: true })
+  async sendNotifications(@Args('input') data: SendMessageDto) {
+    return this.messageService.sendNotifications(data);
   }
 
   @Mutation(() => BatchPayloadResult)

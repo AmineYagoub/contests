@@ -44,3 +44,10 @@ export type ContestCreatedEvent = {
   level?: StudentLevel[];
   participants?: string[];
 };
+
+export const MESSAGES_SEND_EVENT = 'messages.send.event';
+export const MESSAGES_SEND_FOR_EVENT = 'messages.sendFor.event';
+export type MessagesSendEvent = {
+  content: string;
+  recipients?: string[];
+};

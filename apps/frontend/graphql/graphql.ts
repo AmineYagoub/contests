@@ -199,7 +199,6 @@ export type CreateMessageDto = {
   authorId: Scalars['String'];
   content: Scalars['String'];
   recipientId?: InputMaybe<Scalars['String']>;
-  sendToAll?: InputMaybe<Scalars['Boolean']>;
   type: MessageType;
 };
 
@@ -271,8 +270,8 @@ export type Message = {
   published: Scalars['Boolean'];
   /** Identifies the recipient id. */
   recipientId?: Maybe<User>;
-  /** Identifies if this message will be viewed by all users. */
-  sendToAll?: Maybe<Scalars['Boolean']>;
+  /** Identifies the recipients ids in case the message sent to multiple users. */
+  recipients: Array<Scalars['String']>;
   /** Identifies the type of the Message */
   type: MessageType;
   /** Identifies the date and time when the object was last updated. */
@@ -324,6 +323,7 @@ export type Mutation = {
   resendEmailActivationCode: Scalars['Boolean'];
   seedCtsData?: Maybe<Scalars['Boolean']>;
   seedData?: Maybe<Scalars['Boolean']>;
+  sendNotifications?: Maybe<Message>;
   signing: Auth;
   signup: Scalars['Boolean'];
   updateAnswer: Answer;
@@ -420,6 +420,11 @@ export type MutationEmailTokenToRecoverPasswordArgs = {
 
 export type MutationResendEmailActivationCodeArgs = {
   input: EmailDto;
+};
+
+
+export type MutationSendNotificationsArgs = {
+  input: SendMessageDto;
 };
 
 
@@ -767,6 +772,13 @@ export type SelectedAnswerObject = {
   questionIndex: Scalars['Int'];
 };
 
+export type SendMessageDto = {
+  authorId: Scalars['String'];
+  content: Scalars['String'];
+  recipients: Array<Scalars['String']>;
+  type: MessageType;
+};
+
 export type SignUpDto = {
   agreement: Scalars['Boolean'];
   confirmPassword: Scalars['String'];
@@ -953,12 +965,9 @@ export type UpdateDocumentsDto = {
 };
 
 export type UpdateMessageDto = {
-  /** Identify all message ids sended from admin that i have viewed */
-  allIds: Array<Scalars['String']>;
   /** Identify all my message ids that i have viewed */
   meIds: Array<Scalars['String']>;
   viewed: Scalars['Boolean'];
-  viewerId: Scalars['String'];
 };
 
 export type UpdateQuestionDto = {
@@ -1082,7 +1091,6 @@ export type WhereContestArgs = {
 export type WhereMessageArgs = {
   authorId?: InputMaybe<Scalars['String']>;
   recipientId?: InputMaybe<Scalars['String']>;
-  sendToAll?: InputMaybe<Scalars['Boolean']>;
   type?: InputMaybe<MessageType>;
 };
 
@@ -1241,6 +1249,13 @@ export type DeleteMessageMutationVariables = Exact<{
 
 
 export type DeleteMessageMutation = { __typename?: 'Mutation', deleteMessage: { __typename?: 'Message', id: string } };
+
+export type SendNotificationsMutationVariables = Exact<{
+  input: SendMessageDto;
+}>;
+
+
+export type SendNotificationsMutation = { __typename?: 'Mutation', sendNotifications?: { __typename?: 'Message', id: string } | null };
 
 export type PaginateMessagesQueryVariables = Exact<{
   params: MessagePaginationDto;
@@ -2232,6 +2247,39 @@ export function useDeleteMessageMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteMessageMutationHookResult = ReturnType<typeof useDeleteMessageMutation>;
 export type DeleteMessageMutationResult = Apollo.MutationResult<DeleteMessageMutation>;
 export type DeleteMessageMutationOptions = Apollo.BaseMutationOptions<DeleteMessageMutation, DeleteMessageMutationVariables>;
+export const SendNotificationsDocument = gql`
+    mutation SendNotifications($input: SendMessageDto!) {
+  sendNotifications(input: $input) {
+    id
+  }
+}
+    `;
+export type SendNotificationsMutationFn = Apollo.MutationFunction<SendNotificationsMutation, SendNotificationsMutationVariables>;
+
+/**
+ * __useSendNotificationsMutation__
+ *
+ * To run a mutation, you first call `useSendNotificationsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendNotificationsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendNotificationsMutation, { data, loading, error }] = useSendNotificationsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSendNotificationsMutation(baseOptions?: Apollo.MutationHookOptions<SendNotificationsMutation, SendNotificationsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendNotificationsMutation, SendNotificationsMutationVariables>(SendNotificationsDocument, options);
+      }
+export type SendNotificationsMutationHookResult = ReturnType<typeof useSendNotificationsMutation>;
+export type SendNotificationsMutationResult = Apollo.MutationResult<SendNotificationsMutation>;
+export type SendNotificationsMutationOptions = Apollo.BaseMutationOptions<SendNotificationsMutation, SendNotificationsMutationVariables>;
 export const PaginateMessagesDocument = gql`
     query PaginateMessages($params: MessagePaginationDto!) {
   paginateMessages(params: $params) {

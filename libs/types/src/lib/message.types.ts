@@ -9,6 +9,16 @@ export enum MessageType {
   INFO = 'INFO',
 }
 
+export enum MessageRecipients {
+  ALL,
+  TEACHERS,
+  GOLDEN_TEACHERS,
+  FREE_TEACHERS,
+  STUDENTS,
+  STUDENTS_TEACHERS,
+  FREE_STUDENTS,
+}
+
 export type PaginationFilter = {
   authorId?: { $in: string[] };
   recipientId?: { $in: string[] };
@@ -18,6 +28,11 @@ export type PaginationFilter = {
 registerEnumType(MessageType, {
   name: 'MessageType',
   description: 'Message type',
+});
+
+registerEnumType(MessageRecipients, {
+  name: 'MessageRecipients',
+  description: 'Message Recipients type',
 });
 
 @ObjectType()

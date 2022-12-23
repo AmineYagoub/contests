@@ -1,13 +1,57 @@
 import { sanitize } from 'isomorphic-dompurify';
 import { Logger, Injectable } from '@nestjs/common';
 import { PrismaService } from '../app/prisma.service';
-import { CreateMessageDto, UpdateMessageDto } from '@contests/dto';
+import {
+  CreateMessageDto,
+  SendMessageDto,
+  UpdateMessageDto,
+} from '@contests/dto';
 import { Prisma } from '@prisma/contest-service';
-import { MessageType } from '@contests/types';
+import {
+  MessageRecipients,
+  MESSAGES_SEND_EVENT,
+  MessageType,
+} from '@contests/types';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import { Redis } from 'ioredis';
 
 @Injectable()
 export class MessageService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @InjectRedis('publisher') private readonly client: Redis
+  ) {}
+
+  /**
+   * Find last user messages to show in MessageDropdown.
+   *
+   * @param id string
+   * @param isMessages boolean
+   * @returns Promise<Message[]>
+   */
+  private async findLast(id: string, isMessages: boolean) {
+    return this.prisma.message.findMany({
+      where: {
+        OR: [
+          {
+            recipientId: id,
+          },
+          {
+            recipients: {
+              array_contains: id,
+            },
+          },
+        ],
+        type: isMessages
+          ? MessageType.MESSAGE
+          : {
+              not: MessageType.MESSAGE,
+            },
+      },
+      orderBy: { created: 'desc' },
+      take: 20,
+    });
+  }
 
   /**
    * Find last user messages to show in MessageDropdown.
@@ -16,18 +60,17 @@ export class MessageService {
    * @returns Promise<Message[]>
    */
   async findLastMessages(id: string) {
-    return this.prisma.message.findMany({
-      where: {
-        OR: [
-          {
-            recipientId: id,
-          },
-          { sendToAll: true, authorId: { not: id } },
-        ],
-      },
-      orderBy: { created: 'desc' },
-      take: 20,
-    });
+    return this.findLast(id, true);
+  }
+
+  /**
+   * Find last user Notification to show in NotificationDropdown.
+   *
+   * @param id string
+   * @returns Promise<Message[]>
+   */
+  async findLastNotifications(id: string) {
+    return this.findLast(id, false);
   }
 
   /**
@@ -36,16 +79,29 @@ export class MessageService {
    * @param id string
    * @returns Promise<number>
    */
-  async countUnreadMessages(id: string): Promise<number> {
+  private async countUnreadMessages(
+    id: string,
+    isMessages: boolean
+  ): Promise<number> {
     return this.prisma.message.count({
       where: {
         OR: [
           {
             recipientId: id,
-            viewed: false,
           },
-          { sendToAll: true, viewers: { not: id } },
+          {
+            recipients: {
+              array_contains: id,
+            },
+            // TODO Get not viewed message
+            // FIX myb count all messages - profile.messagesCount
+          },
         ],
+        type: isMessages
+          ? MessageType.MESSAGE
+          : {
+              not: MessageType.MESSAGE,
+            },
       },
     });
   }
@@ -58,18 +114,47 @@ export class MessageService {
    */
   async create(payload: CreateMessageDto) {
     try {
-      // FIXME inject admin id in list of viewers if sendToAll is true
-      const { sendToAll, authorId, content } = payload;
-      const viewers = [];
-      if (sendToAll) {
-        viewers.push(authorId);
-      }
+      const { content } = payload;
       payload.content = sanitize(content, {
         USE_PROFILES: { html: true },
       });
+      return await this.prisma.message.create({
+        data: { ...payload, recipients: [] },
+      });
+    } catch (error) {
+      Logger.error(error);
+    }
+  }
+
+  /**
+   * Send notifications.
+   *
+   * @param payload SendMessageDto
+   * @returns Promise<Message>
+   */
+  async sendNotifications(payload: SendMessageDto) {
+    try {
+      const { recipients, content } = payload;
+      payload.content = sanitize(content, {
+        USE_PROFILES: { html: true },
+      });
+      if (
+        [
+          MessageRecipients.ALL,
+          MessageRecipients.FREE_STUDENTS,
+          MessageRecipients.FREE_TEACHERS,
+          MessageRecipients.GOLDEN_TEACHERS,
+          MessageRecipients.TEACHERS,
+          MessageRecipients.STUDENTS,
+          MessageRecipients.STUDENTS_TEACHERS,
+        ].some((el) => recipients.includes(String(el)))
+      ) {
+        this.client.publish(MESSAGES_SEND_EVENT, JSON.stringify(payload));
+        return Promise.resolve();
+      }
 
       return await this.prisma.message.create({
-        data: { ...payload, viewers },
+        data: payload,
       });
     } catch (error) {
       Logger.error(error);
@@ -78,6 +163,7 @@ export class MessageService {
 
   /**
    * Delete Message.
+   *
    * @param id string
    * @returns Promise<Message>
    */
@@ -92,19 +178,13 @@ export class MessageService {
    * @returns Promise<Message>
    */
   async updateMessageViewStat(payload: UpdateMessageDto) {
-    const { meIds, viewed, allIds, viewerId } = payload;
+    const { meIds, viewed } = payload;
     try {
       let result: Promise<Prisma.BatchPayload>;
       if (meIds.length > 0) {
         result = this.prisma.message.updateMany({
           where: { id: { in: meIds } },
           data: { viewed },
-        });
-      }
-      if (allIds?.length > 0) {
-        result = this.prisma.message.updateMany({
-          where: { id: { in: allIds } },
-          data: { viewers: { push: viewerId } },
         });
       }
       return result;
@@ -179,6 +259,9 @@ export class MessageService {
     cursor?: Prisma.MessageWhereUniqueInput;
     where?: Prisma.MessageWhereInput;
   }) {
+    if (!params.where.recipientId) {
+      delete params.where.recipientId;
+    }
     params.where = {
       ...params.where,
       type: {

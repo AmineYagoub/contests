@@ -59,6 +59,7 @@ export const useContactList = (role: RoleTitle, teacherId?: string) => {
         const list = reset
           ? data.paginateUsers.data
           : [...messageSnap.contactList, ...data.paginateUsers.data];
+        console.log(list, reset);
         MessageActions.setContactList(list as User[]);
       }
     } catch (error) {

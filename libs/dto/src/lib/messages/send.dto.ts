@@ -1,9 +1,9 @@
 import { MessageType } from '@contests/types';
 import { InputType, Field } from '@nestjs/graphql';
-import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 @InputType()
-export class CreateMessageDto {
+export class SendMessageDto {
   @Field()
   @IsNotEmpty()
   @IsString()
@@ -14,10 +14,10 @@ export class CreateMessageDto {
   @IsUUID()
   authorId: string;
 
-  @Field({ nullable: true })
-  @IsOptional()
-  @IsUUID()
-  recipientId?: string;
+  @Field(() => [String])
+  @IsNotEmpty()
+  @IsString({ each: true })
+  recipients: string[];
 
   @Field(() => MessageType)
   @IsNotEmpty()

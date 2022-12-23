@@ -75,7 +75,7 @@ table:not('.ant-picker-content') {
 
 .ant-layout {
   background-color: var(--background) !important;
-  min-height: 100vh;
+  min-height: 70vh;
 }
 .ant-layout-content {
   max-width: 1600px;
