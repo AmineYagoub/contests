@@ -1,0 +1,42 @@
+query FindLastMessages($id: String!) {
+  findLastMessages(id: $id) {
+    id
+    type
+    content
+    created
+    updated
+    authorId {
+      id
+      role {
+        title
+      }
+      profile {
+        __typename
+        ... on Teacher {
+          id
+          country
+          created
+          firstName
+          lastName
+          dateOfBirth
+          personalImage
+        }
+        ... on Student {
+          id
+          level
+          country
+          created
+          firstName
+          lastName
+          personalImage
+        }
+      }
+    }
+    recipientId {
+      id
+    }
+
+  }
+}
+
+

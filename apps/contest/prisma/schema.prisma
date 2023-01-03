@@ -37,7 +37,7 @@ enum MessageType {
 
 model Message {
   id                String      @id @default(uuid())
-  content           String      @db.TinyText
+  content           String      @db.Text
   published         Boolean?    @default(true)
   authorId          String      @db.VarChar(255)
   recipientId       String?     @db.VarChar(255) @default("")

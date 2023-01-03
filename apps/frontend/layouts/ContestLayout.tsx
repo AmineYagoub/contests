@@ -1,11 +1,5 @@
-import { Layout, Spin } from 'antd';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-
-import ContestLoadingHeader from '@/components/contest/ContestLoadingHeader';
+import { Layout } from 'antd';
 import ContestPageHeader from '@/components/contest/ContestPageHeader';
-import { Contest, useFindByIdForExamLazyQuery } from '@/graphql/graphql';
-import { ContestActions } from '@/valtio/contest.state';
 import styled from '@emotion/styled';
 
 const { Content } = Layout;
@@ -21,7 +15,7 @@ const StyledContent = styled(Content)({
 
 const StyledLayout = styled(Layout)({
   backgroundImage: 'url("/img/contest-bg.jpg") !important',
-  backgroundSize: '100% !important',
+  backgroundSize: 'cover !important',
   perspective: 700,
   position: 'absolute',
   overflow: 'hidden',
@@ -32,7 +26,7 @@ const StyledLayout = styled(Layout)({
 });
 
 const ContestLayout = ({ children }) => {
-  const router = useRouter();
+  /*   const router = useRouter();
   const [FindByIdForExamQuery, { loading }] = useFindByIdForExamLazyQuery();
 
   useEffect(() => {
@@ -64,13 +58,15 @@ const ContestLayout = ({ children }) => {
     return () => {
       router.events.off('routeChangeStart', handleRouteChange);
     };
-  }, [router.query.key, router, FindByIdForExamQuery]);
+  }, [router.query.key, router, FindByIdForExamQuery]); */
 
   return (
     <StyledLayout>
-      {loading ? <ContestLoadingHeader /> : <ContestPageHeader />}
+      {/* {loading ? <ContestLoadingHeader /> : <ContestPageHeader />} */}
+      <ContestPageHeader />
       <StyledContent>
-        {loading ? <Spin size="large" /> : children}
+        {/* {loading ? <Spin size="large" /> : children} */}
+        {children}
       </StyledContent>
     </StyledLayout>
   );

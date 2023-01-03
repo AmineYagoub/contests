@@ -9,5 +9,8 @@ export class User {
   id: string;
 
   @Field(() => Int, { nullable: true })
-  countUnreadMessages?: number;
+  countAllMessages?: number;
+
+  @Field(() => Int, { nullable: true })
+  countAllNotifications?: number;
 }

@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react';
 
 import { BellOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Menu, Empty, Badge, List, Avatar } from 'antd';
+import { useFindLastNotificationsQuery } from '@/graphql/graphql';
 
 const NotificationsDropdown = () => {
   const router = useRouter();
   const [visible, setVisible] = useState(false);
 
-  const { data, loading } = useFindLastNotificationQuery({
+  const { data, loading } = useFindLastNotificationsQuery({
     skip: !visible,
     variables: {
       id: authUser._id,

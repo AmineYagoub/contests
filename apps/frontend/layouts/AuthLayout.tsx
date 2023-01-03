@@ -14,7 +14,7 @@ const AuthLayout = ({ children }) => (
       title={<Link href={AppRoutes.Home}>{`الرئيسية`}</Link>}
       subTitle="العودة إلى الصفحة الرئيسية"
     />
-    <Content>{children}</Content>
+    <Content style={{ minHeight: '100vh' }}>{children}</Content>
     <StyledFooter />
   </Layout>
 );

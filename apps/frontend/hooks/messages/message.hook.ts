@@ -31,16 +31,25 @@ const getMessage = (message: Message): MessageContentType => {
 export const useMessages = (id: string) => {
   const [form] = Form.useForm();
   const [ref, inView] = useInView();
+  const loadMoreArea = useRef();
+  const scrollArea = useRef();
   const messageSnap = useSnapshot(MessageState);
   const [hasMore, setHasMore] = useState(false);
-  const [dataLength, setDataLength] = useState(0);
   const [createMessageMutation, { loading: submitLoading }] =
     useCreateMessageMutation();
   //const socket = useReactiveVar(socketVar);
 
+  const getPaginationParams = (skip = 0) => ({
+    skip,
+    take: 5,
+    where: {
+      recipientId: id,
+      authorId: messageSnap.currentContactId,
+    },
+  });
+
   const handleMessageSubmit = async () => {
     const content = form.getFieldValue('content');
-
     if (content && messageSnap.currentContactId) {
       try {
         const { data } = await createMessageMutation({
@@ -65,31 +74,27 @@ export const useMessages = (id: string) => {
 
   const { data, loading, fetchMore } = usePaginateMessagesQuery({
     variables: {
-      params: {
-        where: {
-          recipientId: id,
-          authorId: messageSnap.currentContactId,
-        },
-      },
+      params: getPaginationParams(),
     },
     skip: !messageSnap.currentContactId,
   });
 
   useEffect(() => {
     if (data) {
-      setDataLength(data.paginateMessages.total);
       const msg = data.paginateMessages?.data
         ?.map((el) => getMessage(el as Message))
         .reverse();
       MessageActions.setMessages(msg);
+      setHasMore(messageSnap.messages.length < data.paginateMessages.total);
     }
   }, [data]);
 
-  /*   useEffect(() => {
-    if (inView && messages?.length > 0 && messages?.length < dataLength) {
+  useEffect(() => {
+    const messages = messageSnap.messages;
+    if (inView && messages?.length > 0 && hasMore) {
       fetchMore({
         variables: {
-          args: getPaginationArgs(messages?.length),
+          params: getPaginationParams(messages.length),
         },
       }).then(({ data }) => {
         if (loadMoreArea.current) {
@@ -98,17 +103,30 @@ export const useMessages = (id: string) => {
             left: 0,
           });
         }
-        setHasMore(data.paginateMesssages.hasNextPage);
-        messsagesVar([...getMessages(data), ...messages]);
+        const msg = data.paginateMessages?.data
+          ?.map((el) => getMessage(el as Message))
+          .reverse();
+        MessageActions.setMessages([...msg, ...messages]);
+        setHasMore(messageSnap.messages.length < data.paginateMessages.total);
       });
     }
-  }, [inView]); */
+  }, [inView]);
+
+  useEffect(() => {
+    if (scrollArea.current) {
+      (scrollArea.current as HTMLDivElement).scrollIntoView({
+        behavior: 'smooth',
+      });
+    }
+  }, [messageSnap.messageAdded]);
 
   return {
     hasMore,
     loading,
     submitLoading,
     handleMessageSubmit,
+    scrollArea,
+    loadMoreArea,
     form,
     ref,
   };

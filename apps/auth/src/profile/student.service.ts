@@ -1,16 +1,105 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../app/prisma.service';
-import { RoleTitle } from '@contests/types/auth';
-import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import Redis from 'ioredis';
 import { Prisma } from '@prisma/auth-service';
+import { validate as isValidUUID } from 'uuid';
+import { Injectable, Logger } from '@nestjs/common';
+import { PrismaService } from '../app/prisma.service';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import { UpdateDocumentsDto, UpdateStudentDto } from '@contests/dto/auth';
+import { RoleTitle, STUDENT_ADD_TEACHER_EVENT } from '@contests/types/auth';
 
 @Injectable()
 export class StudentService {
   constructor(
     private prisma: PrismaService,
-    @InjectRedis() private readonly redis: Redis
+    @InjectRedis('publisher') private readonly client: Redis
   ) {}
+
+  /**
+   * Update the profile of student
+   *
+   * @param params Prisma.UserUpdateInput The User data.
+   * @returns Promise<User>
+   */
+  async updateStudentProfile(params: {
+    where: Prisma.UserWhereUniqueInput;
+    data: UpdateStudentDto;
+  }) {
+    const {
+      data: { role, teacherId, ...rest },
+      where,
+    } = params;
+    const user: Prisma.UserUpdateWithoutEmailTokenInput = {
+      role: {
+        connectOrCreate: {
+          create: {
+            title: role,
+          },
+          where: {
+            title: role,
+          },
+        },
+      },
+      profile: {
+        update: rest,
+      },
+    };
+    try {
+      const updated = await this.prisma.user.update({
+        where,
+        data: user,
+        include: {
+          profile: {
+            include: { teacher: true },
+          },
+          role: true,
+        },
+      });
+      if (isValidUUID(teacherId)) {
+        this.client.publish(
+          STUDENT_ADD_TEACHER_EVENT,
+          JSON.stringify({
+            teacherId,
+            userId: updated.id,
+            name: `${updated.profile.firstName} ${updated.profile.lastName}`,
+          })
+        );
+      }
+      return updated;
+    } catch (error) {
+      Logger.error(error);
+    }
+  }
+
+  /**
+   * Update the Documents of student.
+   *
+   * @param params Prisma.UserUpdateInput The User data.
+   * @returns Promise<User>
+   */
+  async updateStudentDocuments(params: {
+    where: Prisma.UserWhereUniqueInput;
+    data: UpdateDocumentsDto;
+  }) {
+    const { data, where } = params;
+    try {
+      return await this.prisma.user.update({
+        where,
+        data: {
+          profile: {
+            update: data,
+          },
+        },
+        include: {
+          profile: {
+            include: { teacher: true },
+          },
+          role: true,
+        },
+      });
+    } catch (error) {
+      Logger.error(error);
+    }
+  }
 
   /**
    * Search students by name.

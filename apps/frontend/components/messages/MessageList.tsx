@@ -1,12 +1,13 @@
 import { ClockCircleOutlined } from '@ant-design/icons';
 import { useInView } from 'react-intersection-observer';
-import { useEffect, useRef } from 'react';
+import { MutableRefObject, useEffect, useRef } from 'react';
 import { List, Skeleton, Empty, Tooltip, Tag } from 'antd';
 import { MessageContentType } from '@/valtio/message.state';
 import styled from '@emotion/styled';
 import Loading from '../common/Loading';
 import moment from 'moment-timezone';
 import Avatar from 'antd/lib/avatar/avatar';
+import { assertNullableType } from 'graphql';
 
 export const messagesLimit = 10;
 
@@ -37,37 +38,20 @@ const MessagesList = ({
   messages,
   hasMore,
   loading,
+  scrollArea,
+  loadMoreArea,
   viewRef,
   id,
 }: {
   messages: MessageContentType[];
   hasMore: boolean;
   loading: boolean;
+  scrollArea: MutableRefObject<undefined>;
+  loadMoreArea: MutableRefObject<undefined>;
   viewRef: (node?: Element) => void;
   id: string;
 }) => {
   const [reference] = useInView();
-  const scrollArea = useRef();
-  const loadMoreArea = useRef();
-
-  /*   useEffect(() => {
-    if (inView && messages?.length > 0 && messages?.length < dataLength) {
-      fetchMore({
-        variables: {
-          args: getPaginationArgs(messages?.length),
-        },
-      }).then(({ data }) => {
-        if (loadMoreArea.current) {
-          (loadMoreArea.current as HTMLDivElement).scrollBy({
-            top: 500,
-            left: 0,
-          });
-        }
-        setHasMore(data.paginateMesssages.hasNextPage);
-        messsagesVar([...getMessages(data), ...messages]);
-      });
-    }
-  }, [inView]); */
 
   /*   useEffect(() => {
     if (selectedContact) {
@@ -106,14 +90,6 @@ const MessagesList = ({
       }
     });
   }, []); */
-
-  useEffect(() => {
-    if (scrollArea.current) {
-      (scrollArea.current as HTMLDivElement).scrollIntoView({
-        behavior: 'smooth',
-      });
-    }
-  }, [messages]);
 
   return (
     <StyledSection ref={loadMoreArea}>

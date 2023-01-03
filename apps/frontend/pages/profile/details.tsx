@@ -1,8 +1,6 @@
 import { Tabs } from 'antd';
 import { useSnapshot } from 'valtio';
 
-import UserDetails from '@/components/profile/common/UserDetails';
-import UserDocuments from '@/components/profile/student/documents/UserDocuments';
 import UserPassword from '@/components/profile/common/UserPassword';
 import { PermissionTitle, RoleTitle, User } from '@/graphql/graphql';
 import ProfileLayout from '@/layout/ProfileLayout';
@@ -15,7 +13,17 @@ import {
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { withAuth } from '@/components/common/withAuth';
 
-const ProfileDetails = () => {
+import dynamic from 'next/dynamic';
+
+const UserDocuments = dynamic(
+  import('@/components/profile/student/documents/UserDocuments'),
+  { ssr: false }
+);
+const UserDetails = dynamic(import('@/components/profile/common/UserDetails'), {
+  ssr: false,
+});
+
+export const ProfileDetails = () => {
   const user = useSnapshot(AuthState).user as User;
   const tabs = [
     {

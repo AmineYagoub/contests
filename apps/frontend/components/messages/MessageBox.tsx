@@ -41,8 +41,16 @@ const MessageBox = ({
     setCollapsed(!collapsed);
   };
 
-  const { loading, hasMore, handleMessageSubmit, submitLoading, form, ref } =
-    useMessages(id);
+  const {
+    loading,
+    hasMore,
+    handleMessageSubmit,
+    submitLoading,
+    form,
+    ref,
+    loadMoreArea,
+    scrollArea,
+  } = useMessages(id);
 
   const { loadMoreData, onSearch, searchValue } = useContactList(role, id);
 
@@ -70,9 +78,11 @@ const MessageBox = ({
 
         <Layout style={{ minHeight: 'unset' }}>
           <MessagesList
+            loadMoreArea={loadMoreArea}
             messages={messageSnap.messages as MessageContentType[]}
             loading={loading}
             hasMore={hasMore}
+            scrollArea={scrollArea}
             viewRef={ref}
             id={id}
           />

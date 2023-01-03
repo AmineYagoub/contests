@@ -11,6 +11,10 @@ query GetAuthUser {
         title
       }
     }
+    countAllNotifications
+    countAllMessages
+    messagesCount
+    notificationsCount
     profile {
       __typename
       ... on Student {

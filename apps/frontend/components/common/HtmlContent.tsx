@@ -1,15 +1,60 @@
 import { useRouter } from 'next/router';
 import DOMPurify from 'isomorphic-dompurify';
 import { RefObject, useEffect, useRef } from 'react';
+import { Tag } from 'antd';
+import { MessageType } from '@/graphql/graphql';
 
-export default function HtmlContent({ html }: { html: string }) {
+const getTagContent = (type: MessageType) => {
+  const tag = {
+    label: '',
+    color: '',
+  };
+  switch (type) {
+    case MessageType.Alert:
+      tag.label = 'تنبيه';
+      tag.color = 'gold';
+      break;
+    case MessageType.Announce:
+      tag.label = 'إعلان';
+      tag.color = 'red';
+      break;
+    case MessageType.Info:
+      tag.label = 'إشعار';
+      tag.color = 'blue';
+      break;
+    case MessageType.Report:
+      tag.label = 'بلاغ';
+      tag.color = 'red';
+      break;
+    case MessageType.Request:
+      tag.label = 'طلب إشراف';
+      tag.color = 'green';
+      break;
+
+    default:
+      break;
+  }
+  return tag;
+};
+
+export default function HtmlContent({
+  html,
+  type,
+}: {
+  html: string;
+  type: MessageType;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   useLinkClickHandlers(ref);
+  const tag = getTagContent(type);
   return (
-    <div
-      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(html) }}
-      ref={ref}
-    />
+    <>
+      <Tag color={tag.color}>{tag.label}</Tag>
+      <div
+        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(html) }}
+        ref={ref}
+      />
+    </>
   );
 }
 

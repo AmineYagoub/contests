@@ -76,6 +76,8 @@ model User {
   emailConfirmed        Boolean?  @default(false)
   agreement             Boolean
   isActive              Boolean?  @default(false)
+  messagesCount         Int?      @default(0)
+  notificationsCount    Int?      @default(0)
   created               DateTime  @default(now())
   updated               DateTime  @updatedAt
 
@@ -98,9 +100,6 @@ model Profile {
   country               String?   @db.VarChar(255) @default("")
   phone                 Json?     @db.Json
   dateOfBirth           DateTime?
-  messagesCount         Int?      @default(0)
-  notificationsCount    Int?      @default(0)
-
   created               DateTime  @default(now())
   updated               DateTime  @updatedAt
   userId                String    @unique

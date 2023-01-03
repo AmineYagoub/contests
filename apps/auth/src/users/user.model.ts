@@ -59,6 +59,16 @@ export class User {
   })
   isActive: boolean;
 
+  @Field(() => Int, {
+    description: 'Identifies the number of messages viewed by user.',
+  })
+  messagesCount: number;
+
+  @Field(() => Int, {
+    description: 'Identifies the number of notifications viewed by user.',
+  })
+  notificationsCount: number;
+
   @Field({
     description: 'Identifies the date and time when the object was created.',
   })

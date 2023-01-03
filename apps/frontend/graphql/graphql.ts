@@ -330,6 +330,7 @@ export type Mutation = {
   updateAppConfig: App;
   updateContest: Contest;
   updateMessageViewStat: BatchPayloadResult;
+  updateMessagesCount: User;
   updateQuestion: Question;
   updateStudentDocuments: User;
   updateStudentProfile: User;
@@ -460,6 +461,13 @@ export type MutationUpdateMessageViewStatArgs = {
 };
 
 
+export type MutationUpdateMessagesCountArgs = {
+  count: Scalars['Int'];
+  id: Scalars['String'];
+  isMessage: Scalars['Boolean'];
+};
+
+
 export type MutationUpdateQuestionArgs = {
   id: Scalars['String'];
   input: UpdateQuestionDto;
@@ -561,10 +569,12 @@ export type Profile = Student | Teacher;
 
 export type Query = {
   __typename?: 'Query';
+  findAdminAndTeacher: Array<User>;
   findAllSubscriptionPlans: Array<SubscriptionPlan>;
   findAppConfig: App;
   findEmailToken: ActivationToken;
   findLastMessages: Array<Message>;
+  findLastNotifications: Array<Message>;
   findMembershipByProfileId?: Maybe<Membership>;
   findOneAnswerById?: Maybe<Answer>;
   findOneContestById?: Maybe<Contest>;
@@ -585,12 +595,22 @@ export type Query = {
 };
 
 
+export type QueryFindAdminAndTeacherArgs = {
+  id?: InputMaybe<Scalars['String']>;
+};
+
+
 export type QueryFindEmailTokenArgs = {
   token: Scalars['String'];
 };
 
 
 export type QueryFindLastMessagesArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryFindLastNotificationsArgs = {
   id: Scalars['String'];
 };
 
@@ -1035,7 +1055,8 @@ export type User = {
   __typename?: 'User';
   /** Identifies if the user are accepted agreement. */
   agreement: Scalars['Boolean'];
-  countUnreadMessages?: Maybe<Scalars['Int']>;
+  countAllMessages?: Maybe<Scalars['Int']>;
+  countAllNotifications?: Maybe<Scalars['Int']>;
   /** Identifies the date and time when the object was created. */
   created: Scalars['DateTime'];
   /** Identifies the unique email of the user. */
@@ -1047,6 +1068,10 @@ export type User = {
   isActive: Scalars['Boolean'];
   /** Identifies the unique key the user. */
   key: Scalars['Int'];
+  /** Identifies the number of messages viewed by user. */
+  messagesCount: Scalars['Int'];
+  /** Identifies the number of notifications viewed by user. */
+  notificationsCount: Scalars['Int'];
   /** Identifies the Profile of the user. */
   profile?: Maybe<Profile>;
   /** Identifies the role of the user. */
@@ -1257,6 +1282,20 @@ export type SendNotificationsMutationVariables = Exact<{
 
 export type SendNotificationsMutation = { __typename?: 'Mutation', sendNotifications?: { __typename?: 'Message', id: string } | null };
 
+export type FindLastMessagesQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type FindLastMessagesQuery = { __typename?: 'Query', findLastMessages: Array<{ __typename?: 'Message', id: string, type: MessageType, content: string, created: any, updated: any, authorId: { __typename?: 'User', id: string, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, created: any, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | { __typename: 'Teacher', id: string, country?: string | null, created: any, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null } | null }, recipientId?: { __typename?: 'User', id: string } | null }> };
+
+export type FindLastNotificationsQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type FindLastNotificationsQuery = { __typename?: 'Query', findLastNotifications: Array<{ __typename?: 'Message', id: string, type: MessageType, content: string, created: any, updated: any, authorId: { __typename?: 'User', id: string, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, created: any, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | { __typename: 'Teacher', id: string, country?: string | null, created: any, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null } | null }, recipientId?: { __typename?: 'User', id: string } | null }> };
+
 export type PaginateMessagesQueryVariables = Exact<{
   params: MessagePaginationDto;
 }>;
@@ -1374,6 +1413,15 @@ export type UpdateStudentDocumentsMutationVariables = Exact<{
 
 export type UpdateStudentDocumentsMutation = { __typename?: 'Mutation', updateStudentDocuments: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth?: any | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } };
 
+export type UpdateMessagesCountMutationVariables = Exact<{
+  id: Scalars['String'];
+  count: Scalars['Int'];
+  isMessage: Scalars['Boolean'];
+}>;
+
+
+export type UpdateMessagesCountMutation = { __typename?: 'Mutation', updateMessagesCount: { __typename: 'User', id: string } };
+
 export type UpdateStudentProfileMutationVariables = Exact<{
   id: Scalars['String'];
   input: UpdateStudentDto;
@@ -1397,6 +1445,13 @@ export type UpdateTeacherSubscriptionMutationVariables = Exact<{
 
 
 export type UpdateTeacherSubscriptionMutation = { __typename?: 'Mutation', updateTeacherSubscription: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, country?: string | null, personalImage?: string | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, endDate?: any | null, startDate?: any | null, created: any, memberShipOn: { __typename?: 'SubscriptionPlan', id: string, title: string, price: number } } | null } };
+
+export type FindAdminAndTeacherQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type FindAdminAndTeacherQuery = { __typename?: 'Query', findAdminAndTeacher: Array<{ __typename?: 'User', id: string, created: any, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | null }> };
 
 export type FindStudentsQueryVariables = Exact<{
   name?: InputMaybe<Scalars['String']>;
@@ -1423,7 +1478,7 @@ export type FindUserQuery = { __typename?: 'Query', findUser: { __typename?: 'Us
 export type GetAuthUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, role?: { __typename?: 'Role', title: RoleTitle, permissions?: Array<{ __typename?: 'Permission', title: PermissionTitle }> | null } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth?: any | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, startDate?: any | null, endDate?: any | null, created: any, renewCount: number, memberShipOn: { __typename?: 'SubscriptionPlan', id: string, title: string, price: number } } | null } | null } };
+export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, countAllNotifications?: number | null, countAllMessages?: number | null, messagesCount: number, notificationsCount: number, role?: { __typename?: 'Role', title: RoleTitle, permissions?: Array<{ __typename?: 'Permission', title: PermissionTitle }> | null } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth?: any | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, startDate?: any | null, endDate?: any | null, created: any, renewCount: number, memberShipOn: { __typename?: 'SubscriptionPlan', id: string, title: string, price: number } } | null } | null } };
 
 export type PaginateUsersQueryVariables = Exact<{
   params: UserPaginationDto;
@@ -2280,6 +2335,144 @@ export function useSendNotificationsMutation(baseOptions?: Apollo.MutationHookOp
 export type SendNotificationsMutationHookResult = ReturnType<typeof useSendNotificationsMutation>;
 export type SendNotificationsMutationResult = Apollo.MutationResult<SendNotificationsMutation>;
 export type SendNotificationsMutationOptions = Apollo.BaseMutationOptions<SendNotificationsMutation, SendNotificationsMutationVariables>;
+export const FindLastMessagesDocument = gql`
+    query FindLastMessages($id: String!) {
+  findLastMessages(id: $id) {
+    id
+    type
+    content
+    created
+    updated
+    authorId {
+      id
+      role {
+        title
+      }
+      profile {
+        __typename
+        ... on Teacher {
+          id
+          country
+          created
+          firstName
+          lastName
+          dateOfBirth
+          personalImage
+        }
+        ... on Student {
+          id
+          level
+          country
+          created
+          firstName
+          lastName
+          personalImage
+        }
+      }
+    }
+    recipientId {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindLastMessagesQuery__
+ *
+ * To run a query within a React component, call `useFindLastMessagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindLastMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindLastMessagesQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFindLastMessagesQuery(baseOptions: Apollo.QueryHookOptions<FindLastMessagesQuery, FindLastMessagesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindLastMessagesQuery, FindLastMessagesQueryVariables>(FindLastMessagesDocument, options);
+      }
+export function useFindLastMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindLastMessagesQuery, FindLastMessagesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindLastMessagesQuery, FindLastMessagesQueryVariables>(FindLastMessagesDocument, options);
+        }
+export type FindLastMessagesQueryHookResult = ReturnType<typeof useFindLastMessagesQuery>;
+export type FindLastMessagesLazyQueryHookResult = ReturnType<typeof useFindLastMessagesLazyQuery>;
+export type FindLastMessagesQueryResult = Apollo.QueryResult<FindLastMessagesQuery, FindLastMessagesQueryVariables>;
+export const FindLastNotificationsDocument = gql`
+    query FindLastNotifications($id: String!) {
+  findLastNotifications(id: $id) {
+    id
+    type
+    content
+    created
+    updated
+    authorId {
+      id
+      role {
+        title
+      }
+      profile {
+        __typename
+        ... on Teacher {
+          id
+          country
+          created
+          firstName
+          lastName
+          dateOfBirth
+          personalImage
+        }
+        ... on Student {
+          id
+          level
+          country
+          created
+          firstName
+          lastName
+          personalImage
+        }
+      }
+    }
+    recipientId {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindLastNotificationsQuery__
+ *
+ * To run a query within a React component, call `useFindLastNotificationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindLastNotificationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindLastNotificationsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFindLastNotificationsQuery(baseOptions: Apollo.QueryHookOptions<FindLastNotificationsQuery, FindLastNotificationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindLastNotificationsQuery, FindLastNotificationsQueryVariables>(FindLastNotificationsDocument, options);
+      }
+export function useFindLastNotificationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindLastNotificationsQuery, FindLastNotificationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindLastNotificationsQuery, FindLastNotificationsQueryVariables>(FindLastNotificationsDocument, options);
+        }
+export type FindLastNotificationsQueryHookResult = ReturnType<typeof useFindLastNotificationsQuery>;
+export type FindLastNotificationsLazyQueryHookResult = ReturnType<typeof useFindLastNotificationsLazyQuery>;
+export type FindLastNotificationsQueryResult = Apollo.QueryResult<FindLastNotificationsQuery, FindLastNotificationsQueryVariables>;
 export const PaginateMessagesDocument = gql`
     query PaginateMessages($params: MessagePaginationDto!) {
   paginateMessages(params: $params) {
@@ -2985,6 +3178,42 @@ export function useUpdateStudentDocumentsMutation(baseOptions?: Apollo.MutationH
 export type UpdateStudentDocumentsMutationHookResult = ReturnType<typeof useUpdateStudentDocumentsMutation>;
 export type UpdateStudentDocumentsMutationResult = Apollo.MutationResult<UpdateStudentDocumentsMutation>;
 export type UpdateStudentDocumentsMutationOptions = Apollo.BaseMutationOptions<UpdateStudentDocumentsMutation, UpdateStudentDocumentsMutationVariables>;
+export const UpdateMessagesCountDocument = gql`
+    mutation UpdateMessagesCount($id: String!, $count: Int!, $isMessage: Boolean!) {
+  updateMessagesCount(id: $id, count: $count, isMessage: $isMessage) {
+    __typename
+    id
+  }
+}
+    `;
+export type UpdateMessagesCountMutationFn = Apollo.MutationFunction<UpdateMessagesCountMutation, UpdateMessagesCountMutationVariables>;
+
+/**
+ * __useUpdateMessagesCountMutation__
+ *
+ * To run a mutation, you first call `useUpdateMessagesCountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMessagesCountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMessagesCountMutation, { data, loading, error }] = useUpdateMessagesCountMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      count: // value for 'count'
+ *      isMessage: // value for 'isMessage'
+ *   },
+ * });
+ */
+export function useUpdateMessagesCountMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMessagesCountMutation, UpdateMessagesCountMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateMessagesCountMutation, UpdateMessagesCountMutationVariables>(UpdateMessagesCountDocument, options);
+      }
+export type UpdateMessagesCountMutationHookResult = ReturnType<typeof useUpdateMessagesCountMutation>;
+export type UpdateMessagesCountMutationResult = Apollo.MutationResult<UpdateMessagesCountMutation>;
+export type UpdateMessagesCountMutationOptions = Apollo.BaseMutationOptions<UpdateMessagesCountMutation, UpdateMessagesCountMutationVariables>;
 export const UpdateStudentProfileDocument = gql`
     mutation UpdateStudentProfile($id: String!, $input: UpdateStudentDto!) {
   updateStudentProfile(id: $id, input: $input) {
@@ -3159,6 +3388,57 @@ export function useUpdateTeacherSubscriptionMutation(baseOptions?: Apollo.Mutati
 export type UpdateTeacherSubscriptionMutationHookResult = ReturnType<typeof useUpdateTeacherSubscriptionMutation>;
 export type UpdateTeacherSubscriptionMutationResult = Apollo.MutationResult<UpdateTeacherSubscriptionMutation>;
 export type UpdateTeacherSubscriptionMutationOptions = Apollo.BaseMutationOptions<UpdateTeacherSubscriptionMutation, UpdateTeacherSubscriptionMutationVariables>;
+export const FindAdminAndTeacherDocument = gql`
+    query FindAdminAndTeacher($id: String) {
+  findAdminAndTeacher(id: $id) {
+    id
+    created
+    role {
+      title
+    }
+    profile {
+      __typename
+      ... on Teacher {
+        id
+        firstName
+        lastName
+        personalImage
+      }
+      ... on Student {
+        id
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindAdminAndTeacherQuery__
+ *
+ * To run a query within a React component, call `useFindAdminAndTeacherQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindAdminAndTeacherQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindAdminAndTeacherQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFindAdminAndTeacherQuery(baseOptions?: Apollo.QueryHookOptions<FindAdminAndTeacherQuery, FindAdminAndTeacherQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindAdminAndTeacherQuery, FindAdminAndTeacherQueryVariables>(FindAdminAndTeacherDocument, options);
+      }
+export function useFindAdminAndTeacherLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindAdminAndTeacherQuery, FindAdminAndTeacherQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindAdminAndTeacherQuery, FindAdminAndTeacherQueryVariables>(FindAdminAndTeacherDocument, options);
+        }
+export type FindAdminAndTeacherQueryHookResult = ReturnType<typeof useFindAdminAndTeacherQuery>;
+export type FindAdminAndTeacherLazyQueryHookResult = ReturnType<typeof useFindAdminAndTeacherLazyQuery>;
+export type FindAdminAndTeacherQueryResult = Apollo.QueryResult<FindAdminAndTeacherQuery, FindAdminAndTeacherQueryVariables>;
 export const FindStudentsDocument = gql`
     query FindStudents($name: String, $teacherId: String) {
   findStudents(name: $name, teacherId: $teacherId) {
@@ -3361,6 +3641,10 @@ export const GetAuthUserDocument = gql`
         title
       }
     }
+    countAllNotifications
+    countAllMessages
+    messagesCount
+    notificationsCount
     profile {
       __typename
       ... on Student {

@@ -1,3 +1,6 @@
+import { RoleTitle } from '@/graphql/graphql';
+import { NextRouter } from 'next/router';
+
 export enum AppRoutes {
   Home = '/',
   About = '/about',
@@ -27,3 +30,15 @@ export enum AppRoutes {
   TeacherNotifications = '/teacher/notifications',
   TeacherMembership = '/teacher/membership',
 }
+
+export const redirect = (router: NextRouter, role: RoleTitle) => {
+  const path =
+    role === RoleTitle.Admin
+      ? AppRoutes.AdminManageDashboard
+      : [RoleTitle.GoldenTeacher, RoleTitle.Teacher].includes(role)
+      ? AppRoutes.TeacherDashboard
+      : AppRoutes.StudentDashboard;
+  router.push({
+    pathname: path,
+  });
+};

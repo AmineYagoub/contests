@@ -1,32 +1,24 @@
-import { validate as isValidUUID } from 'uuid';
-
 import {
-  UpdateDocumentsDto,
-  UpdateStudentDto,
-  UpdateTeacherDto,
-  UpdateTeacherSubscriptionDto,
-} from '@contests/dto/auth';
-import { Injectable, Logger } from '@nestjs/common';
-import { Prisma } from '@prisma/auth-service';
-
-import { PrismaService } from '../app/prisma.service';
-import { OnEvent } from '@nestjs/event-emitter';
-import {
-  MembershipStatus,
   RoleTitle,
-  STUDENT_ADD_TEACHER_EVENT,
+  MembershipStatus,
   TeacherRoleMutationEvent,
   TEACHER_CONNECT_STUDENT_EVENT,
   USER_ROLE_UPDATED_EVENT,
 } from '@contests/types/auth';
-import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import Redis from 'ioredis';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Prisma } from '@prisma/auth-service';
+import { Injectable, Logger } from '@nestjs/common';
+
+import { PrismaService } from '../app/prisma.service';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import { UpdateTeacherSubscriptionDto } from '@contests/dto/auth';
 
 @Injectable()
 export class ProfileService {
   constructor(
     private prisma: PrismaService,
-    @InjectRedis() private readonly redis: Redis
+    @InjectRedis('publisher') private readonly client: Redis
   ) {}
 
   /**
@@ -46,62 +38,6 @@ export class ProfileService {
   }
 
   /**
-   * Update the profile of student
-   *
-   * @param params Prisma.UserUpdateInput The User data.
-   * @returns Promise<User>
-   */
-  async updateStudentProfile(params: {
-    where: Prisma.UserWhereUniqueInput;
-    data: UpdateStudentDto;
-  }) {
-    const {
-      data: { role, teacherId, ...rest },
-      where,
-    } = params;
-    const user: Prisma.UserUpdateWithoutEmailTokenInput = {
-      role: {
-        connectOrCreate: {
-          create: {
-            title: role,
-          },
-          where: {
-            title: role,
-          },
-        },
-      },
-      profile: {
-        update: rest,
-      },
-    };
-    try {
-      const updated = await this.prisma.user.update({
-        where,
-        data: user,
-        include: {
-          profile: {
-            include: { teacher: true },
-          },
-          role: true,
-        },
-      });
-      if (isValidUUID(teacherId)) {
-        this.redis.publish(
-          STUDENT_ADD_TEACHER_EVENT,
-          JSON.stringify({
-            teacherId,
-            userId: updated.id,
-            name: `${updated.profile.firstName} ${updated.profile.lastName}`,
-          })
-        );
-      }
-      return updated;
-    } catch (error) {
-      Logger.error(error);
-    }
-  }
-
-  /**
    * Update the profile of student to connect it to chosen teacher
    *
    * @param params Prisma.UserUpdateInput The User data.
@@ -113,31 +49,36 @@ export class ProfileService {
     connect: boolean;
   }) {
     const { studentId, where, connect } = params;
-    const user: Prisma.ProfileUpdateWithoutTeacherInput = {
-      students: connect
-        ? {
-            connect: {
-              userId: studentId,
+    const profile: Prisma.ProfileUpdateOneWithoutUserNestedInput = {
+      update: {
+        students: connect
+          ? {
+              connect: {
+                userId: studentId,
+              },
+            }
+          : {
+              disconnect: {
+                userId: studentId,
+              },
             },
-          }
-        : {
-            disconnect: {
-              userId: studentId,
-            },
-          },
+      },
     };
     try {
-      const updated = await this.prisma.profile.update({
+      const updated = await this.prisma.user.update({
         where,
-        data: user,
+        data: {
+          profile,
+        },
+        include: { profile: true },
       });
-      this.redis.publish(
+      this.client.publish(
         TEACHER_CONNECT_STUDENT_EVENT,
         JSON.stringify({
           connect,
           studentId,
-          teacherId: updated.userId,
-          name: `${updated.firstName} ${updated.lastName}`,
+          teacherId: updated.profile.userId,
+          name: `${updated.profile.firstName} ${updated.profile.lastName}`,
         })
       );
       // Change student role
@@ -148,44 +89,6 @@ export class ProfileService {
         });
       }
       return updated;
-    } catch (error) {
-      Logger.error(error);
-    }
-  }
-
-  /**
-   * Update the profile of Teacher
-   *
-   * @param params Prisma.UserUpdateInput The User data.
-   * @returns Promise<User>
-   */
-  async updateTeacherProfile(params: {
-    where: Prisma.UserWhereUniqueInput;
-    data: UpdateTeacherDto;
-  }) {
-    const {
-      data: { phone, phoneCode, ...rest },
-      where,
-    } = params;
-    const user: Prisma.UserUpdateWithoutEmailTokenInput = {
-      profile: {
-        upsert: {
-          create: {
-            ...rest,
-            phone: { phone, phoneCode },
-          },
-          update: {
-            ...rest,
-            phone: { phone, phoneCode },
-          },
-        },
-      },
-    };
-    try {
-      return await this.prisma.user.update({
-        where,
-        data: user,
-      });
     } catch (error) {
       Logger.error(error);
     }
@@ -282,37 +185,6 @@ export class ProfileService {
               memberShipOn: true,
             },
           },
-        },
-      });
-    } catch (error) {
-      Logger.error(error);
-    }
-  }
-
-  /**
-   * Update the Documents of student.
-   *
-   * @param params Prisma.UserUpdateInput The User data.
-   * @returns Promise<User>
-   */
-  async updateStudentDocuments(params: {
-    where: Prisma.UserWhereUniqueInput;
-    data: UpdateDocumentsDto;
-  }) {
-    const { data, where } = params;
-    try {
-      return await this.prisma.user.update({
-        where,
-        data: {
-          profile: {
-            update: data,
-          },
-        },
-        include: {
-          profile: {
-            include: { teacher: true },
-          },
-          role: true,
         },
       });
     } catch (error) {

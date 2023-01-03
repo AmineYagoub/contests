@@ -164,6 +164,10 @@ input[type='tel'] {
   animation: fast 1.25s linear 1 forwards;
 }
 
+.ant-badge-count {
+  box-shadow: 0 0 0 1px #ff4d4f;
+}
+
 @keyframes slow {
   0% {
     transform: translate3d(0, 0, 0) rotateX(0) rotateY(0);

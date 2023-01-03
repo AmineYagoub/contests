@@ -11,6 +11,7 @@ import {
   BellOutlined,
   EditOutlined,
   IdcardOutlined,
+  LogoutOutlined,
   MailOutlined,
   SettingOutlined,
   TrophyOutlined,
@@ -29,6 +30,7 @@ export const StyledContent = styled(Content)({
   width: '95% !important',
   backgroundColor: 'transparent',
   marginTop: '1rem',
+  minHeight: '90vh !important',
 });
 
 export const Logo = styled('div')({
@@ -43,7 +45,6 @@ export const StyledMenu = styled(Menu)({
 });
 
 const AdminLayout = ({ children }) => {
-  const user = useSnapshot(AuthState).user;
   const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
   const socket = useReactiveVar(socketVar);
@@ -139,11 +140,16 @@ const AdminLayout = ({ children }) => {
                 <Link href={AppRoutes.AdminManageSettings}>{`الإعدادات`}</Link>
               ),
             },
+            {
+              key: AppRoutes.SignOut,
+              icon: <LogoutOutlined style={{ fontSize: 18 }} />,
+              label: <Link href={AppRoutes.SignOut}>تسجيل الخروج</Link>,
+            },
           ]}
         />
       </Sider>
       <Layout>
-        <HeaderIcons avatar={user.profile.personalImage} />
+        <HeaderIcons />
         <StyledContent>{children}</StyledContent>
         <StyledFooter />
       </Layout>

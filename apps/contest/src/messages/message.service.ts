@@ -1,6 +1,3 @@
-import { sanitize } from 'isomorphic-dompurify';
-import { Logger, Injectable } from '@nestjs/common';
-import { PrismaService } from '../app/prisma.service';
 import {
   CreateMessageDto,
   SendMessageDto,
@@ -12,8 +9,11 @@ import {
   MESSAGES_SEND_EVENT,
   MessageType,
 } from '@contests/types';
-import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Redis } from 'ioredis';
+import { sanitize } from 'isomorphic-dompurify';
+import { Logger, Injectable } from '@nestjs/common';
+import { PrismaService } from '../app/prisma.service';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
 
 @Injectable()
 export class MessageService {
@@ -76,14 +76,14 @@ export class MessageService {
   /**
    * Count unread messages.
    *
-   * @param id string
+   * @param user User
+   * @param isMessages boolean
+   *
    * @returns Promise<number>
+   *
    */
-  private async countUnreadMessages(
-    id: string,
-    isMessages: boolean
-  ): Promise<number> {
-    return this.prisma.message.count({
+  async countUnreadMessages(id: string, isMessages: boolean): Promise<number> {
+    return await this.prisma.message.count({
       where: {
         OR: [
           {
@@ -93,8 +93,6 @@ export class MessageService {
             recipients: {
               array_contains: id,
             },
-            // TODO Get not viewed message
-            // FIX myb count all messages - profile.messagesCount
           },
         ],
         type: isMessages
@@ -261,6 +259,13 @@ export class MessageService {
   }) {
     if (!params.where.recipientId) {
       delete params.where.recipientId;
+    } else {
+      params.where = {
+        OR: [
+          { recipientId: params.where.recipientId },
+          { recipients: { array_contains: params.where.recipientId } },
+        ],
+      };
     }
     params.where = {
       ...params.where,

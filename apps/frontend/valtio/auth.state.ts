@@ -23,6 +23,12 @@ export const AuthActions = {
       AuthState.user.profile.personalImage = url;
     }
   },
+  resetMessagesCounter: () => {
+    AuthState.user.messagesCount = AuthState.user.countAllMessages;
+  },
+  resetNotificationsCounter: () => {
+    AuthState.user.notificationsCount = AuthState.user.countAllNotifications;
+  },
   resetState: () => {
     const resetObj = cloneDeep(init);
     Object.keys(resetObj).forEach((key) => {

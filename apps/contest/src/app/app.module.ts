@@ -1,7 +1,6 @@
 import {
   AppConfigModule,
   contestConfig,
-  ContestConfigGQLType,
   ContestConfigType,
   contestGQLConfig,
 } from '@contests/config';
@@ -10,7 +9,7 @@ import {
   ApolloFederationDriverConfig,
 } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
+import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
 import { AnswerModule } from '../answers/answer.module';
 import { RedisModule, RedisModuleOptions } from '@liaoliaots/nestjs-redis';
 
@@ -22,6 +21,7 @@ import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { PrismaService } from './prisma.service';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { User } from '../users/user.entity';
 
 @Module({
   imports: [
@@ -31,7 +31,12 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     }),
     GraphQLModule.forRootAsync<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
-      useFactory: async (config: ContestConfigGQLType) => config,
+      useFactory: async (config: GqlModuleOptions) => {
+        config.buildSchemaOptions = {
+          orphanedTypes: [User],
+        };
+        return config;
+      },
       inject: [contestGQLConfig.KEY],
     }),
     RedisModule.forRootAsync({

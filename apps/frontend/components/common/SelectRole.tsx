@@ -22,10 +22,12 @@ const SelectRole = ({
   selectedSupervisor,
   setSelectedSupervisor,
   isSignUp = true,
+  placeholder = null,
 }: {
   selectedSupervisor: string;
   setSelectedSupervisor: Dispatch<SetStateAction<string>>;
   isSignUp: boolean;
+  placeholder?: string;
 }) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [disabled, setDisabled] = useState<boolean>(false);
@@ -98,11 +100,12 @@ const SelectRole = ({
             onChange={handleInstructorSelect}
             onSearch={handleSearch}
             loading={loading}
+            placeholder={placeholder}
           >
             {data?.findTeacher.map((el) => {
-              const { firstName, lastName, id } = el.profile as Teacher;
+              const { firstName, lastName } = el.profile as Teacher;
               return (
-                <Option value={id} key={id}>
+                <Option value={el.id} key={el.id}>
                   {el.role.title === RoleTitle.GoldenTeacher ? (
                     <Tooltip title="معلم ذهبي">
                       <Space size={10} align="center">

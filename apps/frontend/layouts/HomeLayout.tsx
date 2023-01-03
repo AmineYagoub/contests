@@ -1,15 +1,12 @@
-import { Button, Col, Layout, Row } from 'antd';
-import Link from 'next/link';
+import { Layout } from 'antd';
 
 import theme from '@/config/theme';
-import { AppRoutes } from '@/utils/routes';
 import styled from '@emotion/styled';
-
-import { Logo } from './AdminLayout';
 import StyledFooter from './StyledFooter';
 import { useReactiveVar } from '@apollo/client';
 import { appDataVar, getTitleMeta } from '@/utils/app';
 import Head from 'next/head';
+import HeaderIcons from '@/components/common/HeaderIcons';
 
 const { Content, Header } = Layout;
 
@@ -20,15 +17,9 @@ export const StyledHeader = styled(Header)({
     'rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px',
 });
 
-const StyledButton = styled(Button)`
-  background-color: #fafafa !important;
-  color: #6d90e8 !important;
-  box-shadow: 0 0 20px #eee;
-  border: none !important;
-`;
-
 const HomeLayout = ({ children }) => {
   const siteData = useReactiveVar(appDataVar);
+
   return (
     <>
       <Head>
@@ -59,19 +50,7 @@ const HomeLayout = ({ children }) => {
         <meta name="format-detection" content="telephone=no" />
       </Head>
       <Layout>
-        <StyledHeader>
-          <Row justify="space-between">
-            <Col span={4}>
-              <Logo />
-            </Col>
-            <Col span={17}></Col>
-            <Col span={3}>
-              <Link href={AppRoutes.SignUp}>
-                <StyledButton size="middle">تسجيل / دخول</StyledButton>
-              </Link>
-            </Col>
-          </Row>
-        </StyledHeader>
+        <HeaderIcons inHome />
         <Content>{children}</Content>
         <StyledFooter />
       </Layout>

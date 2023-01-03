@@ -1,0 +1,21 @@
+query FindAdminAndTeacher($id: String) {
+  findAdminAndTeacher(id: $id) {
+    id
+    created
+    role {
+      title
+    }
+    profile {
+      __typename
+      ... on Teacher {
+        id
+        firstName
+        lastName
+        personalImage
+      }
+      ... on Student {
+        id
+      }
+    }
+  }
+}

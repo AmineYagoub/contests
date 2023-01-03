@@ -46,6 +46,77 @@ export class UserService {
   }
 
   /**
+   * Find Admin and Teacher for chatting contact list.
+   *
+   * @param input Prisma.UserWhereUniqueInput The unique id of the User.
+   * @returns Promise<User[]>
+   */
+  async findAdminAndTeacher(input?: Prisma.UserWhereUniqueInput) {
+    const result = [];
+    try {
+      const admin = await this.prisma.user.findFirst({
+        where: {
+          role: {
+            title: {
+              in: [RoleTitle.ADMIN],
+            },
+          },
+        },
+        include: {
+          role: true,
+          profile: true,
+        },
+      });
+      result.push(admin);
+      if (input?.id) {
+        const teacher = await this.prisma.user.findFirstOrThrow({
+          where: {
+            profile: {
+              id: input.id,
+            },
+          },
+          include: {
+            role: true,
+            profile: true,
+          },
+        });
+        result.push(teacher);
+      }
+      return result;
+    } catch (error) {
+      Logger.error(error);
+    }
+  }
+
+  /**
+   * Update messages views count.
+   *
+   * @param id string
+   * @param count number
+   * @param isMessage boolean
+   *
+   * @returns Promise<User>
+   */
+  async updateMessagesCount(id: string, count: number, isMessage: boolean) {
+    try {
+      return this.prisma.user.update({
+        where: {
+          id,
+        },
+        data: isMessage
+          ? {
+              messagesCount: { increment: count },
+            }
+          : {
+              notificationsCount: { increment: count },
+            },
+      });
+    } catch (error) {
+      Logger.error(error);
+    }
+  }
+
+  /**
    * Update a User
    *
    * @param params Prisma.UserUpdateInput The User data.

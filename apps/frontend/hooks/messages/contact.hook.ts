@@ -1,10 +1,13 @@
 import {
   RoleTitle,
+  Student,
+  useFindAdminAndTeacherLazyQuery,
   usePaginateUsersQuery,
   User,
   useSearchUsersLazyQuery,
 } from '@/graphql/graphql';
 import { Logger } from '@/utils/app';
+import { AuthState } from '@/valtio/auth.state';
 import { MessageActions, MessageState } from '@/valtio/message.state';
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
@@ -12,10 +15,13 @@ import { useSnapshot } from 'valtio';
 export const alwaysTake = 7;
 
 export const useContactList = (role: RoleTitle, teacherId?: string) => {
+  const userSnap = useSnapshot(AuthState).user;
   const [searchValue, setSearchValue] = useState<string>(null);
   const roles =
     role === RoleTitle.Teacher
       ? [RoleTitle.StudentTeacher]
+      : role === RoleTitle.Student
+      ? [RoleTitle.Teacher, RoleTitle.GoldenTeacher]
       : [
           RoleTitle.Teacher,
           RoleTitle.GoldenTeacher,
@@ -23,21 +29,24 @@ export const useContactList = (role: RoleTitle, teacherId?: string) => {
           RoleTitle.StudentTeacher,
         ];
   const messageSnap = useSnapshot(MessageState);
-
   const [SearchUsersQuery] = useSearchUsersLazyQuery();
+  const [FindAdminAndTeacherQuery] = useFindAdminAndTeacherLazyQuery();
 
-  const { data, fetchMore, refetch } = usePaginateUsersQuery({
+  const getPaginationParams = (skip = 0) => ({
+    skip,
+    take: alwaysTake,
+    where: {
+      teacherId: role === RoleTitle.Teacher ? teacherId : undefined,
+      role: roles,
+    },
+  });
+
+  const { data, fetchMore } = usePaginateUsersQuery({
     variables: {
-      params: {
-        take: alwaysTake,
-        skip: 0,
-        where: {
-          teacherId: role === RoleTitle.Teacher ? teacherId : undefined,
-          role: roles,
-        },
-      },
+      params: getPaginationParams(),
     },
     ssr: false,
+    skip: role === RoleTitle.Student,
   });
 
   const loadMoreData = async (reset = false) => {
@@ -45,21 +54,13 @@ export const useContactList = (role: RoleTitle, teacherId?: string) => {
       MessageActions.setContactLoading(true);
       const { data } = await fetchMore({
         variables: {
-          params: {
-            skip: messageSnap.contactList.length,
-            take: alwaysTake,
-            where: {
-              teacherId: role === RoleTitle.Teacher ? teacherId : undefined,
-              role: roles,
-            },
-          },
+          params: getPaginationParams(messageSnap.contactList.length),
         },
       });
       if (data) {
         const list = reset
           ? data.paginateUsers.data
           : [...messageSnap.contactList, ...data.paginateUsers.data];
-        console.log(list, reset);
         MessageActions.setContactList(list as User[]);
       }
     } catch (error) {
@@ -115,19 +116,32 @@ export const useContactList = (role: RoleTitle, teacherId?: string) => {
   };
 
   useEffect(() => {
-    if ([RoleTitle.Teacher].includes(role)) {
+    if (RoleTitle.Teacher === role) {
       MessageActions.setContactLoading(true);
-      refetch({
-        params: {
-          where: {
-            role: [RoleTitle.Admin],
-          },
+      FindAdminAndTeacherQuery()
+        .then(({ data }) => {
+          if (data) {
+            MessageActions.setContactList([
+              ...data.findAdminAndTeacher,
+              ...messageSnap.contactList,
+            ] as User[]);
+          }
+        })
+        .finally(() => {
+          MessageActions.setContactLoading(false);
+        });
+    }
+    if (RoleTitle.Student === role) {
+      MessageActions.setContactLoading(true);
+      FindAdminAndTeacherQuery({
+        variables: {
+          id: (userSnap.profile as Student).teacher.id,
         },
       })
         .then(({ data }) => {
           if (data) {
             MessageActions.setContactList([
-              ...data.paginateUsers.data,
+              ...data.findAdminAndTeacher,
               ...messageSnap.contactList,
             ] as User[]);
           }

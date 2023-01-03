@@ -11,7 +11,7 @@ import {
   useSigningMutation,
 } from '@/graphql/graphql';
 import { Logger } from '@/utils/app';
-import { AppRoutes } from '@/utils/routes';
+import { AppRoutes, redirect } from '@/utils/routes';
 
 import type { SigningInput } from '@/utils/types';
 import { AuthActions } from '@/valtio/auth.state';
@@ -51,17 +51,7 @@ export const useSigning = (form: FormInstance<unknown>) => {
           data: { getAuthUser },
         } = await GetAuthUserQuery();
         AuthActions.setUser(getAuthUser as User);
-        const path =
-          getAuthUser.role.title === RoleTitle.Admin
-            ? AppRoutes.AdminManageDashboard
-            : [RoleTitle.GoldenTeacher, RoleTitle.Teacher].includes(
-                getAuthUser.role.title
-              )
-            ? AppRoutes.TeacherDashboard
-            : AppRoutes.StudentDashboard;
-        router.push({
-          pathname: path,
-        });
+        redirect(router, getAuthUser.role.title);
       }
     } catch (error) {
       Logger.log(error);

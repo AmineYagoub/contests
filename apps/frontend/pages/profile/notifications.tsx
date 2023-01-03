@@ -1,15 +1,22 @@
-import { withAuth } from '@/components/common/withAuth';
-import NotificationList from '@/components/profile/common/NotificationList';
-import { PermissionTitle } from '@/graphql/graphql';
-import ProfileLayout from '@/layout/ProfileLayout';
 import { NextPageWithLayout } from '@/utils/types';
-import { AuthState } from '@/valtio/auth.state';
+import ProfileLayout from '@/layout/ProfileLayout';
+import { PermissionTitle } from '@/graphql/graphql';
+import { withAuth } from '@/components/common/withAuth';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import { useSnapshot } from 'valtio';
+import NotificationList from '@/components/messages/NotificationList';
+import { useNotificationHook } from '@/hooks/messages/notification.hook';
 
 const ProfileNotifications: NextPageWithLayout = () => {
-  const user = useSnapshot(AuthState).user;
-  return <NotificationList id={user.id} />;
+  const { onLoadMore, refetch, data, loading, hasMore } = useNotificationHook();
+  return (
+    <NotificationList
+      onLoadMore={onLoadMore}
+      loading={loading}
+      hasMore={hasMore}
+      onSuccess={() => refetch()}
+      data={data}
+    />
+  );
 };
 ProfileNotifications.getLayout = (page: EmotionJSX.Element) => (
   <ProfileLayout>{page}</ProfileLayout>

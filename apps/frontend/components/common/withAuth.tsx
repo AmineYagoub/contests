@@ -8,7 +8,7 @@ import {
   useGetAuthUserLazyQuery,
   User,
 } from '@/graphql/graphql';
-import AuthLayout from '@/layout/HomeLayout';
+import AuthLayout from '@/layout/AuthLayout';
 import { deleteAllCookies, Logger } from '@/utils/app';
 import { AppRoutes } from '@/utils/routes';
 import { AuthActions, AuthState } from '@/valtio/auth.state';

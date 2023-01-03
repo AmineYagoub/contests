@@ -51,6 +51,22 @@ export class UserResolver {
     return this.userService.findUnique({ key });
   }
 
+  @Query(() => [User])
+  findAdminAndTeacher(
+    @Args('id', { type: () => String, nullable: true }) id?: string
+  ) {
+    return this.userService.findAdminAndTeacher({ id });
+  }
+
+  @Mutation(() => User)
+  async updateMessagesCount(
+    @Args('id') id: string,
+    @Args('count', { type: () => Int }) count: number,
+    @Args('isMessage', { type: () => Boolean }) isMessage: boolean
+  ) {
+    return this.userService.updateMessagesCount(id, count, isMessage);
+  }
+
   @isPublic()
   @Mutation(() => User)
   async updateUser(@Args('id') id: string, @Args('input') data: UpdateUserDto) {

@@ -35,6 +35,7 @@ import StyledFooter from './StyledFooter';
 import { useSnapshot } from 'valtio';
 import { AuthState } from '@/valtio/auth.state';
 import { RoleTitle, User } from '@/graphql/graphql';
+import HeaderIcons from '@/components/common/HeaderIcons';
 
 const { Header, Sider } = Layout;
 const { Text } = Typography;
@@ -75,13 +76,6 @@ const ProfileLayout: FC<{ children: ReactElement }> = ({ children }) => {
   };
   const menuList = [
     {
-      key: routes.dashboard,
-      icon: <HomeOutlined style={{ fontSize: 18 }} />,
-
-      label: <Link href={routes.dashboard}>الرئيسية</Link>,
-    },
-
-    {
       key: routes.profile,
       icon: <ContactsOutlined style={{ fontSize: 18 }} />,
 
@@ -108,6 +102,12 @@ const ProfileLayout: FC<{ children: ReactElement }> = ({ children }) => {
     },
   ];
   if (isTeacher) {
+    menuList.unshift({
+      key: routes.dashboard,
+      icon: <HomeOutlined style={{ fontSize: 18 }} />,
+
+      label: <Link href={routes.dashboard}>الرئيسية</Link>,
+    });
     menuList.push({
       key: AppRoutes.TeacherMembership,
       icon: <SketchCircleFilled style={{ fontSize: 18, color: 'gold' }} />,
@@ -135,47 +135,7 @@ const ProfileLayout: FC<{ children: ReactElement }> = ({ children }) => {
         />
       </Sider>
       <Layout>
-        <StyledHeader>
-          <Row justify="space-between">
-            <Col span={2}>
-              {createElement(
-                !collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-                {
-                  className: 'trigger',
-                  onClick: () => setCollapsed(!collapsed),
-                }
-              )}
-            </Col>
-
-            <Col span={4}>
-              <Space size={8}>
-                <Button
-                  icon={<MailOutlined style={{ color: theme.infoColor }} />}
-                  shape="circle"
-                  type="ghost"
-                />
-                <Badge dot>
-                  <Button
-                    icon={<BellOutlined style={{ color: theme.infoColor }} />}
-                    shape="circle"
-                    type="ghost"
-                  />
-                </Badge>
-
-                <Avatar
-                  src={
-                    <Image
-                      src={user?.profile.personalImage}
-                      width={32}
-                      height={32}
-                      alt="avatar"
-                    />
-                  }
-                />
-              </Space>
-            </Col>
-          </Row>
-        </StyledHeader>
+        <HeaderIcons />
         {!isTeacher && !user?.isActive && (
           <Alert
             style={{ marginBottom: 10 }}

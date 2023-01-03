@@ -46,7 +46,7 @@ export class ProfileResolver {
     @Args('id') id: string,
     @Args('input') data: UpdateStudentDto
   ) {
-    return this.profileService.updateStudentProfile({ data, where: { id } });
+    return this.studentService.updateStudentProfile({ data, where: { id } });
   }
 
   @isPublic()
@@ -55,7 +55,7 @@ export class ProfileResolver {
     @Args('id') id: string,
     @Args('input') data: UpdateTeacherDto
   ) {
-    return this.profileService.updateTeacherProfile({ data, where: { id } });
+    return this.teacherService.updateTeacherProfile({ data, where: { id } });
   }
 
   @isPublic()
@@ -89,7 +89,7 @@ export class ProfileResolver {
     @Args('id') id: string,
     @Args('input') data: UpdateDocumentsDto
   ) {
-    return this.profileService.updateStudentDocuments({ data, where: { id } });
+    return this.studentService.updateStudentDocuments({ data, where: { id } });
   }
 
   @Query(() => [User])

@@ -47,6 +47,11 @@ export class MessageResolver {
     return this.messageService.findLastMessages(id);
   }
 
+  @Query(() => [Message])
+  async findLastNotifications(@Args('id') id: string) {
+    return this.messageService.findLastNotifications(id);
+  }
+
   @Query(() => MessagePaginationResponse, { nullable: true })
   async paginateMessages(@Args('params') params: MessagePaginationDto) {
     return this.messageService.paginateMessages(params);

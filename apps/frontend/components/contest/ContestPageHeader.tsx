@@ -1,21 +1,12 @@
-import {
-  Button,
-  Col,
-  Modal,
-  PageHeader,
-  Row,
-  Space,
-  Statistic,
-  Tag,
-} from 'antd';
+import { Button, Col, Modal, PageHeader, Row, Space, Statistic } from 'antd';
 import Link from 'next/link';
 import { useSnapshot } from 'valtio';
 
-import { getMapperLabel, studentMappedLevels } from '@/utils/mapper';
 import { AppRoutes } from '@/utils/routes';
 import { ContestActions, ContestState } from '@/valtio/contest.state';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
+import { Contest } from '@/graphql/graphql';
 
 const valueStyle = {
   fontWeight: 800,
@@ -39,20 +30,6 @@ const StyledStat = styled(Statistic)({
   },
   ['.ant-statistic-title']: {
     color: '#fff',
-  },
-});
-
-const StyledStatLevels = styled(Statistic)({
-  ['.ant-statistic-content']: {
-    height: 35,
-    justifyContent: 'center',
-    color: '#fff !important',
-  },
-  ['.ant-statistic-title']: {
-    color: '#fff',
-  },
-  ['.ant-statistic-content-value']: {
-    display: 'none',
   },
 });
 
@@ -88,7 +65,22 @@ const ContestPageHeader = () => {
   const contestSnap = useSnapshot(ContestState);
 
   if (!contestSnap.contest) {
-    return;
+    return (
+      <PageHeader
+        onBack={() => null}
+        title={
+          !contestSnap.contestStarted && (
+            <Link href={AppRoutes.Home}>{`الرئيسية`}</Link>
+          )
+        }
+        subTitle={
+          <h1
+            style={{ color: '#fff' }}
+          >{`مسابقة ${contestSnap.contest?.title}`}</h1>
+        }
+        style={{ backgroundColor: '#ffffff21' }}
+      />
+    );
   }
   const { easyQuestionCount, mediumQuestionCount, hardQuestionCount } =
     contestSnap.contest;

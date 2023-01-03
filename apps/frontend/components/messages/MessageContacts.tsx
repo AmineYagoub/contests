@@ -1,9 +1,11 @@
 import { Menu, Layout, Avatar, Button, Skeleton, Space, Input } from 'antd';
 import type { MenuProps } from 'antd';
-import { User } from '@/graphql/graphql';
+import { RoleTitle, User } from '@/graphql/graphql';
 import styled from '@emotion/styled';
 import { getMapperLabel, rolesMappedTypes } from '@/utils/mapper';
 import { alwaysTake } from '@/hooks/messages/contact.hook';
+import { useSnapshot } from 'valtio';
+import { AuthState } from '@/valtio/auth.state';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -11,10 +13,11 @@ const StyledMenu = styled(Menu)({
   backgroundColor: '#dce0e6 !important',
   li: {
     paddingLeft: '25px !important',
-    boxShadow: '0 1px 3px blueviolet',
+    boxShadow:
+      'rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px',
     '&.ant-menu-item': {
       margin: '0 !important',
-      height: 45,
+      height: 50,
     },
   },
 });
@@ -35,7 +38,7 @@ function getContact(
   } as MenuItem;
 }
 
-const LoadingStat = () => {
+export const LoadingStat = () => {
   return (
     <>
       {Array(alwaysTake)
@@ -69,6 +72,7 @@ const MessageContacts = ({
   onSearch: (value: string) => void;
   searchValue: string;
 }) => {
+  const userSnap = useSnapshot(AuthState).user;
   const items: MenuItem[] = users?.map((user) => {
     const { firstName, lastName, personalImage } = user.profile;
     return getContact(
@@ -96,13 +100,16 @@ const MessageContacts = ({
         overflow: 'scroll',
       }}
     >
-      {!collapsed && (
-        <Input.Search
-          placeholder="البحث في قائمة الإتصال"
-          onSearch={onSearch}
-          onInput={(e) => onSearch(e.currentTarget.value)}
-        />
-      )}
+      {!collapsed &&
+        ![RoleTitle.StudentTeacher, RoleTitle.Student].includes(
+          userSnap.role.title
+        ) && (
+          <Input.Search
+            placeholder="البحث في قائمة الإتصال"
+            onSearch={onSearch}
+            onInput={(e) => onSearch(e.currentTarget.value)}
+          />
+        )}
       <StyledMenu
         mode="inline"
         items={items}

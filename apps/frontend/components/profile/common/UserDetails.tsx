@@ -2,7 +2,7 @@ import { Button, DatePicker, Form, Input, Select } from 'antd';
 
 import SelectCountry from '@/components/common/SelectCountry';
 import SelectRole from '@/components/common/SelectRole';
-import { RoleTitle, User } from '@/graphql/graphql';
+import { RoleTitle, Student, User } from '@/graphql/graphql';
 import { emailRules } from '@/hooks/auth/signup.hook';
 import { useUser } from '@/hooks/profile/user.hook';
 import { formLayout } from '@/pages/auth/sign-up';
@@ -37,6 +37,12 @@ const UserDetails = ({ user }: { user: User }) => {
     loading,
     tLoading,
   } = useUser(form, user);
+
+  const getPlaceholderText = () =>
+    user.role.title === RoleTitle.StudentTeacher &&
+    !(user.profile as Student).teacher
+      ? 'في إنتظار موافقة المعلم'
+      : null;
   return (
     <StyledForm
       form={form}
@@ -78,6 +84,7 @@ const UserDetails = ({ user }: { user: User }) => {
           selectedSupervisor={selectedSupervisor}
           setSelectedSupervisor={setSelectedSupervisor}
           isSignUp={false}
+          placeholder={getPlaceholderText()}
         />
       )}
 
