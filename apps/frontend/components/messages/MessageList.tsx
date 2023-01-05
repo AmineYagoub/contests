@@ -12,7 +12,7 @@ import { assertNullableType } from 'graphql';
 export const messagesLimit = 10;
 
 const StyledSection = styled('section')({
-  height: 300,
+  height: '60vh',
   overflow: 'scroll',
   paddingLeft: 13,
 });
@@ -99,7 +99,9 @@ const MessagesList = ({
           textAlign: 'center',
         }}
       >
-        {hasMore ? <Skeleton avatar paragraph={{ rows: 1 }} active /> : null}
+        {hasMore && messages.length > 10 ? (
+          <Skeleton avatar paragraph={{ rows: 1 }} active />
+        ) : null}
       </div>
       {messages?.length > 0 ? (
         <List
