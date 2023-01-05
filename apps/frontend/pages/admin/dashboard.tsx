@@ -2,8 +2,8 @@ import { Button, Card, Col, Progress, Row, Statistic } from 'antd';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 
-import LatestInstructors from '@/components/admin/dashboard/LatestInstructors';
-import LatestUsers from '@/components/admin/dashboard/LatestUsers';
+import LatestTeachers from '@/components/admin/dashboard/LatestTeachers';
+import LatestStudents from '@/components/admin/dashboard/LatestStudents';
 import StudentAgeChart from '@/components/admin/dashboard/StudentAgeChart';
 import AdminLayout from '@/layout/AdminLayout';
 import { NextPageWithLayout } from '@/utils/types';
@@ -133,10 +133,10 @@ const AdminDashboard: NextPageWithLayout = () => {
       </Row>
       <Row align="top" gutter={12}>
         <Col span={14}>
-          <LatestUsers />
+          <LatestStudents />
         </Col>
         <Col span={10}>
-          <LatestInstructors />
+          <LatestTeachers />
         </Col>
       </Row>
     </>
