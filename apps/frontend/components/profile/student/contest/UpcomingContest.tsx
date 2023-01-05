@@ -6,18 +6,26 @@ import {
   SearchDatePickerIcon,
 } from '@/components/admin/tables/SearchDatePicker';
 import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
-import { Contest, ContestStatus, User } from '@/graphql/graphql';
-import {
-  ContestsDataIndex,
-  useSearchContests,
-} from '@/hooks/admin/manage-contests.hook';
+import { Contest, ContestStatus } from '@/graphql/graphql';
+
 import { ContestFields } from '@/utils/fields';
 import { contestMappedStatus, getMapperLabel } from '@/utils/mapper';
 
 import type { ColumnsType, ColumnType } from 'antd/es/table';
-const UpcomingContest = ({ user }: { user: User }) => {
+import {
+  useFindContestsForStudents,
+  ContestsDataIndex,
+} from '@/hooks/contests/student.hook';
+import { getContestRoute } from '@/utils/routes';
+const UpcomingContest = ({
+  id,
+  isCompleted,
+}: {
+  id: string;
+  isCompleted?: boolean;
+}) => {
   const { methods, data, loading, filteredInfo, sortedInfo } =
-    useSearchContests();
+    useFindContestsForStudents(id, isCompleted);
 
   const getColumnSearchProps = (
     dataIndex: ContestsDataIndex
@@ -62,21 +70,13 @@ const UpcomingContest = ({ user }: { user: User }) => {
       dataIndex: ContestFields.title,
       key: ContestFields.title,
       ...getColumnSearchProps(ContestFields.title),
-      render(value) {
-        return <a>{value}</a>;
+      render(value: string, record: Contest) {
+        return (
+          <a href={getContestRoute(record.id)} target="_blank" rel="noreferrer">
+            {value}
+          </a>
+        );
       },
-    },
-    {
-      title: 'تاريخ الإنشاء',
-      dataIndex: ContestFields.created,
-      key: ContestFields.created,
-      sorter: true,
-      sortDirections: ['descend', 'ascend'],
-      sortOrder:
-        sortedInfo.columnKey === ContestFields.created
-          ? sortedInfo.order
-          : null,
-      ...getColumnSearchDateProps(ContestFields.created),
     },
     {
       title: 'تاريخ البدء',
@@ -101,6 +101,12 @@ const UpcomingContest = ({ user }: { user: User }) => {
           ? sortedInfo.order
           : null,
       render: (text) => `${text} دقيقة`,
+    },
+    {
+      title: 'عدد المشاركين',
+      dataIndex: ContestFields.participants,
+      key: ContestFields.participants,
+      render: (data: string[]) => `${data.length} طالب`,
     },
     {
       title: 'حالة المسابقة',

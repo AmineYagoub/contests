@@ -4,12 +4,11 @@ import {
   QuestionType,
   SelectedQuestionFields,
 } from '@contests/types';
+import Redis from 'ioredis';
+import { PrismaService } from '../app/prisma.service';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Contest, Prisma, Question } from '@prisma/contest-service';
-import Redis from 'ioredis';
-
-import { PrismaService } from '../app/prisma.service';
 
 @Injectable()
 export class ContestService {
@@ -49,6 +48,7 @@ export class ContestService {
     const created = await this.prisma.contest.create({
       data: results,
     });
+    // TODO UPDATE CONTEST TO PUSH PARTICIPANTS
     this.client.publish(
       CONTEST_CREATED_EVENT,
       JSON.stringify({
@@ -317,6 +317,18 @@ export class ContestService {
           case 'level':
             filter.level = {
               array_contains: String(value),
+            };
+            break;
+          case 'participants':
+            filter.participants = {
+              array_contains: value[0],
+            };
+            break;
+          case 'answerBy':
+            filter.answers = {
+              some: {
+                userId: value[0],
+              },
             };
             break;
           case 'status':
