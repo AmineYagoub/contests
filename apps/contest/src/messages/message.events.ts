@@ -1,20 +1,20 @@
+import {
+  MessageType,
+  ContestCreatedEvent,
+  StudentUpdateTeacher,
+  CONTEST_CREATED_EVENT,
+  TeacherConnectStudent,
+  MESSAGES_SEND_FOR_EVENT,
+  CONTEST_CREATED_WILDCARD,
+  CONTEST_CREATED_FOR_EVENT,
+  STUDENT_ADD_TEACHER_EVENT,
+  TEACHER_CONNECT_STUDENT_EVENT,
+} from '@contests/types';
+import Redis from 'ioredis';
 import { Logger, Injectable } from '@nestjs/common';
 import { PrismaService } from '../app/prisma.service';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
-import Redis from 'ioredis';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
-import {
-  ContestCreatedEvent,
-  CONTEST_CREATED_EVENT,
-  CONTEST_CREATED_FOR_EVENT,
-  CONTEST_CREATED_WILDCARD,
-  MESSAGES_SEND_FOR_EVENT,
-  MessageType,
-  StudentUpdateTeacher,
-  STUDENT_ADD_TEACHER_EVENT,
-  TeacherConnectStudent,
-  TEACHER_CONNECT_STUDENT_EVENT,
-} from '@contests/types';
 import { SendMessageDto } from '@contests/dto';
 
 @Injectable()
@@ -25,11 +25,11 @@ export class MessageEvents {
     @InjectRedis() private readonly client: Redis
   ) {
     this.client.subscribe(
+      CONTEST_CREATED_EVENT,
+      MESSAGES_SEND_FOR_EVENT,
+      CONTEST_CREATED_FOR_EVENT,
       STUDENT_ADD_TEACHER_EVENT,
       TEACHER_CONNECT_STUDENT_EVENT,
-      CONTEST_CREATED_EVENT,
-      CONTEST_CREATED_FOR_EVENT,
-      MESSAGES_SEND_FOR_EVENT,
       (err, count) => {
         if (err) {
           Logger.error('Failed to subscribe: %s', err.message);
