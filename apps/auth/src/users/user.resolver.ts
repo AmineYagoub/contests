@@ -32,6 +32,30 @@ function Paginate<T>(Node: Type<T>) {
 @ObjectType()
 class UserPaginationResponse extends Paginate(User) {}
 
+@ObjectType()
+class DashboardLevelResponse {
+  @Field()
+  level: string;
+
+  @Field(() => Int)
+  value: number;
+}
+
+@ObjectType()
+class DashboardResponse {
+  @Field(() => Int)
+  teachers: number;
+
+  @Field(() => Int)
+  students: number;
+
+  @Field(() => Int)
+  studentTeacher: number;
+
+  @Field(() => [DashboardLevelResponse])
+  levels: DashboardLevelResponse[];
+}
+
 @Resolver(() => User)
 export class UserResolver {
   constructor(
@@ -43,6 +67,11 @@ export class UserResolver {
   @Mutation(() => Boolean, { nullable: true })
   async seedData() {
     return this.seedService.seed();
+  }
+
+  @Query(() => DashboardResponse)
+  dashboard() {
+    return this.userService.dashboard();
   }
 
   @isPublic()

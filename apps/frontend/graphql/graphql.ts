@@ -222,6 +222,20 @@ export type CreateSubscriptionPlansDto = {
   title: Scalars['String'];
 };
 
+export type DashboardLevelResponse = {
+  __typename?: 'DashboardLevelResponse';
+  level: Scalars['String'];
+  value: Scalars['Int'];
+};
+
+export type DashboardResponse = {
+  __typename?: 'DashboardResponse';
+  levels: Array<DashboardLevelResponse>;
+  studentTeacher: Scalars['Int'];
+  students: Scalars['Int'];
+  teachers: Scalars['Int'];
+};
+
 export type EmailDto = {
   email: Scalars['String'];
 };
@@ -569,6 +583,7 @@ export type Profile = Student | Teacher;
 
 export type Query = {
   __typename?: 'Query';
+  dashboard: DashboardResponse;
   findAdminAndTeacher: Array<User>;
   findAllSubscriptionPlans: Array<SubscriptionPlan>;
   findAppConfig: App;
@@ -1102,6 +1117,7 @@ export type UserPhone = {
 };
 
 export type WhereContestArgs = {
+  answerBy?: InputMaybe<Scalars['String']>;
   countries?: InputMaybe<Array<Scalars['String']>>;
   created?: InputMaybe<Array<Scalars['String']>>;
   level?: InputMaybe<Array<StudentLevel>>;
@@ -1169,6 +1185,11 @@ export type UpdateAppConfigMutationVariables = Exact<{
 
 
 export type UpdateAppConfigMutation = { __typename?: 'Mutation', updateAppConfig: { __typename?: 'App', id: string } };
+
+export type DashboardQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DashboardQuery = { __typename?: 'Query', dashboard: { __typename?: 'DashboardResponse', teachers: number, students: number, studentTeacher: number, levels: Array<{ __typename?: 'DashboardLevelResponse', level: string, value: number }> } };
 
 export type FindAppConfigQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1643,6 +1664,46 @@ export function useUpdateAppConfigMutation(baseOptions?: Apollo.MutationHookOpti
 export type UpdateAppConfigMutationHookResult = ReturnType<typeof useUpdateAppConfigMutation>;
 export type UpdateAppConfigMutationResult = Apollo.MutationResult<UpdateAppConfigMutation>;
 export type UpdateAppConfigMutationOptions = Apollo.BaseMutationOptions<UpdateAppConfigMutation, UpdateAppConfigMutationVariables>;
+export const DashboardDocument = gql`
+    query Dashboard {
+  dashboard {
+    teachers
+    students
+    studentTeacher
+    levels {
+      level
+      value
+    }
+  }
+}
+    `;
+
+/**
+ * __useDashboardQuery__
+ *
+ * To run a query within a React component, call `useDashboardQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDashboardQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDashboardQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDashboardQuery(baseOptions?: Apollo.QueryHookOptions<DashboardQuery, DashboardQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DashboardQuery, DashboardQueryVariables>(DashboardDocument, options);
+      }
+export function useDashboardLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DashboardQuery, DashboardQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DashboardQuery, DashboardQueryVariables>(DashboardDocument, options);
+        }
+export type DashboardQueryHookResult = ReturnType<typeof useDashboardQuery>;
+export type DashboardLazyQueryHookResult = ReturnType<typeof useDashboardLazyQuery>;
+export type DashboardQueryResult = Apollo.QueryResult<DashboardQuery, DashboardQueryVariables>;
 export const FindAppConfigDocument = gql`
     query FindAppConfig {
   findAppConfig {

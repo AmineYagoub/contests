@@ -10,7 +10,7 @@ import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
 import { withAuth } from '@/components/common/withAuth';
-import { PermissionTitle } from '@/graphql/graphql';
+import { PermissionTitle, useDashboardQuery } from '@/graphql/graphql';
 
 export const StyledCard = styled(Card)({
   display: 'flex',
@@ -34,6 +34,17 @@ const ContestsChart = dynamic(
 );
 
 const AdminDashboard: NextPageWithLayout = () => {
+  const { data, loading } = useDashboardQuery();
+  const getStudentsPercent = () => {
+    if (data) {
+      const { studentTeacher, students } = data.dashboard;
+      const total = studentTeacher + students;
+      return {
+        students: Math.round((students / total) * 100),
+        studentTeacher: Math.round((studentTeacher / total) * 100),
+      };
+    }
+  };
   return (
     <>
       <Row gutter={16}>
@@ -59,6 +70,8 @@ const AdminDashboard: NextPageWithLayout = () => {
             <Statistic
               title="عدد المعلمين"
               precision={0}
+              value={data?.dashboard.teachers}
+              loading={loading}
               suffix="معلم"
               prefix={
                 <Image
@@ -76,13 +89,15 @@ const AdminDashboard: NextPageWithLayout = () => {
             <Statistic
               title="الطلاب المرتبطين بمشرفين"
               precision={0}
+              value={data?.dashboard.studentTeacher}
+              loading={loading}
               suffix="طالب"
               prefix={
                 <Progress
                   width={80}
                   strokeLinecap="butt"
                   type="dashboard"
-                  percent={25}
+                  percent={getStudentsPercent()?.studentTeacher}
                 />
               }
             />
@@ -94,12 +109,14 @@ const AdminDashboard: NextPageWithLayout = () => {
               title="الطلاب الغير مرتبطين بمشرفين"
               precision={0}
               suffix="طالب"
+              value={data?.dashboard.students}
+              loading={loading}
               prefix={
                 <Progress
                   width={80}
                   strokeLinecap="butt"
                   type="dashboard"
-                  percent={75}
+                  percent={getStudentsPercent()?.students}
                 />
               }
             />
@@ -111,7 +128,7 @@ const AdminDashboard: NextPageWithLayout = () => {
           <ContestsChart />
         </Col>
         <Col span={9}>
-          <StudentAgeChart />
+          <StudentAgeChart data={data?.dashboard.levels} loading={loading} />
         </Col>
       </Row>
       <Row align="top" gutter={12}>

@@ -21,6 +21,58 @@ export class UserService {
   ) {}
 
   /**
+   * Get data for Admin Dashboard.
+   *
+   * @returns Promise<{
+                        teachers: number;
+                        students: number;
+                        levels: (Prisma.PickArray<Prisma.ProfileGroupByOutputType, "level"[]> & {})[];
+                      }>
+   */
+  async dashboard() {
+    try {
+      const teachers = await this.prisma.user.count({
+        where: {
+          role: {
+            title: { in: [RoleTitle.GOLDEN_TEACHER, RoleTitle.TEACHER] },
+          },
+        },
+      });
+      const students = await this.prisma.user.count({
+        where: {
+          role: {
+            title: RoleTitle.STUDENT,
+          },
+        },
+      });
+      const studentTeacher = await this.prisma.user.count({
+        where: {
+          role: {
+            title: RoleTitle.STUDENT_TEACHER,
+          },
+        },
+      });
+      const levels = await this.prisma.profile.groupBy({
+        by: ['level'],
+        _count: {
+          level: true,
+        },
+      });
+      return {
+        teachers,
+        students,
+        studentTeacher,
+        levels: levels.map((el) => ({
+          level: el.level,
+          value: el._count.level,
+        })),
+      };
+    } catch (error) {
+      Logger.error(error);
+    }
+  }
+
+  /**
    * Find a User by its unique key.
    *
    * @param input Prisma.UserWhereUniqueInput The unique key of the User.
