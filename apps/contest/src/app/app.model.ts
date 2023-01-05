@@ -21,6 +21,16 @@ export class App {
   agreement: string;
 
   @Field({
+    description: 'Identifies the privacy policy content.',
+  })
+  privacy: string;
+
+  @Field({
+    description: 'Identifies the user about us content.',
+  })
+  aboutUs: string;
+
+  @Field({
     description:
       'Identifies the email used to receive messages from contactUs page.',
   })
@@ -29,7 +39,7 @@ export class App {
   @Field({
     description: 'Identifies telegram url.',
   })
-  telegramUrl: string;
+  youtubeUrl: string;
 
   @Field({
     description: 'Identifies twitter url.',

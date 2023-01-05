@@ -17,8 +17,10 @@ model AppConfig {
   title             String    @db.VarChar(255) @default("منصة أولمبياد النحو العربي")
   description       String?   @db.VarChar(255) @default("")
   agreement         String    @db.Text
+  privacy           String    @db.Text
+  aboutUs           String    @db.Text
   contactEmail      String?   @db.VarChar(255) @default("")
-  telegramUrl       String?   @db.VarChar(255) @default("")
+  youtubeUrl        String?   @db.VarChar(255) @default("")
   twitterUrl        String?   @db.VarChar(255) @default("")
   facebookUrl       String?   @db.VarChar(255) @default("")
   instagramUrl      String?   @db.VarChar(255) @default("")

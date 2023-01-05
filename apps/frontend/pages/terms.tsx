@@ -33,3 +33,4 @@ UserAgreementPage.getLayout = (page: EmotionJSX.Element) => (
   <HomeLayout>{page}</HomeLayout>
 );
 export default UserAgreementPage;
+// TODO get data by ssr

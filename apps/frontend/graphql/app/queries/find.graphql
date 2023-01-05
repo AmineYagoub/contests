@@ -3,10 +3,9 @@ query FindAppConfig {
     title
     description
     contactEmail
-    agreement
     appStorUrl
     playStorUrl
-    telegramUrl
+    youtubeUrl
     twitterUrl
     facebookUrl
     instagramUrl

@@ -54,6 +54,8 @@ export type AnswerInput = {
 
 export type App = {
   __typename?: 'App';
+  /** Identifies the user about us content. */
+  aboutUs: Scalars['String'];
   /** Identifies the user agreement content. */
   agreement: Scalars['String'];
   /** Identifies the iphone app url in AppStore. */
@@ -69,12 +71,14 @@ export type App = {
   instagramUrl: Scalars['String'];
   /** Identifies the android app url in google play. */
   playStorUrl: Scalars['String'];
-  /** Identifies telegram url. */
-  telegramUrl: Scalars['String'];
+  /** Identifies the privacy policy content. */
+  privacy: Scalars['String'];
   /** Identifies the App title. */
   title: Scalars['String'];
   /** Identifies twitter url. */
   twitterUrl: Scalars['String'];
+  /** Identifies telegram url. */
+  youtubeUrl: Scalars['String'];
 };
 
 export type Auth = {
@@ -1194,7 +1198,7 @@ export type DashboardQuery = { __typename?: 'Query', dashboard: { __typename?: '
 export type FindAppConfigQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FindAppConfigQuery = { __typename?: 'Query', findAppConfig: { __typename?: 'App', title: string, description: string, contactEmail: string, agreement: string, appStorUrl: string, playStorUrl: string, telegramUrl: string, twitterUrl: string, facebookUrl: string, instagramUrl: string } };
+export type FindAppConfigQuery = { __typename?: 'Query', findAppConfig: { __typename?: 'App', title: string, description: string, contactEmail: string, appStorUrl: string, playStorUrl: string, youtubeUrl: string, twitterUrl: string, facebookUrl: string, instagramUrl: string } };
 
 export type ActivateEmailTokenMutationVariables = Exact<{
   input: IdDto;
@@ -1710,10 +1714,9 @@ export const FindAppConfigDocument = gql`
     title
     description
     contactEmail
-    agreement
     appStorUrl
     playStorUrl
-    telegramUrl
+    youtubeUrl
     twitterUrl
     facebookUrl
     instagramUrl

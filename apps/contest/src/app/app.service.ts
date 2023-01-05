@@ -11,6 +11,8 @@ export class AppService {
         this.create({
           title: 'منصة ألمبياد النحو العربي',
           agreement: 'سياسة الإستخدام',
+          privacy: 'سياسة الخصوصية',
+          aboutUs: 'حول الموقع',
           description: 'وصف مختصر للموقع',
           contactEmail: 'admin@olympiadnahw.com',
         });
