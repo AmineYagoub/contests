@@ -53,6 +53,7 @@ export default function HtmlContent({
       <div
         dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(html) }}
         ref={ref}
+        style={{ marginTop: 15, fontSize: '1rem' }}
       />
     </>
   );

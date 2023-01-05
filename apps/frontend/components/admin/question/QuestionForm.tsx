@@ -30,7 +30,7 @@ const QuestionForm = ({
         lesson: record.lesson,
         type: record.type,
         options: [record.correctAnswer, ...record.options],
-        tags: record.tags.map((tag) => ({
+        tags: record.topics.map((tag) => ({
           value: tag.title,
           label: tag.title,
         })),
@@ -87,7 +87,7 @@ const QuestionForm = ({
             </Form.Item>
           </Col>
           <Col span={12}>
-            <SelectTags />
+            <SelectTags isContest={false} />
           </Col>
         </Row>
 

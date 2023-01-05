@@ -1,6 +1,7 @@
 import { Layout } from 'antd';
 import ContestPageHeader from '@/components/contest/ContestPageHeader';
 import styled from '@emotion/styled';
+import { ReactElement } from 'react';
 
 const { Content } = Layout;
 

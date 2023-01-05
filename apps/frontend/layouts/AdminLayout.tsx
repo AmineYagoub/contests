@@ -1,7 +1,7 @@
 import { Layout, Menu } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import TeacherIcon from '@/components/icons/TeacherIcon';
 import { socketVar } from '@/utils/app';
@@ -49,12 +49,12 @@ const AdminLayout = ({ children }) => {
   const router = useRouter();
   const socket = useReactiveVar(socketVar);
 
-  /*   useEffect(() => {
+  useEffect(() => {
     socket.connect();
     return () => {
       socket.disconnect();
     };
-  }, [socket]); */
+  }, [socket]);
 
   return (
     <Layout>

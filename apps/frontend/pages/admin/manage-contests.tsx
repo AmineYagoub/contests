@@ -1,6 +1,6 @@
 import { Space, Table, Tag } from 'antd';
 import moment from 'moment-timezone';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import CreateContest from '@/components/admin/contests/CreateContest';
 import DeleteContest from '@/components/admin/contests/DeleteContest';
@@ -46,6 +46,20 @@ const StyledSection = styled('section')({
 const ManageContests = () => {
   const { methods, data, loading, filteredInfo, sortedInfo } =
     useSearchContests();
+
+  const [participants, setParticipants] = useState(
+    'جاري فرز المتسابقين ... يرجى تحديث الصفحة بعد قليل'
+  );
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setParticipants(null);
+    }, 15 * 1000);
+
+    return () => {
+      clearTimeout(t);
+    };
+  }, []);
 
   const getColumnSearchProps = (
     dataIndex: ContestsDataIndex
@@ -132,7 +146,8 @@ const ManageContests = () => {
         sortedInfo.columnKey === ContestFields.participants
           ? sortedInfo.order
           : null,
-      render: (data: string[]) => `${data.length} متسابق`,
+      render: (data: string[]) =>
+        participants ? participants : `${data.length} طالب`,
     },
     {
       title: 'المستوى المستهدف',

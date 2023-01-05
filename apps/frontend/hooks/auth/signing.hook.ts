@@ -5,14 +5,12 @@ import { ValidateErrorEntity } from 'rc-field-form/es/interface';
 
 import { config } from '@/config/index';
 import {
-  RoleTitle,
   useGetAuthUserLazyQuery,
   User,
   useSigningMutation,
 } from '@/graphql/graphql';
 import { Logger } from '@/utils/app';
-import { AppRoutes, redirect } from '@/utils/routes';
-
+import { redirect } from '@/utils/routes';
 import type { SigningInput } from '@/utils/types';
 import { AuthActions } from '@/valtio/auth.state';
 

@@ -3,7 +3,7 @@ import { ReactElement } from 'react';
 
 import { QuestionType, RoleTitle } from '@/graphql/graphql';
 
-export type NextPageWithLayout = NextPage & {
+export type NextPageWithLayout<P = unknown, IP = unknown> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactElement;
 };
 

@@ -47,6 +47,7 @@ export type StudentsDataIndex = keyof Student;
 export const StudentFields: { [P in StudentsDataIndex]: P } = {
   id: 'id',
   key: 'key',
+  userId: 'userId',
   firstName: 'firstName',
   lastName: 'lastName',
   personalImage: 'personalImage',
@@ -73,6 +74,9 @@ export const UserFields: { [P in UsersDataIndex]: P } = {
   isActive: 'isActive',
   agreement: 'agreement',
   emailConfirmed: 'emailConfirmed',
-  countUnreadMessages: 'countUnreadMessages',
+  countAllMessages: 'countAllMessages',
+  countAllNotifications: 'countAllNotifications',
+  messagesCount: 'messagesCount',
+  notificationsCount: 'notificationsCount',
   __typename: '__typename',
 };

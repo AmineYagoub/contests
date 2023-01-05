@@ -25,6 +25,9 @@ export class WhereContestArgs extends PartialType(
 
   @Field({ nullable: true })
   tags: string;
+
+  @Field({ nullable: true })
+  answerBy: string;
 }
 
 @InputType()

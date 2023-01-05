@@ -10,8 +10,8 @@ export const title = {
   lineHeight: '1.05em',
   color: 'transparent',
   background: `linear-gradient(to left, ${theme.primaryColor}, #ef32d9)`,
-  ['-webkit-background-clip']: 'text',
-  ['-webkit-text-fill-color']: 'transparent',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
 };
 
 const StyledNumbers = styled('span')({

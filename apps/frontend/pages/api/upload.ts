@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import formidable, { File } from 'formidable';
+import multiparty from 'multiparty';
 import { promises as fs } from 'fs';
 import JSZip from 'jszip';
-import path from 'path';
+import { unlink } from 'node:fs/promises';
 
 import { initializeApollo } from '@/config/createGraphQLClient';
 import {
@@ -19,8 +19,6 @@ export const config = {
     bodyParser: false,
   },
 };
-
-type ProcessedFiles = Array<[string, File]>;
 
 const getQuestionType = (type: string) => {
   switch (true) {
@@ -59,16 +57,15 @@ const processFiles = async (path: string) => {
         const correctAnswer = options.shift();
         const lesson = options.pop();
         const questionObject: CreateQuestionDto = {
-          authorId: 1,
+          authorId: '1',
           title,
           options,
           correctAnswer,
           lesson,
-          tags: {
-            connectOrCreate: [
+          topics: {
+            connect: [
               {
-                create: { title: tag },
-                where: { title: tag },
+                title: tag,
               },
             ],
           },
@@ -108,11 +105,34 @@ const saveQuestions = async (questions: CreateQuestionDto[]) => {
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method !== 'POST') {
+    return res
+      .status(405)
+      .json({ status: 'Method Not Allowed', message: 'Upload error' });
+  }
   let status = 200,
     resultBody = { status: 'ok', message: 'Files were uploaded successfully' };
 
-  /* Get files using formidable */
-  const files = await new Promise<ProcessedFiles | undefined>(
+  const form = new multiparty.Form();
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      status = 500;
+      resultBody = {
+        status: 'fail',
+        message: 'Upload error',
+      };
+    } else {
+      for (const [, file] of Object.entries(files)) {
+        console.log(file[0].path);
+        const questions = await processFiles(file[0].path);
+        await saveQuestions(questions);
+        await unlink(file[0].path);
+      }
+      // res.status(status).json(resultBody);
+    }
+  });
+
+  /*   const files = await new Promise<ProcessedFiles | undefined>(
     (resolve, reject) => {
       const form = new formidable.IncomingForm();
       const files: ProcessedFiles = [];
@@ -132,7 +152,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   if (files) {
-    /* Create directory for uploads */
     const targetPath = path.join(process.cwd(), `/uploads/`);
     try {
       await fs.access(targetPath);
@@ -140,7 +159,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       await fs.mkdir(targetPath);
     }
 
-    /* Move uploaded files to directory */
+
     for (const [, file] of files) {
       const tempPath = file.filepath;
       const newPath = targetPath + file.originalFilename;
@@ -148,7 +167,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const questions = await processFiles(newPath);
       await saveQuestions(questions);
     }
-  }
+  } */
 
   res.status(status).json(resultBody);
 };

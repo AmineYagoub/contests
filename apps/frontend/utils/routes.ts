@@ -37,8 +37,15 @@ export const redirect = (router: NextRouter, role: RoleTitle) => {
       ? AppRoutes.AdminManageDashboard
       : [RoleTitle.GoldenTeacher, RoleTitle.Teacher].includes(role)
       ? AppRoutes.TeacherDashboard
-      : AppRoutes.StudentDashboard;
+      : AppRoutes.StudentProfile;
   router.push({
     pathname: path,
   });
 };
+
+export const getContestRoute = (id: string) =>
+  `${AppRoutes.StudentContests}/${id}`;
+export const getContestSoonRoute = (time: string, title: string, id: string) =>
+  encodeURI(
+    `${AppRoutes.StudentContests}/coming-soon?time=${time}&title=${title}&id=${id}`
+  );

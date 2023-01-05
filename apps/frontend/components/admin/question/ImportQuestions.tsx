@@ -48,7 +48,7 @@ const ImportQuestions = ({ onSuccess }: { onSuccess: () => void }) => {
       <Modal
         title="إستيراد الأسئلة"
         style={{ top: 20 }}
-        visible={modalVisible}
+        open={modalVisible}
         destroyOnClose
         confirmLoading={loading}
         closable={false}

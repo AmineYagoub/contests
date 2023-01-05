@@ -6,10 +6,11 @@ import { useFindTopicsLazyQuery } from '@/graphql/graphql';
 import { QuestionFields } from '@/utils/fields';
 
 import type { SelectProps } from 'antd/es/select';
-export interface DebounceSelectProps<ValueType = any>
+export interface DebounceSelectProps<ValueType>
   extends Omit<SelectProps<ValueType | ValueType[]>, 'options' | 'children'> {
   fetchOptions: (search: string) => Promise<ValueType[]>;
   debounceTimeout?: number;
+  isContest: boolean;
 }
 
 function DebounceSelect<
@@ -17,9 +18,10 @@ function DebounceSelect<
     key?: string;
     label: React.ReactNode;
     value: string | number;
-  } = any
+  }
 >({
   fetchOptions,
+  isContest,
   debounceTimeout = 800,
   ...props
 }: DebounceSelectProps<ValueType>) {
@@ -51,18 +53,22 @@ function DebounceSelect<
     <Form.Item
       name={QuestionFields.topics}
       label="الموضوعات"
-      rules={[
-        () => ({
-          validator(_, value) {
-            if (value.length >= 5) {
-              return Promise.resolve();
-            }
-            return Promise.reject(
-              new Error('يرجى تحديد 5 مواضيع للمسابقة على الأقل!')
-            );
-          },
-        }),
-      ]}
+      rules={
+        isContest
+          ? [
+              () => ({
+                validator(_, value) {
+                  if (value.length >= 5) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error('يرجى تحديد 5 مواضيع للمسابقة على الأقل!')
+                  );
+                },
+              }),
+            ]
+          : []
+      }
       required
     >
       <Select
@@ -71,6 +77,7 @@ function DebounceSelect<
         labelInValue
         filterOption={false}
         onSearch={debounceFetcher}
+        onFocus={() => debounceFetcher('')}
         notFoundContent={fetching ? <Spin size="small" /> : null}
         {...props}
         options={options}
@@ -84,7 +91,7 @@ export interface TagValue {
   value: string;
 }
 
-const SelectTopics = () => {
+const SelectTopics = ({ isContest }: { isContest: boolean }) => {
   const [value, setValue] = useState<TagValue[]>([]);
   const [FindTopicsQuery] = useFindTopicsLazyQuery();
   const fetchTags = useCallback(
@@ -113,6 +120,7 @@ const SelectTopics = () => {
         setValue(newValue as TagValue[]);
       }}
       style={{ width: '100%' }}
+      isContest={isContest}
     />
   );
 };

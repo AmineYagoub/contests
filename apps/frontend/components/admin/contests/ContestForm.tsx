@@ -189,7 +189,7 @@ const ContestForm = ({
           </Form.Item>
         </Col>
       </Row>
-      <SelectTopics />
+      <SelectTopics isContest />
       <Row gutter={16}>
         <Col span={12}>
           <SelectCountry
