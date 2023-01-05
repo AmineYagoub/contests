@@ -1,25 +1,31 @@
-import { useRouter } from 'next/router';
-
 import ContestStarter from '@/components/contest/ContestStarter';
-
 import { withAuth } from '@/components/common/withAuth';
 import ContestLayout from '@/layout/ContestLayout';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import { NextPageWithLayout } from '@/utils/types';
 import {
+  Contest,
   FindByIdForExamDocument,
   FindByIdForExamQuery,
   FindByIdForExamQueryVariables,
   PermissionTitle,
 } from '@/graphql/graphql';
 import { initializeApollo } from '@/config/createGraphQLClient';
+import { getContestSoonRoute } from '@/utils/routes';
+import { ContestActions } from '@/valtio/contest.state';
+import { useSnapshot } from 'valtio';
+import { AuthState } from '@/valtio/auth.state';
 
-const StartContestPage: NextPageWithLayout = () => {
-  const router = useRouter();
-  return <ContestStarter contestId={String(router.query.key)} />;
+const StartContestPage = ({ contest }: { contest: Contest }) => {
+  const user = useSnapshot(AuthState).user;
+  ContestActions.setContest(contest);
+  return (
+    <ContestStarter
+      contestId={contest.id}
+      userId={user.id}
+      isAllowed={contest.participants.includes(user.id)}
+    />
+  );
 };
-
-// profile/contests/coming-soon?time=hdhdh
 
 export async function getServerSideProps({ req, query }) {
   if (!query.key) {
@@ -44,6 +50,20 @@ export async function getServerSideProps({ req, query }) {
       }
     );
 
+    const now = Date.now();
+    const time = new Date(findOneContestById.startTime);
+    if (now < time.getTime()) {
+      return {
+        redirect: {
+          destination: getContestSoonRoute(
+            findOneContestById.startTime,
+            findOneContestById.title,
+            String(query.key)
+          ),
+          permanent: false,
+        },
+      };
+    }
     return {
       props: {
         contest: findOneContestById,

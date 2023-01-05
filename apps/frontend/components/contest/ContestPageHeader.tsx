@@ -7,6 +7,7 @@ import { ContestActions, ContestState } from '@/valtio/contest.state';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
 import { Contest } from '@/graphql/graphql';
+import { useRouter } from 'next/router';
 
 const valueStyle = {
   fontWeight: 800,
@@ -63,6 +64,7 @@ const StyledNavigationBtn = styled(Space)({
 
 const ContestPageHeader = () => {
   const contestSnap = useSnapshot(ContestState);
+  const router = useRouter();
 
   if (!contestSnap.contest) {
     return (
@@ -74,9 +76,9 @@ const ContestPageHeader = () => {
           )
         }
         subTitle={
-          <h1
-            style={{ color: '#fff' }}
-          >{`مسابقة ${contestSnap.contest?.title}`}</h1>
+          <h1 style={{ color: '#fff' }}>{`مسابقة ${
+            router.query?.title || contestSnap.contest?.title
+          }`}</h1>
         }
         style={{ backgroundColor: '#ffffff21' }}
       />

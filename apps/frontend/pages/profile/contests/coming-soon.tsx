@@ -1,11 +1,14 @@
+import { useState } from 'react';
+import styled from '@emotion/styled';
+import { useRouter } from 'next/router';
+import { getContestRoute } from '@/utils/routes';
 import ContestLayout from '@/layout/ContestLayout';
 import { NextPageWithLayout } from '@/utils/types';
-import FlipClockCountdown from '@leenguyen/react-flip-clock-countdown';
+import { PermissionTitle } from '@/graphql/graphql';
+import { withAuth } from '@/components/common/withAuth';
 import '@leenguyen/react-flip-clock-countdown/dist/index.css';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import { withAuth } from '@/components/common/withAuth';
-import { PermissionTitle } from '@/graphql/graphql';
-import styled from '@emotion/styled';
+import FlipClockCountdown from '@leenguyen/react-flip-clock-countdown';
 
 const StyledContainer = styled('section')({
   display: 'flex',
@@ -18,13 +21,25 @@ const StyledContainer = styled('section')({
   },
 });
 
-const ContestComingSoon: NextPageWithLayout = ({ time }: { time: string }) => {
+const ContestComingSoon: NextPageWithLayout = ({
+  time,
+  id,
+}: {
+  time: string;
+  id: string;
+}) => {
+  const router = useRouter();
+  const [h1, setH1] = useState('قريبا ستبدأ المسابقة ... ');
+  const onComplete = () => {
+    setH1(null);
+    router.push(getContestRoute(id));
+  };
   return (
     <StyledContainer>
-      <h1>قريبا ستبدأ المسابقة ... </h1>
+      <h1>{h1}</h1>
       <FlipClockCountdown
         style={{ direction: 'ltr' }}
-        to="2023-01-01T14:27:32.635Z"
+        to={time}
         labels={['يوم', 'ساعة', 'دقيقة', 'ثانية']}
         labelStyle={{
           fontSize: '1rem',
@@ -33,13 +48,16 @@ const ContestComingSoon: NextPageWithLayout = ({ time }: { time: string }) => {
         digitBlockStyle={{
           background: 'linear-gradient(to bottom, #41295a, #2f0743)',
         }}
-      />
+        onComplete={onComplete}
+      >
+        <h1>جاري تحويلك لصفحة المسابقة ...</h1>
+      </FlipClockCountdown>
     </StyledContainer>
   );
 };
 
 export async function getServerSideProps({ req, query }) {
-  if (!query.time) {
+  if (!query.time || !query.id) {
     return {
       redirect: {
         destination: '/',
@@ -47,10 +65,10 @@ export async function getServerSideProps({ req, query }) {
       },
     };
   }
-
   return {
     props: {
       time: String(query.time),
+      id: String(query.id),
     },
   };
 }

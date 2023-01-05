@@ -14,8 +14,17 @@ import ContestAnnulled from './ContestAnnulled';
 import ContestFinished from './ContestFinished';
 import ContestQuestionnaire from './ContestQuestionnaire';
 import ContestWelcome from './ContestWelcome';
+import ContestNotAvailable from './ContestNotAvailable';
 
-const ContestStarter = ({ contestId }: { contestId: string }) => {
+const ContestStarter = ({
+  contestId,
+  userId,
+  isAllowed,
+}: {
+  contestId: string;
+  userId: string;
+  isAllowed: boolean;
+}) => {
   const contestSnap = useSnapshot(ContestState);
   const [CreateAnswerMutation] = useCreateAnswerMutation();
   const [loading, setLoading] = useState(false);
@@ -23,14 +32,18 @@ const ContestStarter = ({ contestId }: { contestId: string }) => {
 
   useEffect(() => {
     const animation = new CongratsAnimation(document.querySelector('body'));
+    let t: NodeJS.Timeout;
     if (contestSnap.contestFinished) {
       setLoading(true);
       animation.render();
+      t = setTimeout(() => {
+        animation.destroy();
+      }, 5000);
       // TODO Handle if answers not saved
       CreateAnswerMutation({
         variables: {
           data: {
-            userId: '123',
+            userId,
             answers: contestSnap.answers as SelectedAnswerInput[],
             contest: {
               connect: {
@@ -48,6 +61,7 @@ const ContestStarter = ({ contestId }: { contestId: string }) => {
         });
     }
     return () => {
+      clearTimeout(t);
       animation.destroy();
     };
   }, [contestSnap.contestFinished]);
@@ -65,7 +79,9 @@ const ContestStarter = ({ contestId }: { contestId: string }) => {
 
   return (
     <AnimatePresence mode="wait">
-      {contestSnap.contestStarted && question ? (
+      {!isAllowed ? (
+        <ContestNotAvailable />
+      ) : contestSnap.contestStarted && question ? (
         <ContestQuestionnaire question={question} prevAnswer={prevAnswer} />
       ) : contestSnap.contestFinished ? (
         <ContestFinished
