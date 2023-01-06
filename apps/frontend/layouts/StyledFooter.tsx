@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import Image from 'next/image';
 import { useReactiveVar } from '@apollo/client';
 import { appDataVar } from '@/utils/app';
+import Link from 'next/link';
 
 const { Footer } = Layout;
 
@@ -68,7 +69,14 @@ const StyledFooter = () => {
         <Col style={{ textAlign: 'center' }}>
           <Copyright />
         </Col>
-        <Col span={6}></Col>
+        <Col span={6}>
+          <Space>
+            <Link href="/community/terms">الشروط و الأحكام</Link>
+            <Link href="/community/policy">سياسة الخصوصية</Link>
+            <Link href="/community/about">حول الموقع</Link>
+            <Link href="/community/contact">إتصل بنا</Link>
+          </Space>
+        </Col>
       </Row>
     </NewFooter>
   );
