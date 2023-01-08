@@ -1,4 +1,4 @@
-import { Col, Layout, Row, Space } from 'antd';
+import { Col, Divider, Layout, Row, Space } from 'antd';
 
 import styled from '@emotion/styled';
 import Image from 'next/image';
@@ -30,9 +30,9 @@ const StyledFooter = () => {
   return (
     <NewFooter>
       <Row justify="space-between" align="middle">
-        <Col span={6}>
+        <Col span={7}>
           <Space>
-            <a href={siteData.facebookUrl} target="_blank" rel="noreferrer">
+            <a href={siteData?.facebookUrl} target="_blank" rel="noreferrer">
               <Image
                 src="/icons/social/facebook.png"
                 width={32}
@@ -40,7 +40,7 @@ const StyledFooter = () => {
                 alt="follow us on facebook"
               />
             </a>
-            <a href={siteData.twitterUrl} target="_blank" rel="noreferrer">
+            <a href={siteData?.twitterUrl} target="_blank" rel="noreferrer">
               <Image
                 src="/icons/social/twitter.png"
                 width={32}
@@ -48,7 +48,7 @@ const StyledFooter = () => {
                 alt="follow us on twitter"
               />
             </a>
-            <a href={siteData.instagramUrl} target="_blank" rel="noreferrer">
+            <a href={siteData?.instagramUrl} target="_blank" rel="noreferrer">
               <Image
                 src="/icons/social/instagram.png"
                 width={32}
@@ -56,7 +56,7 @@ const StyledFooter = () => {
                 alt="follow us on instagram"
               />
             </a>
-            <a href={siteData.youtubeUrl} target="_blank" rel="noreferrer">
+            <a href={siteData?.youtubeUrl} target="_blank" rel="noreferrer">
               <Image
                 src="/icons/social/youtube.png"
                 width={32}
@@ -69,13 +69,14 @@ const StyledFooter = () => {
         <Col style={{ textAlign: 'center' }}>
           <Copyright />
         </Col>
-        <Col span={6}>
-          <Space>
-            <Link href="/community/terms">الشروط و الأحكام</Link>
-            <Link href="/community/policy">سياسة الخصوصية</Link>
-            <Link href="/community/about">حول الموقع</Link>
-            <Link href="/community/contact">إتصل بنا</Link>
-          </Space>
+        <Col span={7}>
+          <Link href="/community/terms">الشروط و الأحكام</Link>
+          <Divider type="vertical" />
+          <Link href="/community/privacy">سياسة الخصوصية</Link>
+          <Divider type="vertical" />
+          <Link href="/community/about">حول الموقع</Link>
+          <Divider type="vertical" />
+          <Link href="/community/contact">إتصل بنا</Link>
         </Col>
       </Row>
     </NewFooter>

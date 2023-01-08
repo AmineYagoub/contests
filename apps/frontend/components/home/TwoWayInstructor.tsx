@@ -4,6 +4,7 @@ import { Col, Typography } from 'antd';
 import { StyledSection } from './ContestCategoriesSection';
 import { StyledParagraph } from './HowItWorkSection';
 import StyledButton from '../common/StyledButton';
+import { AppRoutes } from '@/utils/routes';
 
 const { Title } = Typography;
 
@@ -40,7 +41,12 @@ const TwoWayInstructor = () => {
           بك ليتمكن طلابك من خوض التحدي تحت إشرافك و مراقبتك.
         </StyledParagraph>
 
-        <StyledButton size="large" type="primary" shape="round">
+        <StyledButton
+          size="large"
+          type="primary"
+          shape="round"
+          href={AppRoutes.SignUp}
+        >
           إشترك الآن
         </StyledButton>
       </StyledCol>
@@ -51,8 +57,13 @@ const TwoWayInstructor = () => {
           سجل معنا مجانا لتتمكن من التواصل المباشر مع طلابك و الإشراف على
           مسابقاتهم و الإطلاع على نتائجهم.
         </StyledParagraph>
-        <StyledButton size="large" type="primary" shape="round">
-          إنظم إلينا
+        <StyledButton
+          size="large"
+          type="primary"
+          shape="round"
+          href={AppRoutes.SignUp}
+        >
+          سجل الآن
         </StyledButton>
       </StyledCol>
     </StyledSection>

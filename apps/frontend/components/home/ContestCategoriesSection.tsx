@@ -1,3 +1,5 @@
+import { Topic } from '@/graphql/graphql';
+import { AppRoutes } from '@/utils/routes';
 import styled from '@emotion/styled';
 import { Col, Row, Typography } from 'antd';
 import StyledButton from '../common/StyledButton';
@@ -8,8 +10,10 @@ const { Title } = Typography;
 export const StyledSection = styled(Row)({
   justifyContent: 'space-around',
   textAlign: 'center',
+  maxWidth: 1380,
+  margin: '2em auto 5em auto',
   h2: {
-    fontSize: '3.5rem !important',
+    fontSize: '2.5rem !important',
     ...title,
     width: '100%',
   },
@@ -17,27 +21,38 @@ export const StyledSection = styled(Row)({
 
 const StyledCol = styled(Col)({
   boxShadow:
-    'var(--ant-primary-color) 0px 13px 27px -5px, var(--ant-primary-color) 0px 8px 16px -8px !important',
+    'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset !important',
   borderRadius: 5,
   height: 150,
+  minWidth: 180,
+  display: 'flex !important',
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundImage: 'linear-gradient(#DEE0EE ,#C8C8C8)',
+
+  margin: 5,
+  h4: {
+    fontSize: '2rem !important',
+    textShadow: '0px 2px 2px rgba(16, 128, 109, 1)',
+    color: 'purple !important',
+  },
 });
 
-const ContestCategoriesSection = () => {
+const ContestCategoriesSection = ({ topics }: { topics: Topic[] }) => {
   return (
-    <StyledSection>
+    <StyledSection wrap>
       <Title level={2}>مواضيع المسابقات</Title>
-      <StyledCol span={3}>1</StyledCol>
-      <StyledCol span={3}>1</StyledCol>
-      <StyledCol span={3}>1</StyledCol>
-      <StyledCol span={3}>1</StyledCol>
-      <StyledCol span={3}>1</StyledCol>
-      <StyledCol span={3}>1</StyledCol>
-      <StyledCol span={3}>1</StyledCol>
+      {topics.map((topic) => (
+        <StyledCol span={3} key={topic.id} className="koufi">
+          <h4>{topic.title}</h4>
+        </StyledCol>
+      ))}
       <StyledButton
         size="large"
         type="primary"
         shape="round"
         style={{ width: 200, marginTop: 35 }}
+        href={AppRoutes.SignUp}
       >
         شاهد كل المواضيع
       </StyledButton>

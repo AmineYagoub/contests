@@ -60,7 +60,7 @@ const StyledStepper = styled(Row)({
       animation: 'dashedLineAnimation 1000ms linear infinite',
     },
   },
-  h2: {
+  h3: {
     fontSize: '3.5rem !important',
     ...title,
   },
@@ -72,10 +72,10 @@ const StyledStepper = styled(Row)({
 const HowItWorkSection = () => {
   return (
     <StyledStepper>
-      <Title level={2}>كيف يعمل؟</Title>
+      <Title level={3}>كيف يعمل؟</Title>
       <Row>
         <Col span={6}>
-          <Title level={3}>سجل حسابك الخاص</Title>
+          <Title level={4}>سجل حسابك الخاص</Title>
           <StyledParagraph>
             سجل حسابك بطريقة سهلة و سريعة ثم أتمم تعبئة بياناتك الشخصية في صفحتك
             الشخصية
@@ -96,7 +96,7 @@ const HowItWorkSection = () => {
       </Row>
       <Row style={{ margin: '4em auto' }}>
         <Col span={6}>
-          <Title level={3}>إختر مشرفا</Title>
+          <Title level={4}>إختر مشرفا</Title>
           <StyledParagraph>
             إسمح للمعلمين المشرفين بتقديم مفاهيم وحلول في النحو و اللغة عالية
             الجودة لك ، ثم راجع أفضل إختياراتك.
@@ -117,7 +117,7 @@ const HowItWorkSection = () => {
       </Row>
       <Row>
         <Col span={6}>
-          <Title level={3}>شارك في المسابقات</Title>
+          <Title level={4}>شارك في المسابقات</Title>
           <StyledParagraph>
             تقدم منصة ألمبياد النحو العربي العديد من المسابقات والجوائز لجميع
             الأعمار والفئات والمواهب، وجميعها مسابقات مجانية أو تتطلب رسوم رمزية
