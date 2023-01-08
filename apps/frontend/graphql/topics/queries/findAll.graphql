@@ -1,0 +1,6 @@
+query FindAllTopics($take: Int) {
+  findAllTopics(take: $take) {
+    id
+    title
+  }
+}

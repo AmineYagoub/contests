@@ -2,6 +2,7 @@ import { StudentLevel } from '@contests/types';
 import { isPublic } from '@contests/utils';
 import {
   Args,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -37,6 +38,15 @@ export class TopicResolver {
     level?: StudentLevel[]
   ) {
     return this.topicService.findMany(title, level);
+  }
+
+  @isPublic()
+  @Query(() => [Topic], { nullable: true })
+  async findAllTopics(
+    @Args('take', { type: () => Int, nullable: true, defaultValue: 10 })
+    take?: number
+  ) {
+    return this.topicService.findAll(take);
   }
 
   @Mutation(() => Topic, { nullable: true })

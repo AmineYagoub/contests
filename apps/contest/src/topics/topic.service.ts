@@ -102,4 +102,21 @@ export class TopicService {
       Logger.error(error.message);
     }
   }
+
+  /**
+   * Find all Topics.
+   *
+   * @param take number The limit number.
+   *
+   * @returns Promise<Topic[]>
+   */
+  async findAll(take = 10) {
+    try {
+      return this.prisma.topic.findMany({
+        take,
+      });
+    } catch (error) {
+      Logger.error(error.message);
+    }
+  }
 }
