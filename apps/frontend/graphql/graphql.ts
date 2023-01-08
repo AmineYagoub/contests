@@ -590,6 +590,7 @@ export type Query = {
   dashboard: DashboardResponse;
   findAdminAndTeacher: Array<User>;
   findAllSubscriptionPlans: Array<SubscriptionPlan>;
+  findAllTopics?: Maybe<Array<Topic>>;
   findAppConfig: App;
   findEmailToken: ActivationToken;
   findLastMessages: Array<Message>;
@@ -616,6 +617,11 @@ export type Query = {
 
 export type QueryFindAdminAndTeacherArgs = {
   id?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryFindAllTopicsArgs = {
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -957,6 +963,8 @@ export type UpdateAnswerDto = {
 };
 
 export type UpdateAppConfigDto = {
+  /** Identifies the user about us content. */
+  aboutUs?: InputMaybe<Scalars['String']>;
   /** Identifies the user agreement content. */
   agreement?: InputMaybe<Scalars['String']>;
   /** Identifies the iphone app url in AppStore. */
@@ -971,12 +979,14 @@ export type UpdateAppConfigDto = {
   instagramUrl?: InputMaybe<Scalars['String']>;
   /** Identifies the android app url in google play. */
   playStorUrl?: InputMaybe<Scalars['String']>;
-  /** Identifies telegram url. */
-  telegramUrl?: InputMaybe<Scalars['String']>;
+  /** Identifies the user privacy policy content. */
+  privacy?: InputMaybe<Scalars['String']>;
   /** Identifies the App title. */
   title?: InputMaybe<Scalars['String']>;
   /** Identifies twitter url. */
   twitterUrl?: InputMaybe<Scalars['String']>;
+  /** Identifies youtube channel url. */
+  youtubeUrl?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateContestDto = {
@@ -1200,6 +1210,21 @@ export type FindAppConfigQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type FindAppConfigQuery = { __typename?: 'Query', findAppConfig: { __typename?: 'App', title: string, description: string, contactEmail: string, appStorUrl: string, playStorUrl: string, youtubeUrl: string, twitterUrl: string, facebookUrl: string, instagramUrl: string } };
 
+export type FindAboutUsPageQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FindAboutUsPageQuery = { __typename?: 'Query', findAppConfig: { __typename?: 'App', aboutUs: string, title: string, description: string, appStorUrl: string, playStorUrl: string, youtubeUrl: string, twitterUrl: string, facebookUrl: string, instagramUrl: string } };
+
+export type FindPrivacyPolicyPageQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FindPrivacyPolicyPageQuery = { __typename?: 'Query', findAppConfig: { __typename?: 'App', privacy: string, title: string, description: string, appStorUrl: string, playStorUrl: string, youtubeUrl: string, twitterUrl: string, facebookUrl: string, instagramUrl: string } };
+
+export type FindTermsPageQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FindTermsPageQuery = { __typename?: 'Query', findAppConfig: { __typename?: 'App', agreement: string, title: string, description: string, appStorUrl: string, playStorUrl: string, youtubeUrl: string, twitterUrl: string, facebookUrl: string, instagramUrl: string } };
+
 export type ActivateEmailTokenMutationVariables = Exact<{
   input: IdDto;
 }>;
@@ -1405,6 +1430,13 @@ export type FindTopicsQueryVariables = Exact<{
 
 
 export type FindTopicsQuery = { __typename?: 'Query', findTopics?: Array<{ __typename?: 'Topic', id: string, title: string, level: Array<StudentLevel> }> | null };
+
+export type FindAllTopicsQueryVariables = Exact<{
+  take?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type FindAllTopicsQuery = { __typename?: 'Query', findAllTopics?: Array<{ __typename?: 'Topic', id: string, title: string }> | null };
 
 export type ConnectStudentToTeacherMutationVariables = Exact<{
   id: Scalars['String'];
@@ -1750,6 +1782,132 @@ export function useFindAppConfigLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type FindAppConfigQueryHookResult = ReturnType<typeof useFindAppConfigQuery>;
 export type FindAppConfigLazyQueryHookResult = ReturnType<typeof useFindAppConfigLazyQuery>;
 export type FindAppConfigQueryResult = Apollo.QueryResult<FindAppConfigQuery, FindAppConfigQueryVariables>;
+export const FindAboutUsPageDocument = gql`
+    query FindAboutUsPage {
+  findAppConfig {
+    aboutUs
+    title
+    description
+    appStorUrl
+    playStorUrl
+    youtubeUrl
+    twitterUrl
+    facebookUrl
+    instagramUrl
+  }
+}
+    `;
+
+/**
+ * __useFindAboutUsPageQuery__
+ *
+ * To run a query within a React component, call `useFindAboutUsPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindAboutUsPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindAboutUsPageQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFindAboutUsPageQuery(baseOptions?: Apollo.QueryHookOptions<FindAboutUsPageQuery, FindAboutUsPageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindAboutUsPageQuery, FindAboutUsPageQueryVariables>(FindAboutUsPageDocument, options);
+      }
+export function useFindAboutUsPageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindAboutUsPageQuery, FindAboutUsPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindAboutUsPageQuery, FindAboutUsPageQueryVariables>(FindAboutUsPageDocument, options);
+        }
+export type FindAboutUsPageQueryHookResult = ReturnType<typeof useFindAboutUsPageQuery>;
+export type FindAboutUsPageLazyQueryHookResult = ReturnType<typeof useFindAboutUsPageLazyQuery>;
+export type FindAboutUsPageQueryResult = Apollo.QueryResult<FindAboutUsPageQuery, FindAboutUsPageQueryVariables>;
+export const FindPrivacyPolicyPageDocument = gql`
+    query FindPrivacyPolicyPage {
+  findAppConfig {
+    privacy
+    title
+    description
+    appStorUrl
+    playStorUrl
+    youtubeUrl
+    twitterUrl
+    facebookUrl
+    instagramUrl
+  }
+}
+    `;
+
+/**
+ * __useFindPrivacyPolicyPageQuery__
+ *
+ * To run a query within a React component, call `useFindPrivacyPolicyPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindPrivacyPolicyPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindPrivacyPolicyPageQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFindPrivacyPolicyPageQuery(baseOptions?: Apollo.QueryHookOptions<FindPrivacyPolicyPageQuery, FindPrivacyPolicyPageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindPrivacyPolicyPageQuery, FindPrivacyPolicyPageQueryVariables>(FindPrivacyPolicyPageDocument, options);
+      }
+export function useFindPrivacyPolicyPageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindPrivacyPolicyPageQuery, FindPrivacyPolicyPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindPrivacyPolicyPageQuery, FindPrivacyPolicyPageQueryVariables>(FindPrivacyPolicyPageDocument, options);
+        }
+export type FindPrivacyPolicyPageQueryHookResult = ReturnType<typeof useFindPrivacyPolicyPageQuery>;
+export type FindPrivacyPolicyPageLazyQueryHookResult = ReturnType<typeof useFindPrivacyPolicyPageLazyQuery>;
+export type FindPrivacyPolicyPageQueryResult = Apollo.QueryResult<FindPrivacyPolicyPageQuery, FindPrivacyPolicyPageQueryVariables>;
+export const FindTermsPageDocument = gql`
+    query FindTermsPage {
+  findAppConfig {
+    agreement
+    title
+    description
+    appStorUrl
+    playStorUrl
+    youtubeUrl
+    twitterUrl
+    facebookUrl
+    instagramUrl
+  }
+}
+    `;
+
+/**
+ * __useFindTermsPageQuery__
+ *
+ * To run a query within a React component, call `useFindTermsPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindTermsPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindTermsPageQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFindTermsPageQuery(baseOptions?: Apollo.QueryHookOptions<FindTermsPageQuery, FindTermsPageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindTermsPageQuery, FindTermsPageQueryVariables>(FindTermsPageDocument, options);
+      }
+export function useFindTermsPageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindTermsPageQuery, FindTermsPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindTermsPageQuery, FindTermsPageQueryVariables>(FindTermsPageDocument, options);
+        }
+export type FindTermsPageQueryHookResult = ReturnType<typeof useFindTermsPageQuery>;
+export type FindTermsPageLazyQueryHookResult = ReturnType<typeof useFindTermsPageLazyQuery>;
+export type FindTermsPageQueryResult = Apollo.QueryResult<FindTermsPageQuery, FindTermsPageQueryVariables>;
 export const ActivateEmailTokenDocument = gql`
     mutation ActivateEmailToken($input: IDDto!) {
   activateEmailToken(input: $input) {
@@ -3074,6 +3232,42 @@ export function useFindTopicsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type FindTopicsQueryHookResult = ReturnType<typeof useFindTopicsQuery>;
 export type FindTopicsLazyQueryHookResult = ReturnType<typeof useFindTopicsLazyQuery>;
 export type FindTopicsQueryResult = Apollo.QueryResult<FindTopicsQuery, FindTopicsQueryVariables>;
+export const FindAllTopicsDocument = gql`
+    query FindAllTopics($take: Int) {
+  findAllTopics(take: $take) {
+    id
+    title
+  }
+}
+    `;
+
+/**
+ * __useFindAllTopicsQuery__
+ *
+ * To run a query within a React component, call `useFindAllTopicsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindAllTopicsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindAllTopicsQuery({
+ *   variables: {
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useFindAllTopicsQuery(baseOptions?: Apollo.QueryHookOptions<FindAllTopicsQuery, FindAllTopicsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindAllTopicsQuery, FindAllTopicsQueryVariables>(FindAllTopicsDocument, options);
+      }
+export function useFindAllTopicsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindAllTopicsQuery, FindAllTopicsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindAllTopicsQuery, FindAllTopicsQueryVariables>(FindAllTopicsDocument, options);
+        }
+export type FindAllTopicsQueryHookResult = ReturnType<typeof useFindAllTopicsQuery>;
+export type FindAllTopicsLazyQueryHookResult = ReturnType<typeof useFindAllTopicsLazyQuery>;
+export type FindAllTopicsQueryResult = Apollo.QueryResult<FindAllTopicsQuery, FindAllTopicsQueryVariables>;
 export const ConnectStudentToTeacherDocument = gql`
     mutation ConnectStudentToTeacher($id: String!, $studentId: String!, $connect: Boolean!) {
   connectStudentToTeacher(id: $id, studentId: $studentId, connect: $connect) {

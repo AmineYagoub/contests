@@ -1,8 +1,12 @@
 import { FormEvent, useEffect } from 'react';
-import { Form, Input, Button, notification } from 'antd';
-import { appDataVar, Logger } from '@/utils/app';
-import { App, useUpdateAppConfigMutation } from '@/graphql/graphql';
 import { useReactiveVar } from '@apollo/client';
+import { appDataVar, Logger } from '@/utils/app';
+import { Form, Input, Button, notification } from 'antd';
+import {
+  App,
+  UpdateAppConfigDto,
+  useUpdateAppConfigMutation,
+} from '@/graphql/graphql';
 
 const AppSettingsForm = () => {
   const [form] = Form.useForm();
@@ -19,7 +23,7 @@ const AppSettingsForm = () => {
     }
   }, [siteData, form]);
 
-  const onFinish = async (inputs) => {
+  const onFinish = async (inputs: UpdateAppConfigDto) => {
     try {
       const { data } = await UpdateAppConfigMutation({
         variables: {
@@ -82,8 +86,8 @@ const AppSettingsForm = () => {
           <Input placeholder="https://instagram.com/username" />
         </Form.Item>
 
-        <Form.Item label="رابط صفحة الموقع على تلغرام" name="telegramUrl">
-          <Input placeholder="https://t.me/username" />
+        <Form.Item label="رابط قناة الموقع على يوتيوب" name="youtubeUrl">
+          <Input placeholder="https://youtube.com/channel/username" />
         </Form.Item>
         <Form.Item label="رابط صفحة الموقع على فايسبوك" name="facebookUrl">
           <Input placeholder="https://www.facebook.com/add/username" />

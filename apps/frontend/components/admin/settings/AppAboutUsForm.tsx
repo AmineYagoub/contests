@@ -3,16 +3,16 @@ import { Form, Button, notification } from 'antd';
 import { Jodit } from 'jodit';
 import Head from 'next/head';
 import {
-  useFindTermsPageQuery,
+  useFindAboutUsPageQuery,
   useUpdateAppConfigMutation,
 } from '@/graphql/graphql';
 import Loading from '@/components/common/Loading';
 
-const AppAgreementForm = () => {
+const AppAboutUsForm = () => {
   const [form] = Form.useForm();
   const [content, setContent] = useState<string>('');
   const [UpdateAppConfigMutation, { loading }] = useUpdateAppConfigMutation();
-  const { data, loading: loadData } = useFindTermsPageQuery();
+  const { data, loading: loadData } = useFindAboutUsPageQuery();
 
   useEffect(() => {
     if (data) {
@@ -22,7 +22,7 @@ const AppAgreementForm = () => {
         showWordsCounter: false,
         showXPathInStatusbar: false,
       });
-      editor.value = data?.findAppConfig.agreement;
+      editor.value = data?.findAppConfig.aboutUs;
       editor.e.on('change', () => setContent(editor.value));
       return () => {
         editor.destruct();
@@ -39,7 +39,7 @@ const AppAgreementForm = () => {
       const res = await UpdateAppConfigMutation({
         variables: {
           input: {
-            agreement: content,
+            aboutUs: content,
           },
         },
       });
@@ -66,7 +66,7 @@ const AppAgreementForm = () => {
           href="https://unpkg.com/jodit@3.23.2/build/jodit.es2018.min.css"
         />
       </Head>
-      <h2 style={{ padding: '1em' }}>تعديل محتوى صفحة الشروط و الأحكام</h2>
+      <h2 style={{ padding: '1em' }}>تعديل محتوى صفحة حول الموقع</h2>
       {loadData ? (
         <Loading />
       ) : (
@@ -79,7 +79,7 @@ const AppAgreementForm = () => {
           onFinish={onFinish}
           onSubmitCapture={onSubmit}
         >
-          <Form.Item label="المحتوى" required name="agreement">
+          <Form.Item label="المحتوى" required name="aboutUs">
             <textarea id="editor" name="editor"></textarea>
           </Form.Item>
 
@@ -97,4 +97,4 @@ const AppAgreementForm = () => {
   );
 };
 
-export default AppAgreementForm;
+export default AppAboutUsForm;

@@ -22,6 +22,18 @@ export class UpdateAppConfigDto {
 
   @Field({
     nullable: true,
+    description: 'Identifies the user privacy policy content.',
+  })
+  privacy?: string;
+
+  @Field({
+    nullable: true,
+    description: 'Identifies the user about us content.',
+  })
+  aboutUs?: string;
+
+  @Field({
+    nullable: true,
     description:
       'Identifies the email used to receive messages from contactUs page.',
   })
@@ -29,9 +41,9 @@ export class UpdateAppConfigDto {
 
   @Field({
     nullable: true,
-    description: 'Identifies telegram url.',
+    description: 'Identifies youtube channel url.',
   })
-  telegramUrl?: string;
+  youtubeUrl?: string;
 
   @Field({
     nullable: true,

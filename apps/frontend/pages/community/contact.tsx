@@ -1,16 +1,16 @@
 import Head from 'next/head';
-
+import { useSnapshot } from 'valtio';
+import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import { FormEvent, useEffect, useState } from 'react';
+import HomeLayout from '@/layout/HomeLayout';
 import { useReactiveVar } from '@apollo/client';
+import { AuthState } from '@/valtio/auth.state';
+import { SendOutlined } from '@ant-design/icons';
+import { appDataVar, getTitleMeta } from '@/utils/app';
+import { FormEvent, useEffect, useState } from 'react';
+import { withAuth } from '@/components/common/withAuth';
 import { Button, Form, Input, notification, Result } from 'antd';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import HomeLayout from '@/layout/HomeLayout';
-import { appDataVar, getTitleMeta } from '@/utils/app';
-import { useSnapshot } from 'valtio';
-import { AuthState } from '@/valtio/auth.state';
-import styled from '@emotion/styled';
-import { SendOutlined } from '@ant-design/icons';
 
 const rules = [
   {
@@ -164,4 +164,4 @@ export function ContactPage() {
 ContactPage.getLayout = (page: EmotionJSX.Element) => (
   <HomeLayout>{page}</HomeLayout>
 );
-export default ContactPage;
+export default withAuth(ContactPage, null, true);

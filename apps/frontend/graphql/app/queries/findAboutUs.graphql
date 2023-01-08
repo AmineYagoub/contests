@@ -1,0 +1,13 @@
+query FindAboutUsPage {
+  findAppConfig {
+    aboutUs
+    title
+    description
+    appStorUrl
+    playStorUrl
+    youtubeUrl
+    twitterUrl
+    facebookUrl
+    instagramUrl
+  }
+}

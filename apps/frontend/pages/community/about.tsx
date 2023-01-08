@@ -1,9 +1,16 @@
+import {
+  App,
+  FindAboutUsPageQuery,
+  FindAboutUsPageDocument,
+  FindAboutUsPageQueryVariables,
+} from '@/graphql/graphql';
 import Head from 'next/head';
-import { useReactiveVar } from '@apollo/client';
-import { appDataVar, getTitleMeta } from '@/utils/app';
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import HomeLayout from '@/layout/HomeLayout';
 import styled from '@emotion/styled';
+import HomeLayout from '@/layout/HomeLayout';
+import { appDataVar, getTitleMeta } from '@/utils/app';
+import { withAuth } from '@/components/common/withAuth';
+import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import { initializeApollo } from '@/config/createGraphQLClient';
 
 const StyledSection = styled('section')({
   backgroundColor: '#f8f8f8 !important',
@@ -14,23 +21,47 @@ const StyledSection = styled('section')({
   },
 });
 
-export function AboutUsPage() {
-  const siteData = useReactiveVar(appDataVar);
+export function AboutUsPage({ data }: { data: App }) {
+  appDataVar(data);
   return (
     <StyledSection>
       <Head>
-        <title>{getTitleMeta(siteData?.title, 'إتفاقية الإستخدام')}</title>
+        <title>{getTitleMeta(data?.title, 'حول الموقع')}</title>
       </Head>
-      <p
-        style={{ direction: 'rtl', whiteSpace: 'pre-wrap' }}
-        dangerouslySetInnerHTML={{ __html: siteData?.agreement }}
-      ></p>
+      <article
+        style={{ direction: 'rtl', whiteSpace: 'pre-wrap', minHeight: '80vh' }}
+        dangerouslySetInnerHTML={{ __html: data.aboutUs }}
+      />
     </StyledSection>
   );
+}
+
+export async function getServerSideProps({ req, query }) {
+  const client = initializeApollo({ headers: req?.headers });
+  try {
+    const {
+      data: { findAppConfig },
+    } = await client.query<FindAboutUsPageQuery, FindAboutUsPageQueryVariables>(
+      {
+        query: FindAboutUsPageDocument,
+      }
+    );
+
+    return {
+      props: {
+        data: findAppConfig,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      notFound: true,
+    };
+  }
 }
 
 AboutUsPage.getLayout = (page: EmotionJSX.Element) => (
   <HomeLayout>{page}</HomeLayout>
 );
-export default AboutUsPage;
-// TODO get data by ssr
+
+export default withAuth(AboutUsPage, null, true);

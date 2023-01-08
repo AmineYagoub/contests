@@ -1,18 +1,18 @@
-import { FormEvent, useEffect, useState } from 'react';
-import { Form, Button, notification } from 'antd';
+import {
+  useUpdateAppConfigMutation,
+  useFindPrivacyPolicyPageQuery,
+} from '@/graphql/graphql';
 import { Jodit } from 'jodit';
 import Head from 'next/head';
-import {
-  useFindTermsPageQuery,
-  useUpdateAppConfigMutation,
-} from '@/graphql/graphql';
+import { Form, Button, notification } from 'antd';
 import Loading from '@/components/common/Loading';
+import { FormEvent, useEffect, useState } from 'react';
 
-const AppAgreementForm = () => {
+const AppPrivacyForm = () => {
   const [form] = Form.useForm();
   const [content, setContent] = useState<string>('');
   const [UpdateAppConfigMutation, { loading }] = useUpdateAppConfigMutation();
-  const { data, loading: loadData } = useFindTermsPageQuery();
+  const { data, loading: loadData } = useFindPrivacyPolicyPageQuery();
 
   useEffect(() => {
     if (data) {
@@ -22,7 +22,7 @@ const AppAgreementForm = () => {
         showWordsCounter: false,
         showXPathInStatusbar: false,
       });
-      editor.value = data?.findAppConfig.agreement;
+      editor.value = data?.findAppConfig.privacy;
       editor.e.on('change', () => setContent(editor.value));
       return () => {
         editor.destruct();
@@ -39,7 +39,7 @@ const AppAgreementForm = () => {
       const res = await UpdateAppConfigMutation({
         variables: {
           input: {
-            agreement: content,
+            privacy: content,
           },
         },
       });
@@ -79,7 +79,7 @@ const AppAgreementForm = () => {
           onFinish={onFinish}
           onSubmitCapture={onSubmit}
         >
-          <Form.Item label="المحتوى" required name="agreement">
+          <Form.Item label="المحتوى" required name="privacy">
             <textarea id="editor" name="editor"></textarea>
           </Form.Item>
 
@@ -97,4 +97,4 @@ const AppAgreementForm = () => {
   );
 };
 
-export default AppAgreementForm;
+export default AppPrivacyForm;
