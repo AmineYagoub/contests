@@ -1,38 +1,38 @@
 import {
+  Tag,
+  Col,
+  Row,
+  Card,
+  Image,
+  Space,
+  Drawer,
   Avatar,
   Button,
-  Card,
-  Col,
-  Descriptions,
-  Drawer,
-  Image,
-  Popover,
-  Row,
-  Skeleton,
-  Space,
   Switch,
-  Tag,
+  Popover,
+  Skeleton,
+  Descriptions,
 } from 'antd';
 import {
-  RoleTitle,
+  User,
   Student,
+  RoleTitle,
+  MessageType,
   StudentLevel,
   useFindUserQuery,
-  User,
 } from '@/graphql/graphql';
-import moment from 'moment-timezone';
-import styled from '@emotion/styled';
 import {
   getLevelsLabel,
   getMapperLabel,
   rolesMappedTypes,
   studentMappedLevels,
 } from '@/utils/mapper';
-import ViewUserSkeleton from '../ViewUserSkeleton';
-import { MailOutlined, WarningOutlined } from '@ant-design/icons';
-import StyledButton from '@/components/common/StyledButton';
-import { useUpdateUsers } from '@/hooks/admin/manage-users.hook';
+import styled from '@emotion/styled';
+import moment from 'moment-timezone';
 import { memo, useEffect, useState } from 'react';
+import ViewUserSkeleton from '../ViewUserSkeleton';
+import SendMessageToUser from '../SendMessageToUser';
+import { useUpdateUsers } from '@/hooks/admin/manage-users.hook';
 
 const StyledDescriptions = styled(Descriptions)({
   table: {
@@ -147,25 +147,8 @@ const ViewStudentProfile = ({
               }}
               align="center"
             >
-              <StyledButton
-                icon={<MailOutlined />}
-                type="primary"
-                size="middle"
-                shape="round"
-              >
-                أرسل رسالة
-              </StyledButton>
-              <StyledButton
-                icon={<WarningOutlined />}
-                type="primary"
-                ghost
-                size="middle"
-                danger
-                color="danger"
-                shape="round"
-              >
-                أرسل تنبيه
-              </StyledButton>
+              <SendMessageToUser id={user.id} type={MessageType.Message} />
+              <SendMessageToUser id={user.id} type={MessageType.Alert} />
             </Space>
           </Col>
           <Col span={17}>

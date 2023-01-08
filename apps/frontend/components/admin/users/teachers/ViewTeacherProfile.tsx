@@ -1,23 +1,22 @@
 import {
-  Button,
-  Col,
-  Descriptions,
-  Drawer,
-  Image,
-  Row,
-  Space,
-  Switch,
   Tag,
+  Row,
+  Col,
+  Space,
+  Image,
+  Button,
+  Drawer,
+  Switch,
+  Descriptions,
 } from 'antd';
-import { Teacher, useFindUserQuery } from '@/graphql/graphql';
 import moment from 'moment-timezone';
 import styled from '@emotion/styled';
-import ViewUserSkeleton from '../ViewUserSkeleton';
-import { MailOutlined, WarningOutlined } from '@ant-design/icons';
-import StyledButton from '@/components/common/StyledButton';
-import { useUpdateUsers } from '@/hooks/admin/manage-users.hook';
 import MembershipData from './MembershipData';
+import ViewUserSkeleton from '../ViewUserSkeleton';
+import SendMessageToUser from '../SendMessageToUser';
 import ViewTeacherStudents from './ViewTeacherStudents';
+import { useUpdateUsers } from '@/hooks/admin/manage-users.hook';
+import { MessageType, Teacher, useFindUserQuery } from '@/graphql/graphql';
 
 const StyledDescriptions = styled(Descriptions)({
   table: {
@@ -83,25 +82,8 @@ const ViewTeacherProfile = ({
               }}
               align="center"
             >
-              <StyledButton
-                icon={<MailOutlined />}
-                type="primary"
-                size="middle"
-                shape="round"
-              >
-                أرسل رسالة
-              </StyledButton>
-              <StyledButton
-                icon={<WarningOutlined />}
-                type="primary"
-                ghost
-                size="middle"
-                danger
-                color="danger"
-                shape="round"
-              >
-                أرسل تنبيه
-              </StyledButton>
+              <SendMessageToUser id={user.id} type={MessageType.Message} />
+              <SendMessageToUser id={user.id} type={MessageType.Alert} />
             </Space>
           </Col>
           <Col span={17}>
@@ -149,7 +131,7 @@ const ViewTeacherProfile = ({
               membershipPrams={profile.subscription}
               profileId={profile.id}
             />
-            <ViewTeacherStudents />
+            <ViewTeacherStudents teacherId={profile.id} />
           </Col>
         </Row>
       )}

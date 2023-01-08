@@ -1,3 +1,6 @@
+import { RoleTitle, usePaginateUsersQuery, User } from '@/graphql/graphql';
+import { Logger } from '@/utils/app';
+import { getMapperLabel, rolesMappedTypes } from '@/utils/mapper';
 import { Avatar, Button, List, Skeleton } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -18,20 +21,54 @@ interface DataType {
   loading: boolean;
 }
 
-const ViewTeacherStudents = () => {
-  const [initLoading, setInitLoading] = useState(true);
+const alwaysTake = 15;
+
+const ViewTeacherStudents = ({ teacherId }: { teacherId: string }) => {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<DataType[]>([]);
-  const [list, setList] = useState<DataType[]>([]);
+  const [result, setResult] = useState<User[]>([]);
+
+  const getPaginationParams = (skip = 0) => ({
+    skip,
+    take: alwaysTake,
+    where: {
+      teacherId,
+      role: [RoleTitle.StudentTeacher],
+    },
+  });
+
+  const { data, fetchMore } = usePaginateUsersQuery({
+    variables: {
+      params: getPaginationParams(),
+    },
+    ssr: false,
+  });
+
+  const loadMoreData = async () => {
+    try {
+      setLoading(true);
+      const { data } = await fetchMore({
+        variables: {
+          params: getPaginationParams(result.length),
+        },
+      });
+      if (data) {
+        setResult([...result, ...(data.paginateUsers.data as User[])]);
+      }
+    } catch (error) {
+      Logger.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    setTimeout(() => {
-      setInitLoading(false);
-    }, 800);
-  }, []);
+    if (data) {
+      setResult(data.paginateUsers.data as User[]);
+    }
+  }, [data]);
 
   const loadMore =
-    !initLoading && !loading && list.length ? (
+    !loading && result.length ? (
       <div
         style={{
           textAlign: 'center',
@@ -40,31 +77,29 @@ const ViewTeacherStudents = () => {
           lineHeight: '32px',
         }}
       >
-        <Button>loading more</Button>
+        <Button onClick={loadMoreData}> تحميل أكثر</Button>
       </div>
     ) : null;
 
   return (
     <List
       header={<h2>الطلبة المشرف عليهم</h2>}
-      loading={initLoading}
+      loading={loading}
       itemLayout="horizontal"
       loadMore={loadMore}
-      dataSource={list}
+      dataSource={result}
       renderItem={(item) => (
-        <List.Item
-          actions={[
-            <a key="list-loadmore-edit">edit</a>,
-            <a key="list-loadmore-more">more</a>,
-          ]}
-        >
-          <Skeleton avatar title={false} loading={item.loading} active>
+        <List.Item>
+          <Skeleton avatar title={false} loading={loading} active>
             <List.Item.Meta
-              avatar={<Avatar src={item.picture.large} />}
-              title={<a href="https://ant.design">{item.name?.last}</a>}
-              description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+              avatar={<Avatar src={item.profile.personalImage} />}
+              title={
+                <a href="#">
+                  {`${item.profile?.firstName} ${item.profile?.lastName}`}
+                </a>
+              }
+              description={getMapperLabel(rolesMappedTypes, item.role.title)}
             />
-            <div>content</div>
           </Skeleton>
         </List.Item>
       )}
