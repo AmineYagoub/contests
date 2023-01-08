@@ -11,6 +11,8 @@ import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
 import { withAuth } from '@/components/common/withAuth';
 import { PermissionTitle, useDashboardQuery } from '@/graphql/graphql';
+import Head from 'next/head';
+import { getTitleMeta } from '@/utils/app';
 
 export const StyledCard = styled(Card)({
   display: 'flex',
@@ -47,6 +49,9 @@ const AdminDashboard: NextPageWithLayout = () => {
   };
   return (
     <>
+      <Head>
+        <title>{getTitleMeta('لوحة التحكم')}</title>
+      </Head>
       <Row gutter={16}>
         <Col span={6}>
           <StyledCard bordered={false}>

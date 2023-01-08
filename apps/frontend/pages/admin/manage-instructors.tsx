@@ -23,6 +23,8 @@ import { useState } from 'react';
 import DeleteUser from '@/components/admin/users/DeleteUser';
 import { TableBtn } from './dashboard';
 import { withAuth } from '@/components/common/withAuth';
+import Head from 'next/head';
+import { getTitleMeta } from '@/utils/app';
 
 const StyledSection = styled('section')({
   backgroundColor: '#f8f8f8 !important',
@@ -225,6 +227,9 @@ const ManageInstructors = () => {
 
   return (
     <>
+      <Head>
+        <title>{getTitleMeta('لوحة التحكم', 'المعلمين')}</title>
+      </Head>
       <StyledSection>
         <TableBtn onClick={methods.clearAllFilters}>إعادة الضبط</TableBtn>
         <Table

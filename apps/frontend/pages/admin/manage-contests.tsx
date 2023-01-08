@@ -36,6 +36,8 @@ import { TableBtn } from './dashboard';
 
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 import { withAuth } from '@/components/common/withAuth';
+import Head from 'next/head';
+import { getTitleMeta } from '@/utils/app';
 const StyledSection = styled('section')({
   backgroundColor: '#f8f8f8 !important',
   position: 'relative',
@@ -226,31 +228,37 @@ const ManageContests = () => {
   };
 
   return (
-    <StyledSection>
-      <TableBtn
-        type="primary"
-        size="middle"
-        icon={<PlusOutlined />}
-        onClick={showDrawer}
-      >
-        مسابقة جديدة
-      </TableBtn>
-      <TableBtn onClick={methods.clearAllFilters}>إعادة الضبط</TableBtn>
-      <Table
-        columns={columns}
-        dataSource={data}
-        loading={loading}
-        size="large"
-        onChange={methods.handleTableChange}
-        pagination={methods.handlePagination}
-        style={{ minHeight: 500 }}
-      />
-      <CreateContest
-        visible={visible}
-        onClose={onClose}
-        onSuccess={refetchData}
-      />
-    </StyledSection>
+    <>
+      <Head>
+        <title>{getTitleMeta('لوحة التحكم', 'المسابقات')}</title>
+      </Head>
+
+      <StyledSection>
+        <TableBtn
+          type="primary"
+          size="middle"
+          icon={<PlusOutlined />}
+          onClick={showDrawer}
+        >
+          مسابقة جديدة
+        </TableBtn>
+        <TableBtn onClick={methods.clearAllFilters}>إعادة الضبط</TableBtn>
+        <Table
+          columns={columns}
+          dataSource={data}
+          loading={loading}
+          size="large"
+          onChange={methods.handleTableChange}
+          pagination={methods.handlePagination}
+          style={{ minHeight: 500 }}
+        />
+        <CreateContest
+          visible={visible}
+          onClose={onClose}
+          onSuccess={refetchData}
+        />
+      </StyledSection>
+    </>
   );
 };
 

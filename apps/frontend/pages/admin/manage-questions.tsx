@@ -16,7 +16,7 @@ import {
   PermissionTitle,
   Question,
   QuestionType,
-  Tag as TagModel,
+  Topic,
 } from '@/graphql/graphql';
 import { useSearchQuestions } from '@/hooks/admin/manage-questions.hook';
 import AdminLayout from '@/layout/AdminLayout';
@@ -31,6 +31,8 @@ import { TableBtn } from './dashboard';
 
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 import { withAuth } from '@/components/common/withAuth';
+import Head from 'next/head';
+import { getTitleMeta } from '@/utils/app';
 const StyledSection = styled('section')({
   backgroundColor: '#f8f8f8 !important',
   position: 'relative',
@@ -108,11 +110,11 @@ const ManageQuestions = () => {
     },
     {
       title: 'الموضوعات',
-      dataIndex: QuestionFields.tags,
-      key: QuestionFields.tags,
-      ...getColumnSearchProps(QuestionFields.tags),
-      render: (tags: TagModel[]) => {
-        return tags?.map((tag) => {
+      dataIndex: QuestionFields.topics,
+      key: QuestionFields.topics,
+      ...getColumnSearchProps(QuestionFields.topics),
+      render: (topics: Topic[]) => {
+        return topics?.map((tag) => {
           return (
             <Tag color="green" key={tag.title}>
               {tag.title}
@@ -178,32 +180,38 @@ const ManageQuestions = () => {
   ];
 
   return (
-    <StyledSection>
-      <ImportQuestions onSuccess={methods.refetchData} />
-      <TableBtn
-        type="primary"
-        size="middle"
-        icon={<PlusOutlined />}
-        onClick={showDrawer}
-      >
-        سؤال جديد
-      </TableBtn>
-      <TableBtn onClick={methods.clearAllFilters}>إعادة الضبط</TableBtn>
-      <Table
-        columns={columns}
-        dataSource={questionSnap.questions}
-        loading={questionSnap.queryLoading}
-        size="large"
-        onChange={methods.handleTableChange}
-        pagination={methods.handlePagination}
-        style={{ minHeight: 500 }}
-      />
-      <CreateQuestion
-        visible={visible}
-        onClose={onClose}
-        onSuccess={methods.refetchData}
-      />
-    </StyledSection>
+    <>
+      <Head>
+        <title>{getTitleMeta('لوحة التحكم', 'الأسئلة')}</title>
+      </Head>
+
+      <StyledSection>
+        <ImportQuestions onSuccess={methods.refetchData} />
+        <TableBtn
+          type="primary"
+          size="middle"
+          icon={<PlusOutlined />}
+          onClick={showDrawer}
+        >
+          سؤال جديد
+        </TableBtn>
+        <TableBtn onClick={methods.clearAllFilters}>إعادة الضبط</TableBtn>
+        <Table
+          columns={columns}
+          dataSource={questionSnap.questions}
+          loading={questionSnap.queryLoading}
+          size="large"
+          onChange={methods.handleTableChange}
+          pagination={methods.handlePagination}
+          style={{ minHeight: 500 }}
+        />
+        <CreateQuestion
+          visible={visible}
+          onClose={onClose}
+          onSuccess={methods.refetchData}
+        />
+      </StyledSection>
+    </>
   );
 };
 
