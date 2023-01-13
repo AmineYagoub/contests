@@ -42,11 +42,10 @@ export const useCreateContests = ({
         authorId: user.id,
         topics: {
           connect: values.topics?.map((tag: TagValue) => ({
-            title: tag.label,
+            id: tag.value,
           })),
         },
       };
-
       const data = record
         ? await UpdateContestMutation({
             variables: {

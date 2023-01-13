@@ -10,11 +10,11 @@ import {
 } from 'antd';
 import { FormInstance } from 'antd/es/form/Form';
 import moment from 'moment';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import SelectCountry from '@/components/common/SelectCountry';
 import SelectTopics from '@/components/common/SelectTopics';
-import { Contest, RoleTitle } from '@/graphql/graphql';
+import { Contest, RoleTitle, StudentLevel } from '@/graphql/graphql';
 import { ContestFields } from '@/utils/fields';
 import { contestMappedTypes, studentMappedLevels } from '@/utils/mapper';
 
@@ -42,22 +42,25 @@ const ContestForm = ({
 }) => {
   useEffect(() => {
     if (record) {
-      form.setFieldsValue({
-        duration: record.duration,
-        easyQuestionCount: record.easyQuestionCount,
-        mediumQuestionCount: record.mediumQuestionCount,
-        hardQuestionCount: record.hardQuestionCount,
-        title: record.title,
-        level: record.level,
-        type: record.type,
-        countries: record.countries,
-        startTime: moment(record.startTime),
-        maxParticipants: record.maxParticipants,
-        topics: record.topics.map((tag) => ({
-          value: tag.title,
-          label: tag.title,
-        })),
-      });
+      setSelectedLevel(record.level);
+      setTimeout(() => {
+        form.setFieldsValue({
+          duration: record.duration,
+          easyQuestionCount: record.easyQuestionCount,
+          mediumQuestionCount: record.mediumQuestionCount,
+          hardQuestionCount: record.hardQuestionCount,
+          title: record.title,
+          level: record.level,
+          type: record.type,
+          countries: record.countries,
+          startTime: moment(record.startTime),
+          maxParticipants: record.maxParticipants,
+          topics: record.topics.map((tag) => ({
+            value: tag.id,
+            label: tag.title,
+          })),
+        });
+      }, 0);
     }
     return () => form.resetFields();
   }, [form, record]);
@@ -65,6 +68,16 @@ const ContestForm = ({
   const user = useSnapshot(AuthState).user;
   const getTeacherId =
     user?.role.title === RoleTitle.GoldenTeacher ? user?.profile.id : null;
+  const [selectedLevel, setSelectedLevel] = useState<StudentLevel[]>([]);
+  const isTeacher = user?.role.title !== RoleTitle.Admin;
+
+  useEffect(() => {
+    if (selectedLevel?.length === 0) {
+      form.setFieldsValue({
+        topics: [],
+      });
+    }
+  }, [selectedLevel, form]);
 
   return (
     <Form
@@ -90,12 +103,13 @@ const ContestForm = ({
         <Col span={12}>
           <Form.Item name={ContestFields.level} label="المستوى المستهدف">
             <Select
-              disabled={user?.role.title !== RoleTitle.Admin}
+              disabled={isTeacher}
               mode="multiple"
               maxTagCount={2}
               allowClear
               showArrow
               options={studentMappedLevels}
+              onChange={(val) => setSelectedLevel(val)}
             />
           </Form.Item>
         </Col>
@@ -189,7 +203,11 @@ const ContestForm = ({
           </Form.Item>
         </Col>
       </Row>
-      <SelectTopics isContest />
+      <SelectTopics
+        isContest
+        selectedLevel={selectedLevel}
+        isTeacher={isTeacher}
+      />
       <Row gutter={16}>
         <Col span={12}>
           <SelectCountry

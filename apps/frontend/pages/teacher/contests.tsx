@@ -47,7 +47,7 @@ const TeacherContests: NextPageWithLayout = () => {
     tabs.push({
       label: 'مسابقاتي الخاصة',
       key: '3',
-      children: <PremiumContest id="" />,
+      children: <PremiumContest id={user.id} />,
     });
   }
 

@@ -49,9 +49,7 @@ const ManageContests = () => {
   const { methods, data, loading, filteredInfo, sortedInfo } =
     useSearchContests();
 
-  const [participants, setParticipants] = useState(
-    'جاري فرز المتسابقين ... يرجى تحديث الصفحة بعد قليل'
-  );
+  const [participants, setParticipants] = useState('جاري فرز المتسابقين ... ');
 
   useEffect(() => {
     const t = setTimeout(() => {

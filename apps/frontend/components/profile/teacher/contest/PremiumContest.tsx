@@ -9,10 +9,11 @@ import UpdateContest from '@/components/admin/contests/UpdateContest';
 import ContestsTable, {
   TeacherContestsType,
 } from '@/components/profile/common/ContestsTable';
+import { ContestFields } from '@/utils/fields';
 
-const PremiumContest = ({ isPremium = true }: TeacherContestsType) => {
+const PremiumContest = ({ id, isPremium = true }: TeacherContestsType) => {
   const { methods, data, loading, filteredInfo, sortedInfo } =
-    useSearchContests();
+    useSearchContests(id);
 
   const refetchData = () => {
     methods.refetch();
@@ -21,12 +22,15 @@ const PremiumContest = ({ isPremium = true }: TeacherContestsType) => {
   const columns: ColumnsType<ColumnType<Contest>> = [
     {
       title: 'عدد المشاركين',
-      key: 'studentsCount',
-      dataIndex: 'studentsCount',
+      dataIndex: ContestFields.participants,
+      key: ContestFields.participants,
       sorter: true,
       sortDirections: ['descend', 'ascend'],
       sortOrder:
-        sortedInfo.columnKey === 'studentsCount' ? sortedInfo.order : null,
+        sortedInfo.columnKey === ContestFields.participants
+          ? sortedInfo.order
+          : null,
+      render: (data: string[]) => `${data.length} طالب`,
     },
   ];
 

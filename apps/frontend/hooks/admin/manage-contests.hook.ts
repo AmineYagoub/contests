@@ -20,7 +20,7 @@ import type {
 
 export type ContestsDataIndex = keyof Contest;
 
-export const useSearchContests = () => {
+export const useSearchContests = (id?: string) => {
   const [pagination, setPagination] = useState<Pagination>({
     offset: 0,
     limit: 10,
@@ -29,7 +29,8 @@ export const useSearchContests = () => {
     hasPrevPage: false,
   });
 
-  const [where, setWhere] = useState<WhereContestArgs>({});
+  const args = id ? { authorId: id } : {};
+  const [where, setWhere] = useState<WhereContestArgs>(args);
   const [orderBy, setOrderBy] = useState<OrderContestArgs>({});
   const [filteredInfo, setFilteredInfo] = useState<
     Record<string, FilterValue | null>
@@ -53,7 +54,7 @@ export const useSearchContests = () => {
       offset: 0,
       limit: 10,
     });
-    setWhere({});
+    setWhere(args);
     setOrderBy({});
   };
 
@@ -102,7 +103,7 @@ export const useSearchContests = () => {
       }
     }
 
-    const w: WhereContestArgs = {};
+    const w: WhereContestArgs = args;
 
     for (const [key, value] of Object.entries(filters)) {
       if (value) {

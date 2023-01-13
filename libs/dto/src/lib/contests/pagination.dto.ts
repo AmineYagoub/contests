@@ -6,7 +6,6 @@ import { CreateContestDto } from './create.dto';
 @InputType()
 export class WhereContestArgs extends PartialType(
   OmitType(CreateContestDto, [
-    'authorId',
     'maxParticipants',
     'published',
     'duration',

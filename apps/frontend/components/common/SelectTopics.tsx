@@ -1,9 +1,10 @@
-import { Form, Select, Spin } from 'antd';
+import { Form, Select, Spin, Tooltip } from 'antd';
 import debounce from 'lodash/debounce';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 
-import { useFindTopicsLazyQuery } from '@/graphql/graphql';
+import { StudentLevel, useFindTopicsLazyQuery } from '@/graphql/graphql';
 import { QuestionFields } from '@/utils/fields';
+import { getLevelsLabel, studentMappedLevels } from '@/utils/mapper';
 
 import type { SelectProps } from 'antd/es/select';
 export interface DebounceSelectProps<ValueType>
@@ -13,11 +14,14 @@ export interface DebounceSelectProps<ValueType>
   isContest: boolean;
 }
 
+const { Option } = Select;
+
 function DebounceSelect<
   ValueType extends {
     key?: string;
     label: React.ReactNode;
     value: string | number;
+    level: StudentLevel[];
   }
 >({
   fetchOptions,
@@ -80,8 +84,19 @@ function DebounceSelect<
         onFocus={() => debounceFetcher('')}
         notFoundContent={fetching ? <Spin size="small" /> : null}
         {...props}
-        options={options}
-      />
+      >
+        {options.map((el) => (
+          <Option key={el.value} value={el.value} label={el.label}>
+            <Tooltip
+              title={el.level.map(
+                (el) => getLevelsLabel(studentMappedLevels, el) + ', '
+              )}
+            >
+              <div>{el.label}</div>
+            </Tooltip>
+          </Option>
+        ))}
+      </Select>
     </Form.Item>
   );
 }
@@ -89,24 +104,39 @@ function DebounceSelect<
 export interface TagValue {
   label: string;
   value: string;
+  level: StudentLevel[];
 }
 
-const SelectTopics = ({ isContest }: { isContest: boolean }) => {
+const SelectTopics = ({
+  isContest,
+  selectedLevel,
+  isTeacher,
+}: {
+  isContest: boolean;
+  isTeacher: boolean;
+  selectedLevel?: StudentLevel[];
+}) => {
   const [value, setValue] = useState<TagValue[]>([]);
   const [FindTopicsQuery] = useFindTopicsLazyQuery();
   const fetchTags = useCallback(
     async (search: string) => {
-      const { data } = await FindTopicsQuery({
-        variables: {
-          title: search,
-        },
-      });
-      return data.findTopics.map((tag) => ({
-        label: tag.title,
-        value: tag.id,
-      }));
+      if (isTeacher || selectedLevel.length > 0) {
+        const { data } = await FindTopicsQuery({
+          variables: {
+            title: search,
+            level: selectedLevel,
+          },
+        });
+        return data.findTopics.map((topic) => ({
+          label: topic.title,
+          value: topic.id,
+          level: topic.level,
+        }));
+      }
+
+      return [];
     },
-    [FindTopicsQuery]
+    [FindTopicsQuery, selectedLevel, isTeacher]
   );
 
   return (

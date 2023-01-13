@@ -61,6 +61,7 @@ type ContestsTableType = {
       record: Contest
     ) => boolean;
     handleReset: (clearFilters: () => void) => void;
+    refetch: () => void;
   };
   extendColumns?: ColumnsType<ColumnType<Contest>>;
 };
@@ -134,7 +135,7 @@ const ContestsTable = ({
       ...getColumnSearchDateProps(ContestFields.created),
     },
     {
-      title: 'تاريخ الإنتهاء',
+      title: 'تاريخ البدء',
       dataIndex: ContestFields.startTime,
       key: ContestFields.startTime,
       sorter: true,
@@ -218,7 +219,7 @@ const ContestsTable = ({
         <CreateContest
           visible={visible}
           onClose={onClose}
-          onSuccess={console.log}
+          onSuccess={() => methods.refetch()}
         />
       )}
     </StyledSection>

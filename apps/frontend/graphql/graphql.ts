@@ -986,7 +986,7 @@ export type TopicConnectInput = {
 };
 
 export type TopicInput = {
-  title: Scalars['String'];
+  id: Scalars['String'];
 };
 
 export type UpdateAnswerDto = {
@@ -1175,6 +1175,7 @@ export type WhereAnswerArgs = {
 
 export type WhereContestArgs = {
   answerBy?: InputMaybe<Scalars['String']>;
+  authorId?: InputMaybe<Scalars['String']>;
   countries?: InputMaybe<Array<Scalars['String']>>;
   created?: InputMaybe<Array<Scalars['String']>>;
   level?: InputMaybe<Array<StudentLevel>>;

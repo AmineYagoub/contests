@@ -100,14 +100,14 @@ export class ContestService {
   ): Promise<SelectedQuestionFields[]> {
     const topics = (
       topic.connect as Array<{
-        title: string;
+        id: string;
       }>
-    ).map((el) => el.title);
+    ).map((el) => el.id);
     const questions = await this.prisma.question.findMany({
       where: {
         topics: {
           every: {
-            title: {
+            id: {
               in: topics,
             },
           },
@@ -350,6 +350,9 @@ export class ContestService {
                 userId: value[0],
               },
             };
+            break;
+          case 'authorId':
+            filter.authorId = String(value);
             break;
           case 'status':
             filter.status = String(value);
