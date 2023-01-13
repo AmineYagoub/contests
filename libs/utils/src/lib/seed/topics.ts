@@ -588,7 +588,7 @@ export const topics = [
   },
 
   {
-    title: 'توكيد الفعل بالنون',
+    title: 'توكيد الأفعال',
     level: [StudentLevel.Eighteen, StudentLevel.Nineteen],
   },
   {
