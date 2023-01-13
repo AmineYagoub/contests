@@ -3,6 +3,8 @@ import { Form, Select } from 'antd';
 import { Logger } from '@/utils/app';
 import { UsersActions } from '@/valtio/user.state';
 import { FocusEvent, useEffect, useState } from 'react';
+import { useSnapshot } from 'valtio';
+import { AuthState } from '@/valtio/auth.state';
 
 const { Option } = Select;
 
@@ -16,29 +18,35 @@ type CountriesType = {
 const SelectCountry = ({ name, label, multiple = false }) => {
   const [countries, setCountries] = useState<CountriesType[]>([]);
   const [countriesStor, setCountriesStor] = useState<CountriesType[]>([]);
+  const userSnap = useSnapshot(AuthState).user;
 
   const handleFetchCountries = (e: FocusEvent<HTMLElement, Element> | null) => {
     if (countries.length === 0) {
       fetch('/api/data/countries')
         .then((res) => res.json())
-        .then(({ data }) => {
-          const c = data.map((country: CountriesType) => ({
-            label: country.label,
-            flag: country.flag,
-          }));
-
-          const phones = data.map((country: CountriesType) => ({
-            phone: country.phone,
-            flag: country.flag,
-          }));
-          setCountries(c);
-          setCountriesStor(c);
-          UsersActions.setPhoneCodes(phones);
+        .then(({ data }: { data: CountriesType[] }) => {
+          setCountries(data);
+          setCountriesStor(data);
+          const c = data.find((el) => el.label === userSnap?.profile?.country);
+          if (c) {
+            UsersActions.setPhoneCode({
+              flag: c.flag,
+              phone: c.phone,
+            });
+          }
         })
         .catch((e) => Logger.log(e));
     } else {
       setCountries(countriesStor);
     }
+  };
+
+  const setPhoneCode = (val: string) => {
+    const c = countries.find((el) => el.label === val);
+    UsersActions.setPhoneCode({
+      flag: c.flag,
+      phone: c.phone,
+    });
   };
 
   const handleChangeCountries = (value) => {
@@ -82,6 +90,7 @@ const SelectCountry = ({ name, label, multiple = false }) => {
         onChange={handleChangeCountries}
         onSearch={handleSearch}
         notFoundContent={null}
+        onSelect={setPhoneCode}
       >
         {countries?.map((country) => (
           <Option key={country.label} value={country.label}>

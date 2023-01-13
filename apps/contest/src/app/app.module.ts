@@ -22,6 +22,7 @@ import { AppService } from './app.service';
 import { PrismaService } from './prisma.service';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { User } from '../users/user.entity';
+import { AppSubscribeToEvents } from './app.subscriber';
 
 @Module({
   imports: [
@@ -67,6 +68,6 @@ import { User } from '../users/user.entity';
     QuestionModule,
     MessageModule,
   ],
-  providers: [AppResolver, AppService, PrismaService],
+  providers: [AppResolver, AppService, PrismaService, AppSubscribeToEvents],
 })
 export class AppModule {}

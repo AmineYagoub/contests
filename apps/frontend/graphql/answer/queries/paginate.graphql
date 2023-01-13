@@ -1,0 +1,10 @@
+query PaginateAnswers($params: AnswerPaginationDto!) {
+  paginateAnswers(params: $params) {
+    total
+    data {
+      id
+      created
+      annulled
+    }
+  }
+}

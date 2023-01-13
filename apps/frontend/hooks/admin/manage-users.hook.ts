@@ -104,6 +104,7 @@ export const useSearchUsers = (
     UsersActions.setQueryLoading(true);
     if (data) {
       UsersActions.setQueryLoading(false);
+      UsersActions.setTotalUsers(data.paginateUsers.total);
       const results = data?.paginateUsers?.data.map((d) => ({
         key: d.id,
         ...d,

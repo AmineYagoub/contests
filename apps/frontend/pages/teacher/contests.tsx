@@ -6,14 +6,13 @@ import {
   PermissionTitle,
   RoleTitle,
   Teacher,
+  usePaginateAnswersQuery,
   User,
 } from '@/graphql/graphql';
 import { AuthState } from '@/valtio/auth.state';
 import { NextPageWithLayout } from '@/utils/types';
 import ProfileLayout from '@/layout/ProfileLayout';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import FinishedContest from '@/components/profile/teacher/contest/FinishedContest';
-import UpcomingContest from '@/components/profile/teacher/contest/UpcomingContest';
 import PremiumContest from '@/components/profile/teacher/contest/PremiumContest';
 import { withAuth } from '@/components/common/withAuth';
 
@@ -24,16 +23,23 @@ const TeacherContests: NextPageWithLayout = () => {
   /*    const isPremium =
   (user.profile as Teacher).subscription?.status === MembershipStatus.Active; */
 
+  const { data } = usePaginateAnswersQuery({
+    variables: {
+      params: {
+        where: {
+          id: user.profile.id,
+        },
+      },
+    },
+  });
+
+  console.log(data);
+
   const tabs = [
     {
-      label: 'مسابقات طلابك المنتهية',
-      key: '1',
-      children: <FinishedContest id="" isPremium={isPremium} />,
-    },
-    {
-      label: 'مسابقات طلابك القادمة',
+      label: 'نتائج مسابقات طلابك',
       key: '2',
-      children: <UpcomingContest id="" isPremium={isPremium} />,
+      children: <PremiumContest id="" isPremium={isPremium} />,
     },
   ];
 

@@ -51,3 +51,6 @@ export type MessagesSendEvent = {
   content: string;
   recipients?: string[];
 };
+
+export const STUDENTS_RESULTS_EVENT = 'students.results.event';
+export const STUDENTS_IDS_EVENT = 'students.ids.event';

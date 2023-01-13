@@ -52,6 +52,19 @@ export type AnswerInput = {
   id: Scalars['String'];
 };
 
+export type AnswerPaginationDto = {
+  orderBy?: InputMaybe<OrderAnswerArgs>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WhereAnswerArgs>;
+};
+
+export type AnswerPaginationResponse = {
+  __typename?: 'AnswerPaginationResponse';
+  data?: Maybe<Array<Answer>>;
+  total: Scalars['Int'];
+};
+
 export type App = {
   __typename?: 'App';
   /** Identifies the user about us content. */
@@ -533,6 +546,10 @@ export type MutationUpdateUserArgs = {
   input: UpdateUserDto;
 };
 
+export type OrderAnswerArgs = {
+  created?: InputMaybe<OrderByType>;
+};
+
 /** OrderBy Type */
 export enum OrderByType {
   Asc = 'Asc',
@@ -606,12 +623,14 @@ export type Query = {
   findTopics?: Maybe<Array<Topic>>;
   findUser: User;
   getAuthUser: User;
+  paginateAnswers?: Maybe<AnswerPaginationResponse>;
   paginateContest?: Maybe<ContestPaginationResponse>;
   paginateMessages?: Maybe<MessagePaginationResponse>;
   paginateNotifications?: Maybe<MessagePaginationResponse>;
   paginateQuestions?: Maybe<QuestionPaginationResponse>;
   paginateUsers?: Maybe<UserPaginationResponse>;
   searchUsers?: Maybe<Array<Profile>>;
+  teacherDashboard?: Maybe<TeacherDashboardResponse>;
 };
 
 
@@ -693,6 +712,11 @@ export type QueryFindUserArgs = {
 };
 
 
+export type QueryPaginateAnswersArgs = {
+  params: AnswerPaginationDto;
+};
+
+
 export type QueryPaginateContestArgs = {
   params: ContestPaginationDto;
 };
@@ -720,6 +744,11 @@ export type QueryPaginateUsersArgs = {
 
 export type QuerySearchUsersArgs = {
   params: UserPaginationDto;
+};
+
+
+export type QueryTeacherDashboardArgs = {
+  id: Scalars['String'];
 };
 
 export type Question = {
@@ -933,6 +962,12 @@ export type Teacher = {
   userId?: Maybe<Scalars['String']>;
 };
 
+export type TeacherDashboardResponse = {
+  __typename?: 'TeacherDashboardResponse';
+  meTotal: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
 export type Topic = {
   __typename?: 'Topic';
   /** Identifies the date and time when the object was created. */
@@ -1130,6 +1165,14 @@ export type UserPhone = {
   phoneCode: Scalars['String'];
 };
 
+export type WhereAnswerArgs = {
+  annulled?: InputMaybe<Scalars['Boolean']>;
+  annulledReason?: InputMaybe<Scalars['String']>;
+  answers?: InputMaybe<Array<SelectedAnswerInput>>;
+  contest?: InputMaybe<ContestConnectInput>;
+  id?: InputMaybe<Scalars['String']>;
+};
+
 export type WhereContestArgs = {
   answerBy?: InputMaybe<Scalars['String']>;
   countries?: InputMaybe<Array<Scalars['String']>>;
@@ -1192,6 +1235,13 @@ export type FindOneAnswerByIdQueryVariables = Exact<{
 
 
 export type FindOneAnswerByIdQuery = { __typename?: 'Query', findOneAnswerById?: { __typename?: 'Answer', userId: string, annulled: boolean, annulledReason: string, created: any, updated: any, answers: Array<{ __typename?: 'SelectedAnswerObject', questionId: string, questionIndex: number, optionIndex: number }> } | null };
+
+export type PaginateAnswersQueryVariables = Exact<{
+  params: AnswerPaginationDto;
+}>;
+
+
+export type PaginateAnswersQuery = { __typename?: 'Query', paginateAnswers?: { __typename?: 'AnswerPaginationResponse', total: number, data?: Array<{ __typename?: 'Answer', id: string, created: any, annulled: boolean }> | null } | null };
 
 export type UpdateAppConfigMutationVariables = Exact<{
   input: UpdateAppConfigDto;
@@ -1551,6 +1601,13 @@ export type SearchUsersQueryVariables = Exact<{
 
 export type SearchUsersQuery = { __typename?: 'Query', searchUsers?: Array<{ __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, userId?: string | null, personalImage?: string | null } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, userId?: string | null, personalImage?: string | null }> | null };
 
+export type TeacherDashboardQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type TeacherDashboardQuery = { __typename?: 'Query', teacherDashboard?: { __typename?: 'TeacherDashboardResponse', meTotal: number, total: number } | null };
+
 
 export const CreateAnswerDocument = gql`
     mutation CreateAnswer($data: CreateAnswerDto!) {
@@ -1667,6 +1724,46 @@ export function useFindOneAnswerByIdLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type FindOneAnswerByIdQueryHookResult = ReturnType<typeof useFindOneAnswerByIdQuery>;
 export type FindOneAnswerByIdLazyQueryHookResult = ReturnType<typeof useFindOneAnswerByIdLazyQuery>;
 export type FindOneAnswerByIdQueryResult = Apollo.QueryResult<FindOneAnswerByIdQuery, FindOneAnswerByIdQueryVariables>;
+export const PaginateAnswersDocument = gql`
+    query PaginateAnswers($params: AnswerPaginationDto!) {
+  paginateAnswers(params: $params) {
+    total
+    data {
+      id
+      created
+      annulled
+    }
+  }
+}
+    `;
+
+/**
+ * __usePaginateAnswersQuery__
+ *
+ * To run a query within a React component, call `usePaginateAnswersQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePaginateAnswersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePaginateAnswersQuery({
+ *   variables: {
+ *      params: // value for 'params'
+ *   },
+ * });
+ */
+export function usePaginateAnswersQuery(baseOptions: Apollo.QueryHookOptions<PaginateAnswersQuery, PaginateAnswersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PaginateAnswersQuery, PaginateAnswersQueryVariables>(PaginateAnswersDocument, options);
+      }
+export function usePaginateAnswersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaginateAnswersQuery, PaginateAnswersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PaginateAnswersQuery, PaginateAnswersQueryVariables>(PaginateAnswersDocument, options);
+        }
+export type PaginateAnswersQueryHookResult = ReturnType<typeof usePaginateAnswersQuery>;
+export type PaginateAnswersLazyQueryHookResult = ReturnType<typeof usePaginateAnswersLazyQuery>;
+export type PaginateAnswersQueryResult = Apollo.QueryResult<PaginateAnswersQuery, PaginateAnswersQueryVariables>;
 export const UpdateAppConfigDocument = gql`
     mutation UpdateAppConfig($input: UpdateAppConfigDto!) {
   updateAppConfig(input: $input) {
@@ -4089,3 +4186,39 @@ export function useSearchUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type SearchUsersQueryHookResult = ReturnType<typeof useSearchUsersQuery>;
 export type SearchUsersLazyQueryHookResult = ReturnType<typeof useSearchUsersLazyQuery>;
 export type SearchUsersQueryResult = Apollo.QueryResult<SearchUsersQuery, SearchUsersQueryVariables>;
+export const TeacherDashboardDocument = gql`
+    query TeacherDashboard($id: String!) {
+  teacherDashboard(id: $id) {
+    meTotal
+    total
+  }
+}
+    `;
+
+/**
+ * __useTeacherDashboardQuery__
+ *
+ * To run a query within a React component, call `useTeacherDashboardQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTeacherDashboardQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTeacherDashboardQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useTeacherDashboardQuery(baseOptions: Apollo.QueryHookOptions<TeacherDashboardQuery, TeacherDashboardQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TeacherDashboardQuery, TeacherDashboardQueryVariables>(TeacherDashboardDocument, options);
+      }
+export function useTeacherDashboardLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TeacherDashboardQuery, TeacherDashboardQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TeacherDashboardQuery, TeacherDashboardQueryVariables>(TeacherDashboardDocument, options);
+        }
+export type TeacherDashboardQueryHookResult = ReturnType<typeof useTeacherDashboardQuery>;
+export type TeacherDashboardLazyQueryHookResult = ReturnType<typeof useTeacherDashboardLazyQuery>;
+export type TeacherDashboardQueryResult = Apollo.QueryResult<TeacherDashboardQuery, TeacherDashboardQueryVariables>;

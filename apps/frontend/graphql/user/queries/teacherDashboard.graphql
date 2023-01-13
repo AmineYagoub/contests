@@ -1,0 +1,6 @@
+query TeacherDashboard($id: String!) {
+  teacherDashboard(id: $id) {
+    meTotal
+    total
+  }
+}

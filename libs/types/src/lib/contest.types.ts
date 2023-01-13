@@ -1,4 +1,4 @@
-import { registerEnumType } from '@nestjs/graphql';
+import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Prisma } from '@prisma/contest-service';
 
 export enum ContestStatus {
@@ -34,3 +34,12 @@ export type PaginateContestParams = {
     topics?: boolean;
   };
 };
+
+@ObjectType()
+export class TeacherDashboardResponse {
+  @Field(() => Int)
+  meTotal: number;
+
+  @Field(() => Int)
+  total: number;
+}

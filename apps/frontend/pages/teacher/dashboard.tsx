@@ -1,6 +1,11 @@
 import { useSnapshot } from 'valtio';
 
-import { PermissionTitle, Teacher, User } from '@/graphql/graphql';
+import {
+  PermissionTitle,
+  Teacher,
+  User,
+  useTeacherDashboardQuery,
+} from '@/graphql/graphql';
 import ProfileLayout from '@/layout/ProfileLayout';
 import { NextPageWithLayout } from '@/utils/types';
 import { AuthState } from '@/valtio/auth.state';
@@ -11,10 +16,17 @@ import { StyledCard } from '../admin/dashboard';
 import Image from 'next/image';
 import { SketchCircleFilled } from '@ant-design/icons';
 import TeacherStudentsList from '@/components/profile/teacher/TeacherStudentsList';
+import { UsersState } from '@/valtio/user.state';
 
 const ProfileDashboard: NextPageWithLayout = () => {
   const user = useSnapshot(AuthState).user as User;
   const profile = user.profile as Teacher;
+  const teacherSnap = useSnapshot(UsersState);
+  const { data, loading } = useTeacherDashboardQuery({
+    variables: {
+      id: user?.id,
+    },
+  });
   return (
     <>
       <Row gutter={16}>
@@ -24,6 +36,8 @@ const ProfileDashboard: NextPageWithLayout = () => {
               title="عدد المسابقات الخاصة بي"
               precision={0}
               suffix="مسابقة"
+              value={data?.teacherDashboard.meTotal}
+              loading={loading}
               prefix={
                 <Image
                   src="/icons/dashboard/reward.png"
@@ -41,6 +55,8 @@ const ProfileDashboard: NextPageWithLayout = () => {
               title="عدد المسابقات الإدارية"
               precision={0}
               suffix="مسابقة"
+              value={data?.teacherDashboard.total}
+              loading={loading}
               prefix={
                 <Image
                   src="/icons/dashboard/reward.png"
@@ -57,16 +73,15 @@ const ProfileDashboard: NextPageWithLayout = () => {
             <Statistic
               title="الطلاب المشرف عليهم"
               precision={0}
+              value={teacherSnap.totalUsers}
               suffix="طالب"
               prefix={
-                <Tooltip title="بالنسبة للعدد الإجمالي للطلبة">
-                  <Progress
-                    width={80}
-                    strokeLinecap="butt"
-                    type="dashboard"
-                    percent={25}
-                  />
-                </Tooltip>
+                <Image
+                  src="/icons/dashboard/students.png"
+                  width="65"
+                  height="65"
+                  alt="money"
+                />
               }
             />
           </StyledCard>

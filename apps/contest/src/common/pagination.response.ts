@@ -1,5 +1,6 @@
 import { Type } from '@nestjs/common';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Answer } from '../answers/answer.model';
 
 import { Contest } from '../contests/contest.model';
 import { Message } from '../messages/message.model';
@@ -25,3 +26,6 @@ export class QuestionPaginationResponse extends Paginate(Question) {}
 
 @ObjectType()
 export class MessagePaginationResponse extends Paginate(Message) {}
+
+@ObjectType()
+export class AnswerPaginationResponse extends Paginate(Answer) {}

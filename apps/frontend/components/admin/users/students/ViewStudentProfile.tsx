@@ -33,6 +33,8 @@ import { memo, useEffect, useState } from 'react';
 import ViewUserSkeleton from '../ViewUserSkeleton';
 import SendMessageToUser from '../SendMessageToUser';
 import { useUpdateUsers } from '@/hooks/admin/manage-users.hook';
+import { useSnapshot } from 'valtio';
+import { AuthState } from '@/valtio/auth.state';
 
 const StyledDescriptions = styled(Descriptions)({
   table: {
@@ -104,6 +106,8 @@ const ViewStudentProfile = ({
   });
   const user = data?.findUser;
   const profile = user?.profile as Student;
+  const userSnap = useSnapshot(AuthState);
+  const isAdmin = userSnap?.user?.role.title === RoleTitle.Admin;
 
   const { onUserStateChange, loading: l } = useUpdateUsers();
 
@@ -196,32 +200,37 @@ const ViewStudentProfile = ({
                 />
               </Descriptions.Item>
             </StyledDescriptions>
-            <StyledDescriptions title={<h2>وثائق الطالب</h2>} layout="vertical">
-              <Descriptions.Item label="إثبات الهوية">
-                {profile.birthCertImage ? (
-                  <Image
-                    src={profile.birthCertImage}
-                    alt="birthCertImage"
-                    width={64}
-                    height={64}
-                  />
-                ) : (
-                  'غير متوفر'
-                )}
-              </Descriptions.Item>
-              <Descriptions.Item label="خطاب المدرسة">
-                {profile.letterImage ? (
-                  <Image
-                    src={profile.letterImage}
-                    alt="letterImage"
-                    width={64}
-                    height={64}
-                  />
-                ) : (
-                  'غير متوفر'
-                )}
-              </Descriptions.Item>
-            </StyledDescriptions>
+            {isAdmin && (
+              <StyledDescriptions
+                title={<h2>وثائق الطالب</h2>}
+                layout="vertical"
+              >
+                <Descriptions.Item label="إثبات الهوية">
+                  {profile.birthCertImage ? (
+                    <Image
+                      src={profile.birthCertImage}
+                      alt="birthCertImage"
+                      width={64}
+                      height={64}
+                    />
+                  ) : (
+                    'غير متوفر'
+                  )}
+                </Descriptions.Item>
+                <Descriptions.Item label="خطاب المدرسة">
+                  {profile.letterImage ? (
+                    <Image
+                      src={profile.letterImage}
+                      alt="letterImage"
+                      width={64}
+                      height={64}
+                    />
+                  ) : (
+                    'غير متوفر'
+                  )}
+                </Descriptions.Item>
+              </StyledDescriptions>
+            )}
           </Col>
         </Row>
       )}

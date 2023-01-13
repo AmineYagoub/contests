@@ -13,14 +13,20 @@ import {
   ResolveReference,
 } from '@nestjs/graphql';
 
-import { ContestPaginationResponse } from '../common/pagination.response';
-import { User } from '../users/user.entity';
 import { Contest } from './contest.model';
+import { User } from '../users/user.entity';
 import { ContestService } from './contest.service';
+import { TeacherDashboardResponse } from '@contests/types';
+import { ContestPaginationResponse } from '../common/pagination.response';
 
 @Resolver(() => Contest)
 export class ContestResolver {
   constructor(private contestService: ContestService) {}
+
+  @Query(() => TeacherDashboardResponse, { nullable: true })
+  async teacherDashboard(@Args('id') id: string) {
+    return this.contestService.teacherDashboard(id);
+  }
 
   @Query(() => Contest, { nullable: true })
   async findOneContestById(

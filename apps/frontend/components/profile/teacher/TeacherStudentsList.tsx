@@ -1,24 +1,23 @@
-import { Student, StudentLevel, User } from '@/graphql/graphql';
-import type { ColumnsType, ColumnType } from 'antd/es/table';
-import { useSearchUsers } from '@/hooks/admin/manage-users.hook';
-import { StudentFields, StudentsDataIndex } from '@/utils/fields';
-import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
 import {
   SearchDatePicker,
   SearchDatePickerIcon,
 } from '@/components/admin/tables/SearchDatePicker';
-import moment from 'moment-timezone';
-import { Button, Space, Table, Tag } from 'antd';
-import { EyeOutlined } from '@ant-design/icons';
-import { useSnapshot } from 'valtio';
-import { UsersState } from '@/valtio/user.state';
-import { getLevelsLabel, studentMappedLevels } from '@/utils/mapper';
-import styled from '@emotion/styled';
-import ViewStudentProfile from '@/components/admin/users/students/ViewStudentProfile';
 import { useState } from 'react';
+import moment from 'moment-timezone';
+import { useSnapshot } from 'valtio';
+import styled from '@emotion/styled';
+import { EyeOutlined } from '@ant-design/icons';
+import { Button, Space, Table, Tag } from 'antd';
+import { UsersState } from '@/valtio/user.state';
 import { TableBtn } from '@/pages/admin/dashboard';
 import DisconnectStudent from './DisconnectStudent';
-import SendMessageToStudent from './SendMessageToStudent';
+import type { ColumnsType, ColumnType } from 'antd/es/table';
+import { Student, StudentLevel, User } from '@/graphql/graphql';
+import { useSearchUsers } from '@/hooks/admin/manage-users.hook';
+import { StudentFields, StudentsDataIndex } from '@/utils/fields';
+import { getLevelsLabel, studentMappedLevels } from '@/utils/mapper';
+import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
+import ViewStudentProfile from '@/components/admin/users/students/ViewStudentProfile';
 
 const StyledSection = styled('section')({
   backgroundColor: '#f8f8f8 !important',
@@ -30,7 +29,7 @@ const StyledSection = styled('section')({
 
 const TeacherStudentsList = ({ teacherId }: { teacherId: string }) => {
   const { methods, filteredInfo } = useSearchUsers('student', teacherId);
-  const studentSnap = useSnapshot(UsersState);
+  const teacherSnap = useSnapshot(UsersState);
   const [visible, setVisible] = useState(false);
   const [profileKey, setProfileKey] = useState<number>(null);
 
@@ -138,7 +137,7 @@ const TeacherStudentsList = ({ teacherId }: { teacherId: string }) => {
             id={teacherId}
             onSuccess={methods.refetchData}
           />
-          <SendMessageToStudent info={null} />
+
           <Button
             icon={<EyeOutlined style={{ color: 'teal' }} />}
             shape="circle"
@@ -155,8 +154,8 @@ const TeacherStudentsList = ({ teacherId }: { teacherId: string }) => {
       <h2>الطلاب المشرف عليهم</h2>
       <Table
         columns={columns}
-        dataSource={studentSnap.users}
-        loading={studentSnap.queryLoading}
+        dataSource={teacherSnap.users}
+        loading={teacherSnap.queryLoading}
         size="large"
         onChange={methods.handleTableChange}
         pagination={methods.handlePagination}

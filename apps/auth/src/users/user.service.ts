@@ -1,16 +1,15 @@
-import { UpdateUserDto } from '@contests/dto/auth';
-import { RoleTitle, USER_ROLE_UPDATED_EVENT } from '@contests/types/auth';
 import {
-  Injectable,
   Logger,
+  Injectable,
   UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma } from '@prisma/auth-service';
-
+import { UpdateUserDto } from '@contests/dto/auth';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../app/prisma.service';
 import { PasswordService } from '../authentication/password.service';
+import { RoleTitle, USER_ROLE_UPDATED_EVENT } from '@contests/types/auth';
 
 @Injectable()
 export class UserService {

@@ -1,4 +1,8 @@
-import { CreateAnswerDto, UpdateAnswerDto } from '@contests/dto';
+import {
+  AnswerPaginationDto,
+  CreateAnswerDto,
+  UpdateAnswerDto,
+} from '@contests/dto';
 import {
   Args,
   Mutation,
@@ -6,6 +10,7 @@ import {
   Resolver,
   ResolveReference,
 } from '@nestjs/graphql';
+import { AnswerPaginationResponse } from '../common/pagination.response';
 
 import { Answer } from './answer.model';
 import { AnswerService } from './answer.service';
@@ -35,6 +40,11 @@ export class AnswerResolver {
     @Args('data') data: UpdateAnswerDto
   ) {
     return this.answerService.update({ data, where: { id } });
+  }
+
+  @Query(() => AnswerPaginationResponse, { nullable: true })
+  async paginateAnswers(@Args('params') params: AnswerPaginationDto) {
+    return this.answerService.paginate([], params);
   }
 
   /**

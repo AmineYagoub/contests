@@ -11,7 +11,12 @@ import {
   MessagesSendEvent,
   MESSAGES_SEND_EVENT,
 } from '@contests/types';
-import { MESSAGES_SEND_FOR_EVENT, RoleTitle } from '@contests/types/auth';
+import {
+  MESSAGES_SEND_FOR_EVENT,
+  RoleTitle,
+  STUDENTS_IDS_EVENT,
+  STUDENTS_RESULTS_EVENT,
+} from '@contests/types/auth';
 
 @Injectable()
 export class UserEvents {
@@ -24,6 +29,7 @@ export class UserEvents {
     this.client.subscribe(
       CONTEST_CREATED_EVENT,
       MESSAGES_SEND_EVENT,
+      STUDENTS_RESULTS_EVENT,
       (err, count) => {
         if (err) {
           Logger.error('Failed to subscribe: %s', err.message);
@@ -66,6 +72,30 @@ export class UserEvents {
         CONTEST_CREATED_FOR_EVENT,
         JSON.stringify(payload)
       );
+    }
+  }
+
+  /**
+   * Send students IDS to message service when teacher paginate students results.
+   *
+   * @param id: string
+   *
+   * @returns Promise<void>
+   */
+  @OnEvent(STUDENTS_RESULTS_EVENT)
+  async onTeacherPaginateStudentsResultEvent({ id }: { id: string }) {
+    if (id) {
+      const users = await this.prisma.user.findMany({
+        where: {
+          isActive: true,
+          profile: {
+            teacherId: id,
+          },
+        },
+        select: { id: true },
+      });
+      const res = users.map((el) => el.id);
+      this.publisher.publish(STUDENTS_IDS_EVENT, JSON.stringify(res));
     }
   }
 

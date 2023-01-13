@@ -5,9 +5,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 
 @Injectable()
 export class ContestEvents {
-  constructor(private prisma: PrismaService) {
-    // Already subscribed in message events
-  }
+  constructor(private prisma: PrismaService) {}
 
   /**
    * Update contest to add participants ids.

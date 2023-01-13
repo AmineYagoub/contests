@@ -18,6 +18,26 @@ export class ContestService {
   ) {}
 
   /**
+   * Count contests to display result in teacher dashboard.
+   *
+   * @param id string Teacher id.
+   * @returns PromisePromise<{
+                                meTotal: number;
+                                total: number;
+                            }>
+   */
+  async teacherDashboard(id: string) {
+    const data = await this.prisma.$transaction([
+      this.prisma.contest.count({ where: { authorId: id } }),
+      this.prisma.contest.count(),
+    ]);
+    return {
+      meTotal: data[0],
+      total: data[1],
+    };
+  }
+
+  /**
    * Create a Contest
    *
    * @param data Prisma.ContestCreateInput The Contest data.

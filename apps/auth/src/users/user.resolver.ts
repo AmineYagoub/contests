@@ -1,6 +1,3 @@
-import { UpdateUserDto, UserPaginationDto } from '@contests/dto/auth';
-import { isPublic, UserEntity } from '@contests/utils';
-import { Type } from '@nestjs/common';
 import {
   Args,
   Field,
@@ -11,11 +8,13 @@ import {
   Resolver,
   ResolveReference,
 } from '@nestjs/graphql';
+import { User } from './user.model';
+import { Type } from '@nestjs/common';
+import { UserService } from './user.service';
 import { SeedService } from '../app/seed.service';
 import { Profile } from '../profile/profile.resolver';
-
-import { User } from './user.model';
-import { UserService } from './user.service';
+import { isPublic, UserEntity } from '@contests/utils';
+import { UpdateUserDto, UserPaginationDto } from '@contests/dto/auth';
 
 function Paginate<T>(Node: Type<T>) {
   @ObjectType({ isAbstract: true })

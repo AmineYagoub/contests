@@ -1,18 +1,7 @@
-import {
-  Alert,
-  Avatar,
-  Badge,
-  Button,
-  Col,
-  Layout,
-  Row,
-  Space,
-  Typography,
-} from 'antd';
-import Image from 'next/image';
+import { Alert, Layout, Typography } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { createElement, FC, ReactElement, useState } from 'react';
+import { FC, ReactElement, useState } from 'react';
 
 import theme from '@/config/theme';
 import { AppRoutes } from '@/utils/routes';
@@ -23,8 +12,6 @@ import {
   HomeOutlined,
   LogoutOutlined,
   MailOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   SketchCircleFilled,
   TrophyOutlined,
 } from '@ant-design/icons';
@@ -48,20 +35,12 @@ export const StyledHeader = styled(Header)({
 });
 
 const ProfileLayout: FC<{ children: ReactElement }> = ({ children }) => {
-  // const socket = useReactiveVar(socketVar);
   const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
   const user = useSnapshot(AuthState).user as User;
   const isTeacher = [RoleTitle.GoldenTeacher, RoleTitle.Teacher].includes(
     user.role.title
   );
-
-  /*   useEffect(() => {
-    socket.connect();
-    return () => {
-      socket.disconnect();
-    };
-  }, [socket]); */
 
   const routes = {
     dashboard: isTeacher

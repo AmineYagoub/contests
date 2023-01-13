@@ -10,8 +10,9 @@ export type PhoneType = {
 
 interface UsersStorage {
   user: User;
-  phoneCodes: PhoneType[];
   users: User[];
+  totalUsers: number;
+  phoneCode?: PhoneType;
   queryLoading: boolean;
   mutationLoading: boolean;
 }
@@ -19,7 +20,8 @@ interface UsersStorage {
 const init: UsersStorage = {
   user: null,
   users: [],
-  phoneCodes: [],
+  totalUsers: 0,
+  phoneCode: null,
   mutationLoading: false,
   queryLoading: false,
 };
@@ -33,8 +35,11 @@ export const UsersActions = {
   setUsersData: (users: User[]) => {
     UsersState.users = users;
   },
-  setPhoneCodes: (data: PhoneType[]) => {
-    UsersState.phoneCodes = data;
+  setTotalUsers: (val: number) => {
+    UsersState.totalUsers = val;
+  },
+  setPhoneCode: (val: PhoneType) => {
+    UsersState.phoneCode = val;
   },
   setQueryLoading: (loading: boolean) => {
     UsersState.queryLoading = loading;

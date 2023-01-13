@@ -2,49 +2,20 @@ import {
   MessageType,
   ContestCreatedEvent,
   StudentUpdateTeacher,
-  CONTEST_CREATED_EVENT,
   TeacherConnectStudent,
   MESSAGES_SEND_FOR_EVENT,
   CONTEST_CREATED_WILDCARD,
-  CONTEST_CREATED_FOR_EVENT,
   STUDENT_ADD_TEACHER_EVENT,
   TEACHER_CONNECT_STUDENT_EVENT,
 } from '@contests/types';
-import Redis from 'ioredis';
+import { SendMessageDto } from '@contests/dto';
+import { OnEvent } from '@nestjs/event-emitter';
 import { Logger, Injectable } from '@nestjs/common';
 import { PrismaService } from '../app/prisma.service';
-import { InjectRedis } from '@liaoliaots/nestjs-redis';
-import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
-import { SendMessageDto } from '@contests/dto';
 
 @Injectable()
 export class MessageEvents {
-  constructor(
-    private prisma: PrismaService,
-    private eventEmitter: EventEmitter2,
-    @InjectRedis() private readonly client: Redis
-  ) {
-    this.client.subscribe(
-      CONTEST_CREATED_EVENT,
-      MESSAGES_SEND_FOR_EVENT,
-      CONTEST_CREATED_FOR_EVENT,
-      STUDENT_ADD_TEACHER_EVENT,
-      TEACHER_CONNECT_STUDENT_EVENT,
-      (err, count) => {
-        if (err) {
-          Logger.error('Failed to subscribe: %s', err.message);
-        } else {
-          Logger.log(
-            `Subscribed successfully! to ${count} channels.`,
-            'RedisModule'
-          );
-        }
-      }
-    );
-    this.client.on('message', (channel: string, message: string) => {
-      this.eventEmitter.emit(channel, JSON.parse(message));
-    });
-  }
+  constructor(private prisma: PrismaService) {}
 
   /**
    * Send Notification to teacher.
