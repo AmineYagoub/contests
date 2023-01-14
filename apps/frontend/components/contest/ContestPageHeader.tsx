@@ -1,4 +1,4 @@
-import { Button, Col, Modal, PageHeader, Row, Space, Statistic } from 'antd';
+import { Button, Col, PageHeader, Row, Space, Statistic, Tag } from 'antd';
 import Link from 'next/link';
 import { useSnapshot } from 'valtio';
 
@@ -6,7 +6,7 @@ import { AppRoutes } from '@/utils/routes';
 import { ContestActions, ContestState } from '@/valtio/contest.state';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
-import { Contest } from '@/graphql/graphql';
+
 import { useRouter } from 'next/router';
 
 const valueStyle = {
@@ -22,6 +22,16 @@ const StyledStrong = styled('strong')({
   ...valueStyle,
   fontSize: '1.5rem',
   padding: 5,
+});
+
+const StyledTopics = styled('section')({
+  display: 'flex',
+  b: {
+    color: '#fff',
+  },
+  ol: {
+    color: '#fff',
+  },
 });
 
 const StyledStat = styled(Statistic)({
@@ -89,11 +99,7 @@ const ContestPageHeader = () => {
   const count = easyQuestionCount + mediumQuestionCount + hardQuestionCount;
 
   const onTimeFinished = () => {
-    Modal.warning({
-      title: 'إنتهى الوقت!',
-      content: 'انتهى الوقت المحدد للإجابة على أسئلة المسابقة.',
-      okText: 'مشاهدة نتيجة المسابقة',
-    });
+    ContestActions.setContestAnnulled();
   };
 
   return (
@@ -135,17 +141,18 @@ const ContestPageHeader = () => {
       }
     >
       <Row justify="center">
-        <StyledCol span={6}>
-          {/* <StyledStatLevels
-            title="مستوى المسابقة"
-            value=""
-            suffix={contestSnap.contest.level.map((el) => (
-              <Tag key={el} color="blue">
-                {getMapperLabel(studentMappedLevels, el)}
-              </Tag>
-            ))}
-          /> */}
-        </StyledCol>
+        <Col span={6}>
+          <StyledTopics>
+            <b>مواضيع المسابقة</b>
+            <ol>
+              {contestSnap.contest.topics.map((el) => (
+                <li key={el.title}>
+                  <Tag color="blue">{el.title}</Tag>
+                </li>
+              ))}
+            </ol>
+          </StyledTopics>
+        </Col>
         <StyledCol span={6}>
           {contestSnap.contestStarted ? (
             <StyledCountdown

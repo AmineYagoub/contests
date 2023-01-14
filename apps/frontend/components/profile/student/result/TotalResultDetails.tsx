@@ -47,6 +47,10 @@ const TotalResultDetails = ({ contestMeta }: { contestMeta: ContestMeta }) => {
       value: contestMeta.questionsCount,
     },
     {
+      title: 'عدد الأسئلة المجابة',
+      value: contestMeta.answersCount,
+    },
+    {
       title: 'عدد الإجابات الصحيحة',
       value: contestMeta.truthyAnswersCount,
     },

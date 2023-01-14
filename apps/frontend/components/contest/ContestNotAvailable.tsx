@@ -14,14 +14,18 @@ const ContestNotAvailable = () => {
       <Result
         status="warning"
         title={
-          <h2 style={{ color: '#fff' }}>
-            للأسف لا يمكنك المشاركة في هذه المسابقة! نتمنى لك حظا أوفر في
-            المسابقات اللاحقة
-          </h2>
+          <>
+            <h2 style={{ color: '#fff' }}>
+              للأسف لا يمكنك المشاركة في هذه المسابقة!
+            </h2>
+            <h3 style={{ color: '#fff' }}>
+              نتمنى لك حظا أوفر في المسابقات اللاحقة
+            </h3>
+          </>
         }
         extra={
-          <Button type="default" size="large" ghost href={`/`}>
-            الرئيسية
+          <Button type="default" size="large" ghost href="/profile/contests">
+            صفحة المسابقات
           </Button>
         }
       />

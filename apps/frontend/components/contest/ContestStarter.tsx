@@ -33,9 +33,11 @@ const ContestStarter = ({
   useEffect(() => {
     const animation = new CongratsAnimation(document.querySelector('body'));
     let t: NodeJS.Timeout;
-    if (contestSnap.contestFinished) {
+    if (contestSnap.contestFinished || contestSnap.contestAnnulled) {
       setLoading(true);
-      animation.render();
+      if (contestSnap.contestFinished) {
+        animation.render();
+      }
       t = setTimeout(() => {
         animation.destroy();
       }, 5000);
@@ -64,7 +66,7 @@ const ContestStarter = ({
       clearTimeout(t);
       animation.destroy();
     };
-  }, [contestSnap.contestFinished]);
+  }, [contestSnap.contestFinished, contestSnap.contestAnnulled]);
 
   if (!contestSnap.contest) {
     return;
@@ -90,7 +92,11 @@ const ContestStarter = ({
           contestId={contestId}
         />
       ) : contestSnap.contestAnnulled ? (
-        <ContestAnnulled />
+        <ContestAnnulled
+          loading={loading}
+          answerId={answerId}
+          contestId={contestId}
+        />
       ) : (
         <ContestWelcome />
       )}

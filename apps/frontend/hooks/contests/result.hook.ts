@@ -56,6 +56,7 @@ export const useGenerateResult = (contest: Contest) => {
       title: contest.title,
       totalResult: calculateTotalResult(results),
       questionsCount: contest.questions.length,
+      answersCount: results.filter((el) => !!el.options.length).length,
       truthyAnswersCount: results.filter((el) => el.isTrue).length,
       falsyAnswersCount: results.filter((el) => !el.isTrue).length,
       duration: contest.duration,

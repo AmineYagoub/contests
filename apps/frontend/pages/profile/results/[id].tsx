@@ -34,9 +34,9 @@ const ContestResultPage: NextPageWithLayout = ({
       <Col span={6}>
         <TotalResultDetails contestMeta={contestMeta} />
       </Col>
-      <Col span={14}>
+      <Col span={18}>
         <PerformanceGauge values={gaugeValues} />
-        <AnswersResult results={results} />
+        <AnswersResult results={results.filter((el) => !!el.options.length)} />
       </Col>
     </Row>
   );

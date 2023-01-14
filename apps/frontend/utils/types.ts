@@ -37,6 +37,7 @@ export type ContestMeta = {
   title: string;
   totalResult: number;
   questionsCount: number;
+  answersCount: number;
   truthyAnswersCount: number;
   falsyAnswersCount: number;
   duration: number;

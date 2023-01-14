@@ -1345,7 +1345,7 @@ export type FindByIdForExamQueryVariables = Exact<{
 }>;
 
 
-export type FindByIdForExamQuery = { __typename?: 'Query', findOneContestById?: { __typename?: 'Contest', id: string, type: ContestType, title: string, level?: Array<StudentLevel> | null, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null, questions?: Array<{ __typename?: 'Question', id: string, title: string, options: Array<string>, type: QuestionType }> | null } | null };
+export type FindByIdForExamQuery = { __typename?: 'Query', findOneContestById?: { __typename?: 'Contest', id: string, type: ContestType, title: string, level?: Array<StudentLevel> | null, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null, questions?: Array<{ __typename?: 'Question', id: string, title: string, options: Array<string>, type: QuestionType }> | null, answers: Array<{ __typename?: 'Answer', userId: string }> } | null };
 
 export type FindByIdForReviewQueryVariables = Exact<{
   id: Scalars['String'];
@@ -2340,6 +2340,9 @@ export const FindByIdForExamDocument = gql`
       title
       options
       type
+    }
+    answers {
+      userId
     }
     title
     level

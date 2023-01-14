@@ -3,7 +3,15 @@ import React from 'react';
 
 import { StyledSection } from './ContestWelcome';
 
-const ContestAnnulled = () => {
+const ContestAnnulled = ({
+  loading,
+  answerId,
+  contestId,
+}: {
+  loading: boolean;
+  answerId: string;
+  contestId: string;
+}) => {
   return (
     <StyledSection
       exit={{ y: -30, opacity: 0 }}
@@ -15,13 +23,19 @@ const ContestAnnulled = () => {
         status="warning"
         title={
           <h2 style={{ color: '#fff' }}>
-            للأسف تم إلغاء مشاركتك في هذه المسابقة! نتمنى لك حظا أوفر في
-            المسابقات اللاحقة
+            للأسف إنتهى الوقت المخصص لمشاركتك في هذه المسابقة! نتمنى لك حظا أوفر
+            في المسابقات اللاحقة
           </h2>
         }
         extra={
-          <Button type="default" size="large" ghost href={`/`}>
-            الرئيسية
+          <Button
+            type="default"
+            size="large"
+            ghost
+            loading={loading}
+            href={`/profile/results/${answerId}?cid=${contestId}`}
+          >
+            شاهد النتيجة
           </Button>
         }
       />
