@@ -1,7 +1,6 @@
 import { proxy } from 'valtio';
-
-import { Contest, SelectedAnswerInput } from '@/graphql/graphql';
 import { cloneDeep } from '@apollo/client/utilities';
+import { Contest, SelectedAnswerInput } from '@/graphql/graphql';
 
 interface ContestStorage {
   contest: Contest;

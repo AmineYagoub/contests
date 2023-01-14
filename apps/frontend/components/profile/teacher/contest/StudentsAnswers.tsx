@@ -1,21 +1,20 @@
-import { Table, Tag } from 'antd';
-import moment from 'moment-timezone';
-
+import {
+  ContestsDataIndex,
+  useFindContestsForStudents,
+} from '@/hooks/contests/student.hook';
 import {
   SearchDatePicker,
   SearchDatePickerIcon,
 } from '@/components/admin/tables/SearchDatePicker';
-import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
-import { Contest, ContestStatus } from '@/graphql/graphql';
+import { Table, Tag } from 'antd';
+import moment from 'moment-timezone';
 import { ContestFields } from '@/utils/fields';
-import { contestMappedStatus, getMapperLabel } from '@/utils/mapper';
-
-import type { ColumnsType, ColumnType } from 'antd/es/table';
-import {
-  useFindContestsForStudents,
-  ContestsDataIndex,
-} from '@/hooks/contests/student.hook';
 import { getContestRoute } from '@/utils/routes';
+import { Contest, ContestStatus } from '@/graphql/graphql';
+import type { ColumnsType, ColumnType } from 'antd/es/table';
+import { contestMappedStatus, getMapperLabel } from '@/utils/mapper';
+import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
+
 const StudentsAnswers = ({
   id,
   isCompleted,

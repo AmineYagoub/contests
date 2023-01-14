@@ -1,7 +1,7 @@
 import {
+  QuestionType,
   CONTEST_CREATED_EVENT,
   PaginateContestParams,
-  QuestionType,
   SelectedQuestionFields,
 } from '@contests/types';
 import Redis from 'ioredis';
