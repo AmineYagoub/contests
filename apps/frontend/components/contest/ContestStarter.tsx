@@ -19,10 +19,12 @@ import ContestNotAvailable from './ContestNotAvailable';
 const ContestStarter = ({
   contestId,
   userId,
+  teacherId,
   isAllowed,
 }: {
   contestId: string;
   userId: string;
+  teacherId: string;
   isAllowed: boolean;
 }) => {
   const contestSnap = useSnapshot(ContestState);
@@ -46,6 +48,7 @@ const ContestStarter = ({
         variables: {
           data: {
             userId,
+            teacherId,
             answers: contestSnap.answers as SelectedAnswerInput[],
             contest: {
               connect: {

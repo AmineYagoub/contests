@@ -1,13 +1,11 @@
-import { Button, Col, PageHeader, Row, Space, Statistic, Tag } from 'antd';
 import Link from 'next/link';
 import { useSnapshot } from 'valtio';
-
-import { AppRoutes } from '@/utils/routes';
-import { ContestActions, ContestState } from '@/valtio/contest.state';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
-
 import { useRouter } from 'next/router';
+import { AppRoutes } from '@/utils/routes';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { ContestActions, ContestState } from '@/valtio/contest.state';
+import { Button, Col, PageHeader, Row, Space, Statistic, Tag } from 'antd';
 
 const valueStyle = {
   fontWeight: 800,
@@ -123,7 +121,10 @@ const ContestPageHeader = () => {
               icon={<RightOutlined />}
               shape="circle"
               size="large"
-              disabled={contestSnap.contestCurrentIndex <= 0}
+              disabled={
+                contestSnap.contestCurrentIndex <= 0 ||
+                contestSnap.contestFinished
+              }
               onClick={ContestActions.decrementQuestionIndex}
             />
             <StyledStrong>تصفح الأسئلة</StyledStrong>
@@ -132,7 +133,8 @@ const ContestPageHeader = () => {
               shape="circle"
               size="large"
               disabled={
-                contestSnap.contestCurrentIndex >= contestSnap.answers.length
+                contestSnap.contestCurrentIndex >= contestSnap.answers.length ||
+                contestSnap.contestFinished
               }
               onClick={ContestActions.incrementQuestionIndex}
             />
