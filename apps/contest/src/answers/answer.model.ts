@@ -1,5 +1,7 @@
 import { SelectedAnswerObject } from '@contests/types';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Contest } from '../contests/contest.model';
+import { User } from '../users/user.entity';
 
 @ObjectType()
 export class Answer {
@@ -11,10 +13,23 @@ export class Answer {
   })
   contestId: string;
 
-  @Field({
+  @Field(() => Contest, {
+    description: 'Identifies contest entity related to this answer.',
+    nullable: true,
+  })
+  contest?: Contest;
+
+  @Field(() => User, {
     description: 'Identifies the user id hwo submit this answer.',
   })
   userId: string;
+
+  @Field({
+    description:
+      'Identifies the teacher id of the user hwo submit this answer.',
+    nullable: true,
+  })
+  teacherId?: string;
 
   @Field(() => [SelectedAnswerObject], {
     description: 'Identifies the answer details.',

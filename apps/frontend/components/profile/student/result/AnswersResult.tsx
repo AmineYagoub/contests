@@ -3,6 +3,9 @@ import { Alert, Collapse } from 'antd';
 import { ResultType } from '@/utils/types';
 import { CaretRightOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
+import { useSnapshot } from 'valtio';
+import { AuthState } from '@/valtio/auth.state';
+import { RoleTitle } from '@/graphql/graphql';
 
 const { Panel } = Collapse;
 
@@ -26,6 +29,12 @@ const StyledLesson = styled(Alert)({
 });
 
 const AnswersResult = ({ results }: { results: ResultType[] }) => {
+  const user = useSnapshot(AuthState).user;
+  const collapsible = [RoleTitle.GoldenTeacher, RoleTitle.Teacher].includes(
+    user.role.title
+  )
+    ? 'disabled'
+    : 'header';
   return (
     <Collapse
       bordered={false}
@@ -35,7 +44,11 @@ const AnswersResult = ({ results }: { results: ResultType[] }) => {
       )}
     >
       {results.map((el) => (
-        <StyledPanel header={<h3>{el.title}</h3>} key={el.questionId}>
+        <StyledPanel
+          header={<h3>{el.title}</h3>}
+          key={el.questionId}
+          collapsible={collapsible}
+        >
           {el.options.map(
             (opt, i) =>
               opt !== 'empty' && (

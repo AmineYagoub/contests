@@ -8,6 +8,7 @@ import {
   FindByIdForExamQuery,
   FindByIdForExamQueryVariables,
   PermissionTitle,
+  Student,
 } from '@/graphql/graphql';
 import { initializeApollo } from '@/config/createGraphQLClient';
 import { getContestSoonRoute } from '@/utils/routes';
@@ -25,6 +26,7 @@ const StartContestPage = ({ contest }: { contest: Contest }) => {
     <ContestStarter
       contestId={contest.id}
       userId={user.id}
+      teacherId={(user.profile as Student).teacher?.id}
       isAllowed={isAllowed}
     />
   );

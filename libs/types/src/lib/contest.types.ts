@@ -32,6 +32,7 @@ export type PaginateContestParams = {
   include?: {
     questions?: boolean;
     topics?: boolean;
+    answers?: boolean;
   };
 };
 

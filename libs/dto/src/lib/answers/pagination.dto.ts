@@ -6,10 +6,7 @@ import { CreateAnswerDto } from './create.dto';
 @InputType()
 export class WhereAnswerArgs extends PartialType(
   OmitType(CreateAnswerDto, ['userId'] as const)
-) {
-  @Field({ nullable: true })
-  id?: string;
-}
+) {}
 
 @InputType()
 export class OrderAnswerArgs {

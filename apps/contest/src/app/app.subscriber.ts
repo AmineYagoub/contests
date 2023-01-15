@@ -1,5 +1,4 @@
 import {
-  STUDENTS_IDS_EVENT,
   CONTEST_CREATED_EVENT,
   MESSAGES_SEND_FOR_EVENT,
   CONTEST_CREATED_FOR_EVENT,
@@ -23,7 +22,7 @@ export class AppSubscribeToEvents {
       CONTEST_CREATED_FOR_EVENT,
       STUDENT_ADD_TEACHER_EVENT,
       TEACHER_CONNECT_STUDENT_EVENT,
-      STUDENTS_IDS_EVENT,
+
       (err, count) => {
         if (err) {
           Logger.error('Failed to subscribe: %s', err.message);

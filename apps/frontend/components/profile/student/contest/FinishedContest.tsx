@@ -1,4 +1,4 @@
-import { Table, Tag } from 'antd';
+import { Button, Table, Tag, Tooltip } from 'antd';
 import moment from 'moment-timezone';
 
 import {
@@ -6,9 +6,9 @@ import {
   SearchDatePickerIcon,
 } from '@/components/admin/tables/SearchDatePicker';
 import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
-import { Contest, ContestStatus } from '@/graphql/graphql';
+import { Contest, User } from '@/graphql/graphql';
 import { ContestFields } from '@/utils/fields';
-import { contestMappedStatus, getMapperLabel } from '@/utils/mapper';
+import { getMapperLabel, rolesMappedTypes } from '@/utils/mapper';
 
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 import {
@@ -16,6 +16,7 @@ import {
   ContestsDataIndex,
 } from '@/hooks/contests/student.hook';
 import { getContestRoute } from '@/utils/routes';
+import { BarChartOutlined } from '@ant-design/icons';
 const FinishedContest = ({
   id,
   isCompleted,
@@ -78,7 +79,25 @@ const FinishedContest = ({
       },
     },
     {
-      title: 'تاريخ الإجتياز',
+      title: 'منشئ المسابقة',
+      dataIndex: ContestFields.authorId,
+      key: ContestFields.authorId,
+      render(user: User) {
+        return (
+          <>
+            <b>
+              {user.profile.firstName} {user.profile.lastName}
+            </b>
+            <br />
+            <Tag color="gold">
+              {getMapperLabel(rolesMappedTypes, user.role.title)}
+            </Tag>
+          </>
+        );
+      },
+    },
+    {
+      title: 'تاريخ بدء المسابقة',
       dataIndex: ContestFields.startTime,
       key: ContestFields.startTime,
       sorter: true,
@@ -108,24 +127,19 @@ const FinishedContest = ({
       render: (data: string[]) => `${data.length} طالب`,
     },
     {
-      title: 'حالة المسابقة',
-      key: ContestFields.status,
-      dataIndex: ContestFields.status,
-      filters: contestMappedStatus,
-      filterMultiple: false,
-      onFilter: methods.handleFilter,
-      filteredValue: filteredInfo.status || null,
-      render: (status) => {
-        let color = status === ContestStatus.Open ? 'green' : 'volcano';
-        if (status === ContestStatus.NotStarted) {
-          color = 'blue';
-        }
-        return (
-          <Tag color={color}>
-            {getMapperLabel<ContestStatus>(contestMappedStatus, status)}
-          </Tag>
-        );
-      },
+      title: 'الإجراءات',
+      key: 'action',
+      filteredValue: null,
+      render: (record: Contest) => (
+        <Tooltip title="مشاهدة نتيجة المسابقة" color="purple">
+          <Button
+            icon={<BarChartOutlined />}
+            shape="circle"
+            type="primary"
+            href={`/profile/results/${record.answers[0]?.id}?cid=${record.id}`}
+          />
+        </Tooltip>
+      ),
     },
   ];
 

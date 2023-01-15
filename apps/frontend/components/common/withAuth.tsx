@@ -65,11 +65,11 @@ export function withAuth<P>(
           permissions &&
           !user.role.permissions.some((el) => permissions.includes(el.title))
         ) {
+          router.push('/');
           notification.warning({
             message: 'لا يمكنك الوصول لهذه الصفحة!',
             description: 'لا تمتلك الصلاحيات الكافية للوصول لهذه الصفحة.',
           });
-          router.push('/');
           return;
         }
         setLoading(false);

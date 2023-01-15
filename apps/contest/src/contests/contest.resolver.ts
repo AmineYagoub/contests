@@ -1,9 +1,4 @@
 import {
-  ContestPaginationDto,
-  CreateContestDto,
-  UpdateContestDto,
-} from '@contests/dto';
-import {
   Args,
   Mutation,
   Parent,
@@ -12,6 +7,11 @@ import {
   Resolver,
   ResolveReference,
 } from '@nestjs/graphql';
+import {
+  UpdateContestDto,
+  CreateContestDto,
+  ContestPaginationDto,
+} from '@contests/dto';
 
 import { Contest } from './contest.model';
 import { User } from '../users/user.entity';
@@ -77,7 +77,7 @@ export class ContestResolver {
    * @returns
    */
   @ResolveField(() => User)
-  user(@Parent() contest: Contest): unknown {
+  authorId(@Parent() contest: Contest) {
     return { __typename: 'User', id: contest.authorId };
   }
 }

@@ -1,6 +1,8 @@
 query FindOneAnswerById($id: String!) {
   findOneAnswerById(id: $id) {
-    userId
+    userId {
+      id
+    }
     answers {
       questionId
       questionIndex

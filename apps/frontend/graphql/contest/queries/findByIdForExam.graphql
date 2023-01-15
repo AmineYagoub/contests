@@ -11,7 +11,11 @@ query FindByIdForExam($id: String!) {
       options
       type
     }
-    answers { userId }
+    answers {
+      userId {
+        id
+      }
+    }
     title
     level
     duration

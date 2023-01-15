@@ -23,6 +23,7 @@ export type ContestsDataIndex = keyof Contest;
 type ContestWhereInit = {
   participants: string[];
   answerBy?: string;
+  noAnswerBy?: string;
 };
 
 export const useFindContestsForStudents = (
@@ -34,6 +35,8 @@ export const useFindContestsForStudents = (
   };
   if (isCompleted) {
     user.answerBy = id;
+  } else {
+    user.noAnswerBy = id;
   }
   const [pagination, setPagination] = useState<Pagination>({
     offset: 0,

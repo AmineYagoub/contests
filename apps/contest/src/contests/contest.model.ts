@@ -37,6 +37,7 @@ export class Contest extends BaseModel {
 
   @Field(() => [Answer], {
     description: 'Identifies a list of answers that belongs to this contest.',
+    nullable: true,
   })
   answers: Answer[];
 

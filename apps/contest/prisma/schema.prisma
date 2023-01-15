@@ -93,9 +93,9 @@ model Contest {
 model Question {
   id                String    @id @default(uuid())
   type              String    @db.VarChar(100)
-  title             String    @db.VarChar(255)
-  correctAnswer     String    @db.VarChar(255)
-  lesson            String?   @db.VarChar(255) @default("")
+  title             String    @db.VarChar(500)
+  correctAnswer     String    @db.VarChar(500)
+  lesson            String?   @db.VarChar(700) @default("")
   // level             Json      @db.Json
   usedCount         Int?      @db.UnsignedInt @default(0)
   options           Json      @db.Json
@@ -115,6 +115,7 @@ model Answer {
   id                String    @id @default(uuid())
   contestId         String
   userId            String
+  teacherId         String?   @default("")
   contest           Contest   @relation(fields: [contestId], references: [id], onDelete: Cascade)
   answers           Json      @db.Json
   annulled          Boolean?  @default(false)

@@ -7,6 +7,26 @@ query PaginateContests($params: ContestPaginationDto!) {
       topics {
         title
       }
+      answers {
+        id
+      }
+      authorId {
+        id
+        role {
+          title
+        }
+        profile {
+          __typename
+          ... on Teacher {
+            id
+            firstName
+            lastName
+          }
+          ... on Student {
+            id
+          }
+        }
+      }
       title
       level
       duration

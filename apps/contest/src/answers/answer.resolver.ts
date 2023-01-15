@@ -6,11 +6,14 @@ import {
 import {
   Args,
   Mutation,
+  Parent,
   Query,
+  ResolveField,
   Resolver,
   ResolveReference,
 } from '@nestjs/graphql';
 import { AnswerPaginationResponse } from '../common/pagination.response';
+import { User } from '../users/user.entity';
 
 import { Answer } from './answer.model';
 import { AnswerService } from './answer.service';
@@ -42,9 +45,9 @@ export class AnswerResolver {
     return this.answerService.update({ data, where: { id } });
   }
 
-  @Query(() => AnswerPaginationResponse, { nullable: true })
+  @Query(() => AnswerPaginationResponse)
   async paginateAnswers(@Args('params') params: AnswerPaginationDto) {
-    return this.answerService.paginate([], params);
+    return this.answerService.paginate(params);
   }
 
   /**
@@ -56,5 +59,10 @@ export class AnswerResolver {
   @ResolveReference()
   async resolveReference(reference: { __typename: string; id: string }) {
     return this.answerService.findUnique({ id: reference.id });
+  }
+
+  @ResolveField(() => User)
+  userId(@Parent() answer: Answer) {
+    return { __typename: 'User', id: answer.userId };
   }
 }

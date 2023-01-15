@@ -37,15 +37,19 @@ export type Answer = {
   annulledReason: Scalars['String'];
   /** Identifies the answer details. */
   answers: Array<SelectedAnswerObject>;
+  /** Identifies contest entity related to this answer. */
+  contest?: Maybe<Contest>;
   /** Identifies contest id related to this answer. */
   contestId: Scalars['String'];
   /** Identifies the date and time when the object was created. */
   created: Scalars['DateTime'];
   id: Scalars['ID'];
+  /** Identifies the teacher id of the user hwo submit this answer. */
+  teacherId?: Maybe<Scalars['String']>;
   /** Identifies the date and time when the object was last updated. */
   updated: Scalars['DateTime'];
   /** Identifies the user id hwo submit this answer. */
-  userId: Scalars['String'];
+  userId: User;
 };
 
 export type AnswerInput = {
@@ -113,7 +117,7 @@ export type BatchPayloadResult = {
 export type Contest = {
   __typename?: 'Contest';
   /** Identifies a list of answers that belongs to this contest. */
-  answers: Array<Answer>;
+  answers?: Maybe<Array<Answer>>;
   /** Identifies the author of the entity. */
   authorId: User;
   /** Identifies a list of countries that can be allowed to join this Contest. */
@@ -151,7 +155,6 @@ export type Contest = {
   type: ContestType;
   /** Identifies the date and time when the object was last updated. */
   updated: Scalars['DateTime'];
-  user: User;
 };
 
 export type ContestConnectInput = {
@@ -191,6 +194,7 @@ export type CreateAnswerDto = {
   annulledReason?: InputMaybe<Scalars['String']>;
   answers: Array<SelectedAnswerInput>;
   contest: ContestConnectInput;
+  teacherId?: InputMaybe<Scalars['String']>;
   userId: Scalars['String'];
 };
 
@@ -623,7 +627,7 @@ export type Query = {
   findTopics?: Maybe<Array<Topic>>;
   findUser: User;
   getAuthUser: User;
-  paginateAnswers?: Maybe<AnswerPaginationResponse>;
+  paginateAnswers: AnswerPaginationResponse;
   paginateContest?: Maybe<ContestPaginationResponse>;
   paginateMessages?: Maybe<MessagePaginationResponse>;
   paginateNotifications?: Maybe<MessagePaginationResponse>;
@@ -994,6 +998,7 @@ export type UpdateAnswerDto = {
   annulledReason?: InputMaybe<Scalars['String']>;
   answers?: InputMaybe<Array<SelectedAnswerInput>>;
   contest?: InputMaybe<ContestConnectInput>;
+  teacherId?: InputMaybe<Scalars['String']>;
   userId?: InputMaybe<Scalars['String']>;
 };
 
@@ -1170,7 +1175,7 @@ export type WhereAnswerArgs = {
   annulledReason?: InputMaybe<Scalars['String']>;
   answers?: InputMaybe<Array<SelectedAnswerInput>>;
   contest?: InputMaybe<ContestConnectInput>;
-  id?: InputMaybe<Scalars['String']>;
+  teacherId?: InputMaybe<Scalars['String']>;
 };
 
 export type WhereContestArgs = {
@@ -1179,6 +1184,7 @@ export type WhereContestArgs = {
   countries?: InputMaybe<Array<Scalars['String']>>;
   created?: InputMaybe<Array<Scalars['String']>>;
   level?: InputMaybe<Array<StudentLevel>>;
+  noAnswerBy?: InputMaybe<Scalars['String']>;
   participants?: InputMaybe<Array<Scalars['String']>>;
   startTime?: InputMaybe<Array<Scalars['String']>>;
   status?: InputMaybe<ContestStatus>;
@@ -1235,14 +1241,14 @@ export type FindOneAnswerByIdQueryVariables = Exact<{
 }>;
 
 
-export type FindOneAnswerByIdQuery = { __typename?: 'Query', findOneAnswerById?: { __typename?: 'Answer', userId: string, annulled: boolean, annulledReason: string, created: any, updated: any, answers: Array<{ __typename?: 'SelectedAnswerObject', questionId: string, questionIndex: number, optionIndex: number }> } | null };
+export type FindOneAnswerByIdQuery = { __typename?: 'Query', findOneAnswerById?: { __typename?: 'Answer', annulled: boolean, annulledReason: string, created: any, updated: any, userId: { __typename?: 'User', id: string }, answers: Array<{ __typename?: 'SelectedAnswerObject', questionId: string, questionIndex: number, optionIndex: number }> } | null };
 
 export type PaginateAnswersQueryVariables = Exact<{
   params: AnswerPaginationDto;
 }>;
 
 
-export type PaginateAnswersQuery = { __typename?: 'Query', paginateAnswers?: { __typename?: 'AnswerPaginationResponse', total: number, data?: Array<{ __typename?: 'Answer', id: string, created: any, annulled: boolean }> | null } | null };
+export type PaginateAnswersQuery = { __typename?: 'Query', paginateAnswers: { __typename?: 'AnswerPaginationResponse', total: number, data?: Array<{ __typename?: 'Answer', id: string, created: any, userId: { __typename?: 'User', role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null } | { __typename: 'Teacher', id: string } | null }, contest?: { __typename?: 'Contest', id: string, title: string } | null }> | null } };
 
 export type UpdateAppConfigMutationVariables = Exact<{
   input: UpdateAppConfigDto;
@@ -1345,7 +1351,7 @@ export type FindByIdForExamQueryVariables = Exact<{
 }>;
 
 
-export type FindByIdForExamQuery = { __typename?: 'Query', findOneContestById?: { __typename?: 'Contest', id: string, type: ContestType, title: string, level?: Array<StudentLevel> | null, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null, questions?: Array<{ __typename?: 'Question', id: string, title: string, options: Array<string>, type: QuestionType }> | null, answers: Array<{ __typename?: 'Answer', userId: string }> } | null };
+export type FindByIdForExamQuery = { __typename?: 'Query', findOneContestById?: { __typename?: 'Contest', id: string, type: ContestType, title: string, level?: Array<StudentLevel> | null, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null, questions?: Array<{ __typename?: 'Question', id: string, title: string, options: Array<string>, type: QuestionType }> | null, answers?: Array<{ __typename?: 'Answer', userId: { __typename?: 'User', id: string } }> | null } | null };
 
 export type FindByIdForReviewQueryVariables = Exact<{
   id: Scalars['String'];
@@ -1353,14 +1359,14 @@ export type FindByIdForReviewQueryVariables = Exact<{
 }>;
 
 
-export type FindByIdForReviewQuery = { __typename?: 'Query', findOneContestById?: { __typename?: 'Contest', id: string, type: ContestType, title: string, level?: Array<StudentLevel> | null, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null, questions?: Array<{ __typename?: 'Question', id: string, title: string, options: Array<string>, type: QuestionType, correctAnswer?: string | null, usedCount?: number | null, lesson: string, topics?: Array<{ __typename?: 'Topic', title: string }> | null }> | null, answers: Array<{ __typename?: 'Answer', id: string, contestId: string, userId: string, annulled: boolean, annulledReason: string, created: any, updated: any, answers: Array<{ __typename?: 'SelectedAnswerObject', questionId: string, option: string, options: Array<string> }> }> } | null };
+export type FindByIdForReviewQuery = { __typename?: 'Query', findOneContestById?: { __typename?: 'Contest', id: string, type: ContestType, title: string, level?: Array<StudentLevel> | null, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null, questions?: Array<{ __typename?: 'Question', id: string, title: string, options: Array<string>, type: QuestionType, correctAnswer?: string | null, usedCount?: number | null, lesson: string, topics?: Array<{ __typename?: 'Topic', title: string }> | null }> | null, answers?: Array<{ __typename?: 'Answer', id: string, contestId: string, annulled: boolean, annulledReason: string, created: any, updated: any, userId: { __typename?: 'User', id: string }, answers: Array<{ __typename?: 'SelectedAnswerObject', questionId: string, option: string, options: Array<string> }> }> | null } | null };
 
 export type PaginateContestsQueryVariables = Exact<{
   params: ContestPaginationDto;
 }>;
 
 
-export type PaginateContestsQuery = { __typename?: 'Query', paginateContest?: { __typename?: 'ContestPaginationResponse', total: number, data?: Array<{ __typename?: 'Contest', id: string, type: ContestType, title: string, level?: Array<StudentLevel> | null, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null }> | null } | null };
+export type PaginateContestsQuery = { __typename?: 'Query', paginateContest?: { __typename?: 'ContestPaginationResponse', total: number, data?: Array<{ __typename?: 'Contest', id: string, type: ContestType, title: string, level?: Array<StudentLevel> | null, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null, answers?: Array<{ __typename?: 'Answer', id: string }> | null, authorId: { __typename?: 'User', id: string, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } }> | null } | null };
 
 export type CreateMessageMutationVariables = Exact<{
   input: CreateMessageDto;
@@ -1684,7 +1690,9 @@ export type UpdateAnswerMutationOptions = Apollo.BaseMutationOptions<UpdateAnswe
 export const FindOneAnswerByIdDocument = gql`
     query FindOneAnswerById($id: String!) {
   findOneAnswerById(id: $id) {
-    userId
+    userId {
+      id
+    }
     answers {
       questionId
       questionIndex
@@ -1732,7 +1740,26 @@ export const PaginateAnswersDocument = gql`
     data {
       id
       created
-      annulled
+      userId {
+        role {
+          title
+        }
+        profile {
+          __typename
+          ... on Teacher {
+            id
+          }
+          ... on Student {
+            id
+            firstName
+            lastName
+          }
+        }
+      }
+      contest {
+        id
+        title
+      }
     }
   }
 }
@@ -2342,7 +2369,9 @@ export const FindByIdForExamDocument = gql`
       type
     }
     answers {
-      userId
+      userId {
+        id
+      }
     }
     title
     level
@@ -2412,7 +2441,9 @@ export const FindByIdForReviewDocument = gql`
     answers {
       id
       contestId
-      userId
+      userId {
+        id
+      }
       answers {
         questionId
         option
@@ -2478,6 +2509,26 @@ export const PaginateContestsDocument = gql`
       type
       topics {
         title
+      }
+      answers {
+        id
+      }
+      authorId {
+        id
+        role {
+          title
+        }
+        profile {
+          __typename
+          ... on Teacher {
+            id
+            firstName
+            lastName
+          }
+          ... on Student {
+            id
+          }
+        }
       }
       title
       level

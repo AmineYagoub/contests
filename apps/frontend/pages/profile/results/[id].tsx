@@ -9,7 +9,6 @@ import {
   FindByIdForReviewDocument,
   FindByIdForReviewQuery,
   FindByIdForReviewQueryVariables,
-  PermissionTitle,
 } from '@/graphql/graphql';
 import { useGenerateResult } from '@/hooks/contests/result.hook';
 import ProfileLayout from '@/layout/ProfileLayout';
@@ -44,9 +43,7 @@ const ContestResultPage: NextPageWithLayout = ({
 ContestResultPage.getLayout = (page: EmotionJSX.Element) => (
   <ProfileLayout>{page}</ProfileLayout>
 );
-export default withAuth(ContestResultPage, [
-  PermissionTitle.AccessStudentDashboard,
-]);
+export default withAuth(ContestResultPage);
 
 export const getServerSideProps: GetServerSideProps = async ({
   query,

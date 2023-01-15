@@ -11,7 +11,7 @@ import { NextPageWithLayout } from '@/utils/types';
 import { AuthState } from '@/valtio/auth.state';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { withAuth } from '@/components/common/withAuth';
-import { Col, Progress, Row, Statistic, Tooltip } from 'antd';
+import { Col, Row, Statistic } from 'antd';
 import { StyledCard } from '../admin/dashboard';
 import Image from 'next/image';
 import { SketchCircleFilled } from '@ant-design/icons';

@@ -20,7 +20,9 @@ query FindByIdForReview($id: String!, $answerId: String) {
     answers {
       id
       contestId
-      userId
+      userId {
+        id
+      }
       answers {
         questionId
         option

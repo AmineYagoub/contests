@@ -8,7 +8,8 @@ import Redis from 'ioredis';
 import { PrismaService } from '../app/prisma.service';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Contest, Prisma, Question } from '@prisma/contest-service';
+import { Prisma, Question } from '@prisma/contest-service';
+import { Contest } from './contest.model';
 
 @Injectable()
 export class ContestService {
@@ -43,7 +44,7 @@ export class ContestService {
    * @param data Prisma.ContestCreateInput The Contest data.
    * @returns Promise<Contest>
    */
-  async create(data: Prisma.ContestCreateInput): Promise<Contest> {
+  async create(data: Prisma.ContestCreateInput) {
     const {
       topics,
       easyQuestionCount,
@@ -166,7 +167,7 @@ export class ContestService {
   async update(params: {
     where: Prisma.ContestWhereUniqueInput;
     data: Prisma.ContestUpdateInput;
-  }): Promise<Contest> {
+  }) {
     const { data, where } = params;
     return this.prisma.contest.update({
       data,
@@ -180,7 +181,7 @@ export class ContestService {
    * @param where Prisma.ContestWhereInput The Contest where input.
    * @returns  Promise<Contest>
    */
-  async delete(where: Prisma.ContestWhereUniqueInput): Promise<Contest> {
+  async delete(where: Prisma.ContestWhereUniqueInput) {
     return this.prisma.contest.delete({
       where,
     });
@@ -192,10 +193,7 @@ export class ContestService {
    * @param input Prisma.ContestWhereUniqueInput The unique key of the Contest.
    * @returns Promise<Contest | null>
    */
-  async findUnique(
-    input: Prisma.ContestWhereUniqueInput,
-    answerId?: string
-  ): Promise<Contest | null> {
+  async findUnique(input: Prisma.ContestWhereUniqueInput, answerId?: string) {
     const contest = await this.prisma.contest.findUnique({
       where: input,
       include: {
@@ -271,6 +269,7 @@ export class ContestService {
     where?: Prisma.ContestWhereInput;
     orderBy?: Prisma.ContestOrderByWithRelationInput;
     includeQuestions?: boolean;
+    includeAnswers?: boolean;
   }) {
     const { skip, take, cursor, where: w, orderBy, includeQuestions } = params;
     const where = this.buildWhere(w);
@@ -288,13 +287,28 @@ export class ContestService {
     if (includeQuestions) {
       findArgs.include.questions = true;
     }
+    const answerBy = (w as any).answerBy;
+    if (answerBy) {
+      findArgs.include.answers = true;
+    }
     const data = await this.prisma.$transaction([
       this.prisma.contest.count({ where }),
       this.prisma.contest.findMany(findArgs),
     ]);
+    let result = [];
+    if (answerBy) {
+      data[1].forEach((el) => {
+        result.push({
+          ...el,
+          answers: (el as Contest).answers.filter((c) => c.userId === answerBy),
+        });
+      });
+    } else {
+      result = data[1];
+    }
     return {
       total: data[0],
-      data: data[1],
+      data: result,
     };
   }
 
@@ -347,7 +361,14 @@ export class ContestService {
           case 'answerBy':
             filter.answers = {
               some: {
-                userId: value[0],
+                userId: String(value),
+              },
+            };
+            break;
+          case 'noAnswerBy':
+            filter.answers = {
+              none: {
+                userId: String(value),
               },
             };
             break;

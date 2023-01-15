@@ -1,11 +1,9 @@
 import { Redis } from 'ioredis';
 import { Injectable } from '@nestjs/common';
-import { OnEvent } from '@nestjs/event-emitter';
 import { AnswerPaginationDto } from '@contests/dto';
 import { PrismaService } from '../app/prisma.service';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Answer, Prisma } from '@prisma/contest-service';
-import { STUDENTS_IDS_EVENT, STUDENTS_RESULTS_EVENT } from '@contests/types';
 
 @Injectable()
 export class AnswerService {
@@ -91,26 +89,16 @@ export class AnswerService {
    * @param params Prisma.AnswerPaginationInput The pagination input.
    * @returns Promise<Prisma.Answer[]>
    */
-  @OnEvent(STUDENTS_IDS_EVENT)
-  async paginate(students: string[], params?: AnswerPaginationDto) {
-    if (params?.where.id) {
-      this.publisher.publish(
-        STUDENTS_RESULTS_EVENT,
-        JSON.stringify({ id: params?.where.id })
-      );
-    }
-    const where = {
-      userId: {
-        in: students,
-      },
-    };
+  async paginate(params?: AnswerPaginationDto) {
+    const { where, skip, take } = params;
     const data = await this.prisma.$transaction([
       this.prisma.answer.count({ where }),
       this.prisma.answer.findMany({
-        skip: params?.skip || 0,
-        take: params?.take || 15,
+        skip,
+        take,
         where,
         orderBy: { created: 'desc' },
+        include: { contest: true },
       }),
     ]);
     return {

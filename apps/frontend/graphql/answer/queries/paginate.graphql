@@ -4,7 +4,26 @@ query PaginateAnswers($params: AnswerPaginationDto!) {
     data {
       id
       created
-      annulled
+      userId {
+        role {
+          title
+        }
+        profile {
+          __typename
+          ... on Teacher {
+            id
+          }
+          ... on Student {
+            id
+            firstName
+            lastName
+          }
+        }
+      }
+      contest {
+        id
+        title
+      }
     }
   }
 }
