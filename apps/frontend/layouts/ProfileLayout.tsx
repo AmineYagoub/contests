@@ -1,7 +1,7 @@
 import { Alert, Layout, Typography } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FC, ReactElement, useState } from 'react';
+import { FC, ReactElement } from 'react';
 
 import theme from '@/config/theme';
 import { AppRoutes } from '@/utils/routes';
@@ -23,6 +23,7 @@ import { useSnapshot } from 'valtio';
 import { AuthState } from '@/valtio/auth.state';
 import { RoleTitle, User } from '@/graphql/graphql';
 import HeaderIcons from '@/components/common/HeaderIcons';
+import { AppState } from '@/valtio/app.state';
 
 const { Header, Sider } = Layout;
 const { Text } = Typography;
@@ -35,10 +36,13 @@ export const StyledHeader = styled(Header)({
 });
 
 const ProfileLayout: FC<{ children: ReactElement }> = ({ children }) => {
-  const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
   const user = useSnapshot(AuthState).user as User;
+  const collapsed = useSnapshot(AppState).sidebarCollapsed;
   const isTeacher = [RoleTitle.GoldenTeacher, RoleTitle.Teacher].includes(
+    user.role.title
+  );
+  const isStudent = [RoleTitle.Student, RoleTitle.StudentTeacher].includes(
     user.role.title
   );
 
@@ -106,12 +110,14 @@ const ProfileLayout: FC<{ children: ReactElement }> = ({ children }) => {
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <Logo />
-        <StyledMenu
-          mode="inline"
-          defaultSelectedKeys={[router.pathname]}
-          selectedKeys={[router.pathname]}
-          items={menuList}
-        />
+        {(isStudent || isTeacher) && (
+          <StyledMenu
+            mode="inline"
+            defaultSelectedKeys={[router.pathname]}
+            selectedKeys={[router.pathname]}
+            items={menuList}
+          />
+        )}
       </Sider>
       <Layout>
         <HeaderIcons />

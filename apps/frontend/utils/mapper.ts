@@ -118,7 +118,7 @@ export const membershipStatusMappedTypes: Mapper<MembershipStatus>[] = [
 
 export const rolesMappedTypes: Mapper<RoleTitle>[] = [
   {
-    text: 'المدير',
+    text: 'المدير العام',
     value: RoleTitle.Admin,
   },
   {

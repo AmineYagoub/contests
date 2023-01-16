@@ -2,7 +2,7 @@
 
 This project was generated using [Nx](https://nx.dev).
 
-## Project Roadmap
+## Project Road map
 
 - موديول الأسئلة و المسابقات
 - صفحة إجراء المسابقة
@@ -15,13 +15,13 @@ This project was generated using [Nx](https://nx.dev).
 - النسخة العامة من الموقع و باقي الاقسام
 - اعدادات الموقع
 
-### Todos
+### Todo's
 
-- use web socket
-- complete teacher profile (display student answers in contest tab)
-- send notification to admin and teacher when use submit result
-- exit user from contest when time finish
-- exit user from contest when annulled
-- redirect user to result when visit finished contest
-- hide response when teacher view his student result
+- exit user from contest when annulled (leave the page)
 - verify contest questions.
+
+### Todo in progress ...
+
+- show student answers in admin dashboard
+- send notification to admin and teacher when user submit answer
+- use web socket

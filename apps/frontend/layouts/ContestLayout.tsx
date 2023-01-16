@@ -1,7 +1,6 @@
 import { Layout } from 'antd';
-import ContestPageHeader from '@/components/contest/ContestPageHeader';
 import styled from '@emotion/styled';
-import { ReactElement } from 'react';
+import ContestPageHeader from '@/components/contest/ContestPageHeader';
 
 const { Content } = Layout;
 
@@ -27,40 +26,6 @@ const StyledLayout = styled(Layout)({
 });
 
 const ContestLayout = ({ children }) => {
-  /*   const router = useRouter();
-  const [FindByIdForExamQuery, { loading }] = useFindByIdForExamLazyQuery();
-
-  useEffect(() => {
-    document.addEventListener('visibilitychange', function () {
-      ContestActions.setContestAnnulled();
-    });
-    if (router.query.key) {
-      FindByIdForExamQuery({
-        variables: { id: String(router.query.key) },
-      })
-        .then(({ data }) => {
-          if (!data.findOneContestById) {
-            router.push('/');
-            return;
-          }
-          ContestActions.setContest(data.findOneContestById as Contest);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-
-    const handleRouteChange = (url: string) => {
-      if (url !== router.asPath) {
-        ContestActions.setContestAnnulled();
-      }
-    };
-    router.events.on('routeChangeStart', handleRouteChange);
-    return () => {
-      router.events.off('routeChangeStart', handleRouteChange);
-    };
-  }, [router.query.key, router, FindByIdForExamQuery]); */
-
   return (
     <StyledLayout>
       {/* {loading ? <ContestLoadingHeader /> : <ContestPageHeader />} */}

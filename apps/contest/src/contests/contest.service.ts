@@ -287,7 +287,7 @@ export class ContestService {
     if (includeQuestions) {
       findArgs.include.questions = true;
     }
-    const answerBy = (w as any).answerBy;
+    const answerBy = (w as any)?.answerBy;
     if (answerBy) {
       findArgs.include.answers = true;
     }

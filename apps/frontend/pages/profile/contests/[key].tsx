@@ -20,7 +20,7 @@ const StartContestPage = ({ contest }: { contest: Contest }) => {
   const user = useSnapshot(AuthState).user;
   ContestActions.setContest(contest);
   const isAllowed =
-    !contest.answers.some((el) => el.userId === user.id) &&
+    !contest.answers.some((el) => el.userId.id === user.id) &&
     contest.participants.includes(user.id);
   return (
     <ContestStarter

@@ -1,7 +1,7 @@
 import { Layout, Menu } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import TeacherIcon from '@/components/icons/TeacherIcon';
 import { socketVar } from '@/utils/app';
@@ -22,8 +22,7 @@ import styled from '@emotion/styled';
 import StyledFooter from './StyledFooter';
 import HeaderIcons from '@/components/common/HeaderIcons';
 import { useSnapshot } from 'valtio';
-import { AuthState } from '@/valtio/auth.state';
-
+import { AppState } from '@/valtio/app.state';
 const { Content, Sider } = Layout;
 
 export const StyledContent = styled(Content)({
@@ -45,9 +44,9 @@ export const StyledMenu = styled(Menu)({
 });
 
 const AdminLayout = ({ children }) => {
-  const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
   const socket = useReactiveVar(socketVar);
+  const collapsed = useSnapshot(AppState).sidebarCollapsed;
 
   useEffect(() => {
     socket.connect();

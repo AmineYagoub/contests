@@ -31,6 +31,7 @@ const ContestStarter = ({
   const [CreateAnswerMutation] = useCreateAnswerMutation();
   const [loading, setLoading] = useState(false);
   const [answerId, setAnswerId] = useState(null);
+  console.log(contestSnap.contest.questions);
 
   useEffect(() => {
     const animation = new CongratsAnimation(document.querySelector('body'));
