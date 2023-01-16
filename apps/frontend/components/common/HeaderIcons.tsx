@@ -11,7 +11,7 @@ import {
 } from 'antd';
 import Image from 'next/image';
 
-import { createElement, useState } from 'react';
+import { createElement } from 'react';
 
 import theme from '@/config/theme';
 
@@ -30,6 +30,8 @@ import { Logo } from '@/layout/AdminLayout';
 import StyledButton from './StyledButton';
 import { AppRoutes, redirect } from '@/utils/routes';
 import { useRouter } from 'next/router';
+import { AppActions, AppState } from '@/valtio/app.state';
+import { useSnapshot } from 'valtio';
 
 const { Header } = Layout;
 
@@ -38,6 +40,14 @@ const StyledHeader = styled(Header)({
   padding: '0 !important',
   boxShadow:
     'rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px',
+});
+
+const MenuUnfoldOutlinedIcon = styled(MenuUnfoldOutlined)({
+  color: '#fff !important',
+});
+
+const MenuFoldOutlinedIcon = styled(MenuFoldOutlined)({
+  color: '#fff !important',
 });
 
 const messages = (
@@ -81,7 +91,7 @@ const messages = (
 
 const HeaderIcons = ({ inHome = false }: { inHome?: boolean }) => {
   const router = useRouter();
-  const [collapsed, setCollapsed] = useState(false);
+  const collapsed = useSnapshot(AppState).sidebarCollapsed;
   const {
     data,
     loading,
@@ -97,10 +107,13 @@ const HeaderIcons = ({ inHome = false }: { inHome?: boolean }) => {
           {inHome ? (
             <Logo />
           ) : (
-            createElement(!collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-              className: 'trigger',
-              onClick: () => setCollapsed(!collapsed),
-            })
+            createElement(
+              !collapsed ? MenuUnfoldOutlinedIcon : MenuFoldOutlinedIcon,
+              {
+                className: 'trigger',
+                onClick: () => AppActions.toggleSidebarCollapsed(),
+              }
+            )
           )}
         </Col>
 
