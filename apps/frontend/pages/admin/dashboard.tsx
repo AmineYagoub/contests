@@ -1,6 +1,6 @@
-import { Button, Card, Col, Progress, Row, Statistic } from 'antd';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
+import { Button, Card, Col, Progress, Row, Statistic } from 'antd';
 
 import LatestTeachers from '@/components/admin/dashboard/LatestTeachers';
 import LatestStudents from '@/components/admin/dashboard/LatestStudents';
@@ -10,9 +10,10 @@ import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
 import { withAuth } from '@/components/common/withAuth';
-import { PermissionTitle, useDashboardQuery } from '@/graphql/graphql';
+import { PermissionTitle } from '@/graphql/graphql';
 import Head from 'next/head';
 import { getTitleMeta } from '@/utils/app';
+import { useAdminDashboard } from '@/hooks/admin/dashboard.hook';
 
 export const StyledCard = styled(Card)({
   display: 'flex',
@@ -28,6 +29,7 @@ export const TableBtn = styled(Button)({
   float: 'right',
   marginBottom: 15,
   marginRight: 5,
+  zIndex: 10,
 });
 
 const ContestsChart = dynamic(
@@ -36,17 +38,17 @@ const ContestsChart = dynamic(
 );
 
 const AdminDashboard: NextPageWithLayout = () => {
-  const { data, loading } = useDashboardQuery();
-  const getStudentsPercent = () => {
-    if (data) {
-      const { studentTeacher, students } = data.dashboard;
-      const total = studentTeacher + students;
-      return {
-        students: Math.round((students / total) * 100),
-        studentTeacher: Math.round((studentTeacher / total) * 100),
-      };
-    }
-  };
+  const {
+    contestsCount,
+    teachersCount,
+    studentTeacherPercent,
+    studentsLevels,
+    studentsPercent,
+    studentTeacherCount,
+    studentsCount,
+    loading,
+  } = useAdminDashboard();
+
   return (
     <>
       <Head>
@@ -57,6 +59,8 @@ const AdminDashboard: NextPageWithLayout = () => {
           <StyledCard bordered={false}>
             <Statistic
               title="عدد المسابقات"
+              value={contestsCount}
+              loading={loading}
               precision={0}
               suffix="مسابقة"
               prefix={
@@ -75,7 +79,7 @@ const AdminDashboard: NextPageWithLayout = () => {
             <Statistic
               title="عدد المعلمين"
               precision={0}
-              value={data?.dashboard.teachers}
+              value={teachersCount}
               loading={loading}
               suffix="معلم"
               prefix={
@@ -94,7 +98,7 @@ const AdminDashboard: NextPageWithLayout = () => {
             <Statistic
               title="الطلاب المرتبطين بمشرفين"
               precision={0}
-              value={data?.dashboard.studentTeacher}
+              value={studentTeacherCount}
               loading={loading}
               suffix="طالب"
               prefix={
@@ -102,7 +106,7 @@ const AdminDashboard: NextPageWithLayout = () => {
                   width={80}
                   strokeLinecap="butt"
                   type="dashboard"
-                  percent={getStudentsPercent()?.studentTeacher}
+                  percent={studentTeacherPercent}
                 />
               }
             />
@@ -114,14 +118,14 @@ const AdminDashboard: NextPageWithLayout = () => {
               title="الطلاب الغير مرتبطين بمشرفين"
               precision={0}
               suffix="طالب"
-              value={data?.dashboard.students}
+              value={studentsCount}
               loading={loading}
               prefix={
                 <Progress
                   width={80}
                   strokeLinecap="butt"
                   type="dashboard"
-                  percent={getStudentsPercent()?.students}
+                  percent={studentsPercent}
                 />
               }
             />
@@ -133,7 +137,7 @@ const AdminDashboard: NextPageWithLayout = () => {
           <ContestsChart />
         </Col>
         <Col span={9}>
-          <StudentAgeChart data={data?.dashboard.levels} loading={loading} />
+          <StudentAgeChart data={studentsLevels} loading={loading} />
         </Col>
       </Row>
       <Row align="top" gutter={12}>
