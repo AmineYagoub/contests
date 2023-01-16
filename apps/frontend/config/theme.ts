@@ -8,7 +8,7 @@ type AppTheme = Theme & {
 const theme: AppTheme = {
   primaryColor: '#6d90e8',
   infoColor: '#ececec',
-  positiveColor: '#00c9a7',
-  negativeColor: '#ff8066',
+  positiveColor: '#00c89f',
+  negativeColor: '#ff6464',
 };
 export default theme;
