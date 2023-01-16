@@ -14,6 +14,7 @@ import { ContestMeta } from '@/utils/types';
 import styled from '@emotion/styled';
 
 import type { EChartsOption } from 'echarts';
+import theme from '@/config/theme';
 echarts.use([
   ToolboxComponent,
   TooltipComponent,
@@ -64,7 +65,7 @@ const TotalResultDetails = ({ contestMeta }: { contestMeta: ContestMeta }) => {
       value: contestMeta.totalResult,
       name: 'صحيح',
       itemStyle: {
-        color: '#00c9a7',
+        color: theme.positiveColor,
       },
     },
     {
@@ -74,7 +75,7 @@ const TotalResultDetails = ({ contestMeta }: { contestMeta: ContestMeta }) => {
         show: false,
       },
       itemStyle: {
-        color: '#ff8066',
+        color: theme.negativeColor,
       },
       progress: {
         show: true,

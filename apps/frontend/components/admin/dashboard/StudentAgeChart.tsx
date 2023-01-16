@@ -11,7 +11,7 @@ import { PieChart } from 'echarts/charts';
 import { LabelLayout } from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
 import { DashboardLevelResponse, StudentLevel } from '@/graphql/graphql';
-import Id from '@/pages/profile/results/[id]';
+import { AppRoutes } from '@/utils/routes';
 
 echarts.use([
   ToolboxComponent,
@@ -95,7 +95,7 @@ const StudentAgeChart: FC<{
   return (
     <Card
       title="عدد الطلاب المسجلين حسب السن"
-      extra={<Button>إدارة الطلاب</Button>}
+      extra={<Button href={AppRoutes.AdminManageStudents}>إدارة الطلاب</Button>}
     >
       <ReactEChartsCore
         echarts={echarts}
