@@ -79,7 +79,7 @@ export class UserService {
    */
   async findUnique(input: Prisma.UserWhereUniqueInput) {
     try {
-      return await this.prisma.user.findUniqueOrThrow({
+      return this.prisma.user.findUniqueOrThrow({
         where: input,
         include: {
           role: { include: { permissions: true } },

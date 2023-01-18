@@ -122,10 +122,10 @@ export class StudentService {
                   { firstName: { contains: name } },
                   { lastName: { contains: name } },
                 ],
-                teacherId: teacherId ?? null,
+                teacherId: teacherId ?? undefined,
               }
             : {
-                teacherId: teacherId ?? null,
+                teacherId: teacherId ?? undefined,
               },
         },
       };

@@ -12,6 +12,7 @@ import {
   Query,
   ResolveField,
   Parent,
+  Int,
 } from '@nestjs/graphql';
 import { MessagePaginationResponse } from '../common/pagination.response';
 import { User } from '../users/user.entity';
@@ -48,7 +49,7 @@ export class MessageResolver {
   }
 
   @Query(() => [Message])
-  async findLastNotifications(@Args('id') id: string) {
+  async findLastNotifications(@Args('id', { nullable: true }) id?: string) {
     return this.messageService.findLastNotifications(id);
   }
 
@@ -60,6 +61,11 @@ export class MessageResolver {
   @Query(() => MessagePaginationResponse, { nullable: true })
   async paginateNotifications(@Args('params') params: MessagePaginationDto) {
     return this.messageService.paginateNotifications(params);
+  }
+
+  @Query(() => Int)
+  async countAllNotificationsForAdmin() {
+    return await this.messageService.countUnreadMessages(false);
   }
 
   @ResolveField(() => User)

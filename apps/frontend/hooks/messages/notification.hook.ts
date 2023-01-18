@@ -14,7 +14,7 @@ export const useNotificationHook = () => {
     skip,
     take: 15,
     where: {
-      recipientId: user.role.title === RoleTitle.Admin ? null : user.id,
+      recipientId: user?.role.title === RoleTitle.Admin ? null : user?.id,
     },
   });
   const [data, setData] = useState<Message[]>([]);

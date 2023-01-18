@@ -168,7 +168,7 @@ const HeaderIcons = ({ inHome = false }: { inHome?: boolean }) => {
               />
             </Space>
           ) : (
-            <Link href={AppRoutes.SignUp}>
+            <Link href={AppRoutes.SignIn}>
               <StyledButton
                 size="middle"
                 type="ghost"

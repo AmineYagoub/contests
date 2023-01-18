@@ -27,6 +27,7 @@ const StartContestPage = ({ contest }: { contest: Contest }) => {
       contestId={contest.id}
       userId={user.id}
       teacherId={(user.profile as Student).teacher?.id}
+      teacherProfileId={(user.profile as Student).teacher?.userId}
       isAllowed={isAllowed}
     />
   );

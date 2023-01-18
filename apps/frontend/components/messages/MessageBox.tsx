@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Button, Card, Layout } from 'antd';
 import { useSnapshot } from 'valtio';
 import MessagesList from './MessageList';
@@ -28,11 +28,13 @@ const StyledSection = styled(Card)({
 const MessageBox = ({
   role,
   id,
+  profile,
   avatar,
 }: {
   role: RoleTitle;
   id: string;
   avatar: string;
+  profile?: string;
 }) => {
   const messageSnap = useSnapshot(MessageState);
   const [collapsed, setCollapsed] = useState(false);
@@ -52,7 +54,7 @@ const MessageBox = ({
     scrollArea,
   } = useMessages(id);
 
-  const { loadMoreData, onSearch, searchValue } = useContactList(role, id);
+  const { loadMoreData, onSearch, searchValue } = useContactList(role, profile);
 
   return (
     <StyledSection bordered={false} bodyStyle={{ padding: 0 }}>
@@ -100,4 +102,4 @@ const MessageBox = ({
   );
 };
 
-export default MessageBox;
+export default memo(MessageBox);

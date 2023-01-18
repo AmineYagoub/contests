@@ -50,6 +50,11 @@ export const MessageActions = {
   setContactList: (users: User[]) => {
     MessageState.contactList = users;
   },
+  addToContactList: (user: User) => {
+    if (!MessageState.contactList.find((el) => el.id === user.id)) {
+      MessageState.contactList.unshift(user);
+    }
+  },
   setContactLoading: (val: boolean) => {
     MessageState.contactLoading = val;
   },

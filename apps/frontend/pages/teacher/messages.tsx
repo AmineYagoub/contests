@@ -13,6 +13,7 @@ const TeacherMessages: NextPageWithLayout = () => {
     <MessageBox
       role={RoleTitle.Teacher}
       id={userSnap.id}
+      profile={userSnap.profile.id}
       avatar={userSnap.profile.personalImage}
     />
   );

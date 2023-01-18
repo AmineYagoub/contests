@@ -116,16 +116,16 @@ export const useContactList = (role: RoleTitle, teacherId?: string) => {
   };
 
   useEffect(() => {
-    if (RoleTitle.Teacher === role) {
+    MessageActions.setContactLoading(true);
+    if (data && messageSnap.contactList.length === 0) {
+      MessageActions.setContactLoading(false);
+      MessageActions.setContactList(data?.paginateUsers?.data as User[]);
+    }
+    if (RoleTitle.Teacher === role && data) {
       MessageActions.setContactLoading(true);
       FindAdminAndTeacherQuery()
         .then(({ data }) => {
-          if (data) {
-            MessageActions.setContactList([
-              ...data.findAdminAndTeacher,
-              ...messageSnap.contactList,
-            ] as User[]);
-          }
+          MessageActions.addToContactList(data.findAdminAndTeacher[0] as User);
         })
         .finally(() => {
           MessageActions.setContactLoading(false);
@@ -135,28 +135,15 @@ export const useContactList = (role: RoleTitle, teacherId?: string) => {
       MessageActions.setContactLoading(true);
       FindAdminAndTeacherQuery({
         variables: {
-          id: (userSnap.profile as Student).teacher.id,
+          id: (userSnap.profile as Student).teacher?.id,
         },
       })
         .then(({ data }) => {
-          if (data) {
-            MessageActions.setContactList([
-              ...data.findAdminAndTeacher,
-              ...messageSnap.contactList,
-            ] as User[]);
-          }
+          MessageActions.setContactList(data.findAdminAndTeacher as User[]);
         })
         .finally(() => {
           MessageActions.setContactLoading(false);
         });
-    }
-  }, []);
-
-  useEffect(() => {
-    MessageActions.setContactLoading(true);
-    if (data) {
-      MessageActions.setContactLoading(false);
-      MessageActions.setContactList(data?.paginateUsers?.data as User[]);
     }
     return () => {
       MessageActions.setMessages([]);
@@ -164,7 +151,7 @@ export const useContactList = (role: RoleTitle, teacherId?: string) => {
       MessageActions.setContactLoading(false);
       MessageActions.setCurrentContact(null);
     };
-  }, [data]);
+  }, [data, role]);
 
   return { loadMoreData, onSearch, searchValue };
 };

@@ -26,6 +26,16 @@ export type StudentUpdateTeacher = {
   userId: string;
 };
 
+export const STUDENT_SUBMIT_ANSWER_EVENT = 'student.submit.answer';
+export type StudentSubmitAnswer = {
+  contestId: string;
+  contestTitle: string;
+  answerId: string;
+  teacherId?: string;
+  teacherProfileId?: string;
+  userId: string;
+};
+
 export const TEACHER_CONNECT_STUDENT_EVENT = 'teacher.connect.student';
 export type TeacherConnectStudent = {
   name: string;

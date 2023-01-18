@@ -195,6 +195,7 @@ export type CreateAnswerDto = {
   answers: Array<SelectedAnswerInput>;
   contest: ContestConnectInput;
   teacherId?: InputMaybe<Scalars['String']>;
+  teacherProfileId?: InputMaybe<Scalars['String']>;
   userId: Scalars['String'];
 };
 
@@ -608,6 +609,7 @@ export type Profile = Student | Teacher;
 
 export type Query = {
   __typename?: 'Query';
+  countAllNotificationsForAdmin: Scalars['Int'];
   dashboard: DashboardResponse;
   findAdminAndTeacher: Array<User>;
   findAllSubscriptionPlans: Array<SubscriptionPlan>;
@@ -659,7 +661,7 @@ export type QueryFindLastMessagesArgs = {
 
 
 export type QueryFindLastNotificationsArgs = {
-  id: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -999,6 +1001,7 @@ export type UpdateAnswerDto = {
   answers?: InputMaybe<Array<SelectedAnswerInput>>;
   contest?: InputMaybe<ContestConnectInput>;
   teacherId?: InputMaybe<Scalars['String']>;
+  teacherProfileId?: InputMaybe<Scalars['String']>;
   userId?: InputMaybe<Scalars['String']>;
 };
 
@@ -1176,6 +1179,7 @@ export type WhereAnswerArgs = {
   answers?: InputMaybe<Array<SelectedAnswerInput>>;
   contest?: InputMaybe<ContestConnectInput>;
   teacherId?: InputMaybe<Scalars['String']>;
+  teacherProfileId?: InputMaybe<Scalars['String']>;
 };
 
 export type WhereContestArgs = {
@@ -1389,6 +1393,11 @@ export type SendNotificationsMutationVariables = Exact<{
 
 export type SendNotificationsMutation = { __typename?: 'Mutation', sendNotifications?: { __typename?: 'Message', id: string } | null };
 
+export type CountAllNotificationsForAdminQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CountAllNotificationsForAdminQuery = { __typename?: 'Query', countAllNotificationsForAdmin: number };
+
 export type FindLastMessagesQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -1397,7 +1406,7 @@ export type FindLastMessagesQueryVariables = Exact<{
 export type FindLastMessagesQuery = { __typename?: 'Query', findLastMessages: Array<{ __typename?: 'Message', id: string, type: MessageType, content: string, created: any, updated: any, authorId: { __typename?: 'User', id: string, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, created: any, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | { __typename: 'Teacher', id: string, country?: string | null, created: any, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null } | null }, recipientId?: { __typename?: 'User', id: string } | null }> };
 
 export type FindLastNotificationsQueryVariables = Exact<{
-  id: Scalars['String'];
+  id?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -1592,7 +1601,7 @@ export type FindUserQuery = { __typename?: 'Query', findUser: { __typename?: 'Us
 export type GetAuthUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, countAllNotifications?: number | null, countAllMessages?: number | null, messagesCount: number, notificationsCount: number, role?: { __typename?: 'Role', title: RoleTitle, permissions?: Array<{ __typename?: 'Permission', title: PermissionTitle }> | null } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth?: any | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, startDate?: any | null, endDate?: any | null, created: any, renewCount: number, memberShipOn: { __typename?: 'SubscriptionPlan', id: string, title: string, price: number } } | null } | null } };
+export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, countAllNotifications?: number | null, countAllMessages?: number | null, messagesCount: number, notificationsCount: number, role?: { __typename?: 'Role', title: RoleTitle, permissions?: Array<{ __typename?: 'Permission', title: PermissionTitle }> | null } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth?: any | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, userId?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, startDate?: any | null, endDate?: any | null, created: any, renewCount: number, memberShipOn: { __typename?: 'SubscriptionPlan', id: string, title: string, price: number } } | null } | null } };
 
 export type PaginateUsersQueryVariables = Exact<{
   params: UserPaginationDto;
@@ -2709,6 +2718,38 @@ export function useSendNotificationsMutation(baseOptions?: Apollo.MutationHookOp
 export type SendNotificationsMutationHookResult = ReturnType<typeof useSendNotificationsMutation>;
 export type SendNotificationsMutationResult = Apollo.MutationResult<SendNotificationsMutation>;
 export type SendNotificationsMutationOptions = Apollo.BaseMutationOptions<SendNotificationsMutation, SendNotificationsMutationVariables>;
+export const CountAllNotificationsForAdminDocument = gql`
+    query CountAllNotificationsForAdmin {
+  countAllNotificationsForAdmin
+}
+    `;
+
+/**
+ * __useCountAllNotificationsForAdminQuery__
+ *
+ * To run a query within a React component, call `useCountAllNotificationsForAdminQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCountAllNotificationsForAdminQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCountAllNotificationsForAdminQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCountAllNotificationsForAdminQuery(baseOptions?: Apollo.QueryHookOptions<CountAllNotificationsForAdminQuery, CountAllNotificationsForAdminQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CountAllNotificationsForAdminQuery, CountAllNotificationsForAdminQueryVariables>(CountAllNotificationsForAdminDocument, options);
+      }
+export function useCountAllNotificationsForAdminLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CountAllNotificationsForAdminQuery, CountAllNotificationsForAdminQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CountAllNotificationsForAdminQuery, CountAllNotificationsForAdminQueryVariables>(CountAllNotificationsForAdminDocument, options);
+        }
+export type CountAllNotificationsForAdminQueryHookResult = ReturnType<typeof useCountAllNotificationsForAdminQuery>;
+export type CountAllNotificationsForAdminLazyQueryHookResult = ReturnType<typeof useCountAllNotificationsForAdminLazyQuery>;
+export type CountAllNotificationsForAdminQueryResult = Apollo.QueryResult<CountAllNotificationsForAdminQuery, CountAllNotificationsForAdminQueryVariables>;
 export const FindLastMessagesDocument = gql`
     query FindLastMessages($id: String!) {
   findLastMessages(id: $id) {
@@ -2779,7 +2820,7 @@ export type FindLastMessagesQueryHookResult = ReturnType<typeof useFindLastMessa
 export type FindLastMessagesLazyQueryHookResult = ReturnType<typeof useFindLastMessagesLazyQuery>;
 export type FindLastMessagesQueryResult = Apollo.QueryResult<FindLastMessagesQuery, FindLastMessagesQueryVariables>;
 export const FindLastNotificationsDocument = gql`
-    query FindLastNotifications($id: String!) {
+    query FindLastNotifications($id: String) {
   findLastNotifications(id: $id) {
     id
     type
@@ -2836,7 +2877,7 @@ export const FindLastNotificationsDocument = gql`
  *   },
  * });
  */
-export function useFindLastNotificationsQuery(baseOptions: Apollo.QueryHookOptions<FindLastNotificationsQuery, FindLastNotificationsQueryVariables>) {
+export function useFindLastNotificationsQuery(baseOptions?: Apollo.QueryHookOptions<FindLastNotificationsQuery, FindLastNotificationsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<FindLastNotificationsQuery, FindLastNotificationsQueryVariables>(FindLastNotificationsDocument, options);
       }
@@ -4071,6 +4112,7 @@ export const GetAuthUserDocument = gql`
           id
           firstName
           lastName
+          userId
         }
       }
       ... on Teacher {

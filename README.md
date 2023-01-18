@@ -22,6 +22,5 @@ This project was generated using [Nx](https://nx.dev).
 
 ### Todo in progress ...
 
-- show student answers in admin dashboard
-- send notification to admin and teacher when user submit answer
+- display notification to admin and teacher when user submit answer
 - use web socket

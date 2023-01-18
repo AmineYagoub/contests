@@ -14,17 +14,17 @@ export class UserResolver {
    */
   @ResolveField(() => Int)
   async countAllMessages(@Parent() user: User) {
-    return await this.messageService.countUnreadMessages(user.id, true);
+    return await this.messageService.countUnreadMessages(true, user.id);
   }
 
   /**
-   * Count all notification.
+   * Count all notification for teacher and students.
    *
    * @param user User
    * @returns Promise<number>
    */
   @ResolveField(() => Int)
   async countAllNotifications(@Parent() user: User) {
-    return await this.messageService.countUnreadMessages(user.id, false);
+    return await this.messageService.countUnreadMessages(false, user.id);
   }
 }

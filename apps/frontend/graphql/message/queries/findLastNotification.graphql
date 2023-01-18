@@ -1,4 +1,4 @@
-query FindLastNotifications($id: String!) {
+query FindLastNotifications($id: String) {
   findLastNotifications(id: $id) {
     id
     type

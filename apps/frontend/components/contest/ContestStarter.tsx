@@ -20,11 +20,13 @@ const ContestStarter = ({
   contestId,
   userId,
   teacherId,
+  teacherProfileId,
   isAllowed,
 }: {
   contestId: string;
   userId: string;
   teacherId: string;
+  teacherProfileId: string;
   isAllowed: boolean;
 }) => {
   const contestSnap = useSnapshot(ContestState);
@@ -50,6 +52,7 @@ const ContestStarter = ({
           data: {
             userId,
             teacherId,
+            teacherProfileId,
             answers: contestSnap.answers as SelectedAnswerInput[],
             contest: {
               connect: {

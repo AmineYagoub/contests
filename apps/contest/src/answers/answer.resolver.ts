@@ -34,7 +34,8 @@ export class AnswerResolver {
 
   @Mutation(() => Answer)
   async createAnswer(@Args('data') data: CreateAnswerDto) {
-    return this.answerService.create(data);
+    const { teacherProfileId, ...rest } = data;
+    return this.answerService.create(rest, teacherProfileId);
   }
 
   @Mutation(() => Answer)

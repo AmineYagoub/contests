@@ -7,6 +7,8 @@ import {
   CONTEST_CREATED_WILDCARD,
   STUDENT_ADD_TEACHER_EVENT,
   TEACHER_CONNECT_STUDENT_EVENT,
+  STUDENT_SUBMIT_ANSWER_EVENT,
+  StudentSubmitAnswer,
 } from '@contests/types';
 import { SendMessageDto } from '@contests/dto';
 import { OnEvent } from '@nestjs/event-emitter';
@@ -89,6 +91,30 @@ export class MessageEvents {
           },
         });
       }
+    } catch (error) {
+      Logger.log(error);
+    }
+  }
+
+  /**
+   * Notify admin and teacher when Student submit his answer.
+   *
+   * @param payload: StudentSubmitAnswer
+   *
+   * @returns Promise<Message>
+   */
+  @OnEvent(STUDENT_SUBMIT_ANSWER_EVENT)
+  async onStudentSubmitAnswerEvent(payload: StudentSubmitAnswer) {
+    try {
+      const data = {
+        content: `أنهى المشاركة في مسابقة (<a href="/profile/results/${payload.answerId}?cid=${payload.contestId}">${payload.contestTitle}</a>)`,
+        authorId: payload.userId,
+        type: MessageType.INFO,
+        recipients: [payload.teacherProfileId],
+      };
+      return this.prisma.message.create({
+        data,
+      });
     } catch (error) {
       Logger.log(error);
     }

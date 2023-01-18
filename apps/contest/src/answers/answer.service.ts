@@ -1,15 +1,15 @@
-import { Redis } from 'ioredis';
 import { Injectable } from '@nestjs/common';
 import { AnswerPaginationDto } from '@contests/dto';
 import { PrismaService } from '../app/prisma.service';
-import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Answer, Prisma } from '@prisma/contest-service';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { STUDENT_SUBMIT_ANSWER_EVENT } from '@contests/types';
 
 @Injectable()
 export class AnswerService {
   constructor(
     private prisma: PrismaService,
-    @InjectRedis('publisher') private readonly publisher: Redis
+    private eventEmitter: EventEmitter2
   ) {}
 
   /**
@@ -18,11 +18,24 @@ export class AnswerService {
    * @param data Prisma.AnswerCreateInput The Answer data.
    * @returns Promise<Answer>
    */
-  async create(data: Prisma.AnswerCreateInput): Promise<Answer> {
+  async create(
+    data: Prisma.AnswerCreateInput,
+    teacherProfileId: string
+  ): Promise<Answer> {
     try {
-      return this.prisma.answer.create({
+      const answer = await this.prisma.answer.create({
         data,
+        include: { contest: true },
       });
+      this.eventEmitter.emit(STUDENT_SUBMIT_ANSWER_EVENT, {
+        contestId: answer.contestId,
+        contestTitle: answer.contest.title,
+        answerId: answer.id,
+        teacherId: answer.teacherId,
+        userId: answer.userId,
+        teacherProfileId,
+      });
+      return answer;
     } catch (error) {
       console.error(error.message);
     }

@@ -1,5 +1,7 @@
 import {
   Message,
+  RoleTitle,
+  useCountAllNotificationsForAdminQuery,
   useFindLastMessagesLazyQuery,
   useFindLastNotificationsLazyQuery,
   useUpdateMessagesCountMutation,
@@ -11,16 +13,25 @@ import { useSnapshot } from 'valtio';
 
 export const useHeaderNotification = () => {
   const user = useSnapshot(AuthState).user;
+  const isAdmin = user?.role.title === RoleTitle.Admin;
   const countMessages = user?.countAllMessages - user?.messagesCount;
-  const countNotification =
+  let countNotification =
     user?.countAllNotifications - user?.notificationsCount;
 
   const [data, setData] = useState<Message[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const { data: dataCount } = useCountAllNotificationsForAdminQuery({
+    skip: !isAdmin,
+  });
+
+  if (isAdmin && dataCount) {
+    countNotification =
+      dataCount.countAllNotificationsForAdmin - user?.notificationsCount;
+  }
   const [FindLastNotificationsQuery] = useFindLastNotificationsLazyQuery({
     variables: {
-      id: user?.id,
+      id: isAdmin ? undefined : user?.id,
     },
   });
 
@@ -57,7 +68,13 @@ export const useHeaderNotification = () => {
           },
         });
         setData(data.findLastNotifications as Message[]);
-        AuthActions.resetNotificationsCounter();
+        if (isAdmin) {
+          AuthActions.resetNotificationsCounter(
+            dataCount.countAllNotificationsForAdmin
+          );
+        } else {
+          AuthActions.resetNotificationsCounter();
+        }
       }
     } catch (error) {
       Logger.log(error);

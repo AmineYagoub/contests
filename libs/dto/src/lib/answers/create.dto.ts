@@ -43,6 +43,11 @@ export class CreateAnswerDto {
   @IsString()
   teacherId?: string;
 
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  teacherProfileId?: string;
+
   @Field(() => Boolean, { defaultValue: false, nullable: true })
   @IsOptional()
   @IsNumber()

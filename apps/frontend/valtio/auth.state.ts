@@ -26,8 +26,9 @@ export const AuthActions = {
   resetMessagesCounter: () => {
     AuthState.user.messagesCount = AuthState.user.countAllMessages;
   },
-  resetNotificationsCounter: () => {
-    AuthState.user.notificationsCount = AuthState.user.countAllNotifications;
+  resetNotificationsCounter: (val?: number) => {
+    AuthState.user.notificationsCount =
+      val || AuthState.user.countAllNotifications;
   },
   resetState: () => {
     const resetObj = cloneDeep(init);

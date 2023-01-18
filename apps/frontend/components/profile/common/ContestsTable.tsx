@@ -1,4 +1,4 @@
-import { Table, Tag } from 'antd';
+import { Table } from 'antd';
 import moment from 'moment-timezone';
 
 import {
@@ -6,10 +6,9 @@ import {
   SearchDatePickerIcon,
 } from '@/components/admin/tables/SearchDatePicker';
 import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
-import { Contest, ContestStatus } from '@/graphql/graphql';
+import { Contest } from '@/graphql/graphql';
 import { ContestsDataIndex } from '@/hooks/admin/manage-contests.hook';
 import { ContestFields } from '@/utils/fields';
-import { contestMappedStatus, getMapperLabel } from '@/utils/mapper';
 
 import type { ColumnsType, ColumnType, TableProps } from 'antd/es/table';
 import {
@@ -157,26 +156,6 @@ const ContestsTable = ({
           ? sortedInfo.order
           : null,
       render: (text) => `${text} دقيقة`,
-    },
-    {
-      title: 'حالة المسابقة',
-      key: ContestFields.status,
-      dataIndex: ContestFields.status,
-      filters: contestMappedStatus,
-      filterMultiple: false,
-      onFilter: methods.handleFilter,
-      filteredValue: filteredInfo.status || null,
-      render: (status) => {
-        let color = status === ContestStatus.Open ? 'green' : 'volcano';
-        if (status === ContestStatus.NotStarted) {
-          color = 'blue';
-        }
-        return (
-          <Tag color={color}>
-            {getMapperLabel<ContestStatus>(contestMappedStatus, status)}
-          </Tag>
-        );
-      },
     },
   ];
   if (extendColumns) {

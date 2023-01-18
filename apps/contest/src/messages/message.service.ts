@@ -29,25 +29,29 @@ export class MessageService {
    * @param isMessages boolean
    * @returns Promise<Message[]>
    */
-  private async findLast(id: string, isMessages: boolean) {
+  private async findLast(isMessages: boolean, id?: string) {
+    const where: Prisma.MessageWhereInput = {
+      type: isMessages
+        ? MessageType.MESSAGE
+        : {
+            not: MessageType.MESSAGE,
+          },
+    };
+    console.log(id);
+    if (id) {
+      where.OR = [
+        {
+          recipientId: id,
+        },
+        {
+          recipients: {
+            array_contains: id,
+          },
+        },
+      ];
+    }
     return this.prisma.message.findMany({
-      where: {
-        OR: [
-          {
-            recipientId: id,
-          },
-          {
-            recipients: {
-              array_contains: id,
-            },
-          },
-        ],
-        type: isMessages
-          ? MessageType.MESSAGE
-          : {
-              not: MessageType.MESSAGE,
-            },
-      },
+      where,
       orderBy: { created: 'desc' },
       take: 20,
     });
@@ -60,7 +64,7 @@ export class MessageService {
    * @returns Promise<Message[]>
    */
   async findLastMessages(id: string) {
-    return this.findLast(id, true);
+    return this.findLast(true, id);
   }
 
   /**
@@ -69,8 +73,8 @@ export class MessageService {
    * @param id string
    * @returns Promise<Message[]>
    */
-  async findLastNotifications(id: string) {
-    return this.findLast(id, false);
+  async findLastNotifications(id?: string) {
+    return this.findLast(false, id);
   }
 
   /**
@@ -82,25 +86,28 @@ export class MessageService {
    * @returns Promise<number>
    *
    */
-  async countUnreadMessages(id: string, isMessages: boolean): Promise<number> {
+  async countUnreadMessages(isMessages: boolean, id?: string): Promise<number> {
+    const where: Prisma.MessageWhereInput = {
+      type: isMessages
+        ? MessageType.MESSAGE
+        : {
+            not: MessageType.MESSAGE,
+          },
+    };
+    if (id) {
+      where.OR = [
+        {
+          recipientId: id,
+        },
+        {
+          recipients: {
+            array_contains: id,
+          },
+        },
+      ];
+    }
     return await this.prisma.message.count({
-      where: {
-        OR: [
-          {
-            recipientId: id,
-          },
-          {
-            recipients: {
-              array_contains: id,
-            },
-          },
-        ],
-        type: isMessages
-          ? MessageType.MESSAGE
-          : {
-              not: MessageType.MESSAGE,
-            },
-      },
+      where,
     });
   }
 
