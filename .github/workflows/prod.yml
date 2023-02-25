@@ -2,10 +2,10 @@ name: Build Containers for Prod & Push to Dockerhub
 on:
   pull_request:
     branches:
-      - main
+      - dev
   push:
     branches:
-      - main
+      - dev
 
 env:
   AUTH_TEST_TAG: amineyagoub/olympiad-auth:test
