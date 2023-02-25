@@ -1,11 +1,11 @@
-const { merge } = require('webpack-merge');
+const { composePlugins, withNx } = require('@nrwl/webpack');
 
-module.exports = (config, context) => {
-  return merge(config, {
-    optimization: {
-      minimize: false,
-      moduleIds: 'named',
-      chunkIds: 'named',
-    },
-  });
-};
+// Nx plugins for webpack.
+module.exports = composePlugins(withNx(), (config) => {
+  config.optimization = {
+    minimize: false,
+    moduleIds: 'named',
+    chunkIds: 'named',
+  };
+  return config;
+});

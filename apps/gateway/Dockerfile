@@ -20,12 +20,6 @@ ENV NODE_ENV production
 COPY --from=builder /app/dist/apps/gateway ./
 
 RUN npm install
-RUN npm install @nestjs/config apollo-server-core
-
-
-## Add the wait script to the image
-# ADD https://github.com/vishnubob/wait-for-it/blob/master/wait-for-it.sh ./wait-for-it.sh
-# RUN chmod +x ./wait-for-it.sh
 
 # USER nest
 

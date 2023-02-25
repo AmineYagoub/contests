@@ -12,9 +12,7 @@ import { Field, InputType } from '@nestjs/graphql';
 export class SignUpDto {
   @Field()
   @IsNotEmpty()
-  @IsEmail({
-    message: 'email_invalid',
-  })
+  @IsEmail(null, { message: 'email_invalid' })
   email: string;
 
   @Field()

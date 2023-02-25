@@ -1,9 +1,3 @@
-
-
-
-
-
-
 FROM node:16-alpine AS base
 
 FROM base as builder

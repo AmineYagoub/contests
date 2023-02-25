@@ -5,26 +5,22 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nrwl/node:webpack",
+      "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
+        "target": "node",
+        "compiler": "tsc",
         "outputPath": "dist/apps/auth",
         "main": "apps/auth/src/main.ts",
         "tsConfig": "apps/auth/tsconfig.app.json",
-        "webpackConfig": "apps/auth/webpack.config.js",
-        "assets": ["apps/auth/src/assets"]
+        "assets": ["apps/auth/src/assets"],
+        "webpackConfig": "apps/auth/webpack.config.js"
       },
       "configurations": {
         "production": {
           "optimization": true,
           "extractLicenses": true,
-          "inspect": false,
-          "fileReplacements": [
-            {
-              "replace": "apps/auth/src/environments/environment.ts",
-              "with": "apps/auth/src/environments/environment.prod.ts"
-            }
-          ]
+          "inspect": false
         }
       }
     },
