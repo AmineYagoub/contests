@@ -7,6 +7,7 @@ import AuthLayout from '@/layout/AuthLayout';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 import { formLayout, StyledForm } from '../sign-up';
+import { withAuth } from '@/components/common/withAuth';
 
 const ForgotPassword = () => {
   const [form] = Form.useForm();
@@ -41,7 +42,6 @@ const ForgotPassword = () => {
               راجِع مجلدي &#39;الرسائل غير المرغوب فيها&#39; أو &#39;البريد
               المجمّع&#39;.
             </li>
-            <li>أضِف noreply@example.com إلى دفتر العناوين.</li>
             <li>
               تحقق من جميع عناوين البريد الإلكتروني التي من المحتمل أنك
               استخدمتها للاشتراك أو لتسجيل الدخول إلى حسابك.
@@ -63,4 +63,4 @@ const ForgotPassword = () => {
 ForgotPassword.getLayout = (page: EmotionJSX.Element) => (
   <AuthLayout>{page}</AuthLayout>
 );
-export default ForgotPassword;
+export default withAuth(ForgotPassword, null, true);

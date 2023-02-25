@@ -1,4 +1,5 @@
 {
+  "name": "wss",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/wss/src",
   "projectType": "application",

@@ -14,6 +14,7 @@ import { AppRoutes } from '@/utils/routes';
 import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
+import { withAuth } from '@/components/common/withAuth';
 
 export const formLayout = {
   labelCol: { span: 5 },
@@ -144,4 +145,4 @@ const SignUpPage: NextPageWithLayout = () => {
 SignUpPage.getLayout = (page: EmotionJSX.Element) => (
   <AuthLayout>{page}</AuthLayout>
 );
-export default SignUpPage;
+export default withAuth(SignUpPage, null, true);

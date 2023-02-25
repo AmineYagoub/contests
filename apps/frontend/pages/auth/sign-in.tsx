@@ -11,6 +11,7 @@ import { AppRoutes } from '@/utils/routes';
 import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
+import { withAuth } from '@/components/common/withAuth';
 
 export const StyledForm = styled(Form)({
   maxWidth: 400,
@@ -64,4 +65,4 @@ const SignInPage: NextPageWithLayout = () => {
 SignInPage.getLayout = (page: EmotionJSX.Element) => (
   <AuthLayout>{page}</AuthLayout>
 );
-export default SignInPage;
+export default withAuth(SignInPage, null, true);

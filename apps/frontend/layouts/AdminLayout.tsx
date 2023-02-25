@@ -1,28 +1,28 @@
-import { Layout, Menu } from 'antd';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-
-import TeacherIcon from '@/components/icons/TeacherIcon';
-import { socketVar } from '@/utils/app';
-import { AppRoutes } from '@/utils/routes';
 import {
-  BarChartOutlined,
   BellOutlined,
+  MailOutlined,
   EditOutlined,
   IdcardOutlined,
   LogoutOutlined,
-  MailOutlined,
-  SettingOutlined,
   TrophyOutlined,
+  SettingOutlined,
+  BarChartOutlined,
 } from '@ant-design/icons';
-import { useReactiveVar } from '@apollo/client';
+import Link from 'next/link';
+import { useEffect } from 'react';
+import { Layout, Menu } from 'antd';
 import styled from '@emotion/styled';
-
-import StyledFooter from './StyledFooter';
-import HeaderIcons from '@/components/common/HeaderIcons';
 import { useSnapshot } from 'valtio';
+import { socketVar } from '@/utils/app';
+import { useRouter } from 'next/router';
+import StyledFooter from './StyledFooter';
+import { AppRoutes } from '@/utils/routes';
+import Logo from '@/components/common/Logo';
 import { AppState } from '@/valtio/app.state';
+import { useReactiveVar } from '@apollo/client';
+import TeacherIcon from '@/components/icons/TeacherIcon';
+import HeaderIcons from '@/components/common/HeaderIcons';
+
 const { Content, Sider } = Layout;
 
 export const StyledContent = styled(Content)({
@@ -32,15 +32,14 @@ export const StyledContent = styled(Content)({
   minHeight: '90vh !important',
 });
 
-export const Logo = styled('div')({
-  height: 32,
-  margin: 16,
-  backgroundColor: 'rgba(255, 255, 255, 0.3)',
-});
-
-export const StyledMenu = styled(Menu)({
-  height: 'calc(100% - 64px)',
-  paddingTop: '22px !important',
+export const StyledSideBar = styled(Sider)({
+  backgroundColor: '#fff !important',
+  '.logo': {
+    display: 'flex',
+    height: 64,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 const AdminLayout = ({ children }) => {
@@ -57,9 +56,9 @@ const AdminLayout = ({ children }) => {
 
   return (
     <Layout>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
-        <Logo />
-        <StyledMenu
+      <StyledSideBar trigger={null} collapsible collapsed={collapsed}>
+        <Logo height={55} width={64} />
+        <Menu
           mode="inline"
           defaultSelectedKeys={[AppRoutes.AdminManageDashboard]}
           selectedKeys={[router.pathname]}
@@ -146,7 +145,7 @@ const AdminLayout = ({ children }) => {
             },
           ]}
         />
-      </Sider>
+      </StyledSideBar>
       <Layout>
         <HeaderIcons />
         <StyledContent>{children}</StyledContent>

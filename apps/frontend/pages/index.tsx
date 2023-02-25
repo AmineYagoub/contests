@@ -28,8 +28,8 @@ const itemJsonLd = (data: App) => {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
     "url": "https://olympiadnahw.com",
-    "name": ${data.title},
-    "description": ${data.description},
+    "name": "${data.title}",
+    "description": "${data.description}",
     "openingHours": "Mo-Su",
     "logo": "http://cdn.elite-strategies.com/wp-content/uploads/2013/04/elitestrategies.png",
     "foundingDate": "2023",
@@ -53,7 +53,7 @@ const itemJsonLd = (data: App) => {
         "email": "admin@olympiadnahw.com"
       },
     "sameAs": [
-      "http://www.freebase.com/${data.facebookUrl}",
+      "http://www.facebook.com/${data.facebookUrl}",
       "http://www.twitter.com/${data.twitterUrl}",
       "http://instagram.com/${data.instagramUrl}",
       "http://www.youtube.com/${data.youtubeUrl}",

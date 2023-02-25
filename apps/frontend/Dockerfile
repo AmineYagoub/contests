@@ -21,9 +21,7 @@ RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 
 COPY --from=builder --chown=nextjs:nodejs /app/dist/apps/frontend ./
-RUN rm -f ./package.json
-COPY --chown=nextjs:nodejs apps/frontend/package.json ./package.json
-RUN npm install
+RUN npm pkg set dependencies.sharp="latest" && npm install
 
 USER nextjs
 

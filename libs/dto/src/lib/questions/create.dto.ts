@@ -12,13 +12,13 @@ import { Field, InputType } from '@nestjs/graphql';
 import { Prisma } from '@prisma/contest-service';
 
 type TopicTitle = {
-  id: string;
+  title: string;
 };
 
 @InputType()
 class TopicInput {
   @Field()
-  id: string;
+  title: string;
 }
 
 @InputType()

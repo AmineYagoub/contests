@@ -87,7 +87,7 @@ const QuestionForm = ({
             </Form.Item>
           </Col>
           <Col span={12}>
-            <SelectTags isContest={false} />
+            <SelectTags isContest={false} isTeacher />
           </Col>
         </Row>
 

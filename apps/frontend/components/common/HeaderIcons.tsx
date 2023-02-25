@@ -26,18 +26,15 @@ import { useHeaderNotification } from '@/hooks/messages/header.hook';
 import { Message, RoleTitle } from '@/graphql/graphql';
 import Link from 'next/link';
 import { getMessageContent, getMessageVariant } from '@/utils/app';
-import { Logo } from '@/layout/AdminLayout';
-import StyledButton from './StyledButton';
 import { AppRoutes, redirect } from '@/utils/routes';
 import { useRouter } from 'next/router';
 import { AppActions, AppState } from '@/valtio/app.state';
 import { useSnapshot } from 'valtio';
+import Logo from './Logo';
 
 const { Header } = Layout;
 
 const StyledHeader = styled(Header)({
-  backgroundColor: `${theme.primaryColor} !important`,
-  padding: '0 !important',
   boxShadow:
     'rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px',
 });
@@ -105,7 +102,7 @@ const HeaderIcons = ({ inHome = false }: { inHome?: boolean }) => {
       <Row justify="space-between">
         <Col span={2}>
           {inHome ? (
-            <Logo />
+            <Logo height={50} width={64} />
           ) : (
             createElement(
               !collapsed ? MenuUnfoldOutlinedIcon : MenuFoldOutlinedIcon,
@@ -169,13 +166,9 @@ const HeaderIcons = ({ inHome = false }: { inHome?: boolean }) => {
             </Space>
           ) : (
             <Link href={AppRoutes.SignIn}>
-              <StyledButton
-                size="middle"
-                type="ghost"
-                style={{ color: '#fff' }}
-              >
+              <Button size="middle" type="ghost" style={{ color: '#fff' }}>
                 تسجيل / دخول
-              </StyledButton>
+              </Button>
             </Link>
           )}
         </Col>

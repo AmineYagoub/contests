@@ -1,13 +1,13 @@
 import {
-  CreateMessageDto,
   SendMessageDto,
+  CreateMessageDto,
   UpdateMessageDto,
 } from '@contests/dto';
 import { Prisma } from '@prisma/contest-service';
 import {
+  MessageType,
   MessageRecipients,
   MESSAGES_SEND_EVENT,
-  MessageType,
 } from '@contests/types';
 import { Redis } from 'ioredis';
 import { sanitize } from 'isomorphic-dompurify';

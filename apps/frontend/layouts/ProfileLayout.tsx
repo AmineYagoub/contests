@@ -1,4 +1,4 @@
-import { Alert, Layout, Typography } from 'antd';
+import { Alert, Layout, Menu, Typography } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, ReactElement } from 'react';
@@ -17,15 +17,16 @@ import {
 } from '@ant-design/icons';
 import styled from '@emotion/styled';
 
-import { Logo, StyledContent, StyledMenu } from './AdminLayout';
+import { StyledContent, StyledSideBar } from './AdminLayout';
 import StyledFooter from './StyledFooter';
 import { useSnapshot } from 'valtio';
 import { AuthState } from '@/valtio/auth.state';
 import { RoleTitle, User } from '@/graphql/graphql';
 import HeaderIcons from '@/components/common/HeaderIcons';
 import { AppState } from '@/valtio/app.state';
+import Logo from '@/components/common/Logo';
 
-const { Header, Sider } = Layout;
+const { Header } = Layout;
 const { Text } = Typography;
 
 export const StyledHeader = styled(Header)({
@@ -108,17 +109,17 @@ const ProfileLayout: FC<{ children: ReactElement }> = ({ children }) => {
 
   return (
     <Layout>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
-        <Logo />
+      <StyledSideBar trigger={null} collapsible collapsed={collapsed}>
+        <Logo height={55} width={64} />
         {(isStudent || isTeacher) && (
-          <StyledMenu
+          <Menu
             mode="inline"
             defaultSelectedKeys={[router.pathname]}
             selectedKeys={[router.pathname]}
             items={menuList}
           />
         )}
-      </Sider>
+      </StyledSideBar>
       <Layout>
         <HeaderIcons />
         {!isTeacher && !user?.isActive && (

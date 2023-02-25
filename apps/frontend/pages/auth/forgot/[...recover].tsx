@@ -23,6 +23,7 @@ import { AppRoutes } from '@/utils/routes';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 import { StyledForm } from '../sign-in';
+import { withAuth } from '@/components/common/withAuth';
 
 const RecoverPassword = ({
   succeed,
@@ -93,11 +94,10 @@ const RecoverPassword = ({
   );
 };
 
-export default RecoverPassword;
 RecoverPassword.getLayout = (page: EmotionJSX.Element) => (
   <AuthLayout>{page}</AuthLayout>
 );
-
+export default withAuth(RecoverPassword, null, true);
 export const getServerSideProps: GetServerSideProps = async ({
   query,
   req,

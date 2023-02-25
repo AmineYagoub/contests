@@ -992,7 +992,7 @@ export type TopicConnectInput = {
 };
 
 export type TopicInput = {
-  id: Scalars['String'];
+  title: Scalars['String'];
 };
 
 export type UpdateAnswerDto = {
