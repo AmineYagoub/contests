@@ -7,7 +7,6 @@ RUN npm install
 
 COPY . .
 RUN (cd apps/contest/ && npx prisma generate)
-RUN rm -Rf libs/dto/src/auth.ts libs/types/src/auth.ts
 RUN npx nx build contest --generatePackageJson --optimization
 
 
