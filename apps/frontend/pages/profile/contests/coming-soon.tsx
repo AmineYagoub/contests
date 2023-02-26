@@ -9,6 +9,8 @@ import { withAuth } from '@/components/common/withAuth';
 import '@leenguyen/react-flip-clock-countdown/dist/index.css';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import FlipClockCountdown from '@leenguyen/react-flip-clock-countdown';
+import Head from 'next/head';
+import { getTitleMeta } from '@/utils/app';
 
 const StyledContainer = styled('section')({
   display: 'flex',
@@ -35,24 +37,30 @@ const ContestComingSoon: NextPageWithLayout = ({
     router.push(getContestRoute(id));
   };
   return (
-    <StyledContainer>
-      <h1>{h1}</h1>
-      <FlipClockCountdown
-        style={{ direction: 'ltr' }}
-        to={time}
-        labels={['يوم', 'ساعة', 'دقيقة', 'ثانية']}
-        labelStyle={{
-          fontSize: '1rem',
-          fontWeight: 800,
-        }}
-        digitBlockStyle={{
-          background: 'linear-gradient(to bottom, #41295a, #2f0743)',
-        }}
-        onComplete={onComplete}
-      >
-        <h1>جاري تحويلك لصفحة المسابقة ...</h1>
-      </FlipClockCountdown>
-    </StyledContainer>
+    <>
+      <Head>
+        <title>{getTitleMeta('ألمبياد النحو العربي', 'قريبا')}</title>
+      </Head>
+
+      <StyledContainer>
+        <h1>{h1}</h1>
+        <FlipClockCountdown
+          style={{ direction: 'ltr' }}
+          to={time}
+          labels={['يوم', 'ساعة', 'دقيقة', 'ثانية']}
+          labelStyle={{
+            fontSize: '1rem',
+            fontWeight: 800,
+          }}
+          digitBlockStyle={{
+            background: 'linear-gradient(to bottom, #41295a, #2f0743)',
+          }}
+          onComplete={onComplete}
+        >
+          <h1>جاري تحويلك لصفحة المسابقة ...</h1>
+        </FlipClockCountdown>
+      </StyledContainer>
+    </>
   );
 };
 

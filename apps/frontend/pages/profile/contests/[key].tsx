@@ -15,6 +15,8 @@ import { getContestSoonRoute } from '@/utils/routes';
 import { ContestActions } from '@/valtio/contest.state';
 import { useSnapshot } from 'valtio';
 import { AuthState } from '@/valtio/auth.state';
+import Head from 'next/head';
+import { getTitleMeta } from '@/utils/app';
 
 const StartContestPage = ({ contest }: { contest: Contest }) => {
   const user = useSnapshot(AuthState).user;
@@ -23,13 +25,18 @@ const StartContestPage = ({ contest }: { contest: Contest }) => {
     !contest.answers.some((el) => el.userId.id === user.id) &&
     contest.participants.includes(user.id);
   return (
-    <ContestStarter
-      contestId={contest.id}
-      userId={user.id}
-      teacherId={(user.profile as Student).teacher?.id}
-      teacherProfileId={(user.profile as Student).teacher?.userId}
-      isAllowed={isAllowed}
-    />
+    <>
+      <Head>
+        <title>{getTitleMeta('ألمبياد النحو العربي', contest.title)}</title>
+      </Head>
+      <ContestStarter
+        contestId={contest.id}
+        userId={user.id}
+        teacherId={(user.profile as Student).teacher?.id}
+        teacherProfileId={(user.profile as Student).teacher?.userId}
+        isAllowed={isAllowed}
+      />
+    </>
   );
 };
 

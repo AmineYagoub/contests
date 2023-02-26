@@ -15,6 +15,8 @@ import ProfileLayout from '@/layout/ProfileLayout';
 import { NextPageWithLayout } from '@/utils/types';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { withAuth } from '@/components/common/withAuth';
+import Head from 'next/head';
+import { getTitleMeta } from '@/utils/app';
 
 const PerformanceGauge = dynamic(
   () => import('@/components/profile/student/result/PerformanceGauge'),
@@ -29,15 +31,22 @@ const ContestResultPage: NextPageWithLayout = ({
   const { results, gaugeValues, contestMeta } = useGenerateResult(contest);
 
   return (
-    <Row>
-      <Col span={6}>
-        <TotalResultDetails contestMeta={contestMeta} />
-      </Col>
-      <Col span={18}>
-        <PerformanceGauge values={gaugeValues} />
-        <AnswersResult results={results.filter((el) => !!el.options.length)} />
-      </Col>
-    </Row>
+    <>
+      <Head>
+        <title>{getTitleMeta('ألمبياد النحو العربي', 'نتيجة المسابقة')}</title>
+      </Head>
+      <Row>
+        <Col span={6}>
+          <TotalResultDetails contestMeta={contestMeta} />
+        </Col>
+        <Col span={18}>
+          <PerformanceGauge values={gaugeValues} />
+          <AnswersResult
+            results={results.filter((el) => !!el.options.length)}
+          />
+        </Col>
+      </Row>
+    </>
   );
 };
 ContestResultPage.getLayout = (page: EmotionJSX.Element) => (

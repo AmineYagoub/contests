@@ -5,7 +5,7 @@ import StyledButton from '@/components/common/StyledButton';
 import { PermissionTitle, SubscriptionPlan } from '@/graphql/graphql';
 import { useSubscriptionPlans } from '@/hooks/subscription/plans';
 import ProfileLayout from '@/layout/ProfileLayout';
-import { formatPrice } from '@/utils/app';
+import { formatPrice, getTitleMeta } from '@/utils/app';
 import { CheckOutlined } from '@ant-design/icons';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
@@ -13,6 +13,7 @@ import { Card, Divider, Space, Badge, Typography } from 'antd';
 import { useSnapshot } from 'valtio';
 import { SubscriptionPlanState } from '@/valtio/plans.state';
 import { withAuth } from '@/components/common/withAuth';
+import Head from 'next/head';
 
 const gridStyle: React.CSSProperties = {
   width: '25%',
@@ -55,6 +56,11 @@ const TeacherMembership = () => {
 
   return (
     <>
+      <Head>
+        <title>
+          {getTitleMeta('ألمبياد النحو العربي', 'العضوية المدفوعة')}
+        </title>
+      </Head>
       <Title level={3}>الإشتراك المدفوع</Title>
       <Paragraph type="secondary">
         إشترك في أحد الخطط المدفوعة لترقية عضويتك و الحصول على مزايا إضافية.

@@ -17,6 +17,8 @@ import Image from 'next/image';
 import { SketchCircleFilled } from '@ant-design/icons';
 import TeacherStudentsList from '@/components/profile/teacher/TeacherStudentsList';
 import { UsersState } from '@/valtio/user.state';
+import Head from 'next/head';
+import { getTitleMeta } from '@/utils/app';
 
 const ProfileDashboard: NextPageWithLayout = () => {
   const user = useSnapshot(AuthState).user as User;
@@ -29,6 +31,9 @@ const ProfileDashboard: NextPageWithLayout = () => {
   });
   return (
     <>
+      <Head>
+        <title>{getTitleMeta('ألمبياد النحو العربي', 'لوحة التحكم')}</title>
+      </Head>
       <Row gutter={16}>
         <Col span={6}>
           <StyledCard bordered={false}>

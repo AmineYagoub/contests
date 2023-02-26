@@ -6,16 +6,23 @@ import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import MessageBox from '@/components/messages/MessageBox';
 import { useSnapshot } from 'valtio';
 import { AuthState } from '@/valtio/auth.state';
+import Head from 'next/head';
+import { getTitleMeta } from '@/utils/app';
 
 const TeacherMessages: NextPageWithLayout = () => {
   const userSnap = useSnapshot(AuthState).user;
   return (
-    <MessageBox
-      role={RoleTitle.Teacher}
-      id={userSnap.id}
-      profile={userSnap.profile.id}
-      avatar={userSnap.profile.personalImage}
-    />
+    <>
+      <Head>
+        <title>{getTitleMeta('ألمبياد النحو العربي', 'الرسائل')}</title>
+      </Head>
+      <MessageBox
+        role={RoleTitle.Teacher}
+        id={userSnap.id}
+        profile={userSnap.profile.id}
+        avatar={userSnap.profile.personalImage}
+      />
+    </>
   );
 };
 TeacherMessages.getLayout = (page: EmotionJSX.Element) => (

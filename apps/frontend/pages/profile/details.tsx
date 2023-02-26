@@ -14,6 +14,8 @@ import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { withAuth } from '@/components/common/withAuth';
 
 import dynamic from 'next/dynamic';
+import Head from 'next/head';
+import { getTitleMeta } from '@/utils/app';
 
 const UserDocuments = dynamic(
   import('@/components/profile/student/documents/UserDocuments'),
@@ -60,7 +62,14 @@ export const ProfileDetails = () => {
     });
   }
 
-  return <Tabs defaultActiveKey="1" type="card" size="large" items={tabs} />;
+  return (
+    <>
+      <Head>
+        <title>{getTitleMeta('ألمبياد النحو العربي', 'الملف الشخصي')}</title>
+      </Head>
+      <Tabs defaultActiveKey="1" type="card" size="large" items={tabs} />;
+    </>
+  );
 };
 ProfileDetails.getLayout = (page: EmotionJSX.Element) => (
   <ProfileLayout>{page}</ProfileLayout>

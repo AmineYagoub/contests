@@ -1,20 +1,28 @@
-import { Button, Checkbox, Divider, Form, Input } from 'antd';
-import Link from 'next/link';
-
-import VerifyAccount from '@/components/auth/VerifyAccount';
-import SelectRole from '@/components/common/SelectRole';
 import {
-  confirmPasswordRules,
+  useSignUp,
   emailRules,
   passwordRules,
-  useSignUp,
+  confirmPasswordRules,
 } from '@/hooks/auth/signup.hook';
-import AuthLayout from '@/layout/AuthLayout';
-import { AppRoutes } from '@/utils/routes';
-import { NextPageWithLayout } from '@/utils/types';
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import Link from 'next/link';
 import styled from '@emotion/styled';
+import { AppRoutes } from '@/utils/routes';
+import AuthLayout from '@/layout/AuthLayout';
+import { NextPageWithLayout } from '@/utils/types';
 import { withAuth } from '@/components/common/withAuth';
+import SelectRole from '@/components/common/SelectRole';
+import VerifyAccount from '@/components/auth/VerifyAccount';
+import { Button, Checkbox, Divider, Form, Input } from 'antd';
+import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import { initializeApollo } from '@/config/createGraphQLClient';
+import {
+  App,
+  FindAppConfigDocument,
+  FindAppConfigQuery,
+  FindAppConfigQueryVariables,
+} from '@/graphql/graphql';
+import Head from 'next/head';
+import { getTitleMeta } from '@/utils/app';
 
 export const formLayout = {
   labelCol: { span: 5 },
@@ -36,7 +44,7 @@ const Space = styled('span')({
   textAlign: 'center',
 });
 
-const SignUpPage: NextPageWithLayout = () => {
+const SignUpPage: NextPageWithLayout = ({ data }: { data: App }) => {
   const [form] = Form.useForm();
   const {
     onFinish,
@@ -51,6 +59,10 @@ const SignUpPage: NextPageWithLayout = () => {
 
   return (
     <>
+      <Head>
+        <title>{getTitleMeta(data?.title, 'حساب جديد')}</title>
+        <meta name="description" content={data?.description} key="desc" />
+      </Head>
       {isSuccess ? (
         <VerifyAccount email={registeredEmail} isSuccess={isSuccess} />
       ) : (
@@ -141,6 +153,28 @@ const SignUpPage: NextPageWithLayout = () => {
     </>
   );
 };
+
+export async function getServerSideProps({ req, query }) {
+  const client = initializeApollo({ headers: req?.headers });
+  try {
+    const {
+      data: { findAppConfig },
+    } = await client.query<FindAppConfigQuery, FindAppConfigQueryVariables>({
+      query: FindAppConfigDocument,
+    });
+
+    return {
+      props: {
+        data: findAppConfig,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      notFound: true,
+    };
+  }
+}
 
 SignUpPage.getLayout = (page: EmotionJSX.Element) => (
   <AuthLayout>{page}</AuthLayout>

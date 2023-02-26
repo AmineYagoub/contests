@@ -8,6 +8,8 @@ import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { PermissionTitle, RoleTitle, User } from '@/graphql/graphql';
 import PremiumContest from '@/components/profile/teacher/contest/PremiumContest';
 import StudentsAnswers from '@/components/profile/teacher/contest/StudentsAnswers';
+import Head from 'next/head';
+import { getTitleMeta } from '@/utils/app';
 
 const TeacherContests: NextPageWithLayout = () => {
   const user = useSnapshot(AuthState).user as User;
@@ -32,7 +34,14 @@ const TeacherContests: NextPageWithLayout = () => {
     });
   }
 
-  return <Tabs defaultActiveKey="1" type="card" size="large" items={tabs} />;
+  return (
+    <>
+      <Head>
+        <title>{getTitleMeta('ألمبياد النحو العربي', 'المسابقات')}</title>
+      </Head>
+      <Tabs defaultActiveKey="1" type="card" size="large" items={tabs} />;
+    </>
+  );
 };
 TeacherContests.getLayout = (page: EmotionJSX.Element) => (
   <ProfileLayout>{page}</ProfileLayout>

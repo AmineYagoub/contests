@@ -9,6 +9,8 @@ import { AuthState } from '@/valtio/auth.state';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { withAuth } from '@/components/common/withAuth';
 import { NextPageWithLayout } from '@/utils/types';
+import Head from 'next/head';
+import { getTitleMeta } from '@/utils/app';
 
 const ProfileContests: NextPageWithLayout = () => {
   const userSnap = useSnapshot(AuthState).user;
@@ -25,7 +27,14 @@ const ProfileContests: NextPageWithLayout = () => {
     },
   ];
 
-  return <Tabs defaultActiveKey="1" type="card" size="large" items={tabs} />;
+  return (
+    <>
+      <Head>
+        <title>{getTitleMeta('ألمبياد النحو العربي', 'المسابقات')}</title>
+      </Head>
+      <Tabs defaultActiveKey="1" type="card" size="large" items={tabs} />;
+    </>
+  );
 };
 ProfileContests.getLayout = (page: EmotionJSX.Element) => (
   <ProfileLayout>{page}</ProfileLayout>
