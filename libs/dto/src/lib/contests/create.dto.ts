@@ -13,7 +13,21 @@ import { ContestStatus, ContestType, StudentLevel } from '@contests/types';
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { Prisma } from '@prisma/contest-service';
 
-import { TopicConnectInput } from '../questions/create.dto';
+type TopicID = {
+  id: string;
+};
+
+@InputType()
+class TopicInputID {
+  @Field()
+  id: string;
+}
+
+@InputType()
+class TopicConnectID {
+  @Field(() => [TopicInputID])
+  connect: TopicID[];
+}
 
 @InputType()
 export class CreateContestDto {
@@ -48,7 +62,7 @@ export class CreateContestDto {
   @IsDate()
   startTime: Date;
 
-  @Field(() => TopicConnectInput)
+  @Field(() => TopicConnectID)
   @IsOptional()
   @IsObject()
   topics?: Prisma.TopicCreateNestedManyWithoutContestsInput;

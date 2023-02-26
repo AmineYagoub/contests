@@ -213,7 +213,7 @@ export type CreateContestDto = {
   startTime: Scalars['DateTime'];
   status: ContestStatus;
   title: Scalars['String'];
-  topics: TopicConnectInput;
+  topics: TopicConnectId;
   type: ContestType;
 };
 
@@ -231,7 +231,7 @@ export type CreateQuestionDto = {
   options: Array<Scalars['String']>;
   published?: InputMaybe<Scalars['Boolean']>;
   title: Scalars['String'];
-  topics: TopicConnectInput;
+  topics: TopicConnectTitle;
   type: QuestionType;
 };
 
@@ -987,11 +987,19 @@ export type Topic = {
   updated: Scalars['DateTime'];
 };
 
-export type TopicConnectInput = {
-  connect: Array<TopicInput>;
+export type TopicConnectId = {
+  connect: Array<TopicInputId>;
 };
 
-export type TopicInput = {
+export type TopicConnectTitle = {
+  connect: Array<TopicInputTitle>;
+};
+
+export type TopicInputId = {
+  id: Scalars['String'];
+};
+
+export type TopicInputTitle = {
   title: Scalars['String'];
 };
 
@@ -1046,7 +1054,7 @@ export type UpdateContestDto = {
   startTime?: InputMaybe<Scalars['DateTime']>;
   status?: InputMaybe<ContestStatus>;
   title?: InputMaybe<Scalars['String']>;
-  topics?: InputMaybe<TopicConnectInput>;
+  topics?: InputMaybe<TopicConnectId>;
   type?: InputMaybe<ContestType>;
 };
 
@@ -1069,7 +1077,7 @@ export type UpdateQuestionDto = {
   options?: InputMaybe<Array<Scalars['String']>>;
   published?: InputMaybe<Scalars['Boolean']>;
   title?: InputMaybe<Scalars['String']>;
-  topics?: InputMaybe<TopicConnectInput>;
+  topics?: InputMaybe<TopicConnectTitle>;
   type?: InputMaybe<QuestionType>;
   usedCount?: InputMaybe<Scalars['Int']>;
 };

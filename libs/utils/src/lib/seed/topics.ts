@@ -2,7 +2,7 @@ import { StudentLevel } from '@contests/types/auth';
 
 export const topics = [
   {
-    title: 'علامات إعراب المفرد والمثنى والجموع بأنواعها',
+    title: 'إعراب المثنى والجموع بأنواعها',
     level: [
       StudentLevel.Thirteen,
       StudentLevel.Fourteen,
@@ -14,7 +14,7 @@ export const topics = [
     ],
   },
   {
-    title: 'أسماء الإشارة',
+    title: 'أسماء الإشارة والضمائر المنفصلة',
     level: [
       StudentLevel.Thirteen,
       StudentLevel.Fourteen,
@@ -122,7 +122,7 @@ export const topics = [
     ],
   },
   {
-    title: 'أنواع الخبر (خبر المبتدأ – خبر كان – خبر إن )',
+    title: 'أنواع الخبر',
     level: [
       StudentLevel.Thirteen,
       StudentLevel.Fourteen,
@@ -559,7 +559,7 @@ export const topics = [
     ],
   },
   {
-    title: 'الملحق بجمع المذكر',
+    title: 'علامات إعراب الفاعل والمبتدأ والخبر',
     level: [
       StudentLevel.Seventeen,
       StudentLevel.Eighteen,
@@ -567,7 +567,31 @@ export const topics = [
     ],
   },
   {
-    title: 'الملحق بجمع المؤنث',
+    title: 'علامات إعراب المضاف إليه',
+    level: [
+      StudentLevel.Seventeen,
+      StudentLevel.Eighteen,
+      StudentLevel.Nineteen,
+    ],
+  },
+  {
+    title: 'علامات إعراب المفعول به',
+    level: [
+      StudentLevel.Seventeen,
+      StudentLevel.Eighteen,
+      StudentLevel.Nineteen,
+    ],
+  },
+  {
+    title: 'الملحق بجمع المذكر السالم',
+    level: [
+      StudentLevel.Seventeen,
+      StudentLevel.Eighteen,
+      StudentLevel.Nineteen,
+    ],
+  },
+  {
+    title: 'الملحق بجمع المؤنث السالم',
     level: [
       StudentLevel.Seventeen,
       StudentLevel.Eighteen,
@@ -601,11 +625,7 @@ export const topics = [
   },
   { title: 'المصادر', level: [StudentLevel.Eighteen, StudentLevel.Nineteen] },
   {
-    title: 'المصدر الميمي',
-    level: [StudentLevel.Eighteen, StudentLevel.Nineteen],
-  },
-  {
-    title: 'المصدر الصناعي',
+    title: 'المصدر الميمي والمصدر الصناعي',
     level: [StudentLevel.Eighteen, StudentLevel.Nineteen],
   },
   {
@@ -625,7 +645,7 @@ export const topics = [
     level: [StudentLevel.Eighteen, StudentLevel.Nineteen],
   },
   {
-    title: 'لنائب عن المصدر في باب المفعول المطلق',
+    title: 'النائب عن المفعول المطلق',
     level: [StudentLevel.Nineteen],
   },
   { title: 'حروف الجر الزائدة', level: [StudentLevel.Nineteen] },
@@ -638,6 +658,7 @@ export const topics = [
     level: [StudentLevel.Nineteen],
   },
   { title: 'إعراب خاصة وخصوصا وبخاصة', level: [StudentLevel.Nineteen] },
-  { title: 'أنواع من وما', level: [StudentLevel.Nineteen] },
+  { title: 'أنواع ما', level: [StudentLevel.Nineteen] },
+  { title: 'أنواع من', level: [StudentLevel.Nineteen] },
   { title: 'إعراب أدوات الاستفهام', level: [StudentLevel.Nineteen] },
 ];

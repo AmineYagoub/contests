@@ -16,14 +16,14 @@ type TopicTitle = {
 };
 
 @InputType()
-class TopicInput {
+class TopicInputTitle {
   @Field()
   title: string;
 }
 
 @InputType()
-export class TopicConnectInput {
-  @Field(() => [TopicInput])
+class TopicConnectTitle {
+  @Field(() => [TopicInputTitle])
   connect: TopicTitle[];
 }
 
@@ -54,7 +54,7 @@ export class CreateQuestionDto {
   @IsString({ each: true })
   options: string[];
 
-  @Field(() => TopicConnectInput)
+  @Field(() => TopicConnectTitle)
   @IsOptional()
   @IsObject()
   topics?: Prisma.TopicCreateNestedManyWithoutQuestionsInput;
