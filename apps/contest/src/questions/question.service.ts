@@ -30,6 +30,14 @@ export class QuestionService {
     data: Prisma.QuestionUpdateInput;
   }): Promise<Question> {
     const { data, where } = params;
+    await this.prisma.question.update({
+      data: {
+        topics: {
+          set: [],
+        },
+      },
+      where,
+    });
     return this.prisma.question.update({
       data,
       where,

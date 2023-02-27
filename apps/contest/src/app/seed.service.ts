@@ -22,6 +22,7 @@ export class SeedService {
 
   async seedCts() {
     await this.prisma.topic.deleteMany();
+    await this.prisma.question.deleteMany();
     await this.seedTopics();
   }
 }
