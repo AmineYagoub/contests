@@ -21,7 +21,7 @@ import { getTitleMeta } from '@/utils/app';
 const StartContestPage = ({ contest }: { contest: Contest }) => {
   const user = useSnapshot(AuthState).user;
   ContestActions.setContest(contest);
-  const isAllowed =
+  const isAllowed = () =>
     !contest.answers.some((el) => el.userId.id === user.id) &&
     contest.participants.includes(user.id);
   return (
@@ -29,13 +29,15 @@ const StartContestPage = ({ contest }: { contest: Contest }) => {
       <Head>
         <title>{getTitleMeta('ألمبياد النحو العربي', contest.title)}</title>
       </Head>
-      <ContestStarter
-        contestId={contest.id}
-        userId={user.id}
-        teacherId={(user.profile as Student).teacher?.id}
-        teacherProfileId={(user.profile as Student).teacher?.userId}
-        isAllowed={isAllowed}
-      />
+      {user && (
+        <ContestStarter
+          contestId={contest.id}
+          userId={user.id}
+          teacherId={(user.profile as Student).teacher?.id}
+          teacherProfileId={(user.profile as Student).teacher?.userId}
+          isAllowed={isAllowed()}
+        />
+      )}
     </>
   );
 };

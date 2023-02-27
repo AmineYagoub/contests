@@ -19,10 +19,11 @@ import TeacherStudentsList from '@/components/profile/teacher/TeacherStudentsLis
 import { UsersState } from '@/valtio/user.state';
 import Head from 'next/head';
 import { getTitleMeta } from '@/utils/app';
+import Loading from '@/components/common/Loading';
 
 const ProfileDashboard: NextPageWithLayout = () => {
   const user = useSnapshot(AuthState).user as User;
-  const profile = user.profile as Teacher;
+  const profile = user?.profile as Teacher;
   const teacherSnap = useSnapshot(UsersState);
   const { data, loading } = useTeacherDashboardQuery({
     variables: {
@@ -97,7 +98,7 @@ const ProfileDashboard: NextPageWithLayout = () => {
               title="حالة إشتراكي"
               precision={55555}
               valueRender={(val) => <span></span>}
-              suffix={profile.subscription?.memberShipOn.title || 'المجاني'}
+              suffix={profile?.subscription?.memberShipOn.title || 'المجاني'}
               prefix={
                 <SketchCircleFilled
                   style={{ fontSize: '5rem', color: 'gold' }}
@@ -108,7 +109,7 @@ const ProfileDashboard: NextPageWithLayout = () => {
         </Col>
       </Row>
       <Row align="top" gutter={2} style={{ margin: '2em 0' }}>
-        <TeacherStudentsList teacherId={profile.id} />
+        {profile ? <TeacherStudentsList teacherId={profile.id} /> : <Loading />}
       </Row>
     </>
   );

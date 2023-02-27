@@ -17,6 +17,7 @@ const StyledSection = styled('section')({
 const ImportQuestions = ({ onSuccess }: { onSuccess: () => void }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [importProgress, setImportProgress] = useState(0);
+
   const { uploadProps } = useImportQuestions();
   const socket = useReactiveVar(socketVar);
   const showModal = () => {

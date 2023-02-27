@@ -9,8 +9,8 @@ import {
   User,
 } from '@/graphql/graphql';
 import AuthLayout from '@/layout/AuthLayout';
-import { deleteAllCookies, Logger } from '@/utils/app';
-import { AppRoutes } from '@/utils/routes';
+import { Logger } from '@/utils/app';
+import { AppRoutes, redirect } from '@/utils/routes';
 import { AuthActions, AuthState } from '@/valtio/auth.state';
 import { useSnapshot } from 'valtio';
 import { NextPageWithLayout } from '@/utils/types';
@@ -27,12 +27,6 @@ export function withAuth<P>(
     const user = useSnapshot(AuthState).user as User;
 
     useEffect(() => {
-      const logout = () => {
-        localStorage.clear();
-        deleteAllCookies();
-        AuthActions.setUser(null);
-        router.push(AppRoutes.SignIn);
-      };
       const jwt = localStorage.getItem(config.jwtName);
       if (!jwt && !isPublic) {
         notification.error({
@@ -43,37 +37,59 @@ export function withAuth<P>(
         return;
       }
 
+      if (router.asPath === AppRoutes.SignIn && jwt) {
+        if (user) {
+          redirect(router, user.role.title);
+        } else {
+          GetAuthUserQuery()
+            .then(({ data }) => {
+              const u = data.getAuthUser as User;
+              AuthActions.setUser(u);
+              redirect(router, u.role.title);
+            })
+            .catch((error) => {
+              // logout();
+              Logger.log(error);
+            })
+            .finally(() => {
+              setLoading(false);
+            });
+        }
+      }
+
+      if (isPublic) {
+        setLoading(false);
+        return;
+      }
+
       if (jwt && !user) {
         GetAuthUserQuery()
           .then(({ data }) => {
-            if (!data?.getAuthUser) {
-              logout();
-              return;
-            }
             const u = data.getAuthUser as User;
             AuthActions.setUser(u);
           })
           .catch((error) => {
-            logout();
+            //logout();
             Logger.log(error);
           })
           .finally(() => {
             setLoading(false);
           });
-      } else {
-        if (
-          permissions &&
-          !user.role.permissions.some((el) => permissions.includes(el.title))
-        ) {
-          router.push('/');
-          notification.warning({
-            message: 'لا يمكنك الوصول لهذه الصفحة!',
-            description: 'لا تمتلك الصلاحيات الكافية للوصول لهذه الصفحة.',
-          });
-          return;
-        }
-        setLoading(false);
       }
+
+      if (
+        permissions &&
+        user &&
+        !user.role.permissions.some((el) => permissions.includes(el.title))
+      ) {
+        notification.warning({
+          message: 'لا يمكنك الوصول لهذه الصفحة!',
+          description: 'لا تمتلك الصلاحيات الكافية للوصول لهذه الصفحة.',
+        });
+        router.push('/');
+        return;
+      }
+      setLoading(false);
     }, [GetAuthUserQuery, router, user]);
 
     const getLayout = WrappedComponent.getLayout;

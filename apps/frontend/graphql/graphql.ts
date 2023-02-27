@@ -1260,7 +1260,7 @@ export type PaginateAnswersQueryVariables = Exact<{
 }>;
 
 
-export type PaginateAnswersQuery = { __typename?: 'Query', paginateAnswers: { __typename?: 'AnswerPaginationResponse', total: number, data?: Array<{ __typename?: 'Answer', id: string, created: any, userId: { __typename?: 'User', role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null } | { __typename: 'Teacher', id: string } | null }, contest?: { __typename?: 'Contest', id: string, title: string } | null }> | null } };
+export type PaginateAnswersQuery = { __typename?: 'Query', paginateAnswers: { __typename?: 'AnswerPaginationResponse', total: number, data?: Array<{ __typename?: 'Answer', id: string, created: any, userId: { __typename?: 'User', role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null } | { __typename: 'Teacher', id: string } | null }, contest?: { __typename?: 'Contest', id: string, title: string, authorId: { __typename?: 'User', id: string, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } } | null }> | null } };
 
 export type UpdateAppConfigMutationVariables = Exact<{
   input: UpdateAppConfigDto;
@@ -1495,7 +1495,7 @@ export type PaginateQuestionsQueryVariables = Exact<{
 }>;
 
 
-export type PaginateQuestionsQuery = { __typename?: 'Query', paginateQuestions?: { __typename?: 'QuestionPaginationResponse', total: number, data?: Array<{ __typename?: 'Question', id: string, title: string, type: QuestionType, options: Array<string>, lesson: string, correctAnswer?: string | null, created: any, updated: any, usedCount?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null }> | null } | null };
+export type PaginateQuestionsQuery = { __typename?: 'Query', paginateQuestions?: { __typename?: 'QuestionPaginationResponse', total: number, data?: Array<{ __typename?: 'Question', id: string, title: string, type: QuestionType, options: Array<string>, lesson: string, correctAnswer?: string | null, created: any, updated: any, usedCount?: number | null, topics?: Array<{ __typename?: 'Topic', id: string, title: string }> | null }> | null } | null };
 
 export type FindTopicsQueryVariables = Exact<{
   title?: InputMaybe<Scalars['String']>;
@@ -1776,6 +1776,23 @@ export const PaginateAnswersDocument = gql`
       contest {
         id
         title
+        authorId {
+          id
+          role {
+            title
+          }
+          profile {
+            __typename
+            ... on Teacher {
+              id
+              firstName
+              lastName
+            }
+            ... on Student {
+              id
+            }
+          }
+        }
       }
     }
   }
@@ -3358,6 +3375,7 @@ export const PaginateQuestionsDocument = gql`
       lesson
       correctAnswer
       topics {
+        id
         title
       }
       created

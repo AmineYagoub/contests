@@ -3,7 +3,7 @@ import { FormInstance } from 'antd/es/form/Form';
 import { useEffect } from 'react';
 import { useSnapshot } from 'valtio';
 
-import SelectTags from '@/components/common/SelectTopics';
+import SelectTopics from '@/components/common/SelectTopics';
 import { Question } from '@/graphql/graphql';
 import { QuestionFields } from '@/utils/fields';
 import { questionMappedTypes } from '@/utils/mapper';
@@ -30,8 +30,8 @@ const QuestionForm = ({
         lesson: record.lesson,
         type: record.type,
         options: [record.correctAnswer, ...record.options],
-        tags: record.topics.map((tag) => ({
-          value: tag.title,
+        topics: record.topics.map((tag) => ({
+          value: tag.id,
           label: tag.title,
         })),
       });
@@ -87,7 +87,7 @@ const QuestionForm = ({
             </Form.Item>
           </Col>
           <Col span={12}>
-            <SelectTags isContest={false} isTeacher />
+            <SelectTopics isContest={false} isTeacher />
           </Col>
         </Row>
 

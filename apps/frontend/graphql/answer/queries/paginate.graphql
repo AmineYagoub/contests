@@ -23,6 +23,23 @@ query PaginateAnswers($params: AnswerPaginationDto!) {
       contest {
         id
         title
+        authorId {
+          id
+          role {
+            title
+          }
+          profile {
+            __typename
+            ... on Teacher {
+              id
+              firstName
+              lastName
+            }
+            ... on Student {
+              id
+            }
+          }
+        }
       }
     }
   }

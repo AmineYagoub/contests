@@ -102,7 +102,7 @@ const MessageContacts = ({
     >
       {!collapsed &&
         ![RoleTitle.StudentTeacher, RoleTitle.Student].includes(
-          userSnap.role.title
+          userSnap?.role.title
         ) && (
           <Input.Search
             placeholder="البحث في قائمة الإتصال"

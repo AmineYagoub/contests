@@ -31,7 +31,7 @@ const StyledLesson = styled(Alert)({
 const AnswersResult = ({ results }: { results: ResultType[] }) => {
   const user = useSnapshot(AuthState).user;
   const collapsible = [RoleTitle.GoldenTeacher, RoleTitle.Teacher].includes(
-    user.role.title
+    user?.role.title
   )
     ? 'disabled'
     : 'header';

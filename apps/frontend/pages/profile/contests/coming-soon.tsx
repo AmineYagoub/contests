@@ -84,6 +84,4 @@ export async function getServerSideProps({ req, query }) {
 ContestComingSoon.getLayout = (page: EmotionJSX.Element) => (
   <ContestLayout>{page}</ContestLayout>
 );
-export default withAuth(ContestComingSoon, [
-  PermissionTitle.AccessStudentDashboard,
-]);
+export default withAuth(ContestComingSoon, [], true);

@@ -10,11 +10,12 @@ import PremiumContest from '@/components/profile/teacher/contest/PremiumContest'
 import StudentsAnswers from '@/components/profile/teacher/contest/StudentsAnswers';
 import Head from 'next/head';
 import { getTitleMeta } from '@/utils/app';
+import Loading from '@/components/common/Loading';
 
 const TeacherContests: NextPageWithLayout = () => {
   const user = useSnapshot(AuthState).user as User;
 
-  const isPremium = user.role.title === RoleTitle.GoldenTeacher;
+  const isPremium = user && user.role.title === RoleTitle.GoldenTeacher;
   /*    const isPremium =
   (user.profile as Teacher).subscription?.status === MembershipStatus.Active; */
 
@@ -22,7 +23,7 @@ const TeacherContests: NextPageWithLayout = () => {
     {
       label: 'نتائج مسابقات طلابك',
       key: '2',
-      children: <StudentsAnswers id={user.profile.id} />,
+      children: user ? <StudentsAnswers id={user.profile.id} /> : <Loading />,
     },
   ];
 
@@ -30,7 +31,7 @@ const TeacherContests: NextPageWithLayout = () => {
     tabs.push({
       label: 'مسابقاتي الخاصة',
       key: '3',
-      children: <PremiumContest id={user.id} />,
+      children: user ? <PremiumContest id={user.id} /> : <Loading />,
     });
   }
 

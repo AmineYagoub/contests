@@ -41,10 +41,10 @@ const ProfileLayout: FC<{ children: ReactElement }> = ({ children }) => {
   const user = useSnapshot(AuthState).user as User;
   const collapsed = useSnapshot(AppState).sidebarCollapsed;
   const isTeacher = [RoleTitle.GoldenTeacher, RoleTitle.Teacher].includes(
-    user.role.title
+    user?.role.title
   );
   const isStudent = [RoleTitle.Student, RoleTitle.StudentTeacher].includes(
-    user.role.title
+    user?.role.title
   );
 
   const routes = {
@@ -122,7 +122,7 @@ const ProfileLayout: FC<{ children: ReactElement }> = ({ children }) => {
       </StyledSideBar>
       <Layout>
         <HeaderIcons />
-        {!isTeacher && !user?.isActive && (
+        {!isTeacher && user && !user.isActive && (
           <Alert
             style={{ marginBottom: 10 }}
             message="البيانات الشخصية الخاصة بك غير مكتملة"

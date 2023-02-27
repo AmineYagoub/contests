@@ -30,7 +30,7 @@ import SelectContestParticipants from './SelectContestParticipants';
  * @returns - function that can be used in DatePicker's onChange callback
  */
 const disabledDate: RangePickerProps['disabledDate'] = (current) => {
-  return current && current < moment().endOf('day');
+  return current && current <= moment().startOf('day');
 };
 
 const ContestForm = ({

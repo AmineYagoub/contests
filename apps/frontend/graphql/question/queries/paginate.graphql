@@ -9,6 +9,7 @@ query PaginateQuestions($params: QuestionPaginationDto!) {
       lesson
       correctAnswer
       topics {
+        id
         title
       }
       created

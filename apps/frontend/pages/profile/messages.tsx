@@ -18,8 +18,8 @@ const ProfileMessages: NextPageWithLayout = () => {
       </Head>
       <MessageBox
         role={RoleTitle.Student}
-        id={userSnap.id}
-        avatar={userSnap.profile.personalImage}
+        id={userSnap?.id}
+        avatar={userSnap?.profile.personalImage}
       />
     </>
   );

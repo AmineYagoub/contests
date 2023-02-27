@@ -43,6 +43,8 @@ const MembershipData = ({
     (subscriptionSnap.membershipData as Membership) || membershipPrams
   );
 
+  console.log(subscriptionSnap.membershipData, membershipPrams);
+
   return (
     <List header={<h2>{title}</h2>}>
       {membership ? (

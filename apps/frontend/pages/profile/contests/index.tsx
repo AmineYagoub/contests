@@ -18,12 +18,12 @@ const ProfileContests: NextPageWithLayout = () => {
     {
       label: 'المسابقات التي أجريتها',
       key: '1',
-      children: <FinishedContest id={userSnap.id} isCompleted />,
+      children: <FinishedContest id={userSnap?.id} isCompleted />,
     },
     {
       label: 'المسابقات المتاحة',
       key: '2',
-      children: <UpcomingContest id={userSnap.id} />,
+      children: <UpcomingContest id={userSnap?.id} />,
     },
   ];
 

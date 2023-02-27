@@ -1,11 +1,14 @@
-import { Form } from 'antd';
-import { TagValue } from '@/components/common/SelectTopics';
 import {
   Question,
+  CreateQuestionDto,
   useCreateQuestionMutation,
   useUpdateQuestionMutation,
 } from '@/graphql/graphql';
+import { Form } from 'antd';
+import { useSnapshot } from 'valtio';
+import { AuthState } from '@/valtio/auth.state';
 import { QuestionActions } from '@/valtio/question.state';
+import { TagValue } from '@/components/common/SelectTopics';
 
 export interface CreateQuestionsProps {
   visible?: boolean;
@@ -26,22 +29,23 @@ export const useCreateQuestions = ({
     UpdateQuestionMutation,
     { loading: loadingUpdate, error: errorUpdate },
   ] = useUpdateQuestionMutation();
+  const user = useSnapshot(AuthState).user;
 
   const onFinish = async () => {
     try {
       QuestionActions.setMutationLoading(true);
       const values = await form.validateFields();
-      const payload = {
+      const payload: CreateQuestionDto = {
         ...values,
-        authorId: 1,
+        authorId: user?.id,
         correctAnswer: values.options.shift(),
-        tags: {
-          connectOrCreate: values.tags?.map((tag: TagValue) => {
-            return {
-              where: { title: tag.value },
-              create: { title: tag.value },
-            };
-          }),
+        topics: {
+          connect: values.topics?.map((tag) => ({
+            title:
+              typeof tag.label === 'string'
+                ? tag.label
+                : tag.label?.props.children.props.children,
+          })),
         },
       };
 

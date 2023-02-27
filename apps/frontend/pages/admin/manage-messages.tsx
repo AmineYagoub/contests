@@ -1,3 +1,4 @@
+import Loading from '@/components/common/Loading';
 import { withAuth } from '@/components/common/withAuth';
 import MessageBox from '@/components/messages/MessageBox';
 import { PermissionTitle, RoleTitle } from '@/graphql/graphql';
@@ -15,11 +16,15 @@ const ManageMessages = () => {
       <Head>
         <title>{getTitleMeta('لوحة التحكم', 'الرسائل')}</title>
       </Head>
-      <MessageBox
-        role={RoleTitle.Admin}
-        id={userSnap.id}
-        avatar={userSnap.profile.personalImage}
-      />
+      {userSnap ? (
+        <MessageBox
+          role={RoleTitle.Admin}
+          id={userSnap.id}
+          avatar={userSnap.profile.personalImage}
+        />
+      ) : (
+        <Loading />
+      )}
     </>
   );
 };

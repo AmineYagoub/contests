@@ -1,43 +1,13 @@
-import {
-  ContestsDataIndex,
-  useFindContestsForStudents,
-} from '@/hooks/contests/student.hook';
-import {
-  SearchDatePicker,
-  SearchDatePickerIcon,
-} from '@/components/admin/tables/SearchDatePicker';
-import { Button, Table, Tag, Tooltip } from 'antd';
 import moment from 'moment-timezone';
-import { Answer, Contest } from '@/graphql/graphql';
+import { Button, Table, Tag, Tooltip } from 'antd';
+import { BarChartOutlined } from '@ant-design/icons';
+import { Answer, RoleTitle } from '@/graphql/graphql';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 import { getMapperLabel, rolesMappedTypes } from '@/utils/mapper';
-import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
 import { useFindAnswersForStudents } from '@/hooks/contests/answer.hook';
-import { BarChartOutlined } from '@ant-design/icons';
 
 const StudentsAnswers = ({ id }: { id?: string }) => {
-  const { methods, data, loading, filteredInfo, sortedInfo } =
-    useFindAnswersForStudents(id);
-
-  const getColumnSearchDateProps = (
-    dataIndex: ContestsDataIndex
-  ): ColumnType<Contest> => ({
-    filterDropdown: (props) => (
-      <SearchDatePicker
-        {...props}
-        dataIndex={dataIndex}
-        handleSearch={methods.handleSearch}
-        handleReset={methods.handleReset}
-      />
-    ),
-    filterIcon: (filtered: boolean) => (
-      <SearchDatePickerIcon filtered={filtered} />
-    ),
-    filteredValue: filteredInfo[dataIndex] || null,
-    render: (date: string | number | Date) => (
-      <span>{moment(date).calendar()}</span>
-    ),
-  });
+  const { methods, data, loading } = useFindAnswersForStudents(id);
 
   const columns: ColumnsType<ColumnType<Answer>> = [
     {
@@ -63,6 +33,25 @@ const StudentsAnswers = ({ id }: { id?: string }) => {
       key: '2',
       render(record: Answer) {
         return <span>{record.contest.title}</span>;
+      },
+    },
+    {
+      title: 'منشئ المسابقة',
+      key: '4',
+      render(record: Answer) {
+        const { firstName, lastName } = record.contest.authorId.profile;
+        const { role } = record.contest.authorId;
+        return (
+          <>
+            <b>
+              {firstName} {lastName}
+            </b>
+            <br />
+            <Tag color={role.title === RoleTitle.Admin ? 'green' : 'gold'}>
+              {getMapperLabel(rolesMappedTypes, role.title)}
+            </Tag>
+          </>
+        );
       },
     },
     {

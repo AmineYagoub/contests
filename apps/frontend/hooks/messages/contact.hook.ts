@@ -131,7 +131,7 @@ export const useContactList = (role: RoleTitle, teacherId?: string) => {
           MessageActions.setContactLoading(false);
         });
     }
-    if (RoleTitle.Student === role) {
+    if (RoleTitle.Student === role && userSnap) {
       MessageActions.setContactLoading(true);
       FindAdminAndTeacherQuery({
         variables: {
@@ -151,7 +151,7 @@ export const useContactList = (role: RoleTitle, teacherId?: string) => {
       MessageActions.setContactLoading(false);
       MessageActions.setCurrentContact(null);
     };
-  }, [data, role]);
+  }, [data, role, userSnap]);
 
   return { loadMoreData, onSearch, searchValue };
 };

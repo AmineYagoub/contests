@@ -134,7 +134,6 @@ const TeacherStudentsList = ({ teacherId }: { teacherId: string }) => {
         <Space size="small">
           <DisconnectStudent
             studentId={record.id}
-            id={teacherId}
             onSuccess={methods.refetchData}
           />
 

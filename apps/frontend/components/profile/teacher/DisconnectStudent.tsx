@@ -4,14 +4,16 @@ import { useConnectStudentToTeacherMutation } from '@/graphql/graphql';
 import { DisconnectOutlined } from '@ant-design/icons';
 import { Logger } from '@/utils/app';
 import { useState } from 'react';
+import { useSnapshot } from 'valtio';
+import { AuthState } from '@/valtio/auth.state';
 
 const DisconnectStudent = ({
   studentId,
-  id,
+
   onSuccess,
 }: {
   studentId: string;
-  id: string;
+
   onSuccess: () => void;
 }) => {
   const [openTooltip, setOpenTooltip] = useState(false);
@@ -27,13 +29,15 @@ const DisconnectStudent = ({
   const [ConnectStudentToTeacherMutation, { loading }] =
     useConnectStudentToTeacherMutation();
 
+  const user = useSnapshot(AuthState).user;
+
   const confirmDisconnect = async () => {
     try {
       const res = await ConnectStudentToTeacherMutation({
         variables: {
           connect: false,
           studentId,
-          id,
+          id: user?.id,
         },
       });
       if (res) {

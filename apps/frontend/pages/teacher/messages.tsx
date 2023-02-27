@@ -16,12 +16,14 @@ const TeacherMessages: NextPageWithLayout = () => {
       <Head>
         <title>{getTitleMeta('ألمبياد النحو العربي', 'الرسائل')}</title>
       </Head>
-      <MessageBox
-        role={RoleTitle.Teacher}
-        id={userSnap.id}
-        profile={userSnap.profile.id}
-        avatar={userSnap.profile.personalImage}
-      />
+      {userSnap && (
+        <MessageBox
+          role={RoleTitle.Teacher}
+          id={userSnap.id}
+          profile={userSnap.profile.id}
+          avatar={userSnap.profile.personalImage}
+        />
+      )}
     </>
   );
 };

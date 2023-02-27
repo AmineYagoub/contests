@@ -16,6 +16,7 @@ import { withAuth } from '@/components/common/withAuth';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { getTitleMeta } from '@/utils/app';
+import Loading from '@/components/common/Loading';
 
 const UserDocuments = dynamic(
   import('@/components/profile/student/documents/UserDocuments'),
@@ -36,7 +37,7 @@ export const ProfileDetails = () => {
         </span>
       ),
       key: '1',
-      children: <UserDetails user={user} />,
+      children: user ? <UserDetails user={user} /> : <Loading />,
     },
     {
       label: (
@@ -46,10 +47,12 @@ export const ProfileDetails = () => {
         </span>
       ),
       key: '3',
-      children: <UserPassword user={user} />,
+      children: user ? <UserPassword user={user} /> : <Loading />,
     },
   ];
-  if ([RoleTitle.Student, RoleTitle.StudentTeacher].includes(user.role.title)) {
+  if (
+    [RoleTitle.Student, RoleTitle.StudentTeacher].includes(user?.role.title)
+  ) {
     tabs.push({
       label: (
         <span>
@@ -58,7 +61,7 @@ export const ProfileDetails = () => {
         </span>
       ),
       key: '2',
-      children: <UserDocuments user={user} />,
+      children: user ? <UserDocuments user={user} /> : <Loading />,
     });
   }
 

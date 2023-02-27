@@ -12,6 +12,7 @@ import { socket } from '@/utils/app';
 import { unlink } from 'node:fs/promises';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { initializeApollo } from '@/config/createGraphQLClient';
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 
 export const config = {
   api: {
@@ -35,7 +36,7 @@ const percentOf = (value: number, total: number) => {
   return result <= 5 ? 5 : result;
 };
 
-const processFiles = async (path: string) => {
+const processFiles = async (path: string, authorId: string) => {
   const result: CreateQuestionDto[] = [];
   const entries: { zipEntry: JSZip.JSZipObject; relativePath: string }[] = [];
   const file = await fs.readFile(path);
@@ -56,7 +57,7 @@ const processFiles = async (path: string) => {
         const correctAnswer = options.shift();
         const lesson = options.pop();
         const questionObject: CreateQuestionDto = {
-          authorId: '1',
+          authorId,
           title,
           options,
           correctAnswer,
@@ -78,9 +79,10 @@ const processFiles = async (path: string) => {
   return result;
 };
 
-const saveQuestions = async (questions: CreateQuestionDto[]) => {
-  socket.connect();
-  const client = initializeApollo({});
+const saveQuestions = async (
+  questions: CreateQuestionDto[],
+  client: ApolloClient<NormalizedCacheObject>
+) => {
   let i = 0;
   for (const question of questions) {
     try {
@@ -100,7 +102,6 @@ const saveQuestions = async (questions: CreateQuestionDto[]) => {
     }
   }
   socket.emit('saveQuestionsProgress', 100);
-  socket.disconnect();
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -109,24 +110,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       .status(405)
       .json({ status: 'Method Not Allowed', message: 'Upload error' });
   }
-  let status = 200,
+  const authorId = req.query?.authorId || '1';
+  const client = initializeApollo({});
+  const status = 200,
     resultBody = { status: 'ok', message: 'Files were uploaded successfully' };
 
   const form = new multiparty.Form();
   form.parse(req, async (err, fields, files) => {
-    if (err) {
-      status = 500;
-      resultBody = {
-        status: 'fail',
-        message: 'Upload error',
-      };
-    } else {
-      for (const [, file] of Object.entries(files)) {
-        const questions = await processFiles(file[0].path);
-        await saveQuestions(questions);
-        await unlink(file[0].path);
-      }
+    socket.connect();
+    for (const [, file] of Object.entries(files)) {
+      const questions = await processFiles(file[0].path, String(authorId));
+      await saveQuestions(questions, client);
+      await unlink(file[0].path);
     }
+    socket.disconnect();
   });
   res.status(status).json(resultBody);
 };

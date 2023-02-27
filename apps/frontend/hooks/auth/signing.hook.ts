@@ -52,6 +52,7 @@ export const useSigning = (form: FormInstance<unknown>) => {
         redirect(router, getAuthUser.role.title);
       }
     } catch (error) {
+      localStorage?.clear();
       Logger.log(error);
       if (error.networkError?.statusCode === 404) {
         form.setFields([
