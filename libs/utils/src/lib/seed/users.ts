@@ -2,17 +2,17 @@ import { RoleTitle } from '@contests/types/auth';
 
 export const users = [
   {
-    password: '12345678',
+    password: '4jpwjgD6q8SvnTXX',
     key: 999999,
-    email: 'admin@yahoo.com',
+    email: 'nahwdotcom@gmail.com',
     agreement: true,
     role: RoleTitle.ADMIN,
     emailConfirmed: true,
     isActive: true,
     profile: {
-      firstName: 'أحمد',
+      firstName: 'يسري',
       personalImage: '/icons/user-avatar.svg',
-      lastName: 'عمر',
+      lastName: 'سلال',
       dateOfBirth: '1975-10-07T11:43:24.616Z',
       country: 'مصر',
     },
