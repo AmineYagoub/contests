@@ -1,0 +1,13 @@
+query FindAppConfig {
+  findAppConfig {
+    title
+    description
+    contactEmail
+    appStorUrl
+    playStorUrl
+    youtubeUrl
+    twitterUrl
+    facebookUrl
+    instagramUrl
+  }
+}

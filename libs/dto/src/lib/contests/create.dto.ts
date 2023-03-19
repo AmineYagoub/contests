@@ -1,18 +1,33 @@
 import {
-  IsArray,
   IsDate,
   IsNotEmpty,
   IsNumber,
   IsObject,
   IsOptional,
   IsString,
+  IsUUID,
   Min,
 } from 'class-validator';
 
 import { ContestStatus, ContestType, StudentLevel } from '@contests/types';
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { TagConnectInput } from '../questions/create.dto';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/contest-service';
+
+type TopicID = {
+  id: string;
+};
+
+@InputType()
+class TopicInputID {
+  @Field()
+  id: string;
+}
+
+@InputType()
+class TopicConnectID {
+  @Field(() => [TopicInputID])
+  connect: TopicID[];
+}
 
 @InputType()
 export class CreateContestDto {
@@ -27,10 +42,10 @@ export class CreateContestDto {
   @Min(0)
   duration?: number;
 
-  @Field(() => [StudentLevel])
-  @IsNotEmpty()
+  @Field(() => [StudentLevel], { nullable: true })
+  @IsOptional()
   @IsString({ each: true })
-  level: StudentLevel[];
+  level?: StudentLevel[];
 
   @Field(() => ContestType)
   @IsNotEmpty()
@@ -47,15 +62,15 @@ export class CreateContestDto {
   @IsDate()
   startTime: Date;
 
-  @Field(() => TagConnectInput)
+  @Field(() => TopicConnectID)
   @IsOptional()
   @IsObject()
-  tags?: Prisma.TagCreateNestedManyWithoutContestsInput;
+  topics?: Prisma.TopicCreateNestedManyWithoutContestsInput;
 
-  @Field(() => Int)
+  @Field()
   @IsNotEmpty()
-  @IsNumber()
-  authorId: number;
+  @IsUUID()
+  authorId: string;
 
   @Field(() => Boolean, { defaultValue: true, nullable: true })
   @IsOptional()
@@ -67,18 +82,28 @@ export class CreateContestDto {
   @IsNumber()
   maxParticipants?: number;
 
-  @Field(() => [Int], { defaultValue: [], nullable: true })
+  @Field(() => [String], { defaultValue: [], nullable: true })
   @IsOptional()
-  @IsArray()
-  participants?: number[];
+  @IsString({ each: true })
+  participants?: string[];
 
   @Field(() => [String], { defaultValue: [], nullable: true })
   @IsOptional()
-  @IsArray()
+  @IsString({ each: true })
   countries?: string[];
 
-  @Field(() => Int, { defaultValue: 100, nullable: true })
+  @Field(() => Int)
   @IsOptional()
   @IsNumber()
-  questionCount?: number;
+  easyQuestionCount: number;
+
+  @Field(() => Int)
+  @IsOptional()
+  @IsNumber()
+  mediumQuestionCount: number;
+
+  @Field(() => Int)
+  @IsOptional()
+  @IsNumber()
+  hardQuestionCount: number;
 }

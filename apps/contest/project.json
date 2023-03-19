@@ -1,28 +1,26 @@
 {
+  "name": "contest",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/contest/src",
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nrwl/node:webpack",
+      "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
+        "target": "node",
+        "compiler": "tsc",
         "outputPath": "dist/apps/contest",
         "main": "apps/contest/src/main.ts",
         "tsConfig": "apps/contest/tsconfig.app.json",
-        "assets": ["apps/contest/src/assets"]
+        "assets": ["apps/contest/src/assets"],
+        "webpackConfig": "apps/contest/webpack.config.js"
       },
       "configurations": {
         "production": {
           "optimization": true,
           "extractLicenses": true,
-          "inspect": false,
-          "fileReplacements": [
-            {
-              "replace": "apps/contest/src/environments/environment.ts",
-              "with": "apps/contest/src/environments/environment.prod.ts"
-            }
-          ]
+          "inspect": false
         }
       }
     },

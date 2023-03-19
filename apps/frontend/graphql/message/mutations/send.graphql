@@ -1,0 +1,5 @@
+mutation SendNotifications($input: SendMessageDto!) {
+  sendNotifications(input: $input) {
+    id
+  }
+}

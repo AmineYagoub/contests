@@ -1,0 +1,13 @@
+query FindTermsPage {
+  findAppConfig {
+    agreement
+    title
+    description
+    appStorUrl
+    playStorUrl
+    youtubeUrl
+    twitterUrl
+    facebookUrl
+    instagramUrl
+  }
+}

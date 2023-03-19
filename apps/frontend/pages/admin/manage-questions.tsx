@@ -1,6 +1,7 @@
 import { Space, Table, Tag } from 'antd';
 import moment from 'moment-timezone';
 import { useState } from 'react';
+import { useSnapshot } from 'valtio';
 
 import CreateQuestion from '@/components/admin/question/CreateQuestion';
 import DeleteQuestion from '@/components/admin/question/DeleteQuestion';
@@ -12,22 +13,16 @@ import {
 } from '@/components/admin/tables/SearchDatePicker';
 import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
 import {
+  PermissionTitle,
   Question,
   QuestionType,
-  StudentLevel,
-  Tag as TagModel,
+  Topic,
 } from '@/graphql/graphql';
-import {
-  QuestionsDataIndex,
-  useSearchQuestions,
-} from '@/hooks/admin/manage-questions';
-import AdminDashboardLayout from '@/layout/AdminDashboardLayout';
-import { QuestionFields } from '@/utils/fields';
-import {
-  getMapperLabel,
-  questionMappedTypes,
-  studentMappedLevels,
-} from '@/utils/mapper';
+import { useSearchQuestions } from '@/hooks/admin/manage-questions.hook';
+import AdminLayout from '@/layout/AdminLayout';
+import { QuestionFields, QuestionsDataIndex } from '@/utils/fields';
+import { getMapperLabel, questionMappedTypes } from '@/utils/mapper';
+import { QuestionState } from '@/valtio/question.state';
 import { PlusOutlined } from '@ant-design/icons';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import styled from '@emotion/styled';
@@ -35,8 +30,9 @@ import styled from '@emotion/styled';
 import { TableBtn } from './dashboard';
 
 import type { ColumnsType, ColumnType } from 'antd/es/table';
-import { useSnapshot } from 'valtio';
-import { QuestionState } from '@/valtio/question.state';
+import { withAuth } from '@/components/common/withAuth';
+import Head from 'next/head';
+import { getTitleMeta } from '@/utils/app';
 const StyledSection = styled('section')({
   backgroundColor: '#f8f8f8 !important',
   position: 'relative',
@@ -114,11 +110,11 @@ const ManageQuestions = () => {
     },
     {
       title: 'الموضوعات',
-      dataIndex: QuestionFields.tags,
-      key: QuestionFields.tags,
-      ...getColumnSearchProps(QuestionFields.tags),
-      render: (tags: TagModel[]) => {
-        return tags?.map((tag) => {
+      dataIndex: QuestionFields.topics,
+      key: QuestionFields.topics,
+      ...getColumnSearchProps(QuestionFields.topics),
+      render: (topics: Topic[]) => {
+        return topics?.map((tag) => {
           return (
             <Tag color="green" key={tag.title}>
               {tag.title}
@@ -148,24 +144,6 @@ const ManageQuestions = () => {
       },
     },
     {
-      title: 'المستوى المستهدف',
-      dataIndex: QuestionFields.level,
-      key: QuestionFields.level,
-      filters: studentMappedLevels,
-      filterMultiple: true,
-      onFilter: methods.handleFilter,
-      filteredValue: filteredInfo.level || null,
-      render: (levels: StudentLevel[]) => {
-        return levels?.map((level) => {
-          return (
-            <Tag color="warning" key={level}>
-              {getMapperLabel<StudentLevel>(studentMappedLevels, level)}
-            </Tag>
-          );
-        });
-      },
-    },
-    {
       title: 'عدد الخيارات',
       dataIndex: QuestionFields.options,
       key: QuestionFields.options,
@@ -175,7 +153,7 @@ const ManageQuestions = () => {
         sortedInfo.columnKey === QuestionFields.options
           ? sortedInfo.order
           : null,
-      render: (options) => options?.length + 1, // Plus correctAnswer
+      render: (options) => options?.length + 1, // TODO Plus correctAnswer
     },
     {
       title: 'مرات الإستخدام',
@@ -202,36 +180,43 @@ const ManageQuestions = () => {
   ];
 
   return (
-    <StyledSection>
-      <ImportQuestions onSuccess={methods.refetchData} />
-      <TableBtn
-        type="primary"
-        size="middle"
-        icon={<PlusOutlined />}
-        onClick={showDrawer}
-      >
-        سؤال جديد
-      </TableBtn>
-      <TableBtn onClick={methods.clearAllFilters}>إعادة الضبط</TableBtn>
-      <Table
-        columns={columns}
-        dataSource={questionSnap.questions}
-        loading={questionSnap.queryLoading}
-        size="large"
-        onChange={methods.handleTableChange}
-        pagination={methods.handlePagination}
-        style={{ minHeight: 500 }}
-      />
-      <CreateQuestion
-        visible={visible}
-        onClose={onClose}
-        onSuccess={methods.refetchData}
-      />
-    </StyledSection>
+    <>
+      <Head>
+        <title>{getTitleMeta('لوحة التحكم', 'الأسئلة')}</title>
+      </Head>
+
+      <StyledSection>
+        <ImportQuestions onSuccess={methods.refetchData} />
+        <TableBtn
+          type="primary"
+          size="middle"
+          icon={<PlusOutlined />}
+          onClick={showDrawer}
+        >
+          سؤال جديد
+        </TableBtn>
+        <TableBtn onClick={methods.clearAllFilters}>إعادة الضبط</TableBtn>
+        <Table
+          columns={columns}
+          dataSource={questionSnap.questions}
+          loading={questionSnap.queryLoading}
+          size="large"
+          onChange={methods.handleTableChange}
+          pagination={methods.handlePagination}
+          style={{ minHeight: 500 }}
+        />
+        <CreateQuestion
+          visible={visible}
+          onClose={onClose}
+          onSuccess={methods.refetchData}
+        />
+      </StyledSection>
+    </>
   );
 };
 
 ManageQuestions.getLayout = (page: EmotionJSX.Element) => (
-  <AdminDashboardLayout>{page}</AdminDashboardLayout>
+  <AdminLayout>{page}</AdminLayout>
 );
-export default ManageQuestions;
+
+export default withAuth(ManageQuestions, [PermissionTitle.AccessDashboard]);

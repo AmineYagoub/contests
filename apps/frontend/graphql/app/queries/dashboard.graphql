@@ -1,0 +1,11 @@
+query Dashboard {
+  dashboard {
+    teachers
+    students
+    studentTeacher
+    levels {
+      level
+      value
+    }
+  }
+}

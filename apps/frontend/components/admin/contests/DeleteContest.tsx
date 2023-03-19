@@ -2,6 +2,7 @@ import { Button, Popconfirm } from 'antd';
 
 import { Contest, useDeleteContestMutation } from '@/graphql/graphql';
 import { DeleteOutlined } from '@ant-design/icons';
+import { Logger } from '@/utils/app';
 
 const DeleteContest = ({
   record,
@@ -11,20 +12,18 @@ const DeleteContest = ({
   onSuccess: () => void;
 }) => {
   const [DeleteContestMutation, { loading }] = useDeleteContestMutation();
-
   const confirmDelete = async () => {
     try {
       const data = await DeleteContestMutation({
         variables: {
-          id: Number(record.id),
+          id: record.id,
         },
       });
       if (data) {
         onSuccess();
       }
-      console.log(record, data);
     } catch (error) {
-      console.log(error);
+      Logger.log(error);
     }
   };
   return (

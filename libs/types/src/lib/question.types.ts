@@ -10,3 +10,8 @@ registerEnumType(QuestionType, {
   name: 'QuestionType',
   description: 'Question Type',
 });
+
+export type SelectedQuestionFields = {
+  id: string;
+  type?: string;
+};

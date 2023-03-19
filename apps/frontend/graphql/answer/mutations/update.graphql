@@ -1,0 +1,7 @@
+mutation UpdateAnswer($id: String!, $data: UpdateAnswerDto!) {
+  updateAnswer(id: $id, data: $data) {
+    id
+    created
+    updated
+  }
+}

@@ -1,0 +1,6 @@
+mutation UpdateMessagesCount($id: String!, $count: Int!, $isMessage: Boolean!) {
+  updateMessagesCount(id: $id, count: $count, isMessage: $isMessage) {
+      __typename
+      id
+    }
+}

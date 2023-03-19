@@ -1,6 +1,9 @@
 {
   "root": true,
-  "ignorePatterns": ["apps/frontend/.next/*"],
+  "ignorePatterns": [
+    "/workspaces/contests/apps/frontend/.next/*",
+    "/workspaces/contests/apps/frontend/graphql/graphql.ts"
+  ],
   "plugins": ["@nrwl/nx"],
   "overrides": [
     {

@@ -4,35 +4,27 @@ import {
   IsObject,
   IsOptional,
   IsString,
+  IsUUID,
 } from 'class-validator';
 
-import { QuestionType, StudentLevel } from '@contests/types';
-import { Field, InputType, Int } from '@nestjs/graphql';
-import { Prisma } from '@prisma/client';
+import { QuestionType } from '@contests/types';
+import { Field, InputType } from '@nestjs/graphql';
+import { Prisma } from '@prisma/contest-service';
 
-type TagTitle = {
+type TopicTitle = {
   title: string;
 };
 
 @InputType()
-class TagInput {
+class TopicInputTitle {
   @Field()
   title: string;
 }
 
 @InputType()
-class TagCreateInput {
-  @Field(() => TagInput)
-  create: TagTitle;
-
-  @Field(() => TagInput)
-  where: TagTitle;
-}
-
-@InputType()
-export class TagConnectInput {
-  @Field(() => [TagCreateInput])
-  connectOrCreate: { create: TagTitle; where: TagTitle }[];
+class TopicConnectTitle {
+  @Field(() => [TopicInputTitle])
+  connect: TopicTitle[];
 }
 
 @InputType()
@@ -52,11 +44,6 @@ export class CreateQuestionDto {
   @IsString()
   lesson?: string;
 
-  @Field(() => [StudentLevel])
-  @IsNotEmpty()
-  @IsString({ each: true })
-  level: StudentLevel[];
-
   @Field(() => QuestionType)
   @IsNotEmpty()
   @IsString()
@@ -67,15 +54,15 @@ export class CreateQuestionDto {
   @IsString({ each: true })
   options: string[];
 
-  @Field(() => TagConnectInput)
+  @Field(() => TopicConnectTitle)
   @IsOptional()
   @IsObject()
-  tags?: Prisma.TagCreateNestedManyWithoutQuestionsInput;
+  topics?: Prisma.TopicCreateNestedManyWithoutQuestionsInput;
 
-  @Field(() => Int)
+  @Field()
   @IsNotEmpty()
-  @IsNumber()
-  authorId: number;
+  @IsUUID()
+  authorId: string;
 
   @Field(() => Boolean, { defaultValue: true, nullable: true })
   @IsOptional()

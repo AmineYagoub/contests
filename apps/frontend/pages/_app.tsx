@@ -1,20 +1,18 @@
-import 'antd/dist/antd.variable.min.css';
 import './app.css';
 import 'moment/locale/ar-dz';
+import 'antd/dist/antd.variable.min.css';
 
-import { ConfigProvider, notification, Spin } from 'antd';
-import ar from 'antd/lib/locale/ar_EG';
-import moment from 'moment-timezone';
-import { NextComponentType } from 'next';
-import { AppProps } from 'next/app';
-import Head from 'next/head';
-import { ReactElement, useEffect } from 'react';
-
-import createEmotionCache from '@/config/createEmotionCache';
-import { useApollo } from '@/config/createGraphQLClient';
 import theme from '@/config/theme';
-import { LoadingOutlined } from '@ant-design/icons';
+import { AppProps } from 'next/app';
+import moment from 'moment-timezone';
+import ar from 'antd/lib/locale/ar_EG';
+import { NextComponentType } from 'next';
 import { ApolloProvider } from '@apollo/client';
+import { ReactElement, useEffect } from 'react';
+import { LoadingOutlined } from '@ant-design/icons';
+import { useApollo } from '@/config/createGraphQLClient';
+import { ConfigProvider, notification, Spin } from 'antd';
+import createEmotionCache from '@/config/createEmotionCache';
 import { CacheProvider, EmotionCache } from '@emotion/react';
 
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
@@ -32,7 +30,6 @@ interface MyAppProps extends AppProps {
 
 export default function CustomApp(props: MyAppProps) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-  const getLayout = Component.getLayout || ((page: ReactElement) => page);
 
   useEffect(() => {
     notification.config({
@@ -44,17 +41,12 @@ export default function CustomApp(props: MyAppProps) {
       theme,
     });
   }, []);
-
   const apolloClient = useApollo(pageProps);
-
   return (
     <CacheProvider value={emotionCache}>
-      <Head>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
-      </Head>
       <ApolloProvider client={apolloClient}>
         <ConfigProvider locale={ar} direction="rtl">
-          {getLayout(<Component {...pageProps} />)}
+          <Component {...pageProps} />
         </ConfigProvider>
       </ApolloProvider>
     </CacheProvider>

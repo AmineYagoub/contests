@@ -1,0 +1,64 @@
+query GetAuthUser {
+  getAuthUser {
+    id
+    key
+    email
+    isActive
+    emailConfirmed
+    role {
+      title
+      permissions {
+        title
+      }
+    }
+    countAllNotifications
+    countAllMessages
+    messagesCount
+    notificationsCount
+    profile {
+      __typename
+      ... on Student {
+        id
+        firstName
+        lastName
+        level
+        country
+        personalImage
+        birthCertImage
+        letterImage
+        dateOfBirth
+        teacher {
+          id
+          firstName
+          lastName
+          userId
+        }
+      }
+      ... on Teacher {
+        id
+        country
+        firstName
+        lastName
+        dateOfBirth
+        phone {
+          phone
+          phoneCode
+        }
+        personalImage
+        subscription {
+          id
+          status
+          startDate
+          endDate
+          created
+          renewCount
+          memberShipOn {
+            id
+            title
+            price
+          }
+        }
+      }
+    }
+  }
+}

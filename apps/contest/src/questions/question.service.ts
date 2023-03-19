@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma, Question } from '@prisma/client';
+import { Prisma, Question } from '@prisma/contest-service';
 
 import { PrismaService } from '../app/prisma.service';
 
@@ -30,6 +30,14 @@ export class QuestionService {
     data: Prisma.QuestionUpdateInput;
   }): Promise<Question> {
     const { data, where } = params;
+    await this.prisma.question.update({
+      data: {
+        topics: {
+          set: [],
+        },
+      },
+      where,
+    });
     return this.prisma.question.update({
       data,
       where,
@@ -91,7 +99,7 @@ export class QuestionService {
         where,
         orderBy: sort,
         include: {
-          tags: true,
+          topics: true,
         },
       }),
     ]);
@@ -133,16 +141,11 @@ export class QuestionService {
               contains: String(value),
             };
             break;
-          case 'level':
-            filter.level = {
-              array_contains: String(value),
-            };
-            break;
           case 'type':
             filter.type = String(value);
             break;
-          case 'tags':
-            filter.tags = {
+          case 'topics':
+            filter.topics = {
               some: {
                 title: {
                   contains: String(value),

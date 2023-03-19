@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  db:
+    image: percona
+    restart: unless-stopped
+    volumes:
+      - api-data:/var/lib/mysql
+    # Uncomment to change startup options
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass123
+      MYSQL_DATABASE: mostaqil
+    ports:
+      - 3306:3306
+    networks:
+      - db_network
+
+  cts_db:
+    image: percona
+    restart: unless-stopped
+    volumes:
+      - cts-data:/var/lib/mysql
+    # Uncomment to change startup options
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass123
+      MYSQL_DATABASE: cts
+    ports:
+      - 3307:3306
+    networks:
+      - db_network
+
+  minio:
+    image: bitnami/minio
+    volumes:
+      - minio_data:/data
+    environment:
+      MINIO_ROOT_USER: minio-root-user
+      MINIO_ROOT_PASSWORD: minio-root-password
+    ports:
+      - 9000:9000
+      - 9001:9001
+    networks:
+      - db_network
+
+    #Nginx Service
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - redis_data:/data
+
+networks:
+  db_network:
+
+volumes:
+  api-data: null
+  cts-data: null
+  minio_data: null
+  redis_data: null

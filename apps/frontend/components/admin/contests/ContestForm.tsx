@@ -1,16 +1,29 @@
-import { Col, DatePicker, Form, Input, InputNumber, Row, Select } from 'antd';
+import {
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  Row,
+  Select,
+  Space,
+} from 'antd';
 import { FormInstance } from 'antd/es/form/Form';
 import moment from 'moment';
-import Image from 'next/image';
-import { FocusEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Contest } from '@/graphql/graphql';
+import SelectCountry from '@/components/common/SelectCountry';
+import SelectTopics from '@/components/common/SelectTopics';
+import { Contest, RoleTitle, StudentLevel } from '@/graphql/graphql';
 import { ContestFields } from '@/utils/fields';
 import { contestMappedTypes, studentMappedLevels } from '@/utils/mapper';
 
 import type { RangePickerProps } from 'antd/es/date-picker';
-import SelectTags from '@/components/common/SelectTags';
-const { Option } = Select;
+import { useSnapshot } from 'valtio';
+import { AuthState } from '@/valtio/auth.state';
+import SelectContestParticipants from './SelectContestParticipants';
+import SelectDate from '@/components/common/SelectDate';
+import dayjs from 'dayjs';
 
 /**
  * Can not select days before today and today.
@@ -19,7 +32,7 @@ const { Option } = Select;
  * @returns - function that can be used in DatePicker's onChange callback
  */
 const disabledDate: RangePickerProps['disabledDate'] = (current) => {
-  return current && current < moment().endOf('day');
+  return current && current <= moment().startOf('day');
 };
 
 const ContestForm = ({
@@ -29,64 +42,47 @@ const ContestForm = ({
   form: FormInstance;
   record?: Contest;
 }) => {
-  type ContriesType = {
-    name: string;
-    flag: string;
-  };
-  const [countries, setCountries] = useState<ContriesType[]>();
-  const [countriesStor, setCountriesStor] = useState<ContriesType[]>();
-
-  const handleFetchCountries = (e: FocusEvent<HTMLElement, Element>) => {
-    if (!countries) {
-      fetch(process.env.NEXT_PUBLIC_COUNTRIES_ENDPOINT)
-        .then((res) => res.json())
-        .then((data) => {
-          const c = data.map((country) => ({
-            name: country.name.common,
-            flag: country.flags.png,
-          }));
-          setCountries(c);
-          setCountriesStor(c);
-        });
-    }
-  };
-  const handleChangeCountries = (value) => {
-    if (value.length === 0) {
-      setCountries(countriesStor);
-    }
-  };
-
-  const handleSearch = (newValue: string) => {
-    if (newValue) {
-      setCountries(
-        countriesStor?.filter((country) =>
-          country.name.toLowerCase().match(newValue.toLowerCase())
-        )
-      );
-    } else {
-      setCountries(countriesStor);
-    }
-  };
-
   useEffect(() => {
     if (record) {
-      form.setFieldsValue({
-        duration: record.duration,
-        questionCount: record.questionCount,
-        title: record.title,
-        level: record.level,
-        type: record.type,
-        countries: record.countries,
-        startTime: moment(record.startTime),
-        maxParticipants: record.maxParticipants,
-        tags: record.tags.map((tag) => ({
-          value: tag.title,
-          label: tag.title,
-        })),
-      });
+      setSelectedLevel(record.level);
+      setTimeout(() => {
+        form.setFieldsValue({
+          duration: record.duration,
+          easyQuestionCount: record.easyQuestionCount,
+          mediumQuestionCount: record.mediumQuestionCount,
+          hardQuestionCount: record.hardQuestionCount,
+          title: record.title,
+          level: record.level,
+          type: record.type,
+          countries: record.countries,
+          // startTime: moment(record.startTime),
+          year: dayjs(record.startTime).get('year'),
+          month: dayjs(record.startTime).get('month') + 1,
+          day: dayjs(record.startTime).get('D'),
+          maxParticipants: record.maxParticipants,
+          topics: record.topics.map((tag) => ({
+            value: tag.id,
+            label: tag.title,
+          })),
+        });
+      }, 0);
     }
     return () => form.resetFields();
   }, [form, record]);
+
+  const user = useSnapshot(AuthState).user;
+  const getTeacherId =
+    user?.role.title === RoleTitle.GoldenTeacher ? user?.profile.id : null;
+  const [selectedLevel, setSelectedLevel] = useState<StudentLevel[]>([]);
+  const isTeacher = user?.role.title !== RoleTitle.Admin;
+
+  useEffect(() => {
+    if (selectedLevel?.length === 0) {
+      form.setFieldsValue({
+        topics: [],
+      });
+    }
+  }, [selectedLevel, form]);
 
   return (
     <Form
@@ -110,17 +106,15 @@ const ContestForm = ({
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item
-            name={ContestFields.level}
-            label="المستوى المستهدف"
-            rules={[{ required: true, message: 'يرجى تحديد مستوى المسابقة' }]}
-          >
+          <Form.Item name={ContestFields.level} label="المستوى المستهدف">
             <Select
-              mode="tags"
+              disabled={isTeacher}
+              mode="multiple"
+              maxTagCount={2}
               allowClear
               showArrow
               options={studentMappedLevels}
-              fieldNames={{ label: 'text' }}
+              onChange={(val) => setSelectedLevel(val)}
             />
           </Form.Item>
         </Col>
@@ -141,15 +135,44 @@ const ContestForm = ({
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item
-            name={ContestFields.questionCount}
-            label="عدد أسئلة المسابقة"
-            rules={[
-              { required: true, message: 'يرجى تحديد عدد أسئلة المسابقة' },
-            ]}
-          >
-            <InputNumber style={{ width: '100%' }} />
-          </Form.Item>
+          <Space size={20}>
+            <Form.Item
+              name={ContestFields.easyQuestionCount}
+              label="الأسئلة السهلة"
+              rules={[
+                {
+                  required: true,
+                  message: 'يرجى تحديد عدد الأسئلة السهلة للمسابقة',
+                },
+              ]}
+            >
+              <InputNumber placeholder="عدد الأسئلة" />
+            </Form.Item>
+            <Form.Item
+              name={ContestFields.mediumQuestionCount}
+              label="الأسئلة المتوسطة"
+              rules={[
+                {
+                  required: true,
+                  message: 'يرجى تحديد عدد الأسئلة المتوسطة للمسابقة',
+                },
+              ]}
+            >
+              <InputNumber style={{ width: 105 }} placeholder="عدد الأسئلة" />
+            </Form.Item>
+            <Form.Item
+              name={ContestFields.hardQuestionCount}
+              label="الأسئلة الصعبة"
+              rules={[
+                {
+                  required: true,
+                  message: 'يرجى تحديد عدد الأسئلة الصعبة للمسابقة',
+                },
+              ]}
+            >
+              <InputNumber placeholder="عدد الأسئلة" />
+            </Form.Item>
+          </Space>
         </Col>
       </Row>
 
@@ -158,19 +181,20 @@ const ContestForm = ({
           <Form.Item
             name={ContestFields.startTime}
             label="موعد إجراء المسابقة"
-            rules={[
+            /*  rules={[
               { required: true, message: 'يرجى تحديد تاريخ بدء المسابقة' },
-            ]}
+            ]} */
             help="توقيت القاهرة"
             required
           >
-            <DatePicker
+            {/* <DatePicker
               showTime
               showToday
               allowClear
               style={{ width: '100%' }}
               disabledDate={disabledDate}
-            />
+            /> */}
+            <SelectDate showTime />
           </Form.Item>
         </Col>
         <Col span={12}>
@@ -179,46 +203,24 @@ const ContestForm = ({
             label="مدة المسابقة"
             rules={[{ required: true, message: 'يرجى تحديد مدة المسابقة' }]}
             help="المدة الزمنية بالدقائق"
+            required
           >
             <InputNumber style={{ width: '100%' }} />
           </Form.Item>
         </Col>
       </Row>
+      <SelectTopics
+        isContest
+        selectedLevel={selectedLevel}
+        isTeacher={isTeacher}
+      />
       <Row gutter={16}>
         <Col span={12}>
-          <Form.Item
+          <SelectCountry
             name={ContestFields.countries}
             label="الدول المشاركة"
-            help="أتركه فارغا للسماح بجميع الدول"
-          >
-            <Select
-              mode="multiple"
-              allowClear
-              showArrow
-              filterOption={false}
-              showSearch
-              value={countries}
-              onFocus={handleFetchCountries}
-              onChange={handleChangeCountries}
-              onSearch={handleSearch}
-              notFoundContent={null}
-            >
-              {countries?.map((country) => (
-                <Option key={country.name} value={country.name}>
-                  <Image
-                    loading="lazy"
-                    width="20"
-                    height="12"
-                    src={country.flag}
-                    alt={country.name}
-                  />
-                  <b style={{ margin: '0 5px', display: 'inline-block' }}>
-                    {country.name}
-                  </b>
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
+            multiple
+          />
         </Col>
         <Col span={12}>
           <Form.Item
@@ -230,14 +232,8 @@ const ContestForm = ({
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item
-        name={ContestFields.participants}
-        label="الطلاب المستهدفين"
-        help="لن تظهر المسابقة إلا للطبة المحددين في هذا الحقل"
-      >
-        <Select allowClear showArrow fieldNames={{ label: 'text' }} />
-      </Form.Item>
-      <SelectTags />
+
+      <SelectContestParticipants teacherId={getTeacherId} />
     </Form>
   );
 };

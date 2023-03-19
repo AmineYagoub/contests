@@ -3,6 +3,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "sourceMap": true,
+    "resolveJsonModule": true,
     "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
@@ -17,7 +18,10 @@
     "paths": {
       "@contests/config": ["libs/config/src/index.ts"],
       "@contests/dto": ["libs/dto/src/index.ts"],
-      "@contests/types": ["libs/types/src/index.ts"]
+      "@contests/dto/auth": ["libs/dto/src/auth.ts"],
+      "@contests/types": ["libs/types/src/index.ts"],
+      "@contests/types/auth": ["libs/types/src/auth.ts"],
+      "@contests/utils": ["libs/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

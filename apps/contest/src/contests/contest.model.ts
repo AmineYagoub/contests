@@ -1,8 +1,10 @@
-import { ContestStatus, ContestType } from '@contests/types';
+import { ContestStatus, ContestType, StudentLevel } from '@contests/types';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
+import { Answer } from '../answers/answer.model';
 import { BaseModel } from '../common/base.model';
-import { Tag } from '../tags/tag.model';
+import { Question } from '../questions/question.model';
+import { Topic } from '../topics/topic.model';
 
 @ObjectType()
 export class Contest extends BaseModel {
@@ -21,10 +23,23 @@ export class Contest extends BaseModel {
   })
   type: ContestType;
 
-  @Field(() => [Tag], {
-    description: 'Identifies a list of tags that belongs to this Question.',
+  @Field(() => [StudentLevel], {
+    description: 'Identifies a list of levels that can be join this Contest.',
+    nullable: true,
   })
-  tags: Tag[];
+  level?: StudentLevel[];
+
+  @Field(() => [Topic], {
+    description: 'Identifies a list of topics that belongs to this contest.',
+    nullable: true,
+  })
+  topics: Topic[];
+
+  @Field(() => [Answer], {
+    description: 'Identifies a list of answers that belongs to this contest.',
+    nullable: true,
+  })
+  answers: Answer[];
 
   @Field(() => ContestStatus, {
     description: 'Identifies the status of the Contest.',
@@ -42,6 +57,13 @@ export class Contest extends BaseModel {
   })
   participants?: string[];
 
+  @Field(() => [Question], {
+    description:
+      'Identifies a list of questions ids that connected to this contest.',
+    nullable: true,
+  })
+  questions?: Question[];
+
   @Field(() => [String], {
     description:
       'Identifies a list of countries that can be allowed to join this Contest.',
@@ -50,12 +72,23 @@ export class Contest extends BaseModel {
   countries?: string[];
 
   @Field(() => Int, {
-    description: 'Identifies how many questions in the Contest.',
+    description: 'Identifies how many easy questions in the Contest.',
   })
-  questionCount: number;
+  easyQuestionCount: number;
+
+  @Field(() => Int, {
+    description: 'Identifies how many medium questions in the Contest.',
+  })
+  mediumQuestionCount: number;
+
+  @Field(() => Int, {
+    description: 'Identifies how many hard questions in the Contest.',
+  })
+  hardQuestionCount: number;
 
   @Field(() => Int, {
     description: 'Identifies the max number of Participants in the Contest.',
+    nullable: true,
   })
   maxParticipants: number;
 }

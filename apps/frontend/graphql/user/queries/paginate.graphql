@@ -1,0 +1,33 @@
+query PaginateUsers($params: UserPaginationDto!) {
+  paginateUsers(params: $params) {
+    total
+    data {
+      id
+      key
+      role {
+        title
+      }
+      isActive
+      created
+      emailConfirmed
+      profile {
+      __typename
+      ... on Student {
+        id
+        firstName
+        lastName
+        level
+        country
+        personalImage
+      }
+      ... on Teacher {
+        id
+        firstName
+        lastName
+        country
+        personalImage
+      }
+    }
+    }
+  }
+}

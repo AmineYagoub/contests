@@ -5,7 +5,15 @@ const withTM = require('next-transpile-modules')(['echarts', 'zrender']);
 /**
  * @type {import('@nrwl/next/plugins/with-nx').WithNxOptions}
  **/
+
 const nextConfig = {
+  webpack: (config) => {
+    config.watchOptions = {
+      poll: 1000,
+      aggregateTimeout: 300,
+    };
+    return config;
+  },
   reactStrictMode: true,
   compiler: {
     emotion: true,
@@ -14,7 +22,13 @@ const nextConfig = {
     }, */
   },
   images: {
-    domains: ['via.placeholder.com', 'flagcdn.com', 'upload.wikimedia.org'],
+    domains: [
+      'ui-avatars.com',
+      'flagcdn.com',
+      'upload.wikimedia.org',
+      's3.olympiadnahw.com',
+      'localhost',
+    ],
   },
   i18n: {
     locales: ['ar'],

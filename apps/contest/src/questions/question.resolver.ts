@@ -5,14 +5,13 @@ import {
 } from '@contests/dto';
 import {
   Args,
-  Int,
   Mutation,
   Query,
   Resolver,
   ResolveReference,
 } from '@nestjs/graphql';
 
-import { QuestionPaginationResponce } from '../common/pagination.responce';
+import { QuestionPaginationResponse } from '../common/pagination.response';
 import { Question } from './question.model';
 import { QuestionService } from './question.service';
 
@@ -21,28 +20,29 @@ export class QuestionResolver {
   constructor(private questionService: QuestionService) {}
 
   @Query(() => Question, { nullable: true })
-  async findOneQuestionById(@Args('id', { type: () => Int }) id: number) {
+  async findOneQuestionById(@Args('id') id: string) {
     return this.questionService.findUnique({ id });
   }
 
   @Mutation(() => Question, { nullable: true })
-  async deleteQuestionById(@Args('id', { type: () => Int }) id: number) {
+  async deleteQuestionById(@Args('id') id: string) {
     return this.questionService.delete({ id });
   }
 
-  @Query(() => QuestionPaginationResponce, { nullable: true })
+  @Query(() => QuestionPaginationResponse, { nullable: true })
   async paginateQuestions(@Args('params') params: QuestionPaginationDto) {
     return this.questionService.paginate(params);
   }
 
   @Mutation(() => Question)
   async createQuestion(@Args('input') data: CreateQuestionDto) {
+    console.log(data.topics.connect);
     return this.questionService.create(data);
   }
 
   @Mutation(() => Question)
   async updateQuestion(
-    @Args('id', { type: () => Int }) id: number,
+    @Args('id') id: string,
     @Args('input') data: UpdateQuestionDto
   ) {
     return this.questionService.update({ data, where: { id } });
@@ -55,7 +55,7 @@ export class QuestionResolver {
    * @returns
    */
   @ResolveReference()
-  async resolveReference(reference: { __typename: string; id: number }) {
+  async resolveReference(reference: { __typename: string; id: string }) {
     return this.questionService.findUnique({ id: reference.id });
   }
 }

@@ -1,0 +1,51 @@
+query FindByIdForReview($id: String!, $answerId: String) {
+  findOneContestById(id: $id, answerId: $answerId) {
+    id
+    type
+    topics {
+      title
+    }
+    questions {
+      id
+      title
+      options
+      type
+      topics {
+        title
+      }
+      correctAnswer
+      usedCount
+      lesson
+    }
+    answers {
+      id
+      contestId
+      userId {
+        id
+      }
+      answers {
+        questionId
+        option
+        options
+      }
+      annulled
+      annulledReason
+      created
+      updated
+    }
+    title
+    level
+    duration
+    published
+    countries
+    created
+    updated
+    status
+    startTime
+    participants
+    easyQuestionCount
+    mediumQuestionCount
+    hardQuestionCount
+    maxParticipants
+  }
+}

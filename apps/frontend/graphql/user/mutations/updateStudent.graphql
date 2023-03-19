@@ -1,0 +1,37 @@
+mutation UpdateStudentProfile($id: String!, $input: UpdateStudentDto!) {
+  updateStudentProfile(id: $id, input: $input) {
+    id
+    key
+    email
+    isActive
+    emailConfirmed
+    role {
+      title
+    }
+    profile {
+      __typename
+      ... on Student {
+        id
+        firstName
+        lastName
+        level
+        country
+        personalImage
+        birthCertImage
+        letterImage
+        dateOfBirth
+        teacher {
+          id
+          firstName
+          lastName
+        }
+      }
+      ... on Teacher {
+        id
+        firstName
+        lastName
+      }
+    }
+
+  }
+}

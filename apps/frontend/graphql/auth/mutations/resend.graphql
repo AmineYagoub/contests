@@ -1,0 +1,3 @@
+mutation ResendEmailActivationCode($input: EmailDto!) {
+  resendEmailActivationCode(input: $input)
+}

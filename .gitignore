@@ -40,3 +40,6 @@ Thumbs.db
 
 # Next.js
 apps/frontend/.next
+apps/frontend/.env
+
+uploads/

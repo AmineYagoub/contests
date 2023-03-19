@@ -1,0 +1,13 @@
+query FindPrivacyPolicyPage {
+  findAppConfig {
+    privacy
+    title
+    description
+    appStorUrl
+    playStorUrl
+    youtubeUrl
+    twitterUrl
+    facebookUrl
+    instagramUrl
+  }
+}

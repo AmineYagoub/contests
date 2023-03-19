@@ -1,0 +1,6 @@
+mutation SendContactUsForm($input: ContactUsDto!) {
+  sendContactUsForm(input: $input) {
+      envelopeTime
+      messageId
+  }
+}

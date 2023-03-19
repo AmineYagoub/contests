@@ -1,6 +1,7 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum StudentLevel {
+  Student = 'Student',
   Eighteen = 'Eighteen',
   Fifteen = 'Fifteen',
   Fourteen = 'Fourteen',

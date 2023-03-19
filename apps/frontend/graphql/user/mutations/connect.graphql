@@ -1,0 +1,5 @@
+mutation ConnectStudentToTeacher($id: String!, $studentId: String!, $connect: Boolean!) {
+  connectStudentToTeacher(id: $id, studentId: $studentId, connect: $connect ) {
+    id
+  }
+}

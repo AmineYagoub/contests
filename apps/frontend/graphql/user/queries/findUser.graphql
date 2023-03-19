@@ -1,0 +1,59 @@
+query FindUser($key: Int!) {
+  findUser(key: $key) {
+    id
+    key
+    email
+    emailConfirmed
+    isActive
+    created
+    role {
+      title
+    }
+    profile {
+      __typename
+      ... on Teacher {
+        id
+        country
+        firstName
+        lastName
+        phone {
+          phone
+          phoneCode
+        }
+        subscription{
+          id
+          status
+          startDate
+          endDate
+          created
+          renewCount
+          memberShipOn {
+            id
+            title
+            price
+          }
+        }
+        dateOfBirth
+        personalImage
+      }
+      ... on Student {
+        id
+        level
+        country
+        firstName
+        lastName
+        dateOfBirth
+        letterImage
+        personalImage
+        birthCertImage
+        teacher {
+          id
+          country
+          firstName
+          lastName
+          personalImage
+        }
+      }
+    }
+  }
+}

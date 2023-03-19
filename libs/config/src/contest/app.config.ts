@@ -11,6 +11,11 @@ export const contestConfig = registerAs(CONTEST_CONFIG_REGISTER_KEY, () => ({
   get url() {
     return `${this.protocol}://${this.host}:${this.port}`;
   },
+  redis: {
+    host: process.env.REDIS_HOST || 'localhost',
+    port: Number(process.env.REDIS_PORT) || 6379,
+    password: process.env.REDIS_PASSWORD || 'eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81',
+  },
 }));
 
 export type ContestConfigType = ConfigType<typeof contestConfig>;

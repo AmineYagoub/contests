@@ -1,0 +1,16 @@
+query FindOneAnswerById($id: String!) {
+  findOneAnswerById(id: $id) {
+    userId {
+      id
+    }
+    answers {
+      questionId
+      questionIndex
+      optionIndex
+    }
+    annulled
+    annulledReason
+    created
+    updated
+  }
+}

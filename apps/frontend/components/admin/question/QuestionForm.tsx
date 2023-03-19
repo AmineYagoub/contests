@@ -1,15 +1,15 @@
-import { Button, Col, Form, Input, Row, Select, Spin } from 'antd';
+import { useSnapshot } from 'valtio';
+import { useEffect } from 'react';
 import { FormInstance } from 'antd/es/form/Form';
+import { Button, Col, Form, Input, Row, Select, Spin } from 'antd';
 
-import SelectTags from '@/components/common/SelectTags';
+import SelectTopics from '@/components/common/SelectTopics';
 import { Question } from '@/graphql/graphql';
 import { QuestionFields } from '@/utils/fields';
-import { questionMappedTypes, studentMappedLevels } from '@/utils/mapper';
+import { questionMappedTypes } from '@/utils/mapper';
+import { QuestionState } from '@/valtio/question.state';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
-import { useSnapshot } from 'valtio';
-import { QuestionState } from '@/valtio/question.state';
-import { useEffect } from 'react';
 
 const StyledInput = styled(Input)({
   maxWidth: '95%',
@@ -29,10 +29,9 @@ const QuestionForm = ({
         title: record.title,
         lesson: record.lesson,
         type: record.type,
-        level: record.level,
         options: [record.correctAnswer, ...record.options],
-        tags: record.tags.map((tag) => ({
-          value: tag.title,
+        topics: record.topics.map((tag) => ({
+          value: tag.id,
           label: tag.title,
         })),
       });
@@ -88,26 +87,8 @@ const QuestionForm = ({
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item
-              name={QuestionFields.level}
-              label="المستوى المستهدف"
-              rules={[{ required: true, message: 'يرجى تحديد مستوى السؤال' }]}
-            >
-              <Select
-                mode="tags"
-                allowClear
-                showArrow
-                options={studentMappedLevels}
-                fieldNames={{ label: 'text' }}
-              />
-            </Form.Item>
+            <SelectTopics isContest={false} isTeacher />
           </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col span={12}>
-            <SelectTags />
-          </Col>
-          <Col span={12}></Col>
         </Row>
 
         <Form.List

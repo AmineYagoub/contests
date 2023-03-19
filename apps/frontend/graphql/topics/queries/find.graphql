@@ -1,0 +1,7 @@
+query FindTopics($title: String, $level: [StudentLevel!]) {
+  findTopics(title: $title, level: $level) {
+    id
+    title
+    level
+  }
+}

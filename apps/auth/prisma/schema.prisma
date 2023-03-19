@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../node_modules/@prisma/auth-service"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Permission {
+  id                    String    @id @default(uuid())
+  title                 String    @db.VarChar(100) @unique
+  description           String?   @db.VarChar(250) @default("")
+  created               DateTime  @default(now())
+  updated               DateTime  @updatedAt
+  roles                 Role[]
+}
+
+model Role {
+  id                    String    @id @default(uuid())
+  title                 String    @db.VarChar(100) @unique
+  description           String?   @db.VarChar(250) @default("")
+  created               DateTime  @default(now())
+  updated               DateTime  @updatedAt
+  permissions           Permission[]
+  users                 User[]
+}
+
+model Membership {
+  id                    String             @id @default(uuid())
+  status                MembershipStatus   @default(UNPAID)
+  startDate             DateTime?
+  endDate               DateTime?
+  renewCount            Int?               @db.UnsignedSmallInt @default(0)
+
+  profileId             String             @unique
+  profile               Profile            @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  memberShipOn          SubscriptionPlans[]
+
+  created               DateTime           @default(now())
+  updated               DateTime           @updatedAt
+}
+
+enum MembershipStatus {
+  ACTIVE
+  CANCELED
+  UNPAID
+  EXPIRED
+}
+
+model SubscriptionPlans {
+  id                    String    @id @default(uuid())
+  title                 String    @db.VarChar(100) @unique
+  subTitle              String?   @db.VarChar(250) @default("")
+  price                 Int       @db.UnsignedSmallInt
+  period                Int?      @db.SmallInt
+  allowedContests       Int?      @db.SmallInt
+  options               Json      @db.Json
+  created               DateTime  @default(now())
+  updated               DateTime  @updatedAt
+
+  memberships           Membership[]
+}
+
+model User {
+  id                    String    @id @default(uuid())
+  email                 String    @db.VarChar(100) @unique
+  key                   Int       @db.UnsignedInt @unique
+  password              String    @db.Char(255)
+  emailConfirmed        Boolean?  @default(false)
+  agreement             Boolean
+  isActive              Boolean?  @default(false)
+  messagesCount         Int?      @default(0)
+  notificationsCount    Int?      @default(0)
+  created               DateTime  @default(now())
+  updated               DateTime  @updatedAt
+
+  roleId                String
+  role                  Role      @relation(fields: [roleId], references: [id], onDelete: NoAction)
+  emailToken            EmailToken?
+  profile               Profile?
+
+  @@index([emailConfirmed(sort: Desc)])
+}
+
+model Profile {
+  id                    String    @id @default(uuid())
+  firstName             String?   @db.VarChar(100) @default("")
+  lastName              String?   @db.VarChar(100) @default("")
+  level                 String?   @db.Char(64) @default("")
+  personalImage         String?   @db.VarChar(1000) @default("")
+  birthCertImage        String?   @db.VarChar(1000) @default("")
+  letterImage           String?   @db.VarChar(1000) @default("")
+  country               String?   @db.VarChar(255) @default("")
+  phone                 Json?     @db.Json
+  dateOfBirth           DateTime?
+  created               DateTime  @default(now())
+  updated               DateTime  @updatedAt
+  userId                String    @unique
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  teacherId             String?
+  teacher               Profile?   @relation("StudentTeacher", fields: [teacherId], references: [id] , onDelete: SetNull)
+  students              Profile[]  @relation("StudentTeacher")
+
+  subscription          Membership?
+
+  @@index([firstName( sort: Desc)])
+  @@index([level( sort: Desc)])
+}
+
+model EmailToken {
+  id                    String    @id @default(uuid())
+  value                 String    @db.Char(128) @unique
+  created               DateTime  @default(now())
+  updated               DateTime  @updatedAt
+  userId                String    @unique
+  user                  User      @relation(fields: [userId], references: [id] , onDelete: Cascade)
+}

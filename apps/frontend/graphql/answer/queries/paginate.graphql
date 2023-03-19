@@ -1,0 +1,46 @@
+query PaginateAnswers($params: AnswerPaginationDto!) {
+  paginateAnswers(params: $params) {
+    total
+    data {
+      id
+      created
+      userId {
+        role {
+          title
+        }
+        profile {
+          __typename
+          ... on Teacher {
+            id
+          }
+          ... on Student {
+            id
+            firstName
+            lastName
+          }
+        }
+      }
+      contest {
+        id
+        title
+        authorId {
+          id
+          role {
+            title
+          }
+          profile {
+            __typename
+            ... on Teacher {
+              id
+              firstName
+              lastName
+            }
+            ... on Student {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+}

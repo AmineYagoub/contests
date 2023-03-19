@@ -1,4 +1,4 @@
-mutation DeleteQuestion($id: Int!) {
+mutation DeleteQuestion($id: String!) {
   deleteQuestionById(id: $id) {
     id
   }

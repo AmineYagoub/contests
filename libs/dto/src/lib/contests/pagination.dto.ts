@@ -6,13 +6,14 @@ import { CreateContestDto } from './create.dto';
 @InputType()
 export class WhereContestArgs extends PartialType(
   OmitType(CreateContestDto, [
-    'authorId',
     'maxParticipants',
     'published',
     'duration',
-    'questionCount',
+    'easyQuestionCount',
+    'mediumQuestionCount',
+    'hardQuestionCount',
     'startTime',
-    'tags',
+    'topics',
   ] as const)
 ) {
   @Field(() => [String], { nullable: true })
@@ -23,6 +24,12 @@ export class WhereContestArgs extends PartialType(
 
   @Field({ nullable: true })
   tags: string;
+
+  @Field({ nullable: true })
+  answerBy: string;
+
+  @Field({ nullable: true })
+  noAnswerBy: string;
 }
 
 @InputType()
@@ -44,4 +51,7 @@ export class OrderContestArgs {
 export class ContestPaginationDto extends PaginatedArgs(
   WhereContestArgs,
   OrderContestArgs
-) {}
+) {
+  @Field(() => Boolean, { nullable: true, defaultValue: false })
+  includeQuestions?: boolean;
+}

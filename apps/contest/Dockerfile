@@ -6,8 +6,9 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
+RUN (cd apps/auth/ && npx prisma generate)
 RUN (cd apps/contest/ && npx prisma generate)
-RUN npx nx build contest --generatePackageJson --optimization 
+RUN npx nx build contest --generatePackageJson --optimization
 
 
 # Production image, copy all the files and run next
@@ -18,8 +19,7 @@ ENV NODE_ENV production
 
 COPY --from=builder /app/dist/apps/contest ./
 COPY apps/contest/prisma ./prisma/
-RUN npm install
-RUN npm install prisma @nestjs/config apollo-server-core @apollo/gateway
+RUN npm pkg set dependencies.prisma="latest" && npm install
 
 ## Add the wait script to the image
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait /wait

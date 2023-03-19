@@ -1,0 +1,34 @@
+query FindByIdForExam($id: String!) {
+  findOneContestById(id: $id) {
+    id
+    type
+    topics {
+      title
+    }
+    questions {
+      id
+      title
+      options
+      type
+    }
+    answers {
+      userId {
+        id
+      }
+    }
+    title
+    level
+    duration
+    published
+    countries
+    created
+    updated
+    status
+    startTime
+    participants
+    easyQuestionCount
+    mediumQuestionCount
+    hardQuestionCount
+    maxParticipants
+  }
+}

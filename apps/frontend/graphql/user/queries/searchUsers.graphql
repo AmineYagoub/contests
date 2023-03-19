@@ -1,0 +1,20 @@
+
+query SearchUsers($params: UserPaginationDto!) {
+  searchUsers(params: $params) {
+    __typename
+    ... on Student {
+      id
+      firstName
+      lastName
+      userId
+      personalImage
+    }
+    ... on Teacher {
+      id
+      firstName
+      lastName
+      userId
+      personalImage
+    }
+  }
+}

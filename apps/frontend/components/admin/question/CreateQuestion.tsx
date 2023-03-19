@@ -1,6 +1,6 @@
 import { Alert, Button, Drawer, Space } from 'antd';
 
-import { useCreateQuestions } from '@/hooks/questions/create-question.hook';
+import { useCreateQuestions } from '@/hooks/questions/create.hook';
 import { SaveOutlined } from '@ant-design/icons';
 
 import QuestionForm from './QuestionForm';
@@ -24,7 +24,7 @@ const CreateQuestion = ({
       placement="right"
       closable={false}
       onClose={onClose}
-      visible={visible}
+      open={visible}
       getContainer={false}
       style={{ position: 'absolute' }}
       bodyStyle={{ paddingBottom: 80 }}

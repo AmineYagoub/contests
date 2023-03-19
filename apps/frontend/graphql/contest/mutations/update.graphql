@@ -1,4 +1,4 @@
-mutation UpdateContest($id: Int!, $input: UpdateContestDto!) {
+mutation UpdateContest($id: String!, $input: UpdateContestDto!) {
   updateContest(id: $id, input: $input) {
     id
     title
@@ -8,9 +8,10 @@ mutation UpdateContest($id: Int!, $input: UpdateContestDto!) {
     created
     updated
     status
-    authorId
     startTime
-    questionCount
+    easyQuestionCount
+    mediumQuestionCount
+    hardQuestionCount
     participants
   }
 }

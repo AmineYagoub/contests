@@ -8,13 +8,12 @@ query PaginateQuestions($params: QuestionPaginationDto!) {
       options
       lesson
       correctAnswer
-      tags {
+      topics {
+        id
         title
       }
-      level
       created
       updated
-      authorId
       usedCount
     }
   }

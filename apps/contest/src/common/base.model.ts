@@ -1,25 +1,20 @@
-import { StudentLevel } from '@contests/types';
-import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { User } from '../users/user.entity';
 
 @ObjectType({ isAbstract: true })
 export abstract class BaseModel {
   @Field(() => ID)
   id: string;
 
-  @Field(() => [StudentLevel], {
-    description: 'Identifies a list of levels that can be join this Contest.',
-  })
-  level: StudentLevel[];
-
   @Field(() => Boolean, {
-    description: 'Identifies if the Question is published or not.',
+    description: 'Identifies if the entity is published or not.',
   })
   published: boolean;
 
-  @Field(() => Int, {
-    description: 'Identifies the author of the Question.',
+  @Field(() => User, {
+    description: 'Identifies the author of the entity.',
   })
-  authorId: number;
+  authorId: string;
 
   @Field({
     description: 'Identifies the date and time when the object was created.',

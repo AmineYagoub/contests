@@ -2,7 +2,7 @@ import { Alert, Button, Drawer, Space } from 'antd';
 import { useState } from 'react';
 
 import { Question } from '@/graphql/graphql';
-import { useCreateQuestions } from '@/hooks/questions/create-question.hook';
+import { useCreateQuestions } from '@/hooks/questions/create.hook';
 import { EditOutlined, SaveOutlined } from '@ant-design/icons';
 
 import QuestionForm from './QuestionForm';
@@ -42,7 +42,7 @@ const UpdateQuestion = ({
         placement="left"
         closable={false}
         onClose={onClose}
-        visible={visible}
+        open={visible}
         width={720}
         extra={
           <Space>

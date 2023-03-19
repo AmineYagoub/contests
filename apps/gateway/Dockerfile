@@ -6,7 +6,9 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-RUN npx nx build gateway --generatePackageJson --optimization 
+RUN (cd apps/auth/ && npx prisma generate)
+RUN (cd apps/contest/ && npx prisma generate)
+RUN npx nx build gateway --generatePackageJson --optimization
 
 
 # Production image, copy all the files and run next
@@ -18,15 +20,9 @@ ENV NODE_ENV production
 COPY --from=builder /app/dist/apps/gateway ./
 
 RUN npm install
-RUN npm install prisma @nestjs/config apollo-server-core
-
-
-## Add the wait script to the image
-# ADD https://github.com/vishnubob/wait-for-it/blob/master/wait-for-it.sh ./wait-for-it.sh
-# RUN chmod +x ./wait-for-it.sh
 
 # USER nest
 
-EXPOSE 3000
+EXPOSE 3005
 ## Launch the wait tool and then your application
 CMD ["node", "main"]
