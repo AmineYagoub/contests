@@ -226,8 +226,8 @@ export class UserService {
       role,
       profileId: result.profile.id,
       membershipId: result.profile.subscription?.id,
-      planId: result.profile.subscription?.memberShipOn.id,
-      membershipPeriod: result.profile.subscription?.memberShipOn.period,
+      planId: result.profile.subscription?.memberShipOn[0].id,
+      membershipPeriod: result.profile.subscription?.memberShipOn[0].period,
     });
     return result;
   }

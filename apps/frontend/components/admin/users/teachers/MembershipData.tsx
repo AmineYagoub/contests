@@ -1,19 +1,19 @@
 import {
-  Membership,
-  MembershipStatus,
   RoleTitle,
+  Membership,
   SubscriptionPlan,
+  MembershipStatus,
 } from '@/graphql/graphql';
+import { useState } from 'react';
+import { useSnapshot } from 'valtio';
 import styled from '@emotion/styled';
-import { List, Tag, Typography } from 'antd';
-import { getMapperLabel, membershipStatusMappedTypes } from '@/utils/mapper';
 import moment from 'moment-timezone';
 import { formatPrice } from '@/utils/app';
-import DeleteSubscription from './DeleteSubscription';
-import { useSnapshot } from 'valtio';
-import { SubscriptionPlanState } from '@/valtio/plans.state';
+import { List, Tag, Typography } from 'antd';
 import { AuthState } from '@/valtio/auth.state';
-import { useState } from 'react';
+import DeleteSubscription from './DeleteSubscription';
+import { SubscriptionPlanState } from '@/valtio/plans.state';
+import { getMapperLabel, membershipStatusMappedTypes } from '@/utils/mapper';
 
 const { Item } = List;
 
@@ -43,8 +43,6 @@ const MembershipData = ({
     (subscriptionSnap.membershipData as Membership) || membershipPrams
   );
 
-  console.log(subscriptionSnap.membershipData, membershipPrams);
-
   return (
     <List header={<h2>{title}</h2>}>
       {membership ? (
@@ -56,11 +54,11 @@ const MembershipData = ({
 
           <StyledItem>
             <Typography.Text strong>خطة الإشتراك</Typography.Text>
-            <span>{membership.memberShipOn.title}</span>
+            <span>{membership.memberShipOn[0]?.title}</span>
             {(user?.role.title === RoleTitle.Admin ||
               membership.status !== MembershipStatus.Active) && (
               <DeleteSubscription
-                plan={membership.memberShipOn as SubscriptionPlan}
+                plan={membership.memberShipOn[0] as SubscriptionPlan}
                 profileId={profileId}
                 onSuccess={() => setMembership(null)}
               />
@@ -85,7 +83,7 @@ const MembershipData = ({
               {formatPrice(
                 membership.status === MembershipStatus.Active
                   ? 0
-                  : membership.memberShipOn.price
+                  : membership.memberShipOn[0]?.price
               )}
             </Typography.Text>
           </StyledItem>

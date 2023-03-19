@@ -9,6 +9,7 @@ export * from './lib/users/updateTeacherSubscription.dto';
 export * from './lib/users/pagination.dto';
 export * from './lib/plans/create.dto';
 export * from './lib/plans/update.dto';
+export * from './lib/users/contactUs.dto';
 
 import { IsEmail, IsUUID } from 'class-validator';
 

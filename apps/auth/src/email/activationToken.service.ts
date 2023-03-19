@@ -26,14 +26,61 @@ export class ActivationTokenService {
     private prisma: PrismaService
   ) {
     this.config = configService.get<AuthConfigType>(AUTH_CONFIG_REGISTER_KEY);
-    const { smtp, user, pass } = this.config.mail;
+    const { host, user, pass } = this.config.mail;
     this.transporter = createTransport({
-      service: smtp,
+      service: 'Outlook365',
+      host: host,
+      port: 25,
+      tls: {
+        rejectUnauthorized: false,
+      },
       auth: {
         user,
         pass,
       },
     });
+  }
+
+  /**
+   * Send Contact us form to Admin email
+   *
+   * @param email string
+   * @param to number
+   * @param title number
+   * @param content number
+   *
+   * @returns Promise<SMTPTransport.SentMessageInfo>
+   */
+  async sendContactUsForm({
+    email,
+    content,
+    title,
+    to,
+  }: {
+    email: string;
+    to: string;
+    title: string;
+    content: string;
+  }): Promise<SMTPTransport.SentMessageInfo> {
+    const c = this.configService.get<AuthConfigType>(AUTH_CONFIG_REGISTER_KEY);
+    const message = {
+      from: c.mail.from,
+      subject: title,
+      to,
+      text: `رسالة من طرف <${email}>:
+        ${content}
+        `,
+    };
+    try {
+      return new Promise((resolve, reject) => {
+        this.transporter.sendMail(message, (err, info) => {
+          if (err) reject(err);
+          else resolve(info);
+        });
+      });
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   /**

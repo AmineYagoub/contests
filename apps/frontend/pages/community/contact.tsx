@@ -11,6 +11,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { withAuth } from '@/components/common/withAuth';
 import { Button, Form, Input, notification, Result } from 'antd';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import { useSendContactUsFormMutation } from '@/graphql/graphql';
 
 const rules = [
   {
@@ -23,6 +24,7 @@ const StyledSection = styled('section')({
   textAlign: 'center',
   maxWidth: 550,
   margin: '0 auto',
+  height: '100vh',
 });
 
 export function ContactPage() {
@@ -32,6 +34,7 @@ export function ContactPage() {
   const [result, setResult] = useState(false);
   const router = useRouter();
   const user = useSnapshot(AuthState).user;
+  const [SendContactUsFormMutation] = useSendContactUsFormMutation();
 
   const rootUrl = 'get from gonfig';
 
@@ -46,7 +49,7 @@ export function ContactPage() {
 
   const onFinish = async (inputs) => {
     try {
-      /* setLoading(true);
+      setLoading(true);
       const data = await SendContactUsFormMutation({
         variables: {
           input: {
@@ -57,7 +60,7 @@ export function ContactPage() {
       });
       if (data) {
         setResult(true);
-      } */
+      }
     } catch (error) {
       console.error(error);
       notification.error({
@@ -125,7 +128,7 @@ export function ContactPage() {
             rules={rules}
             name="content"
           >
-            <Input.TextArea allowClear rows={10} />
+            <Input.TextArea rows={10} />
           </Form.Item>
 
           <Button

@@ -3,6 +3,7 @@ import { FormInstance } from 'antd/es/form/Form';
 import moment from 'moment';
 import { ValidateErrorEntity } from 'rc-field-form/es/interface';
 import { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
 
 import {
   Student,
@@ -16,8 +17,9 @@ import {
   Teacher,
 } from '@/graphql/graphql';
 import { Logger } from '@/utils/app';
-
 import type { RcFile } from 'antd/es/upload/interface';
+import { DateTimeInput } from '@/components/common/SelectDate';
+
 export const useUser = (form: FormInstance<unknown>, user: User) => {
   const isTeacher = [RoleTitle.GoldenTeacher, RoleTitle.Teacher].includes(
     user.role.title
@@ -33,6 +35,7 @@ export const useUser = (form: FormInstance<unknown>, user: User) => {
     if (user) {
       const profile = user.profile as Student;
       const phone = (user.profile as Teacher)?.phone;
+
       form.setFieldsValue({
         email: user?.email,
         firstName: profile?.firstName,
@@ -44,6 +47,9 @@ export const useUser = (form: FormInstance<unknown>, user: User) => {
         dateOfBirth: moment(profile?.dateOfBirth),
         phone: phone?.phone,
         phoneCode: phone?.phoneCode,
+        year: dayjs(profile.dateOfBirth).get('year'),
+        month: dayjs(profile.dateOfBirth).get('month') + 1,
+        day: dayjs(profile.dateOfBirth).get('D'),
       });
 
       if (profile?.teacher) {
@@ -54,11 +60,15 @@ export const useUser = (form: FormInstance<unknown>, user: User) => {
     }
   }, [form, user]);
 
-  const onFinish = async (values: UpdateStudentDto | UpdateTeacherDto) => {
+  const onFinish = async (
+    values: DateTimeInput | UpdateStudentDto | UpdateTeacherDto
+  ) => {
     let res = false;
     try {
+      const { year, month, day } = values as DateTimeInput;
+      const dateOfBirth = dayjs(`${year}-${month}-${day}`).format();
       if (isTeacher) {
-        const { firstName, lastName, phone, phoneCode, country, dateOfBirth } =
+        const { firstName, lastName, phone, phoneCode, country } =
           values as UpdateTeacherDto;
         const { data } = await UpdateTeacherProfileMutation({
           variables: {
@@ -75,7 +85,7 @@ export const useUser = (form: FormInstance<unknown>, user: User) => {
         });
         res = !!data?.updateTeacherProfile;
       } else {
-        const { firstName, lastName, level, role, country, dateOfBirth } =
+        const { firstName, lastName, level, role, country } =
           values as UpdateStudentDto;
         const { data } = await UpdateStudentProfileMutation({
           variables: {

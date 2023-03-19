@@ -38,7 +38,13 @@ const StyledCol = styled(Col)({
   },
 });
 
-const ContestCategoriesSection = ({ topics }: { topics: Topic[] }) => {
+const ContestCategoriesSection = ({
+  topics,
+  length,
+}: {
+  topics: Topic[];
+  length: number;
+}) => {
   return (
     <StyledSection wrap>
       <Title level={2}>مواضيع المسابقات</Title>
@@ -47,15 +53,12 @@ const ContestCategoriesSection = ({ topics }: { topics: Topic[] }) => {
           <h4>{topic.title}</h4>
         </StyledCol>
       ))}
-      <StyledButton
-        size="large"
-        type="primary"
-        shape="round"
-        style={{ width: 200, marginTop: 35 }}
-        href={AppRoutes.SignUp}
+      <span
+        style={{ width: 200, marginTop: 35, fontSize: '1.5rem' }}
+        className="koufi"
       >
-        شاهد كل المواضيع
-      </StyledButton>
+        أكثر من {length} موضوع
+      </span>
     </StyledSection>
   );
 };

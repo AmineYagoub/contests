@@ -13,25 +13,26 @@ import { useSnapshot } from 'valtio';
 
 export const useHeaderNotification = () => {
   const user = useSnapshot(AuthState).user;
-  const isAdmin = user?.role.title === RoleTitle.Admin;
+  // const isAdmin = user?.role.title === RoleTitle.Admin;
   const countMessages = user?.countAllMessages - user?.messagesCount;
-  let countNotification =
+  const countNotification =
     user?.countAllNotifications - user?.notificationsCount;
 
   const [data, setData] = useState<Message[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { data: dataCount } = useCountAllNotificationsForAdminQuery({
+  /*   const { data: dataCount } = useCountAllNotificationsForAdminQuery({
     skip: !isAdmin,
-  });
+  }); */
 
-  if (isAdmin && dataCount) {
+  /*  if (isAdmin && dataCount) {
     countNotification =
       dataCount.countAllNotificationsForAdmin - user?.notificationsCount;
-  }
+  } */
   const [FindLastNotificationsQuery] = useFindLastNotificationsLazyQuery({
     variables: {
-      id: isAdmin ? undefined : user?.id,
+      //id: isAdmin ? undefined : user?.id, // show all notifications to admin
+      id: user?.id,
     },
   });
 
@@ -68,13 +69,14 @@ export const useHeaderNotification = () => {
           },
         });
         setData(data.findLastNotifications as Message[]);
-        if (isAdmin) {
+        /* if (isAdmin) {
           AuthActions.resetNotificationsCounter(
             dataCount.countAllNotificationsForAdmin
           );
         } else {
           AuthActions.resetNotificationsCounter();
-        }
+        } */
+        AuthActions.resetNotificationsCounter();
       }
     } catch (error) {
       Logger.log(error);

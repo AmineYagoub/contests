@@ -70,7 +70,7 @@ export const ProfileDetails = () => {
       <Head>
         <title>{getTitleMeta('ألمبياد النحو العربي', 'الملف الشخصي')}</title>
       </Head>
-      <Tabs defaultActiveKey="1" type="card" size="large" items={tabs} />;
+      <Tabs defaultActiveKey="1" type="card" size="large" items={tabs} />
     </>
   );
 };

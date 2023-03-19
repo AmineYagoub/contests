@@ -11,6 +11,8 @@ import {
 } from '@/graphql/graphql';
 import { Logger } from '@/utils/app';
 import { ConstraintsErrors, SignUpInput } from '@/utils/types';
+import { useRouter } from 'next/router';
+import { AppRoutes } from '@/utils/routes';
 
 const handleSignUpErrors = (error: any, form: FormInstance<unknown>) => {
   Logger.log(error);
@@ -125,6 +127,7 @@ const clearErrors = (field: SignUpDto, form: FormInstance<unknown>) => {
 };
 
 export const useSignUp = (form: FormInstance<unknown>) => {
+  const router = useRouter();
   const [SignUpMutation, { loading }] = useSignUpMutation();
   const [isSuccess, setSuccess] = useState<boolean>(false);
   const [registeredEmail, setRegisteredEmail] = useState<string>(null);
@@ -141,7 +144,11 @@ export const useSignUp = (form: FormInstance<unknown>) => {
         },
       });
       if (data?.signup) {
-        setSuccess(true);
+        // setSuccess(true); TODO Set success to true to show email verification form
+        notification.success({
+          message: 'تم تسجيل حسابك بنجاح, يرجى تسجيل الدخول.',
+        });
+        router.push(AppRoutes.SignIn);
       }
     } catch (error) {
       handleSignUpErrors(error, form);

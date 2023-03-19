@@ -52,7 +52,7 @@ const TeacherMembership = () => {
     membership === null && el.price === 0;
 
   const isCurrentPlan = (el: SubscriptionPlan) =>
-    isFreePlan(el) || el.title === membership?.memberShipOn.title;
+    isFreePlan(el) || el.title === membership?.memberShipOn[0]?.title;
 
   return (
     <>

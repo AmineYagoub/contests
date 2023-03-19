@@ -10,6 +10,9 @@ import { ContestActions } from '@/valtio/contest.state';
 import { useSnapshot } from 'valtio';
 import { AuthState } from '@/valtio/auth.state';
 import { Logger } from '@/utils/app';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 
 export interface CreateContestsProps {
   visible?: boolean;
@@ -36,8 +39,14 @@ export const useCreateContests = ({
     try {
       ContestActions.setMutationLoading(true);
       const values = await form.validateFields();
+      const { year, month, day, time, ...rest } = values;
+      const startTime = dayjs(
+        `${year}-${month}-${day} ${dayjs(time.toString()).format('HH:mm')}`
+      ).format();
+
       const payload = {
-        ...values,
+        ...rest,
+        startTime,
         status: ContestStatus.NotStarted,
         authorId: user.id,
         topics: {

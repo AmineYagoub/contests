@@ -67,7 +67,7 @@ const GoodEducationSection = () => {
           style={{ width: 200, marginTop: 20 }}
           href={AppRoutes.SignUp}
         >
-          إنظم إلينا
+          انضم إلينا
         </StyledButton>
       </Col>
     </StyledContainer>

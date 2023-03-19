@@ -30,15 +30,15 @@ export const authConfig = registerAs(AUTH_CONFIG_REGISTER_KEY, () => ({
     nonceEncryptKey: process.env.JWT_SECRET || 'secret',
   },
   mail: {
-    smtp: process.env.SMTP_SERVICE || 'gmail',
-    user: process.env.SMTP_USER || 'yagoub.2.amine@gmail.com',
-    pass: process.env.SMTP_PASSWORD || 'ifxmonknifeehske',
+    host: process.env.SMTP_SERVICE || 'smtp.office365.com',
+    user: process.env.SMTP_USER || 'yosrysallal@olympiadnahw.com',
+    pass: process.env.SMTP_PASSWORD || 'Norahmed88',
     baseUrl: process.env.BASE_URL || 'http://localhost:3000',
     templatePath: path.join(
       path.resolve(),
       isProd ? './assets/' : './apps/auth/src/assets/'
     ),
-    from: process.env.MAIL_FROM || 'yagoub.2.amine@gmail.com',
+    from: process.env.MAIL_FROM || 'yosrysallal@olympiadnahw.com',
     siteName: process.env.MAIL_SITE_NAME || 'منصة أولمبياد النحو العربي',
   },
   redis: {

@@ -24,7 +24,7 @@ export const contestMappedStatus: Mapper<ContestStatus>[] = [
     value: ContestStatus.Closed,
   },
   {
-    text: 'لم تبدأ بعد',
+    text: 'لم تقم بإجتيازها',
     value: ContestStatus.NotStarted,
   },
 ];

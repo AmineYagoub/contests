@@ -1,4 +1,4 @@
-import { IDDto } from '@contests/dto/auth';
+import { ContactUsDto, ContactUsResponse, IDDto } from '@contests/dto/auth';
 import { isPublic } from '@contests/utils';
 import {
   Args,
@@ -26,6 +26,12 @@ export class ActivationTokenResolver {
   @Mutation(() => User)
   activateEmailToken(@Args('input') data: IDDto) {
     return this.activationService.activateEmailToken({ id: data.id });
+  }
+
+  @isPublic()
+  @Mutation(() => ContactUsResponse)
+  async sendContactUsForm(@Args('input') data: ContactUsDto) {
+    return this.activationService.sendContactUsForm(data);
   }
 
   /**

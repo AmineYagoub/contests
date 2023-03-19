@@ -50,12 +50,13 @@ export class AuthService {
       const emailToken = randomUUID();
       const user = await this.buildUser(data, emailToken);
       const result = await this.prisma.user.create({ data: user });
-      this.eventEmitter.emit(USER_CREATED_EVENT, {
+      // TODO use email verification
+      /*this.eventEmitter.emit(USER_CREATED_EVENT, {
         template: 'email-confirmation',
         token: emailToken,
         id: result.id,
         email: result.email,
-      });
+      }); */
       return true;
     } catch (error) {
       if (error.code === 'P2002') {
@@ -77,6 +78,8 @@ export class AuthService {
     const hashedPassword = await this.passwordService.hashPassword(password);
     const user: Prisma.UserCreateInput = {
       password: hashedPassword,
+      isActive: true,
+      emailConfirmed: true,
       key: generateUserKey(),
       email,
       agreement,
@@ -90,11 +93,11 @@ export class AuthService {
           },
         },
       },
-      emailToken: {
+      /*emailToken: {
         create: {
           value: emailToken,
         },
-      },
+      }, */
       profile: {
         create: {
           personalImage: '/icons/user-avatar.svg',

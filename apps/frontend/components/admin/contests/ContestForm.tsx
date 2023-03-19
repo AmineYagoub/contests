@@ -22,6 +22,8 @@ import type { RangePickerProps } from 'antd/es/date-picker';
 import { useSnapshot } from 'valtio';
 import { AuthState } from '@/valtio/auth.state';
 import SelectContestParticipants from './SelectContestParticipants';
+import SelectDate from '@/components/common/SelectDate';
+import dayjs from 'dayjs';
 
 /**
  * Can not select days before today and today.
@@ -53,7 +55,10 @@ const ContestForm = ({
           level: record.level,
           type: record.type,
           countries: record.countries,
-          startTime: moment(record.startTime),
+          // startTime: moment(record.startTime),
+          year: dayjs(record.startTime).get('year'),
+          month: dayjs(record.startTime).get('month') + 1,
+          day: dayjs(record.startTime).get('D'),
           maxParticipants: record.maxParticipants,
           topics: record.topics.map((tag) => ({
             value: tag.id,
@@ -176,19 +181,20 @@ const ContestForm = ({
           <Form.Item
             name={ContestFields.startTime}
             label="موعد إجراء المسابقة"
-            rules={[
+            /*  rules={[
               { required: true, message: 'يرجى تحديد تاريخ بدء المسابقة' },
-            ]}
+            ]} */
             help="توقيت القاهرة"
             required
           >
-            <DatePicker
+            {/* <DatePicker
               showTime
               showToday
               allowClear
               style={{ width: '100%' }}
               disabledDate={disabledDate}
-            />
+            /> */}
+            <SelectDate showTime />
           </Form.Item>
         </Col>
         <Col span={12}>

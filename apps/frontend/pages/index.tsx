@@ -102,7 +102,10 @@ const Index: NextPageWithLayout = ({
         />
       </Head>
       <HeroSEction />
-      <ContestCategoriesSection topics={topics} />
+      <ContestCategoriesSection
+        topics={topics.slice(0, 14)}
+        length={topics.length}
+      />
       <GoodEducationSection />
       <HowItWorkSvg />
       <HowItWorkSection />
@@ -124,7 +127,7 @@ export async function getServerSideProps({ req, query }) {
       data: { findAllTopics },
     } = await client.query<FindAllTopicsQuery, FindAllTopicsQueryVariables>({
       query: FindAllTopicsDocument,
-      variables: { take: 14 },
+      variables: { take: 200 },
     });
 
     return {

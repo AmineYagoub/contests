@@ -98,7 +98,9 @@ const ProfileDashboard: NextPageWithLayout = () => {
               title="حالة إشتراكي"
               precision={55555}
               valueRender={(val) => <span></span>}
-              suffix={profile?.subscription?.memberShipOn.title || 'المجاني'}
+              suffix={
+                profile?.subscription?.memberShipOn[0]?.title || 'المجاني'
+              }
               prefix={
                 <SketchCircleFilled
                   style={{ fontSize: '5rem', color: 'gold' }}

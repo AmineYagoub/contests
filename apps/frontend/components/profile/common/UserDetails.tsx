@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, Input, Select } from 'antd';
+import { Button, Form, Input, Select } from 'antd';
 
 import SelectCountry from '@/components/common/SelectCountry';
 import SelectRole from '@/components/common/SelectRole';
@@ -10,6 +10,7 @@ import { studentMappedLevels } from '@/utils/mapper';
 import styled from '@emotion/styled';
 import TeacherAvatar from '../teacher/TeacherAvatar';
 import SelectPhone from '@/components/common/SelectPhone';
+import SelectDate from '@/components/common/SelectDate';
 
 const StyledForm = styled(Form)({
   maxWidth: 680,
@@ -109,7 +110,7 @@ const UserDetails = ({ user }: { user: User }) => {
         label="تاريخ الميلاد"
         rules={[{ required: true, message: 'يرجى كتابة تاريخ ميلادك' }]}
       >
-        <DatePicker
+        {/* <DatePicker
           style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}
           showToday
           allowClear
@@ -120,12 +121,20 @@ const UserDetails = ({ user }: { user: User }) => {
               style.borderRadius = '50%';
             }
             return (
-              <div className="ant-picker-cell-inner" style={style}>
+              <div className='ant-picker-cell-inner' style={style}>
                 {current.date()}
               </div>
             );
           }}
-        />
+        /> */}
+        {/* <Input
+          placeholder='Basic usage'
+          type='date'
+          lang='ar'
+          dir='ltr'
+          pattern='\d{4}-\d{2}-\d{2}'
+        /> */}
+        <SelectDate />
       </Form.Item>
 
       {isTeacher && (

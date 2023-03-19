@@ -11,6 +11,7 @@ import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import FlipClockCountdown from '@leenguyen/react-flip-clock-countdown';
 import Head from 'next/head';
 import { getTitleMeta } from '@/utils/app';
+import { Button } from 'antd';
 
 const StyledContainer = styled('section')({
   display: 'flex',
@@ -58,6 +59,12 @@ const ContestComingSoon: NextPageWithLayout = ({
           onComplete={onComplete}
         >
           <h1>جاري تحويلك لصفحة المسابقة ...</h1>
+          <p>
+            إذا لم يكن متصفحك يدعم التحويل التلقائي إضغط هنا{' '}
+            <Button type="link" onClick={onComplete}>
+              صفحة المسابقة
+            </Button>
+          </p>
         </FlipClockCountdown>
       </StyledContainer>
     </>

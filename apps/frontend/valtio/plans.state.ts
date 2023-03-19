@@ -14,9 +14,9 @@ interface SubscriptionPlanStorage {
 
 const init: SubscriptionPlanStorage = {
   plans: [],
+  queryLoading: false,
   membershipData: null,
   mutationLoading: false,
-  queryLoading: false,
   subscriptionForm: false,
   membershipDetails: false,
 };

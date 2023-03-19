@@ -29,10 +29,10 @@ export class Membership {
   })
   renewCount: number;
 
-  @Field(() => SubscriptionPlan, {
+  @Field(() => [SubscriptionPlan], {
     description: 'Identifies the subscription plan.',
   })
-  memberShipOn: SubscriptionPlan;
+  memberShipOn: SubscriptionPlan[];
 
   @Field({
     description: 'Identifies the date and time when the object was created.',

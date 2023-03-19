@@ -60,7 +60,7 @@ const UserDocuments = ({ user }: { user: User }) => {
       <StyledItem
         label={
           <Label
-            label="إثبات الهوية"
+            label="شهادة الميلاد"
             help="شهادة الميلاد أو ما يعادلها في بلدك."
           />
         }
@@ -78,7 +78,7 @@ const UserDocuments = ({ user }: { user: User }) => {
         />
       </StyledItem>
 
-      <StyledItem
+      {/*       <StyledItem
         label={
           <Label
             label="خطاب معتمد من المدرسة"
@@ -97,7 +97,7 @@ const UserDocuments = ({ user }: { user: User }) => {
           onDelete={onDelete}
           confirmLoading={confirmLoading}
         />
-      </StyledItem>
+      </StyledItem> */}
     </StyledForm>
   );
 };

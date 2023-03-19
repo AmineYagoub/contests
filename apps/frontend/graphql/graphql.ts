@@ -114,6 +114,21 @@ export type BatchPayloadResult = {
   count: Scalars['Int'];
 };
 
+export type ContactUsDto = {
+  content: Scalars['String'];
+  email: Scalars['String'];
+  title: Scalars['String'];
+  to: Scalars['String'];
+};
+
+export type ContactUsResponse = {
+  __typename?: 'ContactUsResponse';
+  envelopeTime?: Maybe<Scalars['Int']>;
+  messageId?: Maybe<Scalars['String']>;
+  messageSize?: Maybe<Scalars['Int']>;
+  messageTime?: Maybe<Scalars['Int']>;
+};
+
 export type Contest = {
   __typename?: 'Contest';
   /** Identifies a list of answers that belongs to this contest. */
@@ -274,7 +289,7 @@ export type Membership = {
   endDate?: Maybe<Scalars['DateTime']>;
   id: Scalars['ID'];
   /** Identifies the subscription plan. */
-  memberShipOn: SubscriptionPlan;
+  memberShipOn: Array<SubscriptionPlan>;
   /** Identifies the number of renew times. */
   renewCount: Scalars['Int'];
   /** Identifies the start date of the membership. */
@@ -359,6 +374,7 @@ export type Mutation = {
   resendEmailActivationCode: Scalars['Boolean'];
   seedCtsData?: Maybe<Scalars['Boolean']>;
   seedData?: Maybe<Scalars['Boolean']>;
+  sendContactUsForm: ContactUsResponse;
   sendNotifications?: Maybe<Message>;
   signing: Auth;
   signup: Scalars['Boolean'];
@@ -457,6 +473,11 @@ export type MutationEmailTokenToRecoverPasswordArgs = {
 
 export type MutationResendEmailActivationCodeArgs = {
   input: EmailDto;
+};
+
+
+export type MutationSendContactUsFormArgs = {
+  input: ContactUsDto;
 };
 
 
@@ -1262,6 +1283,13 @@ export type PaginateAnswersQueryVariables = Exact<{
 
 export type PaginateAnswersQuery = { __typename?: 'Query', paginateAnswers: { __typename?: 'AnswerPaginationResponse', total: number, data?: Array<{ __typename?: 'Answer', id: string, created: any, userId: { __typename?: 'User', role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null } | { __typename: 'Teacher', id: string } | null }, contest?: { __typename?: 'Contest', id: string, title: string, authorId: { __typename?: 'User', id: string, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } } | null }> | null } };
 
+export type SendContactUsFormMutationVariables = Exact<{
+  input: ContactUsDto;
+}>;
+
+
+export type SendContactUsFormMutation = { __typename?: 'Mutation', sendContactUsForm: { __typename?: 'ContactUsResponse', envelopeTime?: number | null, messageId?: string | null } };
+
 export type UpdateAppConfigMutationVariables = Exact<{
   input: UpdateAppConfigDto;
 }>;
@@ -1466,7 +1494,7 @@ export type FindMembershipByProfileIdQueryVariables = Exact<{
 }>;
 
 
-export type FindMembershipByProfileIdQuery = { __typename?: 'Query', findMembershipByProfileId?: { __typename?: 'Membership', id: string, status: MembershipStatus, endDate?: any | null, startDate?: any | null, renewCount: number, created: any, updated: any, memberShipOn: { __typename?: 'SubscriptionPlan', id: string, title: string, subTitle: string, price: number, period: number, allowedContests: number } } | null };
+export type FindMembershipByProfileIdQuery = { __typename?: 'Query', findMembershipByProfileId?: { __typename?: 'Membership', id: string, status: MembershipStatus, endDate?: any | null, startDate?: any | null, renewCount: number, created: any, updated: any, memberShipOn: Array<{ __typename?: 'SubscriptionPlan', id: string, title: string, subTitle: string, price: number, period: number, allowedContests: number }> } | null };
 
 export type CreateQuestionMutationVariables = Exact<{
   input: CreateQuestionDto;
@@ -1575,7 +1603,7 @@ export type UpdateTeacherSubscriptionMutationVariables = Exact<{
 }>;
 
 
-export type UpdateTeacherSubscriptionMutation = { __typename?: 'Mutation', updateTeacherSubscription: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, country?: string | null, personalImage?: string | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, endDate?: any | null, startDate?: any | null, created: any, memberShipOn: { __typename?: 'SubscriptionPlan', id: string, title: string, price: number } } | null } };
+export type UpdateTeacherSubscriptionMutation = { __typename?: 'Mutation', updateTeacherSubscription: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, country?: string | null, personalImage?: string | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, endDate?: any | null, startDate?: any | null, created: any, memberShipOn: Array<{ __typename?: 'SubscriptionPlan', id: string, title: string, price: number }> } | null } };
 
 export type FindAdminAndTeacherQueryVariables = Exact<{
   id?: InputMaybe<Scalars['String']>;
@@ -1604,12 +1632,12 @@ export type FindUserQueryVariables = Exact<{
 }>;
 
 
-export type FindUserQuery = { __typename?: 'Query', findUser: { __typename?: 'User', id: string, key: number, email: string, emailConfirmed: boolean, isActive: boolean, created: any, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, letterImage?: string | null, personalImage?: string | null, birthCertImage?: string | null, teacher?: { __typename?: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, startDate?: any | null, endDate?: any | null, created: any, renewCount: number, memberShipOn: { __typename?: 'SubscriptionPlan', id: string, title: string, price: number } } | null } | null } };
+export type FindUserQuery = { __typename?: 'Query', findUser: { __typename?: 'User', id: string, key: number, email: string, emailConfirmed: boolean, isActive: boolean, created: any, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string, level: StudentLevel, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, letterImage?: string | null, personalImage?: string | null, birthCertImage?: string | null, teacher?: { __typename?: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, personalImage?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, startDate?: any | null, endDate?: any | null, created: any, renewCount: number, memberShipOn: Array<{ __typename?: 'SubscriptionPlan', id: string, title: string, price: number }> } | null } | null } };
 
 export type GetAuthUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, countAllNotifications?: number | null, countAllMessages?: number | null, messagesCount: number, notificationsCount: number, role?: { __typename?: 'Role', title: RoleTitle, permissions?: Array<{ __typename?: 'Permission', title: PermissionTitle }> | null } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth?: any | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, userId?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, startDate?: any | null, endDate?: any | null, created: any, renewCount: number, memberShipOn: { __typename?: 'SubscriptionPlan', id: string, title: string, price: number } } | null } | null } };
+export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, countAllNotifications?: number | null, countAllMessages?: number | null, messagesCount: number, notificationsCount: number, role?: { __typename?: 'Role', title: RoleTitle, permissions?: Array<{ __typename?: 'Permission', title: PermissionTitle }> | null } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth?: any | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, userId?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, startDate?: any | null, endDate?: any | null, created: any, renewCount: number, memberShipOn: Array<{ __typename?: 'SubscriptionPlan', id: string, title: string, price: number }> } | null } | null } };
 
 export type PaginateUsersQueryVariables = Exact<{
   params: UserPaginationDto;
@@ -1826,6 +1854,40 @@ export function usePaginateAnswersLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type PaginateAnswersQueryHookResult = ReturnType<typeof usePaginateAnswersQuery>;
 export type PaginateAnswersLazyQueryHookResult = ReturnType<typeof usePaginateAnswersLazyQuery>;
 export type PaginateAnswersQueryResult = Apollo.QueryResult<PaginateAnswersQuery, PaginateAnswersQueryVariables>;
+export const SendContactUsFormDocument = gql`
+    mutation SendContactUsForm($input: ContactUsDto!) {
+  sendContactUsForm(input: $input) {
+    envelopeTime
+    messageId
+  }
+}
+    `;
+export type SendContactUsFormMutationFn = Apollo.MutationFunction<SendContactUsFormMutation, SendContactUsFormMutationVariables>;
+
+/**
+ * __useSendContactUsFormMutation__
+ *
+ * To run a mutation, you first call `useSendContactUsFormMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendContactUsFormMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendContactUsFormMutation, { data, loading, error }] = useSendContactUsFormMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSendContactUsFormMutation(baseOptions?: Apollo.MutationHookOptions<SendContactUsFormMutation, SendContactUsFormMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendContactUsFormMutation, SendContactUsFormMutationVariables>(SendContactUsFormDocument, options);
+      }
+export type SendContactUsFormMutationHookResult = ReturnType<typeof useSendContactUsFormMutation>;
+export type SendContactUsFormMutationResult = Apollo.MutationResult<SendContactUsFormMutation>;
+export type SendContactUsFormMutationOptions = Apollo.BaseMutationOptions<SendContactUsFormMutation, SendContactUsFormMutationVariables>;
 export const UpdateAppConfigDocument = gql`
     mutation UpdateAppConfig($input: UpdateAppConfigDto!) {
   updateAppConfig(input: $input) {

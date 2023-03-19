@@ -37,11 +37,10 @@ model Membership {
   endDate               DateTime?
   renewCount            Int?               @db.UnsignedSmallInt @default(0)
 
-  profileId             String?            @unique
-  profile               Profile?           @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId             String             @unique
+  profile               Profile            @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-  memberShipId          String             @unique
-  memberShipOn          SubscriptionPlans  @relation(fields: [memberShipId], references: [id], onDelete: Cascade)
+  memberShipOn          SubscriptionPlans[]
 
   created               DateTime           @default(now())
   updated               DateTime           @updatedAt
