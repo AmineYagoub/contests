@@ -193,7 +193,7 @@ export const messageMappedTypes: Mapper<MessageType>[] = [
 export const getMapperLabel = <T>(mapper: Mapper<T>[], val: T) =>
   mapper.find((m) => m.value === val)?.text;
 
-export const getMapperValue = <T>(mapper: Mapper<T>[], val: T) =>
+export const getMapperValue = <T>(mapper: Mapper<T>[], val: string) =>
   mapper.find((m) => m.text === val)?.value;
 
 export const getLevelsValues = (text: string) =>

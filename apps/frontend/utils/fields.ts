@@ -15,6 +15,7 @@ export const ContestFields: { [P in ContestsDataIndex]: P } = {
   authorId: 'authorId',
   topics: 'topics',
   maxParticipants: 'maxParticipants',
+  dictationLevel: 'dictationLevel',
   published: 'published',
   participants: 'participants',
   easyQuestionCount: 'easyQuestionCount',
