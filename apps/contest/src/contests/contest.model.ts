@@ -1,4 +1,8 @@
-import { ContestStatus, ContestType, StudentLevel } from '@contests/types';
+import {
+  ContestStatus,
+  DictationQuestionLevel,
+  StudentLevel,
+} from '@contests/types';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { Answer } from '../answers/answer.model';
@@ -17,11 +21,6 @@ export class Contest extends BaseModel {
     description: 'Identifies the duration of the Contest.',
   })
   duration: number;
-
-  @Field(() => ContestType, {
-    description: 'Identifies the Type of this Contest.',
-  })
-  type: ContestType;
 
   @Field(() => [StudentLevel], {
     description: 'Identifies a list of levels that can be join this Contest.',
@@ -85,6 +84,16 @@ export class Contest extends BaseModel {
     description: 'Identifies how many hard questions in the Contest.',
   })
   hardQuestionCount: number;
+
+  @Field(() => Int, {
+    description: 'Identifies how many dictation questions in the Contest.',
+  })
+  dictationQuestionCount: number;
+
+  @Field(() => DictationQuestionLevel, {
+    description: 'Identifies the level of this dictation Question.',
+  })
+  dictationLevel: DictationQuestionLevel;
 
   @Field(() => Int, {
     description: 'Identifies the max number of Participants in the Contest.',

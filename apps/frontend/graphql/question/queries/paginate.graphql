@@ -14,7 +14,7 @@ query PaginateQuestions($params: QuestionPaginationDto!) {
       }
       created
       updated
-      usedCount
+      dictationLevel
     }
   }
 }

@@ -1,7 +1,6 @@
 query FindByIdForReview($id: String!, $answerId: String) {
   findOneContestById(id: $id, answerId: $answerId) {
     id
-    type
     topics {
       title
     }
@@ -13,9 +12,9 @@ query FindByIdForReview($id: String!, $answerId: String) {
       topics {
         title
       }
-      correctAnswer
-      usedCount
       lesson
+      correctAnswer
+      dictationLevel
     }
     answers {
       id
@@ -46,6 +45,8 @@ query FindByIdForReview($id: String!, $answerId: String) {
     easyQuestionCount
     mediumQuestionCount
     hardQuestionCount
+    dictationQuestionCount
+    dictationLevel
     maxParticipants
   }
 }

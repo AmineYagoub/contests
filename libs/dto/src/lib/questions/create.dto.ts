@@ -7,7 +7,7 @@ import {
   IsUUID,
 } from 'class-validator';
 
-import { QuestionType } from '@contests/types';
+import { DictationQuestionLevel, QuestionType } from '@contests/types';
 import { Field, InputType } from '@nestjs/graphql';
 import { Prisma } from '@prisma/contest-service';
 
@@ -39,22 +39,30 @@ export class CreateQuestionDto {
   @IsString()
   correctAnswer: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsOptional()
   @IsString()
   lesson?: string;
 
-  @Field(() => QuestionType)
-  @IsNotEmpty()
+  @Field(() => QuestionType, { nullable: true })
+  @IsOptional()
   @IsString()
-  type: QuestionType;
+  type?: QuestionType;
+
+  @Field(() => DictationQuestionLevel, {
+    nullable: true,
+    defaultValue: DictationQuestionLevel.EMPTY,
+  })
+  @IsOptional()
+  @IsString()
+  dictationLevel?: DictationQuestionLevel;
 
   @Field(() => [String])
   @IsNotEmpty()
   @IsString({ each: true })
   options: string[];
 
-  @Field(() => TopicConnectTitle)
+  @Field(() => TopicConnectTitle, { nullable: true })
   @IsOptional()
   @IsObject()
   topics?: Prisma.TopicCreateNestedManyWithoutQuestionsInput;

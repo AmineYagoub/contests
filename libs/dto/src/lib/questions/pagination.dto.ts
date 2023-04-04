@@ -21,9 +21,6 @@ export class OrderQuestionArgs {
 
   @Field(() => OrderByType, { nullable: true })
   options?: OrderByType;
-
-  @Field(() => OrderByType, { nullable: true })
-  usedCount?: OrderByType;
 }
 
 @InputType()

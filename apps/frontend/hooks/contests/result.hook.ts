@@ -50,6 +50,10 @@ export const useGenerateResult = (contest: Contest) => {
       [QuestionType.Easy]: calculateGaugeValues(results, QuestionType.Easy),
       [QuestionType.Medium]: calculateGaugeValues(results, QuestionType.Medium),
       [QuestionType.Hard]: calculateGaugeValues(results, QuestionType.Hard),
+      [QuestionType.Dictation]: calculateGaugeValues(
+        results,
+        QuestionType.Dictation
+      ),
     },
 
     contestMeta: {

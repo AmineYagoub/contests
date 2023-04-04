@@ -19,7 +19,7 @@ const StyledCol = styled(Col)({
     left: '50%',
     transform: 'translate(-50%, 0)',
     fontWeight: 800,
-    fontSize: '1.1rem',
+    fontSize: '1rem',
     color: 'rgb(0, 191, 165)',
   },
 });
@@ -147,9 +147,38 @@ const PerformanceGauge = ({ values }: { values: GaugeValues }) => {
       negativeResult,
     ],
   };
+
+  const dictationOptions: EChartsOption = {
+    series: [
+      {
+        ...seriesOption,
+        itemStyle: {
+          color:
+            values.DICTATION > 0 ? theme.positiveColor : theme.negativeColor,
+        },
+        max: 100,
+        data: [
+          {
+            value: values.DICTATION,
+          },
+        ],
+      },
+      negativeResult,
+    ],
+  };
   return (
     <Row>
-      <StyledCol span={8}>
+      <StyledCol span={6}>
+        <h3>الاملاء</h3>
+        <ReactEChartsCore
+          echarts={echarts}
+          option={dictationOptions}
+          notMerge={true}
+          lazyUpdate={true}
+          style={{ height: 250 }}
+        />
+      </StyledCol>
+      <StyledCol span={6}>
         <h3>الأسئلة السهلة</h3>
         <ReactEChartsCore
           echarts={echarts}
@@ -159,7 +188,7 @@ const PerformanceGauge = ({ values }: { values: GaugeValues }) => {
           style={{ height: 250 }}
         />
       </StyledCol>
-      <StyledCol span={8}>
+      <StyledCol span={6}>
         <h3>الأسئلة المتوسطة</h3>
         <ReactEChartsCore
           echarts={echarts}
@@ -169,7 +198,7 @@ const PerformanceGauge = ({ values }: { values: GaugeValues }) => {
           style={{ height: 250 }}
         />
       </StyledCol>
-      <StyledCol span={8}>
+      <StyledCol span={6}>
         <h3>الأسئلة الصعبة</h3>
         <ReactEChartsCore
           echarts={echarts}

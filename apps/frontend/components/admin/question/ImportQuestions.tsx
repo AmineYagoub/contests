@@ -14,11 +14,17 @@ const StyledSection = styled('section')({
   padding: 5,
 });
 
-const ImportQuestions = ({ onSuccess }: { onSuccess: () => void }) => {
+const ImportQuestions = ({
+  onSuccess,
+  isDictation = false,
+}: {
+  onSuccess: () => void;
+  isDictation?: boolean;
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [importProgress, setImportProgress] = useState(0);
 
-  const { uploadProps } = useImportQuestions();
+  const { uploadProps } = useImportQuestions(isDictation);
   const socket = useReactiveVar(socketVar);
   const showModal = () => {
     setModalVisible(true);
@@ -44,10 +50,10 @@ const ImportQuestions = ({ onSuccess }: { onSuccess: () => void }) => {
         icon={<FolderAddOutlined />}
         onClick={showModal}
       >
-        إستيراد الأسئلة
+        {isDictation ? 'إستيراد الإملاء' : 'إستيراد الأسئلة'}{' '}
       </Button>
       <Modal
-        title="إستيراد الأسئلة"
+        title={isDictation ? 'إستيراد الإملاء' : 'إستيراد الأسئلة'}
         style={{ top: 20 }}
         open={modalVisible}
         destroyOnClose

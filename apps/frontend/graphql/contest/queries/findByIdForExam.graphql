@@ -1,13 +1,13 @@
 query FindByIdForExam($id: String!) {
   findOneContestById(id: $id) {
     id
-    type
     topics {
       title
     }
     questions {
       id
       title
+      dictationLevel
       options
       type
     }
@@ -29,6 +29,8 @@ query FindByIdForExam($id: String!) {
     easyQuestionCount
     mediumQuestionCount
     hardQuestionCount
+    dictationQuestionCount
+    dictationLevel
     maxParticipants
   }
 }

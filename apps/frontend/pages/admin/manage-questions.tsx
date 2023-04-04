@@ -13,6 +13,7 @@ import {
 } from '@/components/admin/tables/SearchDatePicker';
 import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
 import {
+  DictationQuestionLevel,
   PermissionTitle,
   Question,
   QuestionType,
@@ -21,7 +22,11 @@ import {
 import { useSearchQuestions } from '@/hooks/admin/manage-questions.hook';
 import AdminLayout from '@/layout/AdminLayout';
 import { QuestionFields, QuestionsDataIndex } from '@/utils/fields';
-import { getMapperLabel, questionMappedTypes } from '@/utils/mapper';
+import {
+  dictationMappedLevels,
+  getMapperLabel,
+  questionMappedTypes,
+} from '@/utils/mapper';
 import { QuestionState } from '@/valtio/question.state';
 import { PlusOutlined } from '@ant-design/icons';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
@@ -114,17 +119,21 @@ const ManageQuestions = () => {
       key: QuestionFields.topics,
       ...getColumnSearchProps(QuestionFields.topics),
       render: (topics: Topic[]) => {
-        return topics?.map((tag) => {
-          return (
-            <Tag color="green" key={tag.title}>
-              {tag.title}
-            </Tag>
-          );
-        });
+        return topics.length ? (
+          topics?.map((tag) => {
+            return (
+              <Tag color="green" key={tag.title}>
+                {tag.title}
+              </Tag>
+            );
+          })
+        ) : (
+          <Tag color="green">غير محدد</Tag>
+        );
       },
     },
     {
-      title: 'صعوبة السؤال',
+      title: 'نوع السؤال',
       key: QuestionFields.type,
       dataIndex: QuestionFields.type,
       filters: questionMappedTypes,
@@ -156,15 +165,16 @@ const ManageQuestions = () => {
       render: (options) => options?.length + 1, // TODO Plus correctAnswer
     },
     {
-      title: 'مرات الإستخدام',
-      key: QuestionFields.usedCount,
-      dataIndex: QuestionFields.usedCount,
-      sorter: true,
-      sortDirections: ['descend', 'ascend'],
-      sortOrder:
-        sortedInfo.columnKey === QuestionFields.usedCount
-          ? sortedInfo.order
-          : null,
+      title: 'مستوى الاملاء',
+      key: QuestionFields.dictationLevel,
+      render: (record: Question) => (
+        <span>
+          {!record.dictationLevel ||
+          record.dictationLevel === DictationQuestionLevel.Empty
+            ? 'غير محدد'
+            : getMapperLabel(dictationMappedLevels, record.dictationLevel)}
+        </span>
+      ),
     },
     {
       title: 'الإجراءات',
@@ -186,7 +196,10 @@ const ManageQuestions = () => {
       </Head>
 
       <StyledSection>
-        <ImportQuestions onSuccess={methods.refetchData} />
+        <Space>
+          <ImportQuestions onSuccess={methods.refetchData} />
+          <ImportQuestions onSuccess={methods.refetchData} isDictation />
+        </Space>
         <TableBtn
           type="primary"
           size="middle"

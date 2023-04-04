@@ -12,6 +12,7 @@ mutation UpdateContest($id: String!, $input: UpdateContestDto!) {
     easyQuestionCount
     mediumQuestionCount
     hardQuestionCount
+    dictationQuestionCount
     participants
   }
 }

@@ -55,6 +55,7 @@ export const useCreateContests = ({
           })),
         },
       };
+      console.log(payload);
       const data = record
         ? await UpdateContestMutation({
             variables: {
