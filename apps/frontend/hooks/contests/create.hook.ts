@@ -3,12 +3,14 @@ import { TagValue } from '@/components/common/SelectTopics';
 import {
   Contest,
   ContestStatus,
+  User,
   useCreateContestMutation,
+  useGetAuthUserLazyQuery,
   useUpdateContestMutation,
 } from '@/graphql/graphql';
 import { ContestActions } from '@/valtio/contest.state';
 import { useSnapshot } from 'valtio';
-import { AuthState } from '@/valtio/auth.state';
+import { AuthActions, AuthState } from '@/valtio/auth.state';
 import { Logger } from '@/utils/app';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -34,6 +36,7 @@ export const useCreateContests = ({
     UpdateContestMutation,
     { loading: loadingUpdate, error: errorUpdate },
   ] = useUpdateContestMutation();
+  const [GetAuthUserQuery] = useGetAuthUserLazyQuery();
 
   const onFinish = async () => {
     try {
@@ -55,7 +58,7 @@ export const useCreateContests = ({
           })),
         },
       };
-      console.log(payload);
+
       const data = record
         ? await UpdateContestMutation({
             variables: {
@@ -69,6 +72,8 @@ export const useCreateContests = ({
             },
           });
       if (data) {
+        const { data } = await GetAuthUserQuery();
+        AuthActions.setUser(data.getAuthUser as User);
         form.resetFields();
         onClose();
         onSuccess();

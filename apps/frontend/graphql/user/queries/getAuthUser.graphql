@@ -52,10 +52,12 @@ query GetAuthUser {
           endDate
           created
           renewCount
+          contestCount
           memberShipOn {
             id
             title
             price
+            allowedContests
           }
         }
       }

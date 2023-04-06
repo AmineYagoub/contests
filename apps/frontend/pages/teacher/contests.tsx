@@ -5,7 +5,13 @@ import { NextPageWithLayout } from '@/utils/types';
 import ProfileLayout from '@/layout/ProfileLayout';
 import { withAuth } from '@/components/common/withAuth';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import { PermissionTitle, RoleTitle, User } from '@/graphql/graphql';
+import {
+  MembershipStatus,
+  PermissionTitle,
+  RoleTitle,
+  Teacher,
+  User,
+} from '@/graphql/graphql';
 import PremiumContest from '@/components/profile/teacher/contest/PremiumContest';
 import StudentsAnswers from '@/components/profile/teacher/contest/StudentsAnswers';
 import Head from 'next/head';
@@ -15,7 +21,10 @@ import Loading from '@/components/common/Loading';
 const TeacherContests: NextPageWithLayout = () => {
   const user = useSnapshot(AuthState).user as User;
 
-  const isPremium = user && user.role.title === RoleTitle.GoldenTeacher;
+  const isPremium =
+    user &&
+    user.role.title === RoleTitle.GoldenTeacher &&
+    (user.profile as Teacher).subscription?.status === MembershipStatus.Active;
   /*    const isPremium =
   (user.profile as Teacher).subscription?.status === MembershipStatus.Active; */
 
@@ -31,7 +40,7 @@ const TeacherContests: NextPageWithLayout = () => {
     tabs.push({
       label: 'مسابقاتي الخاصة',
       key: '3',
-      children: user ? <PremiumContest id={user.id} /> : <Loading />,
+      children: user ? <PremiumContest user={user} /> : <Loading />,
     });
   }
 

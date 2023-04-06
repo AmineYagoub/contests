@@ -54,7 +54,9 @@ export const useUploadDocuments = (user: User) => {
           id: user.id,
         },
       });
-      AuthActions.setUserAvatar(res.message);
+      if (res.message.includes('personalImage')) {
+        AuthActions.setUserAvatar(res.message);
+      }
       try {
         await UpdateStudentDocumentsMutation({
           variables: {

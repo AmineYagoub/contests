@@ -293,6 +293,8 @@ export type IdDto = {
 
 export type Membership = {
   __typename?: 'Membership';
+  /** Identifies the number of created contests in this period. */
+  contestCount: Scalars['Int'];
   /** Identifies the date and time when the object was created. */
   created: Scalars['DateTime'];
   /** Identifies the end date of the membership. */
@@ -667,6 +669,7 @@ export type Query = {
   paginateUsers?: Maybe<UserPaginationResponse>;
   searchUsers?: Maybe<Array<Profile>>;
   teacherDashboard?: Maybe<TeacherDashboardResponse>;
+  updateMembershipsJob?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -1649,7 +1652,7 @@ export type FindUserQuery = { __typename?: 'Query', findUser: { __typename?: 'Us
 export type GetAuthUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, countAllNotifications?: number | null, countAllMessages?: number | null, messagesCount: number, notificationsCount: number, role?: { __typename?: 'Role', title: RoleTitle, permissions?: Array<{ __typename?: 'Permission', title: PermissionTitle }> | null } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth?: any | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, userId?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, startDate?: any | null, endDate?: any | null, created: any, renewCount: number, memberShipOn: Array<{ __typename?: 'SubscriptionPlan', id: string, title: string, price: number }> } | null } | null } };
+export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, countAllNotifications?: number | null, countAllMessages?: number | null, messagesCount: number, notificationsCount: number, role?: { __typename?: 'Role', title: RoleTitle, permissions?: Array<{ __typename?: 'Permission', title: PermissionTitle }> | null } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth?: any | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, userId?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, startDate?: any | null, endDate?: any | null, created: any, renewCount: number, contestCount: number, memberShipOn: Array<{ __typename?: 'SubscriptionPlan', id: string, title: string, price: number, allowedContests: number }> } | null } | null } };
 
 export type PaginateUsersQueryVariables = Exact<{
   params: UserPaginationDto;
@@ -4238,10 +4241,12 @@ export const GetAuthUserDocument = gql`
           endDate
           created
           renewCount
+          contestCount
           memberShipOn {
             id
             title
             price
+            allowedContests
           }
         }
       }
