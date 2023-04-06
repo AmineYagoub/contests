@@ -1,8 +1,8 @@
 import multiparty from 'multiparty';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { unlink } from 'node:fs/promises';
-
-import { createBucket, getUrl, uploadFile } from '@/config/createMinioClient';
+import { config as appConfig } from '@/config/index';
+import { createBucket, uploadFile } from '@/config/createMinioClient';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let status = 200,
@@ -37,7 +37,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       for (const [name, file] of Object.entries(files)) {
         await uploadFile(bucketName, file[0].path, name);
         await unlink(file[0].path);
-        const url = await getUrl(bucketName, name, 1);
+        const url = `https://${appConfig.minio.minioHost}/${bucketName}/${name}`;
         resultBody.message = url;
         resultBody.docName = name;
       }

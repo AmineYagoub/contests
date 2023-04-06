@@ -9,7 +9,11 @@ import {
   Min,
 } from 'class-validator';
 
-import { ContestStatus, ContestType, StudentLevel } from '@contests/types';
+import {
+  ContestStatus,
+  DictationQuestionLevel,
+  StudentLevel,
+} from '@contests/types';
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { Prisma } from '@prisma/contest-service';
 
@@ -46,11 +50,6 @@ export class CreateContestDto {
   @IsOptional()
   @IsString({ each: true })
   level?: StudentLevel[];
-
-  @Field(() => ContestType)
-  @IsNotEmpty()
-  @IsString()
-  type: ContestType;
 
   @Field(() => ContestStatus)
   @IsNotEmpty()
@@ -106,4 +105,17 @@ export class CreateContestDto {
   @IsOptional()
   @IsNumber()
   hardQuestionCount: number;
+
+  @Field(() => Int)
+  @IsOptional()
+  @IsNumber()
+  dictationQuestionCount: number;
+
+  @Field(() => DictationQuestionLevel, {
+    nullable: true,
+    defaultValue: DictationQuestionLevel.EMPTY,
+  })
+  @IsOptional()
+  @IsString()
+  dictationLevel: string;
 }

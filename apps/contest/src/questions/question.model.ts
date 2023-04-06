@@ -1,4 +1,4 @@
-import { QuestionType } from '@contests/types';
+import { DictationQuestionLevel, QuestionType } from '@contests/types';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { BaseModel } from '../common/base.model';
@@ -27,6 +27,12 @@ export class Question extends BaseModel {
   })
   type: QuestionType;
 
+  @Field(() => DictationQuestionLevel, {
+    description: 'Identifies the level of this dictation Question.',
+    nullable: true,
+  })
+  dictationLevel?: DictationQuestionLevel;
+
   @Field(() => [String], {
     description: 'Identifies a list of answers of this Question.',
   })
@@ -37,10 +43,4 @@ export class Question extends BaseModel {
     nullable: true,
   })
   topics: Topic[];
-
-  @Field(() => Int, {
-    description: 'Identifies how many questions in the Question.',
-    nullable: true,
-  })
-  usedCount?: number;
 }

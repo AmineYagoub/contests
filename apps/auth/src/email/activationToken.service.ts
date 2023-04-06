@@ -1,21 +1,19 @@
+import {
+  UserMutatedEvent,
+  USER_CREATED_EVENT,
+  USER_CHANGE_PASSWORD,
+} from '@contests/types/auth';
 import { readFileSync } from 'fs';
 import { compile } from 'handlebars';
-import { createTransport, Transporter } from 'nodemailer';
-
-import { AUTH_CONFIG_REGISTER_KEY, AuthConfigType } from '@contests/config';
-import {
-  USER_CHANGE_PASSWORD,
-  USER_CREATED_EVENT,
-  UserMutatedEvent,
-} from '@contests/types/auth';
-import { Injectable, Logger } from '@nestjs/common';
+import { Prisma } from '@prisma/auth-service';
 import { ConfigService } from '@nestjs/config';
 import { OnEvent } from '@nestjs/event-emitter';
-import { Prisma } from '@prisma/auth-service';
-
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../app/prisma.service';
-
+import { createTransport, Transporter } from 'nodemailer';
 import SMTPTransport = require('nodemailer/lib/smtp-transport');
+import { AUTH_CONFIG_REGISTER_KEY, AuthConfigType } from '@contests/config';
+
 @Injectable()
 export class ActivationTokenService {
   private transporter: Transporter<SMTPTransport.SentMessageInfo>;

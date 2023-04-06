@@ -92,9 +92,17 @@ const ContestPageHeader = () => {
       />
     );
   }
-  const { easyQuestionCount, mediumQuestionCount, hardQuestionCount } =
-    contestSnap.contest;
-  const count = easyQuestionCount + mediumQuestionCount + hardQuestionCount;
+  const {
+    easyQuestionCount,
+    mediumQuestionCount,
+    hardQuestionCount,
+    dictationQuestionCount,
+  } = contestSnap.contest;
+  const count =
+    easyQuestionCount +
+    mediumQuestionCount +
+    hardQuestionCount +
+    dictationQuestionCount;
 
   const onTimeFinished = () => {
     ContestActions.setContestAnnulled();

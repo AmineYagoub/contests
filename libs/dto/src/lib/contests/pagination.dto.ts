@@ -12,6 +12,7 @@ export class WhereContestArgs extends PartialType(
     'easyQuestionCount',
     'mediumQuestionCount',
     'hardQuestionCount',
+    'dictationQuestionCount',
     'startTime',
     'topics',
   ] as const)

@@ -5,11 +5,11 @@ import {
   SelectedQuestionFields,
 } from '@contests/types';
 import Redis from 'ioredis';
+import { Contest } from './contest.model';
 import { PrismaService } from '../app/prisma.service';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
-import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, Question } from '@prisma/contest-service';
-import { Contest } from './contest.model';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class ContestService {
@@ -50,14 +50,19 @@ export class ContestService {
       easyQuestionCount,
       mediumQuestionCount,
       hardQuestionCount,
+      dictationLevel,
+      dictationQuestionCount,
     } = data;
 
     const questions = await this.getConnectedQuestions(
       topics,
       easyQuestionCount,
       mediumQuestionCount,
-      hardQuestionCount
+      hardQuestionCount,
+      dictationLevel,
+      dictationQuestionCount
     );
+
     const results = questions.length
       ? {
           ...data,
@@ -66,6 +71,7 @@ export class ContestService {
           },
         }
       : data;
+
     const created = await this.prisma.contest.create({
       data: results,
     });
@@ -84,6 +90,37 @@ export class ContestService {
   }
 
   /**
+   * Get random list of dictation questions.
+   *
+   * dictationLevel: DictationQuestionLevel,
+   * count: number
+   *
+   * @returns Promise<SelectedQuestionFields[]>
+   */
+  private async getDictationQuestions(
+    dictationLevel: string,
+    count: number
+  ): Promise<SelectedQuestionFields[]> {
+    const questions = await this.prisma.question.findMany({
+      where: {
+        AND: [
+          {
+            dictationLevel: dictationLevel,
+          },
+          {
+            type: QuestionType.DICTATION,
+          },
+        ],
+      },
+      select: {
+        id: true,
+        type: true,
+      },
+    });
+    return this.getQuestionsRandomly(questions, QuestionType.DICTATION, count);
+  }
+
+  /**
    * Get random list of questions.
    *
    * topic: Prisma.TopicCreateNestedManyWithoutContestsInput,
@@ -97,7 +134,9 @@ export class ContestService {
     topic: Prisma.TopicCreateNestedManyWithoutContestsInput,
     easy: number,
     mid: number,
-    hard: number
+    hard: number,
+    dictationLevel: string,
+    dictationQuestionCount: number
   ): Promise<SelectedQuestionFields[]> {
     const topics = (
       topic.connect as Array<{
@@ -134,7 +173,16 @@ export class ContestService {
       QuestionType.HARD,
       hard
     );
-    return [...easyQuestions, ...midQuestions, ...hardQuestions];
+    const dictationQuestions = await this.getDictationQuestions(
+      dictationLevel,
+      dictationQuestionCount
+    );
+    return [
+      ...easyQuestions,
+      ...midQuestions,
+      ...dictationQuestions,
+      ...hardQuestions,
+    ];
   }
 
   /**
@@ -226,7 +274,8 @@ export class ContestService {
     const order = {
       [QuestionType.EASY]: 1,
       [QuestionType.MEDIUM]: 2,
-      [QuestionType.HARD]: 3,
+      [QuestionType.DICTATION]: 3,
+      [QuestionType.HARD]: 4,
     };
     const sorted = questions.sort((a, b) => order[a.type] - order[b.type]);
     const shuffled = sorted.map((el) => {

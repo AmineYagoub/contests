@@ -1,4 +1,3 @@
-import { Logger } from '@/utils/app';
 import * as Minio from 'minio';
 
 import { config } from './';
@@ -22,6 +21,44 @@ export function initializeMinio() {
 }
 
 export const createBucket = (name: string): Promise<string> => {
+  const policy = `
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:GetBucketLocation",
+        "s3:ListBucket"
+      ],
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": [
+          "*"
+        ]
+      },
+      "Resource": [
+        "arn:aws:s3:::${name}"
+      ],
+      "Sid": ""
+    },
+    {
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": [
+          "*"
+        ]
+      },
+      "Resource": [
+        "arn:aws:s3:::${name}/*"
+      ],
+      "Sid": ""
+    }
+  ]
+}
+`;
   const minioClient = initializeMinio();
   return new Promise((resolve, reject) => {
     minioClient.bucketExists(name, (err: Error, exists: boolean) => {
@@ -31,12 +68,25 @@ export const createBucket = (name: string): Promise<string> => {
       if (!exists) {
         minioClient.makeBucket(name, '', (e: Error) => {
           if (e) {
+            console.log(e);
             return reject(e);
+          }
+          minioClient.setBucketPolicy(name, policy, (err) => {
+            if (err) {
+              console.log(err);
+              return reject(err);
+            }
+            resolve(name);
+          });
+        });
+      } else {
+        minioClient.setBucketPolicy(name, policy, (err) => {
+          if (err) {
+            console.log(err);
+            return reject(err);
           }
           resolve(name);
         });
-      } else {
-        resolve(name);
       }
     });
   });

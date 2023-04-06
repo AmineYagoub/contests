@@ -45,7 +45,7 @@ const AnswersResult = ({ results }: { results: ResultType[] }) => {
     >
       {results.map((el) => (
         <StyledPanel
-          header={<h3>{el.title}</h3>}
+          header={<pre>{el.title}</pre>}
           key={el.questionId}
           collapsible={collapsible}
         >

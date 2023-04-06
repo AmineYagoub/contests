@@ -80,7 +80,7 @@ export const useSearchQuestions = () => {
     QuestionActions.setQueryLoading(loading);
     if (data) {
       QuestionActions.setQueryLoading(false);
-      const results = data?.paginateQuestions?.data.map((d: Question) => ({
+      const results = data?.paginateQuestions?.data?.map((d: Question) => ({
         key: d.id,
         ...d,
       }));
@@ -96,7 +96,7 @@ export const useSearchQuestions = () => {
     QuestionActions.setQueryLoading(true);
     refetch()
       .then(({ data }) => {
-        const results = data?.paginateQuestions?.data.map((d: Question) => ({
+        const results = data?.paginateQuestions?.data?.map((d: Question) => ({
           key: d.id,
           ...d,
         }));

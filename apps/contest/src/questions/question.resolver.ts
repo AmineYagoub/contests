@@ -36,7 +36,6 @@ export class QuestionResolver {
 
   @Mutation(() => Question)
   async createQuestion(@Args('input') data: CreateQuestionDto) {
-    console.log(data.topics.connect);
     return this.questionService.create(data);
   }
 

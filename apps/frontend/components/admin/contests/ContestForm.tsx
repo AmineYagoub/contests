@@ -1,39 +1,19 @@
-import {
-  Col,
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Row,
-  Select,
-  Space,
-} from 'antd';
+import { Col, Form, Input, InputNumber, Row, Select, Space } from 'antd';
 import { FormInstance } from 'antd/es/form/Form';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 
 import SelectCountry from '@/components/common/SelectCountry';
 import SelectTopics from '@/components/common/SelectTopics';
 import { Contest, RoleTitle, StudentLevel } from '@/graphql/graphql';
 import { ContestFields } from '@/utils/fields';
-import { contestMappedTypes, studentMappedLevels } from '@/utils/mapper';
+import { studentMappedLevels } from '@/utils/mapper';
 
-import type { RangePickerProps } from 'antd/es/date-picker';
 import { useSnapshot } from 'valtio';
 import { AuthState } from '@/valtio/auth.state';
 import SelectContestParticipants from './SelectContestParticipants';
 import SelectDate from '@/components/common/SelectDate';
 import dayjs from 'dayjs';
-
-/**
- * Can not select days before today and today.
- *
- * @param current - current date
- * @returns - function that can be used in DatePicker's onChange callback
- */
-const disabledDate: RangePickerProps['disabledDate'] = (current) => {
-  return current && current <= moment().startOf('day');
-};
+import SelectDictationLevel from '@/components/common/SelectDictationLevel';
 
 const ContestForm = ({
   form,
@@ -47,15 +27,15 @@ const ContestForm = ({
       setSelectedLevel(record.level);
       setTimeout(() => {
         form.setFieldsValue({
+          title: record.title,
+          level: record.level,
           duration: record.duration,
+          countries: record.countries,
           easyQuestionCount: record.easyQuestionCount,
           mediumQuestionCount: record.mediumQuestionCount,
           hardQuestionCount: record.hardQuestionCount,
-          title: record.title,
-          level: record.level,
-          type: record.type,
-          countries: record.countries,
-          // startTime: moment(record.startTime),
+          dictationQuestionCount: record.dictationQuestionCount,
+          dictationLevel: record.dictationLevel,
           year: dayjs(record.startTime).get('year'),
           month: dayjs(record.startTime).get('month') + 1,
           day: dayjs(record.startTime).get('D'),
@@ -121,18 +101,21 @@ const ContestForm = ({
       </Row>
       <Row gutter={16}>
         <Col span={12}>
-          <Form.Item
-            name={ContestFields.type}
-            label="نوع المسابقة"
-            rules={[{ required: true, message: 'يرجى إختيار نوع المسابقة' }]}
-          >
-            <Select
-              allowClear
-              showArrow
-              options={contestMappedTypes}
-              fieldNames={{ label: 'text' }}
-            />
-          </Form.Item>
+          <Space>
+            <SelectDictationLevel />
+            <Form.Item
+              name={ContestFields.dictationQuestionCount}
+              label="أسئلة الاملاء"
+              rules={[
+                {
+                  required: true,
+                  message: 'يرجى تحديد عدد أسئلة الاملاء للمسابقة',
+                },
+              ]}
+            >
+              <InputNumber placeholder="عدد الأسئلة" />
+            </Form.Item>
+          </Space>
         </Col>
         <Col span={12}>
           <Space size={20}>
@@ -178,22 +161,7 @@ const ContestForm = ({
 
       <Row gutter={16}>
         <Col span={12}>
-          <Form.Item
-            name={ContestFields.startTime}
-            label="موعد إجراء المسابقة"
-            /*  rules={[
-              { required: true, message: 'يرجى تحديد تاريخ بدء المسابقة' },
-            ]} */
-            help="توقيت القاهرة"
-            required
-          >
-            {/* <DatePicker
-              showTime
-              showToday
-              allowClear
-              style={{ width: '100%' }}
-              disabledDate={disabledDate}
-            /> */}
+          <Form.Item label="موعد إجراء المسابقة" help="توقيت القاهرة" required>
             <SelectDate showTime />
           </Form.Item>
         </Col>

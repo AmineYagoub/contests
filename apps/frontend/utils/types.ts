@@ -31,6 +31,7 @@ export type GaugeValues = {
   [QuestionType.Easy]: number;
   [QuestionType.Medium]: number;
   [QuestionType.Hard]: number;
+  [QuestionType.Dictation]: number;
 };
 
 export type ContestMeta = {

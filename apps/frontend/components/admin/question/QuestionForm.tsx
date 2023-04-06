@@ -10,6 +10,7 @@ import { questionMappedTypes } from '@/utils/mapper';
 import { QuestionState } from '@/valtio/question.state';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
+import SelectDictationLevel from '@/components/common/SelectDictationLevel';
 
 const StyledInput = styled(Input)({
   maxWidth: '95%',
@@ -30,7 +31,7 @@ const QuestionForm = ({
         lesson: record.lesson,
         type: record.type,
         options: [record.correctAnswer, ...record.options],
-        topics: record.topics.map((tag) => ({
+        topics: record.topics?.map((tag) => ({
           value: tag.id,
           label: tag.title,
         })),
@@ -51,7 +52,7 @@ const QuestionForm = ({
 
       <Form
         layout="vertical"
-        hideRequiredMark
+        requiredMark={false}
         scrollToFirstError
         form={form}
         name={`${record} ? update-question : create-question`}
@@ -77,7 +78,7 @@ const QuestionForm = ({
         </Form.Item>
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item name={QuestionFields.type} label="صعوبة السؤال">
+            <Form.Item name={QuestionFields.type} label="نوع السؤال">
               <Select
                 allowClear
                 showArrow
@@ -90,6 +91,8 @@ const QuestionForm = ({
             <SelectTopics isContest={false} isTeacher />
           </Col>
         </Row>
+
+        <SelectDictationLevel />
 
         <Form.List
           name="options"

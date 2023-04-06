@@ -110,30 +110,6 @@ const UserDetails = ({ user }: { user: User }) => {
         label="تاريخ الميلاد"
         rules={[{ required: true, message: 'يرجى كتابة تاريخ ميلادك' }]}
       >
-        {/* <DatePicker
-          style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}
-          showToday
-          allowClear
-          dateRender={(current) => {
-            const style: React.CSSProperties = {};
-            if (current.date() === 1) {
-              style.border = '1px solid #1890ff';
-              style.borderRadius = '50%';
-            }
-            return (
-              <div className='ant-picker-cell-inner' style={style}>
-                {current.date()}
-              </div>
-            );
-          }}
-        /> */}
-        {/* <Input
-          placeholder='Basic usage'
-          type='date'
-          lang='ar'
-          dir='ltr'
-          pattern='\d{4}-\d{2}-\d{2}'
-        /> */}
         <SelectDate />
       </Form.Item>
 

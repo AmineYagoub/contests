@@ -39,7 +39,11 @@ const SelectDate = ({ showTime = false }: { showTime?: boolean }) => {
   return (
     <Space wrap>
       {showTime && (
-        <Form.Item name="time" noStyle>
+        <Form.Item
+          name="time"
+          noStyle
+          rules={[{ required: true, message: 'يرجى تحديد الوقت' }]}
+        >
           <TimePicker
             placeholder="التوقيت"
             format={format}

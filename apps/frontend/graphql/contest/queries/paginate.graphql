@@ -3,7 +3,6 @@ query PaginateContests($params: ContestPaginationDto!) {
     total
     data {
       id
-      type
       topics {
         title
       }
@@ -40,6 +39,8 @@ query PaginateContests($params: ContestPaginationDto!) {
       easyQuestionCount
       mediumQuestionCount
       hardQuestionCount
+      dictationQuestionCount
+      dictationLevel
       maxParticipants
     }
   }

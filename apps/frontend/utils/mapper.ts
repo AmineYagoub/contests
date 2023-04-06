@@ -1,6 +1,6 @@
 import {
   ContestStatus,
-  ContestType,
+  DictationQuestionLevel,
   MembershipStatus,
   MessageType,
   QuestionType,
@@ -67,18 +67,46 @@ export const studentMappedLevels: Mapper<StudentLevel>[] = [
   },
 ];
 
-export const contestMappedTypes: Mapper<ContestType>[] = [
+export const dictationMappedLevels: Mapper<DictationQuestionLevel>[] = [
   {
-    text: 'مسابقة جهوية',
-    value: ContestType.Regional,
+    text: 'الصف السادس',
+    label: 'الصف السادس',
+    value: DictationQuestionLevel.GradSix,
   },
   {
-    text: 'مسابقة مركزية',
-    value: ContestType.Centralized,
+    text: 'رابعة وخامسة',
+    label: 'رابعة وخامسة',
+    value: DictationQuestionLevel.FourthAndFifth,
   },
   {
-    text: 'مسابقة دولية',
-    value: ContestType.Worldwide,
+    text: 'أولى إعدادي',
+    label: 'أولى إعدادي',
+    value: DictationQuestionLevel.FirstPreparatory,
+  },
+  {
+    text: 'تانية إعدادي',
+    label: 'تانية إعدادي',
+    value: DictationQuestionLevel.SecondPreparatory,
+  },
+  {
+    text: 'تالتة إعدادي',
+    label: 'تالتة إعدادي',
+    value: DictationQuestionLevel.ThirdPreparatory,
+  },
+  {
+    text: 'أولى ثانوي',
+    label: 'أولى ثانوي',
+    value: DictationQuestionLevel.FirstSecondary,
+  },
+  {
+    text: 'تانية ثانوي',
+    label: 'تانية ثانوي',
+    value: DictationQuestionLevel.SecondSecondary,
+  },
+  {
+    text: 'تالتة ثانوي',
+    label: 'تالتة ثانوي',
+    value: DictationQuestionLevel.ThirdSecondary,
   },
 ];
 
@@ -94,6 +122,10 @@ export const questionMappedTypes: Mapper<QuestionType>[] = [
   {
     text: 'صعب',
     value: QuestionType.Hard,
+  },
+  {
+    text: 'املاء',
+    value: QuestionType.Dictation,
   },
 ];
 
@@ -160,6 +192,9 @@ export const messageMappedTypes: Mapper<MessageType>[] = [
 
 export const getMapperLabel = <T>(mapper: Mapper<T>[], val: T) =>
   mapper.find((m) => m.value === val)?.text;
+
+export const getMapperValue = <T>(mapper: Mapper<T>[], val: string) =>
+  mapper.find((m) => m.text === val)?.value;
 
 export const getLevelsValues = (text: string) =>
   studentMappedLevels.find((m) => m.text === text)?.value;

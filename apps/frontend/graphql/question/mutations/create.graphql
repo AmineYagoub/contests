@@ -4,7 +4,7 @@ mutation CreateQuestion($input: CreateQuestionDto!) {
     type
     title
     options
-    usedCount
+    dictationLevel
     published
     created
     updated

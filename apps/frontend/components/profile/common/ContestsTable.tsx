@@ -29,13 +29,9 @@ const StyledSection = styled('section')({
   minHeight: 'calc(100vh - 200px)',
 });
 
-export type TeacherContestsType = {
-  isPremium?: boolean;
-  id: string;
-};
-
 type ContestsTableType = {
-  isPremium: boolean;
+  allowedContests: number;
+  contestCount: number;
   sortedInfo: SorterResult<ColumnType<Contest>[]>;
   filteredInfo: Record<string, FilterValue>;
   data: object[];
@@ -67,12 +63,13 @@ type ContestsTableType = {
 
 const ContestsTable = ({
   data,
+  allowedContests,
+  contestCount,
   filteredInfo,
   sortedInfo,
   loading,
   methods,
   extendColumns,
-  isPremium,
 }: ContestsTableType) => {
   const getColumnSearchProps = (
     dataIndex: ContestsDataIndex
@@ -171,19 +168,20 @@ const ContestsTable = ({
   const onClose = () => {
     setVisible(false);
   };
+  const contestCountAchieved = contestCount >= allowedContests;
 
   return (
     <StyledSection>
-      {isPremium && (
-        <TableBtn
-          type="primary"
-          size="middle"
-          icon={<PlusOutlined />}
-          onClick={showDrawer}
-        >
-          مسابقة جديدة
-        </TableBtn>
-      )}
+      <TableBtn
+        type="primary"
+        size="middle"
+        icon={<PlusOutlined />}
+        onClick={showDrawer}
+        disabled={contestCountAchieved}
+      >
+        {`${contestCount}/${allowedContests} -  مسابقة جديدة`}
+      </TableBtn>
+
       <TableBtn>إعادة الضبط</TableBtn>
       <Table
         columns={columns}
@@ -194,7 +192,8 @@ const ContestsTable = ({
         pagination={methods.handlePagination}
         style={{ minHeight: 500 }}
       />
-      {isPremium && (
+
+      {!contestCountAchieved && (
         <CreateContest
           visible={visible}
           onClose={onClose}

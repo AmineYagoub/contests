@@ -3,12 +3,14 @@ import {
   CreateQuestionDto,
   useCreateQuestionMutation,
   useUpdateQuestionMutation,
+  DictationQuestionLevel,
 } from '@/graphql/graphql';
 import { Form } from 'antd';
 import { useSnapshot } from 'valtio';
 import { AuthState } from '@/valtio/auth.state';
 import { QuestionActions } from '@/valtio/question.state';
 import { TagValue } from '@/components/common/SelectTopics';
+import { getMapperValue } from '@/utils/mapper';
 
 export interface CreateQuestionsProps {
   visible?: boolean;
@@ -39,15 +41,22 @@ export const useCreateQuestions = ({
         ...values,
         authorId: user?.id,
         correctAnswer: values.options.shift(),
-        topics: {
+      };
+
+      if (values.topics) {
+        payload.topics = {
           connect: values.topics?.map((tag) => ({
             title:
               typeof tag.label === 'string'
                 ? tag.label
                 : tag.label?.props.children.props.children,
           })),
-        },
-      };
+        };
+      }
+
+      if (!values.dictationLevel) {
+        payload.dictationLevel = DictationQuestionLevel.Empty;
+      }
 
       const data = record
         ? await UpdateQuestionMutation({

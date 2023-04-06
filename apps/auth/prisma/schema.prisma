@@ -36,6 +36,7 @@ model Membership {
   startDate             DateTime?
   endDate               DateTime?
   renewCount            Int?               @db.UnsignedSmallInt @default(0)
+  contestCount          Int?               @db.UnsignedSmallInt @default(0)
 
   profileId             String             @unique
   profile               Profile            @relation(fields: [profileId], references: [id], onDelete: Cascade)

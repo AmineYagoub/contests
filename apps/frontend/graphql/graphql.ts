@@ -139,6 +139,10 @@ export type Contest = {
   countries?: Maybe<Array<Scalars['String']>>;
   /** Identifies the date and time when the object was created. */
   created: Scalars['DateTime'];
+  /** Identifies the level of this dictation Question. */
+  dictationLevel: DictationQuestionLevel;
+  /** Identifies how many dictation questions in the Contest. */
+  dictationQuestionCount: Scalars['Int'];
   /** Identifies the duration of the Contest. */
   duration: Scalars['Int'];
   /** Identifies how many easy questions in the Contest. */
@@ -166,8 +170,6 @@ export type Contest = {
   title: Scalars['String'];
   /** Identifies a list of topics that belongs to this contest. */
   topics?: Maybe<Array<Topic>>;
-  /** Identifies the Type of this Contest. */
-  type: ContestType;
   /** Identifies the date and time when the object was last updated. */
   updated: Scalars['DateTime'];
 };
@@ -197,13 +199,6 @@ export enum ContestStatus {
   Open = 'OPEN'
 }
 
-/** Contest Type */
-export enum ContestType {
-  Centralized = 'CENTRALIZED',
-  Regional = 'REGIONAL',
-  Worldwide = 'WORLDWIDE'
-}
-
 export type CreateAnswerDto = {
   annulled?: InputMaybe<Scalars['Boolean']>;
   annulledReason?: InputMaybe<Scalars['String']>;
@@ -217,6 +212,8 @@ export type CreateAnswerDto = {
 export type CreateContestDto = {
   authorId: Scalars['String'];
   countries?: InputMaybe<Array<Scalars['String']>>;
+  dictationLevel?: InputMaybe<DictationQuestionLevel>;
+  dictationQuestionCount: Scalars['Int'];
   duration?: InputMaybe<Scalars['Int']>;
   easyQuestionCount: Scalars['Int'];
   hardQuestionCount: Scalars['Int'];
@@ -229,7 +226,6 @@ export type CreateContestDto = {
   status: ContestStatus;
   title: Scalars['String'];
   topics: TopicConnectId;
-  type: ContestType;
 };
 
 export type CreateMessageDto = {
@@ -242,12 +238,13 @@ export type CreateMessageDto = {
 export type CreateQuestionDto = {
   authorId: Scalars['String'];
   correctAnswer: Scalars['String'];
-  lesson: Scalars['String'];
+  dictationLevel?: InputMaybe<DictationQuestionLevel>;
+  lesson?: InputMaybe<Scalars['String']>;
   options: Array<Scalars['String']>;
   published?: InputMaybe<Scalars['Boolean']>;
   title: Scalars['String'];
-  topics: TopicConnectTitle;
-  type: QuestionType;
+  topics?: InputMaybe<TopicConnectTitle>;
+  type?: InputMaybe<QuestionType>;
 };
 
 export type CreateSubscriptionPlansDto = {
@@ -273,6 +270,19 @@ export type DashboardResponse = {
   teachers: Scalars['Int'];
 };
 
+/** Dictation Question Level */
+export enum DictationQuestionLevel {
+  Empty = 'EMPTY',
+  FirstPreparatory = 'FIRST_PREPARATORY',
+  FirstSecondary = 'FIRST_SECONDARY',
+  FourthAndFifth = 'FOURTH_AND_FIFTH',
+  GradSix = 'GRAD_SIX',
+  SecondPreparatory = 'SECOND_PREPARATORY',
+  SecondSecondary = 'SECOND_SECONDARY',
+  ThirdPreparatory = 'THIRD_PREPARATORY',
+  ThirdSecondary = 'THIRD_SECONDARY'
+}
+
 export type EmailDto = {
   email: Scalars['String'];
 };
@@ -283,6 +293,8 @@ export type IdDto = {
 
 export type Membership = {
   __typename?: 'Membership';
+  /** Identifies the number of created contests in this period. */
+  contestCount: Scalars['Int'];
   /** Identifies the date and time when the object was created. */
   created: Scalars['DateTime'];
   /** Identifies the end date of the membership. */
@@ -596,7 +608,6 @@ export type OrderMessageArgs = {
 export type OrderQuestionArgs = {
   created?: InputMaybe<OrderByType>;
   options?: InputMaybe<OrderByType>;
-  usedCount?: InputMaybe<OrderByType>;
 };
 
 export type OrderUserArgs = {
@@ -658,6 +669,7 @@ export type Query = {
   paginateUsers?: Maybe<UserPaginationResponse>;
   searchUsers?: Maybe<Array<Profile>>;
   teacherDashboard?: Maybe<TeacherDashboardResponse>;
+  updateMembershipsJob?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -786,6 +798,8 @@ export type Question = {
   correctAnswer?: Maybe<Scalars['String']>;
   /** Identifies the date and time when the object was created. */
   created: Scalars['DateTime'];
+  /** Identifies the level of this dictation Question. */
+  dictationLevel?: Maybe<DictationQuestionLevel>;
   id: Scalars['ID'];
   /** Identifies the lesson learned from this Question. */
   lesson: Scalars['String'];
@@ -801,8 +815,6 @@ export type Question = {
   type: QuestionType;
   /** Identifies the date and time when the object was last updated. */
   updated: Scalars['DateTime'];
-  /** Identifies how many questions in the Question. */
-  usedCount?: Maybe<Scalars['Int']>;
 };
 
 export type QuestionPaginationDto = {
@@ -820,6 +832,7 @@ export type QuestionPaginationResponse = {
 
 /** Question Type */
 export enum QuestionType {
+  Dictation = 'DICTATION',
   Easy = 'EASY',
   Hard = 'HARD',
   Medium = 'MEDIUM'
@@ -1064,6 +1077,8 @@ export type UpdateAppConfigDto = {
 export type UpdateContestDto = {
   authorId?: InputMaybe<Scalars['String']>;
   countries?: InputMaybe<Array<Scalars['String']>>;
+  dictationLevel?: InputMaybe<DictationQuestionLevel>;
+  dictationQuestionCount?: InputMaybe<Scalars['Int']>;
   duration?: InputMaybe<Scalars['Int']>;
   easyQuestionCount?: InputMaybe<Scalars['Int']>;
   hardQuestionCount?: InputMaybe<Scalars['Int']>;
@@ -1076,7 +1091,6 @@ export type UpdateContestDto = {
   status?: InputMaybe<ContestStatus>;
   title?: InputMaybe<Scalars['String']>;
   topics?: InputMaybe<TopicConnectId>;
-  type?: InputMaybe<ContestType>;
 };
 
 export type UpdateDocumentsDto = {
@@ -1094,13 +1108,13 @@ export type UpdateMessageDto = {
 export type UpdateQuestionDto = {
   authorId?: InputMaybe<Scalars['String']>;
   correctAnswer?: InputMaybe<Scalars['String']>;
+  dictationLevel?: InputMaybe<DictationQuestionLevel>;
   lesson?: InputMaybe<Scalars['String']>;
   options?: InputMaybe<Array<Scalars['String']>>;
   published?: InputMaybe<Scalars['Boolean']>;
   title?: InputMaybe<Scalars['String']>;
   topics?: InputMaybe<TopicConnectTitle>;
   type?: InputMaybe<QuestionType>;
-  usedCount?: InputMaybe<Scalars['Int']>;
 };
 
 export type UpdateStudentDto = {
@@ -1216,6 +1230,7 @@ export type WhereContestArgs = {
   authorId?: InputMaybe<Scalars['String']>;
   countries?: InputMaybe<Array<Scalars['String']>>;
   created?: InputMaybe<Array<Scalars['String']>>;
+  dictationLevel?: InputMaybe<DictationQuestionLevel>;
   level?: InputMaybe<Array<StudentLevel>>;
   noAnswerBy?: InputMaybe<Scalars['String']>;
   participants?: InputMaybe<Array<Scalars['String']>>;
@@ -1223,7 +1238,6 @@ export type WhereContestArgs = {
   status?: InputMaybe<ContestStatus>;
   tags?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<ContestType>;
 };
 
 export type WhereMessageArgs = {
@@ -1235,6 +1249,7 @@ export type WhereMessageArgs = {
 export type WhereQuestionArgs = {
   correctAnswer?: InputMaybe<Scalars['String']>;
   created?: InputMaybe<Array<Scalars['String']>>;
+  dictationLevel?: InputMaybe<DictationQuestionLevel>;
   lesson?: InputMaybe<Scalars['String']>;
   options?: InputMaybe<Array<Scalars['String']>>;
   tags?: InputMaybe<Scalars['String']>;
@@ -1384,14 +1399,14 @@ export type UpdateContestMutationVariables = Exact<{
 }>;
 
 
-export type UpdateContestMutation = { __typename?: 'Mutation', updateContest: { __typename?: 'Contest', id: string, title: string, duration: number, published: boolean, level?: Array<StudentLevel> | null, created: any, updated: any, status: ContestStatus, startTime: any, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, participants?: Array<string> | null } };
+export type UpdateContestMutation = { __typename?: 'Mutation', updateContest: { __typename?: 'Contest', id: string, title: string, duration: number, published: boolean, level?: Array<StudentLevel> | null, created: any, updated: any, status: ContestStatus, startTime: any, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, dictationQuestionCount: number, participants?: Array<string> | null } };
 
 export type FindByIdForExamQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type FindByIdForExamQuery = { __typename?: 'Query', findOneContestById?: { __typename?: 'Contest', id: string, type: ContestType, title: string, level?: Array<StudentLevel> | null, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null, questions?: Array<{ __typename?: 'Question', id: string, title: string, options: Array<string>, type: QuestionType }> | null, answers?: Array<{ __typename?: 'Answer', userId: { __typename?: 'User', id: string } }> | null } | null };
+export type FindByIdForExamQuery = { __typename?: 'Query', findOneContestById?: { __typename?: 'Contest', id: string, title: string, level?: Array<StudentLevel> | null, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, dictationQuestionCount: number, dictationLevel: DictationQuestionLevel, maxParticipants?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null, questions?: Array<{ __typename?: 'Question', id: string, title: string, dictationLevel?: DictationQuestionLevel | null, options: Array<string>, type: QuestionType }> | null, answers?: Array<{ __typename?: 'Answer', userId: { __typename?: 'User', id: string } }> | null } | null };
 
 export type FindByIdForReviewQueryVariables = Exact<{
   id: Scalars['String'];
@@ -1399,14 +1414,14 @@ export type FindByIdForReviewQueryVariables = Exact<{
 }>;
 
 
-export type FindByIdForReviewQuery = { __typename?: 'Query', findOneContestById?: { __typename?: 'Contest', id: string, type: ContestType, title: string, level?: Array<StudentLevel> | null, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null, questions?: Array<{ __typename?: 'Question', id: string, title: string, options: Array<string>, type: QuestionType, correctAnswer?: string | null, usedCount?: number | null, lesson: string, topics?: Array<{ __typename?: 'Topic', title: string }> | null }> | null, answers?: Array<{ __typename?: 'Answer', id: string, contestId: string, annulled: boolean, annulledReason: string, created: any, updated: any, userId: { __typename?: 'User', id: string }, answers: Array<{ __typename?: 'SelectedAnswerObject', questionId: string, option: string, options: Array<string> }> }> | null } | null };
+export type FindByIdForReviewQuery = { __typename?: 'Query', findOneContestById?: { __typename?: 'Contest', id: string, title: string, level?: Array<StudentLevel> | null, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, dictationQuestionCount: number, dictationLevel: DictationQuestionLevel, maxParticipants?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null, questions?: Array<{ __typename?: 'Question', id: string, title: string, options: Array<string>, type: QuestionType, lesson: string, correctAnswer?: string | null, dictationLevel?: DictationQuestionLevel | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null }> | null, answers?: Array<{ __typename?: 'Answer', id: string, contestId: string, annulled: boolean, annulledReason: string, created: any, updated: any, userId: { __typename?: 'User', id: string }, answers: Array<{ __typename?: 'SelectedAnswerObject', questionId: string, option: string, options: Array<string> }> }> | null } | null };
 
 export type PaginateContestsQueryVariables = Exact<{
   params: ContestPaginationDto;
 }>;
 
 
-export type PaginateContestsQuery = { __typename?: 'Query', paginateContest?: { __typename?: 'ContestPaginationResponse', total: number, data?: Array<{ __typename?: 'Contest', id: string, type: ContestType, title: string, level?: Array<StudentLevel> | null, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, maxParticipants?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null, answers?: Array<{ __typename?: 'Answer', id: string }> | null, authorId: { __typename?: 'User', id: string, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } }> | null } | null };
+export type PaginateContestsQuery = { __typename?: 'Query', paginateContest?: { __typename?: 'ContestPaginationResponse', total: number, data?: Array<{ __typename?: 'Contest', id: string, title: string, level?: Array<StudentLevel> | null, duration: number, published: boolean, countries?: Array<string> | null, created: any, updated: any, status: ContestStatus, startTime: any, participants?: Array<string> | null, easyQuestionCount: number, mediumQuestionCount: number, hardQuestionCount: number, dictationQuestionCount: number, dictationLevel: DictationQuestionLevel, maxParticipants?: number | null, topics?: Array<{ __typename?: 'Topic', title: string }> | null, answers?: Array<{ __typename?: 'Answer', id: string }> | null, authorId: { __typename?: 'User', id: string, role?: { __typename?: 'Role', title: RoleTitle } | null, profile?: { __typename: 'Student', id: string } | { __typename: 'Teacher', id: string, firstName?: string | null, lastName?: string | null } | null } }> | null } | null };
 
 export type CreateMessageMutationVariables = Exact<{
   input: CreateMessageDto;
@@ -1501,7 +1516,7 @@ export type CreateQuestionMutationVariables = Exact<{
 }>;
 
 
-export type CreateQuestionMutation = { __typename?: 'Mutation', createQuestion: { __typename?: 'Question', id: string, type: QuestionType, title: string, options: Array<string>, usedCount?: number | null, published: boolean, created: any, updated: any } };
+export type CreateQuestionMutation = { __typename?: 'Mutation', createQuestion: { __typename?: 'Question', id: string, type: QuestionType, title: string, options: Array<string>, dictationLevel?: DictationQuestionLevel | null, published: boolean, created: any, updated: any } };
 
 export type DeleteQuestionMutationVariables = Exact<{
   id: Scalars['String'];
@@ -1516,14 +1531,14 @@ export type UpdateQuestionMutationVariables = Exact<{
 }>;
 
 
-export type UpdateQuestionMutation = { __typename?: 'Mutation', updateQuestion: { __typename?: 'Question', id: string, type: QuestionType, title: string, options: Array<string>, usedCount?: number | null, published: boolean, created: any, updated: any } };
+export type UpdateQuestionMutation = { __typename?: 'Mutation', updateQuestion: { __typename?: 'Question', id: string, type: QuestionType, title: string, options: Array<string>, dictationLevel?: DictationQuestionLevel | null, published: boolean, created: any, updated: any } };
 
 export type PaginateQuestionsQueryVariables = Exact<{
   params: QuestionPaginationDto;
 }>;
 
 
-export type PaginateQuestionsQuery = { __typename?: 'Query', paginateQuestions?: { __typename?: 'QuestionPaginationResponse', total: number, data?: Array<{ __typename?: 'Question', id: string, title: string, type: QuestionType, options: Array<string>, lesson: string, correctAnswer?: string | null, created: any, updated: any, usedCount?: number | null, topics?: Array<{ __typename?: 'Topic', id: string, title: string }> | null }> | null } | null };
+export type PaginateQuestionsQuery = { __typename?: 'Query', paginateQuestions?: { __typename?: 'QuestionPaginationResponse', total: number, data?: Array<{ __typename?: 'Question', id: string, title: string, type: QuestionType, options: Array<string>, lesson: string, correctAnswer?: string | null, created: any, updated: any, dictationLevel?: DictationQuestionLevel | null, topics?: Array<{ __typename?: 'Topic', id: string, title: string }> | null }> | null } | null };
 
 export type FindTopicsQueryVariables = Exact<{
   title?: InputMaybe<Scalars['String']>;
@@ -1637,7 +1652,7 @@ export type FindUserQuery = { __typename?: 'Query', findUser: { __typename?: 'Us
 export type GetAuthUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, countAllNotifications?: number | null, countAllMessages?: number | null, messagesCount: number, notificationsCount: number, role?: { __typename?: 'Role', title: RoleTitle, permissions?: Array<{ __typename?: 'Permission', title: PermissionTitle }> | null } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth?: any | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, userId?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, startDate?: any | null, endDate?: any | null, created: any, renewCount: number, memberShipOn: Array<{ __typename?: 'SubscriptionPlan', id: string, title: string, price: number }> } | null } | null } };
+export type GetAuthUserQuery = { __typename?: 'Query', getAuthUser: { __typename?: 'User', id: string, key: number, email: string, isActive: boolean, emailConfirmed: boolean, countAllNotifications?: number | null, countAllMessages?: number | null, messagesCount: number, notificationsCount: number, role?: { __typename?: 'Role', title: RoleTitle, permissions?: Array<{ __typename?: 'Permission', title: PermissionTitle }> | null } | null, profile?: { __typename: 'Student', id: string, firstName?: string | null, lastName?: string | null, level: StudentLevel, country?: string | null, personalImage?: string | null, birthCertImage?: string | null, letterImage?: string | null, dateOfBirth?: any | null, teacher?: { __typename?: 'Teacher', id: string, firstName?: string | null, lastName?: string | null, userId?: string | null } | null } | { __typename: 'Teacher', id: string, country?: string | null, firstName?: string | null, lastName?: string | null, dateOfBirth?: any | null, personalImage?: string | null, phone?: { __typename?: 'UserPhone', phone: string, phoneCode: string } | null, subscription?: { __typename?: 'Membership', id: string, status: MembershipStatus, startDate?: any | null, endDate?: any | null, created: any, renewCount: number, contestCount: number, memberShipOn: Array<{ __typename?: 'SubscriptionPlan', id: string, title: string, price: number, allowedContests: number }> } | null } | null } };
 
 export type PaginateUsersQueryVariables = Exact<{
   params: UserPaginationDto;
@@ -2419,6 +2434,7 @@ export const UpdateContestDocument = gql`
     easyQuestionCount
     mediumQuestionCount
     hardQuestionCount
+    dictationQuestionCount
     participants
   }
 }
@@ -2454,13 +2470,13 @@ export const FindByIdForExamDocument = gql`
     query FindByIdForExam($id: String!) {
   findOneContestById(id: $id) {
     id
-    type
     topics {
       title
     }
     questions {
       id
       title
+      dictationLevel
       options
       type
     }
@@ -2482,6 +2498,8 @@ export const FindByIdForExamDocument = gql`
     easyQuestionCount
     mediumQuestionCount
     hardQuestionCount
+    dictationQuestionCount
+    dictationLevel
     maxParticipants
   }
 }
@@ -2518,7 +2536,6 @@ export const FindByIdForReviewDocument = gql`
     query FindByIdForReview($id: String!, $answerId: String) {
   findOneContestById(id: $id, answerId: $answerId) {
     id
-    type
     topics {
       title
     }
@@ -2530,9 +2547,9 @@ export const FindByIdForReviewDocument = gql`
       topics {
         title
       }
-      correctAnswer
-      usedCount
       lesson
+      correctAnswer
+      dictationLevel
     }
     answers {
       id
@@ -2563,6 +2580,8 @@ export const FindByIdForReviewDocument = gql`
     easyQuestionCount
     mediumQuestionCount
     hardQuestionCount
+    dictationQuestionCount
+    dictationLevel
     maxParticipants
   }
 }
@@ -2602,7 +2621,6 @@ export const PaginateContestsDocument = gql`
     total
     data {
       id
-      type
       topics {
         title
       }
@@ -2639,6 +2657,8 @@ export const PaginateContestsDocument = gql`
       easyQuestionCount
       mediumQuestionCount
       hardQuestionCount
+      dictationQuestionCount
+      dictationLevel
       maxParticipants
     }
   }
@@ -3318,7 +3338,7 @@ export const CreateQuestionDocument = gql`
     type
     title
     options
-    usedCount
+    dictationLevel
     published
     created
     updated
@@ -3391,7 +3411,7 @@ export const UpdateQuestionDocument = gql`
     type
     title
     options
-    usedCount
+    dictationLevel
     published
     created
     updated
@@ -3442,7 +3462,7 @@ export const PaginateQuestionsDocument = gql`
       }
       created
       updated
-      usedCount
+      dictationLevel
     }
   }
 }
@@ -4221,10 +4241,12 @@ export const GetAuthUserDocument = gql`
           endDate
           created
           renewCount
+          contestCount
           memberShipOn {
             id
             title
             price
+            allowedContests
           }
         }
       }

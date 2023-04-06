@@ -61,28 +61,28 @@ model Topic {
 }
 
 model Contest {
-  id                    String    @id @default(uuid())
-  type                  String    @db.VarChar(100)
-  title                 String    @db.VarChar(255) @unique
-  status                String    @db.VarChar(100)
-  level                 Json?     @db.Json
-  duration              Int?      @db.UnsignedSmallInt @default(40)
-  startTime             DateTime  @db.DateTime
-  easyQuestionCount     Int       @db.UnsignedInt
-  mediumQuestionCount   Int       @db.UnsignedInt
-  hardQuestionCount     Int       @db.UnsignedInt
-  maxParticipants       Int?      @db.UnsignedInt @default(0)
-  participants          Json?     @db.Json
-  countries             Json?     @db.Json
-  published             Boolean?  @default(true)
-  authorId              String    @db.VarChar(255)
-  created               DateTime  @default(now())
-  updated               DateTime  @updatedAt
-  topics                Topic[]
-  questions             Question[]
-  answers               Answer[]
+  id                         String    @id @default(uuid())
+  title                      String    @db.VarChar(255) @unique
+  status                     String    @db.VarChar(100)
+  level                      Json?     @db.Json
+  duration                   Int?      @db.UnsignedSmallInt @default(40)
+  startTime                  DateTime  @db.DateTime
+  easyQuestionCount          Int       @db.UnsignedInt
+  mediumQuestionCount        Int       @db.UnsignedInt
+  hardQuestionCount          Int       @db.UnsignedInt
+  dictationQuestionCount     Int       @db.UnsignedInt @default(0)
+  dictationLevel             String    @db.VarChar(100) @default("EMPTY")
+  maxParticipants            Int?      @db.UnsignedInt @default(0)
+  participants               Json?     @db.Json
+  countries                  Json?     @db.Json
+  published                  Boolean?  @default(true)
+  authorId                   String    @db.VarChar(255)
+  created                    DateTime  @default(now())
+  updated                    DateTime  @updatedAt
+  topics                     Topic[]
+  questions                  Question[]
+  answers                    Answer[]
 
-  @@index([type(length: 100, sort: Desc)])
   @@index([status(length: 100, sort: Desc)])
   @@index([authorId, created(sort: Desc)])
 }
@@ -92,12 +92,11 @@ model Contest {
 
 model Question {
   id                String    @id @default(uuid())
-  type              String    @db.VarChar(100)
+  type              String?   @db.VarChar(100) @default("")
   title             String    @db.VarChar(500)
   correctAnswer     String    @db.VarChar(500)
   lesson            String?   @db.VarChar(700) @default("")
-  // level             Json      @db.Json
-  usedCount         Int?      @db.UnsignedInt @default(0)
+  dictationLevel    String?   @db.VarChar(100) @default("")
   options           Json      @db.Json
   published         Boolean?  @default(true)
   authorId          String    @db.VarChar(255)
@@ -107,7 +106,7 @@ model Question {
   topics            Topic[]
 
   @@index([type(length: 100, sort: Desc)])
-  @@index([usedCount(sort: Desc)])
+  @@index([dictationLevel(sort: Desc)])
   @@index([authorId, created(sort: Desc)])
 }
 

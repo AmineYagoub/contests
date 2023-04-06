@@ -11,12 +11,12 @@ export const StyledSection = styled(motion.section)({
   padding: 10,
   textAlign: 'center',
   h2: {
-    fontSize: '2rem',
+    fontSize: '1.5rem',
   },
 });
 
 export const StyledAnswers = styled(motion.button)({
-  width: 400,
+  width: 500,
   display: 'flex !important',
   padding: '12px 10px 12px 35px',
   justifyContent: 'center',
@@ -43,7 +43,7 @@ export const StyledIcon = styled(CheckCircleOutlined)({
 export const StyledContainer = styled(motion.div)({
   position: 'relative',
   margin: 'auto',
-  maxWidth: 400,
+  maxWidth: 500,
 });
 
 const tap = {

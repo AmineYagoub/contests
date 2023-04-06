@@ -1,18 +1,16 @@
 import {
+  Args,
+  Query,
+  Mutation,
+  Resolver,
+  ResolveReference,
+} from '@nestjs/graphql';
+import {
   CreateSubscriptionPlansDto,
   UpdateSubscriptionPlansDto,
 } from '@contests/dto/auth';
 import { isPublic } from '@contests/utils';
-
-import {
-  Args,
-  Mutation,
-  Query,
-  Resolver,
-  ResolveReference,
-} from '@nestjs/graphql';
 import { Membership } from './membership.model';
-
 import { SubscriptionPlan } from './plan.model';
 import { SubscriptionPlanService } from './plan.service';
 
@@ -21,20 +19,27 @@ export class SubscriptionPlanResolver {
   constructor(private planService: SubscriptionPlanService) {}
 
   @isPublic()
+  @Query(() => Boolean, { nullable: true })
+  async updateMembershipsJob() {
+    await this.planService.updateMembershipsJob();
+    return true;
+  }
+
+  @isPublic()
   @Query(() => SubscriptionPlan)
-  findSubscriptionPlan(@Args('id') id: string) {
+  async findSubscriptionPlan(@Args('id') id: string) {
     return this.planService.findUnique({ id });
   }
 
   @isPublic()
   @Query(() => Membership, { nullable: true })
-  findMembershipByProfileId(@Args('id') id: string) {
+  async findMembershipByProfileId(@Args('id') id: string) {
     return this.planService.findMembershipByProfileId(id);
   }
 
   @isPublic()
   @Query(() => [SubscriptionPlan])
-  findAllSubscriptionPlans() {
+  async findAllSubscriptionPlans() {
     return this.planService.findAll();
   }
 
