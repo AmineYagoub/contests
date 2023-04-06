@@ -121,7 +121,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     for (const [, file] of Object.entries(files)) {
       const questions = await processFiles(file[0].path, String(authorId));
       await saveQuestions(questions, client);
-      await unlink(file[0].path);
+      // await unlink(file[0].path);
     }
     socket.disconnect();
   });
