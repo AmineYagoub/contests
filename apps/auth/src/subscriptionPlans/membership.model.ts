@@ -29,6 +29,11 @@ export class Membership {
   })
   renewCount: number;
 
+  @Field(() => Int, {
+    description: 'Identifies the number of created contests in this period.',
+  })
+  contestCount: number;
+
   @Field(() => [SubscriptionPlan], {
     description: 'Identifies the subscription plan.',
   })

@@ -22,6 +22,7 @@ import { ActivationTokenModule } from '../email/activationToken.module';
 import { ProfileModule } from '../profile/profile.module';
 import { SubscriptionPlanModule } from '../subscriptionPlans/plan.module';
 import { UserModule } from '../users/user.module';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
   imports: [
@@ -56,11 +57,21 @@ import { UserModule } from '../users/user.module';
         };
       },
     }),
+    BullModule.forRootAsync({
+      inject: [authConfig.KEY],
+      useFactory: async (config: AuthConfigType) => ({
+        redis: {
+          host: config.redis.host,
+          port: config.redis.port,
+          password: config.redis.password,
+        },
+      }),
+    }),
+    SubscriptionPlanModule,
     AuthModule,
     UserModule,
     RoleModule,
     ProfileModule,
-    SubscriptionPlanModule,
     ActivationTokenModule,
   ],
   providers: [

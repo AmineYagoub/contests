@@ -1,11 +1,30 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/auth-service';
-
+import { Queue } from 'bull';
+import { InjectQueue } from '@nestjs/bull';
 import { PrismaService } from '../app/prisma.service';
+import { UPDATE_MEMBERSHIP } from './membership.consumer';
 
 @Injectable()
 export class SubscriptionPlanService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @InjectQueue(UPDATE_MEMBERSHIP) private updateQueue: Queue,
+    private prisma: PrismaService
+  ) {}
+
+  /**
+   * Update All ended teacher memberships to free plan.
+   *
+   * @returns Promise<Bull.Job<any>>
+   */
+  async updateMembershipsJob() {
+    return await this.updateQueue.add(null, {
+      repeat: {
+        cron: '0 0 * * *', // job every midnight
+      },
+      attempts: 3,
+    });
+  }
 
   /**
    * Find a SubscriptionPlans by its unique key.
@@ -65,7 +84,6 @@ export class SubscriptionPlanService {
    * @returns Promise<Membership>
    */
   async createMemberShip(data: Prisma.MembershipCreateInput) {
-    console.log(data);
     try {
       return this.prisma.membership.create({
         data,
