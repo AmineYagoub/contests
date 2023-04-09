@@ -102,7 +102,7 @@ const ContestForm = ({
       <Row gutter={16}>
         <Col span={12}>
           <Space>
-            <SelectDictationLevel />
+            <SelectDictationLevel isContest />
             <Form.Item
               name={ContestFields.dictationQuestionCount}
               label="أسئلة الاملاء"
