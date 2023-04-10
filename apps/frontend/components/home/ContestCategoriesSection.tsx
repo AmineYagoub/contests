@@ -1,9 +1,7 @@
-import { Topic } from '@/graphql/graphql';
-import { AppRoutes } from '@/utils/routes';
 import styled from '@emotion/styled';
-import { Col, Row, Typography } from 'antd';
-import StyledButton from '../common/StyledButton';
+import { Topic } from '@/graphql/graphql';
 import { title } from './HowItWorkSection';
+import { Col, Row, Typography } from 'antd';
 
 const { Title } = Typography;
 
@@ -57,7 +55,7 @@ const ContestCategoriesSection = ({
         style={{ width: 200, marginTop: 35, fontSize: '1.5rem' }}
         className="koufi"
       >
-        أكثر من {length} موضوع
+        أكثر من {length} موضوعاً
       </span>
     </StyledSection>
   );
