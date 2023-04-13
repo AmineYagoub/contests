@@ -1,43 +1,42 @@
-import { Space, Table, Tag } from 'antd';
-import moment from 'moment-timezone';
-import { useState } from 'react';
-import { useSnapshot } from 'valtio';
-
-import CreateQuestion from '@/components/admin/question/CreateQuestion';
-import DeleteQuestion from '@/components/admin/question/DeleteQuestion';
-import ImportQuestions from '@/components/admin/question/ImportQuestions';
-import UpdateQuestion from '@/components/admin/question/UpdateQuestion';
 import {
   SearchDatePicker,
   SearchDatePickerIcon,
 } from '@/components/admin/tables/SearchDatePicker';
-import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
 import {
-  DictationQuestionLevel,
-  PermissionTitle,
+  Topic,
   Question,
   QuestionType,
-  Topic,
+  PermissionTitle,
+  DictationQuestionLevel,
 } from '@/graphql/graphql';
-import { useSearchQuestions } from '@/hooks/admin/manage-questions.hook';
-import AdminLayout from '@/layout/AdminLayout';
-import { QuestionFields, QuestionsDataIndex } from '@/utils/fields';
 import {
-  dictationMappedLevels,
   getMapperLabel,
   questionMappedTypes,
+  dictationMappedLevels,
 } from '@/utils/mapper';
-import { QuestionState } from '@/valtio/question.state';
-import { PlusOutlined } from '@ant-design/icons';
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import styled from '@emotion/styled';
-
-import { TableBtn } from './dashboard';
-
-import type { ColumnsType, ColumnType } from 'antd/es/table';
-import { withAuth } from '@/components/common/withAuth';
 import Head from 'next/head';
+import { useState } from 'react';
+import moment from 'moment-timezone';
+import styled from '@emotion/styled';
+import { useSnapshot } from 'valtio';
+import { TableBtn } from './dashboard';
+import { Space, Table, Tag } from 'antd';
 import { getTitleMeta } from '@/utils/app';
+import AdminLayout from '@/layout/AdminLayout';
+import { PlusOutlined } from '@ant-design/icons';
+import { withAuth } from '@/components/common/withAuth';
+import { QuestionState } from '@/valtio/question.state';
+import type { ColumnsType, ColumnType } from 'antd/es/table';
+import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import { QuestionFields, QuestionsDataIndex } from '@/utils/fields';
+import UpdateQuestion from '@/components/admin/question/UpdateQuestion';
+import CreateQuestion from '@/components/admin/question/CreateQuestion';
+import DeleteQuestion from '@/components/admin/question/DeleteQuestion';
+import { useSearchQuestions } from '@/hooks/admin/manage-questions.hook';
+import ImportQuestions from '@/components/admin/question/ImportQuestions';
+import { SearchIcon, SearchInput } from '@/components/admin/tables/SearchInput';
+import DeleteAllQuestions from '@/components/admin/question/DeleteAllQuestions';
+
 const StyledSection = styled('section')({
   backgroundColor: '#f8f8f8 !important',
   position: 'relative',
@@ -208,6 +207,7 @@ const ManageQuestions = () => {
         >
           سؤال جديد
         </TableBtn>
+        <DeleteAllQuestions onSuccess={methods.refetchData} />
         <TableBtn onClick={methods.clearAllFilters}>إعادة الضبط</TableBtn>
         <Table
           columns={columns}

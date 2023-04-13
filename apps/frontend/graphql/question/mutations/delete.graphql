@@ -1,5 +1,13 @@
-mutation DeleteQuestion($id: String!) {
+mutation DeleteQuestionById($id: String!) {
   deleteQuestionById(id: $id) {
     id
   }
 }
+
+mutation DeleteAllQuestions {
+  deleteAllQuestions {
+    count
+  }
+}
+
+

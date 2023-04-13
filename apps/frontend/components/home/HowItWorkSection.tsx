@@ -1,7 +1,7 @@
-import { Col, Row, Typography } from 'antd';
-import theme from '@/config/theme';
 import Image from 'next/image';
+import theme from '@/config/theme';
 import styled from '@emotion/styled';
+import { Col, Row, Typography } from 'antd';
 import HowItWorkDashedSvg from './HowItWorkDashedSvg';
 
 const { Title, Paragraph } = Typography;
