@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useReactiveVar } from '@apollo/client';
 import { appDataVar } from '@/utils/app';
 import Link from 'next/link';
+import { AppRoutes } from '@/utils/routes';
 
 const { Footer } = Layout;
 
@@ -70,13 +71,13 @@ const StyledFooter = () => {
           <Copyright />
         </Col>
         <Col span={7}>
-          <Link href="/community/terms">الشروط و الأحكام</Link>
+          <Link href={AppRoutes.Terms}>الشروط و الأحكام</Link>
           <Divider type="vertical" />
-          <Link href="/community/privacy">سياسة الخصوصية</Link>
+          <Link href={AppRoutes.Privacy}>سياسة الخصوصية</Link>
           <Divider type="vertical" />
-          <Link href="/community/about">حول الموقع</Link>
+          <Link href={AppRoutes.About}>حول الموقع</Link>
           <Divider type="vertical" />
-          <Link href="/community/contact">إتصل بنا</Link>
+          <Link href={AppRoutes.Contact}>إتصل بنا</Link>
         </Col>
       </Row>
     </NewFooter>
