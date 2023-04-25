@@ -3,8 +3,10 @@ import { NextRouter } from 'next/router';
 
 export enum AppRoutes {
   Home = '/',
-  About = '/about',
-  Contact = '/contact',
+  Terms = '/community/terms',
+  Privacy = '/community/privacy',
+  About = '/community/about',
+  Contact = '/community/contact',
   Blog = '/blog',
   SignIn = '/auth/sign-in',
   SignUp = '/auth/sign-up',

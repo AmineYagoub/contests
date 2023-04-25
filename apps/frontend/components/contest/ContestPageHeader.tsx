@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { AppRoutes } from '@/utils/routes';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { ContestActions, ContestState } from '@/valtio/contest.state';
-import { Button, Col, PageHeader, Row, Space, Statistic, Tag } from 'antd';
+import { Button, Col, PageHeader, Row, Space, Statistic } from 'antd';
 
 const valueStyle = {
   fontWeight: 800,
@@ -20,16 +20,6 @@ const StyledStrong = styled('strong')({
   ...valueStyle,
   fontSize: '1.5rem',
   padding: 5,
-});
-
-const StyledTopics = styled('section')({
-  display: 'flex',
-  b: {
-    color: '#fff',
-  },
-  ol: {
-    color: '#fff',
-  },
 });
 
 const StyledStat = styled(Statistic)({
@@ -152,7 +142,7 @@ const ContestPageHeader = () => {
     >
       <Row justify="center">
         <Col span={6}>
-          <StyledTopics>
+          {/* <StyledTopics>
             <b>مواضيع المسابقة</b>
             <ol>
               {contestSnap.contest.topics.map((el) => (
@@ -161,7 +151,7 @@ const ContestPageHeader = () => {
                 </li>
               ))}
             </ol>
-          </StyledTopics>
+          </StyledTopics> */}
         </Col>
         <StyledCol span={6}>
           {contestSnap.contestStarted ? (

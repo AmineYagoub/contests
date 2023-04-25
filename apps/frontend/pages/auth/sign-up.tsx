@@ -126,7 +126,7 @@ const SignUpPage: NextPageWithLayout = ({ data }: { data: App }) => {
           >
             <Checkbox>
               أوافق على
-              <Link href="/terms">
+              <Link href={AppRoutes.Terms}>
                 <Button type="link">إتفاقية الإستخدام</Button>
               </Link>
             </Checkbox>

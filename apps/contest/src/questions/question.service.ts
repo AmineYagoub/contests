@@ -57,6 +57,15 @@ export class QuestionService {
   }
 
   /**
+   * Delete all Questions
+   *
+   * @returns  Promise<{count: number}>
+   */
+  async deleteAll(): Promise<{ count: number }> {
+    return this.prisma.question.deleteMany();
+  }
+
+  /**
    * Find a Question by its unique key.
    *
    * @param input Prisma.QuestionWhereUniqueInput The unique key of the Question.

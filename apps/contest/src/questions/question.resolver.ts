@@ -14,6 +14,7 @@ import {
 import { QuestionPaginationResponse } from '../common/pagination.response';
 import { Question } from './question.model';
 import { QuestionService } from './question.service';
+import { BatchPayloadResult } from '@contests/types';
 
 @Resolver(() => Question)
 export class QuestionResolver {
@@ -27,6 +28,11 @@ export class QuestionResolver {
   @Mutation(() => Question, { nullable: true })
   async deleteQuestionById(@Args('id') id: string) {
     return this.questionService.delete({ id });
+  }
+
+  @Mutation(() => BatchPayloadResult, { nullable: true })
+  async deleteAllQuestions() {
+    return this.questionService.deleteAll();
   }
 
   @Query(() => QuestionPaginationResponse, { nullable: true })

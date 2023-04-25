@@ -1,6 +1,6 @@
 import { Button, Popconfirm } from 'antd';
 
-import { Question, useDeleteQuestionMutation } from '@/graphql/graphql';
+import { Question, useDeleteQuestionByIdMutation } from '@/graphql/graphql';
 import { DeleteOutlined } from '@ant-design/icons';
 
 const DeleteQuestion = ({
@@ -10,7 +10,7 @@ const DeleteQuestion = ({
   record: Question;
   onSuccess: () => void;
 }) => {
-  const [DeleteQuestionMutation, { loading }] = useDeleteQuestionMutation();
+  const [DeleteQuestionMutation, { loading }] = useDeleteQuestionByIdMutation();
 
   const confirmDelete = async () => {
     try {

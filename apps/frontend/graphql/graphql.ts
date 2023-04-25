@@ -375,6 +375,7 @@ export type Mutation = {
   createMessage: Message;
   createQuestion: Question;
   createSubscriptionPlan: SubscriptionPlan;
+  deleteAllQuestions?: Maybe<BatchPayloadResult>;
   deleteAnswerById?: Maybe<Answer>;
   deleteContestById?: Maybe<Contest>;
   deleteMessage: Message;
@@ -1518,12 +1519,17 @@ export type CreateQuestionMutationVariables = Exact<{
 
 export type CreateQuestionMutation = { __typename?: 'Mutation', createQuestion: { __typename?: 'Question', id: string, type: QuestionType, title: string, options: Array<string>, dictationLevel?: DictationQuestionLevel | null, published: boolean, created: any, updated: any } };
 
-export type DeleteQuestionMutationVariables = Exact<{
+export type DeleteQuestionByIdMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteQuestionMutation = { __typename?: 'Mutation', deleteQuestionById?: { __typename?: 'Question', id: string } | null };
+export type DeleteQuestionByIdMutation = { __typename?: 'Mutation', deleteQuestionById?: { __typename?: 'Question', id: string } | null };
+
+export type DeleteAllQuestionsMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DeleteAllQuestionsMutation = { __typename?: 'Mutation', deleteAllQuestions?: { __typename?: 'BatchPayloadResult', count: number } | null };
 
 export type UpdateQuestionMutationVariables = Exact<{
   id: Scalars['String'];
@@ -3371,39 +3377,71 @@ export function useCreateQuestionMutation(baseOptions?: Apollo.MutationHookOptio
 export type CreateQuestionMutationHookResult = ReturnType<typeof useCreateQuestionMutation>;
 export type CreateQuestionMutationResult = Apollo.MutationResult<CreateQuestionMutation>;
 export type CreateQuestionMutationOptions = Apollo.BaseMutationOptions<CreateQuestionMutation, CreateQuestionMutationVariables>;
-export const DeleteQuestionDocument = gql`
-    mutation DeleteQuestion($id: String!) {
+export const DeleteQuestionByIdDocument = gql`
+    mutation DeleteQuestionById($id: String!) {
   deleteQuestionById(id: $id) {
     id
   }
 }
     `;
-export type DeleteQuestionMutationFn = Apollo.MutationFunction<DeleteQuestionMutation, DeleteQuestionMutationVariables>;
+export type DeleteQuestionByIdMutationFn = Apollo.MutationFunction<DeleteQuestionByIdMutation, DeleteQuestionByIdMutationVariables>;
 
 /**
- * __useDeleteQuestionMutation__
+ * __useDeleteQuestionByIdMutation__
  *
- * To run a mutation, you first call `useDeleteQuestionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteQuestionMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useDeleteQuestionByIdMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteQuestionByIdMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [deleteQuestionMutation, { data, loading, error }] = useDeleteQuestionMutation({
+ * const [deleteQuestionByIdMutation, { data, loading, error }] = useDeleteQuestionByIdMutation({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useDeleteQuestionMutation(baseOptions?: Apollo.MutationHookOptions<DeleteQuestionMutation, DeleteQuestionMutationVariables>) {
+export function useDeleteQuestionByIdMutation(baseOptions?: Apollo.MutationHookOptions<DeleteQuestionByIdMutation, DeleteQuestionByIdMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteQuestionMutation, DeleteQuestionMutationVariables>(DeleteQuestionDocument, options);
+        return Apollo.useMutation<DeleteQuestionByIdMutation, DeleteQuestionByIdMutationVariables>(DeleteQuestionByIdDocument, options);
       }
-export type DeleteQuestionMutationHookResult = ReturnType<typeof useDeleteQuestionMutation>;
-export type DeleteQuestionMutationResult = Apollo.MutationResult<DeleteQuestionMutation>;
-export type DeleteQuestionMutationOptions = Apollo.BaseMutationOptions<DeleteQuestionMutation, DeleteQuestionMutationVariables>;
+export type DeleteQuestionByIdMutationHookResult = ReturnType<typeof useDeleteQuestionByIdMutation>;
+export type DeleteQuestionByIdMutationResult = Apollo.MutationResult<DeleteQuestionByIdMutation>;
+export type DeleteQuestionByIdMutationOptions = Apollo.BaseMutationOptions<DeleteQuestionByIdMutation, DeleteQuestionByIdMutationVariables>;
+export const DeleteAllQuestionsDocument = gql`
+    mutation DeleteAllQuestions {
+  deleteAllQuestions {
+    count
+  }
+}
+    `;
+export type DeleteAllQuestionsMutationFn = Apollo.MutationFunction<DeleteAllQuestionsMutation, DeleteAllQuestionsMutationVariables>;
+
+/**
+ * __useDeleteAllQuestionsMutation__
+ *
+ * To run a mutation, you first call `useDeleteAllQuestionsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAllQuestionsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAllQuestionsMutation, { data, loading, error }] = useDeleteAllQuestionsMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDeleteAllQuestionsMutation(baseOptions?: Apollo.MutationHookOptions<DeleteAllQuestionsMutation, DeleteAllQuestionsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteAllQuestionsMutation, DeleteAllQuestionsMutationVariables>(DeleteAllQuestionsDocument, options);
+      }
+export type DeleteAllQuestionsMutationHookResult = ReturnType<typeof useDeleteAllQuestionsMutation>;
+export type DeleteAllQuestionsMutationResult = Apollo.MutationResult<DeleteAllQuestionsMutation>;
+export type DeleteAllQuestionsMutationOptions = Apollo.BaseMutationOptions<DeleteAllQuestionsMutation, DeleteAllQuestionsMutationVariables>;
 export const UpdateQuestionDocument = gql`
     mutation UpdateQuestion($id: String!, $input: UpdateQuestionDto!) {
   updateQuestion(id: $id, input: $input) {

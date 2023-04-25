@@ -1,4 +1,4 @@
-import { createUnionType, registerEnumType } from '@nestjs/graphql';
+import { registerEnumType } from '@nestjs/graphql';
 
 export enum QuestionType {
   EASY = 'EASY',
